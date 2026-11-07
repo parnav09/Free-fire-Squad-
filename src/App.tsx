@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { isSupabaseConfigured, supabase } from "./lib/supabase/client";
 
-type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Analytics";
+type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics";
 type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
   { id: "P1", name: "Player 1", role: "Primary Rusher", status: "Active" },
@@ -64,6 +64,10 @@ export default function App() {
     return () => { alive = false; authSub.subscription.unsubscribe(); };
   }, []);
 
+  const loadAssignments=async()=>{if(!supabase||!team)return;const {data,error}=await supabase.from("player_drill_assignments").select("id,player_id,drill_title,drill_description,due_date,status,completion_note").eq("team_id",team.id).order("due_date",{ascending:false}).limit(100);if(error)throw error;setAssignmentRows(data||[]);};
+  useEffect(()=>{if(signedIn&&team)loadAssignments().catch(e=>setNotice(e.message));},[signedIn,team?.id]);
+  const createAssignment=async()=>{if(!supabase||!team||!assignmentPlayer||!assignmentTitle.trim())return;const {data:{user}}=await supabase.auth.getUser();const {error}=await supabase.from("player_drill_assignments").insert({team_id:team.id,player_id:assignmentPlayer,assigned_by:user?.id,drill_title:assignmentTitle.trim(),drill_description:assignmentDesc.trim(),due_date:assignmentDate});if(error){setNotice(error.message);return;}setNotice("Drill assigned.");await loadAssignments();};
+  const updateAssignment=async(id:string,status:string)=>{if(!supabase)return;const {error}=await supabase.from("player_drill_assignments").update({status,completed_at:status==="completed"?new Date().toISOString():null}).eq("id",id);if(error){setNotice(error.message);return;}await loadAssignments();};
   const signIn = async () => { if (!supabase) return; const { error } = await supabase.auth.signInWithPassword({ email: sessionEmail.trim(), password: sessionPassword }); setNotice(error ? error.message : "Signed in. Cloud sync is enabled."); };
   const signUp = async () => { if (!supabase) return; if (!displayName.trim()) { setNotice("Enter your in-game/display name before creating account."); return; } const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword, options: { data: { display_name: displayName.trim() } } }); setNotice(error ? error.message : "Account created. If email verification is enabled, verify email then sign in."); };
   const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
@@ -197,12 +201,23 @@ export default function App() {
             </section>
             <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">RECENT EVALUATIONS · {evalHistory.length}</div><div className="player-list">{evalHistory.map(e=><article className="player-row" key={e.id}><span className="player-id">{e.score_date}</span><div><b>{teamMembers.find(m=>m.user_id===e.player_id)?.display_name||e.player_id.slice(0,8)} · {e.total??"—"}/50</b><small>Com {e.communication} · Coord {e.coordination} · Decisions {e.decision_making} · Role {e.role_execution} · Map {e.map_awareness}</small>{e.improvement_target&&<small>Target: {e.improvement_target}</small>}{e.notes&&<small>Notes: {e.notes}</small>}</div></article>)}</div></section>
           </>}
+          {section==="Assignments" && <>
+            <div className="section-heading"><div><div className="eyebrow">INDIVIDUAL PRACTICE</div><h2>Drill assignments</h2></div><span className="phase-pill">{assignmentRows.filter(x=>x.status==="completed").length}/{assignmentRows.length} DONE</span></div>
+            <section className="connection-panel" style={{display:"block"}}>
+              {!signedIn||!team?<p>Sign in and join/create a squad to use cloud assignments.</p>:<>
+              <div className="toolbar"><label>Player<select value={assignmentPlayer} onChange={e=>setAssignmentPlayer(e.target.value)}><option value="">Choose player</option>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · P{m.player_number||"—"}</option>)}</select></label><label>Due date<input type="date" value={assignmentDate} onChange={e=>setAssignmentDate(e.target.value}/></label></div>
+              <label className="notes-label">Drill title<input value={assignmentTitle} onChange={e=>setAssignmentTitle(e.target.value}/></label><label className="notes-label">Exact task<textarea value={assignmentDesc} onChange={e=>setAssignmentDesc(e.target.value}/></label>
+              <button className="primary-button" onClick={createAssignment} disabled={!assignmentPlayer||!assignmentTitle.trim()}>Assign drill</button>
+              </>}
+            </section>
+            <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">SQUAD TASK BOARD · {assignmentRows.length}</div><div className="player-list">{assignmentRows.map(a=><article className="player-row" key={a.id}><span className="player-id">{a.due_date}</span><div><b>{teamMembers.find(m=>m.user_id===a.player_id)?.display_name||a.player_id.slice(0,8)} · {a.drill_title}</b><small>{a.drill_description}</small><small>Status: {a.status}</small>{a.completion_note&&<small>{a.completion_note}</small>}</div><button className="secondary-button" onClick={()=>updateAssignment(a.id,a.status==="completed"?"assigned":"completed")}>{a.status==="completed"?"Undo":"Complete"}</button></article>)}</div></section>
+          </>}
           {section==="Analytics" && <>
             <div className="section-heading"><div><div className="eyebrow">PERFORMANCE SNAPSHOT</div><h2>Current week</h2></div><span className="phase-pill">BROWSER DATA</span></div>
             <div className="foundation-grid">{[["Recorded matches",totalMatches],["Placement + kills points",points],["Average kills",totalMatches?(Object.values(matches).reduce((s,m)=>s+m.kills,0)/totalMatches).toFixed(1):"0.0"],["Roster size",players.length]].map(([a,b],i)=><article className="foundation-card" key={String(a)}><div className="card-index">0{i+1}</div><div className="card-label">{a}</div><div className="card-value">{b}</div></article>)}</div>
             <section className="connection-panel"><div><div className="eyebrow">DATA WARNING</div><h3>Analytics are still browser-local</h3><p>Tournament match rows are shared in Supabase; these summary metrics still calculate from this browser’s local entries.</p></div></section>
           </>}
-          <footer className="footer-note">M2 · TEAM CLOUD MATCH LEDGER + LOCAL TRAINING / ANALYTICS</footer>
+          <footer className="footer-note">M3 · CLOUD MATCHES + TRAINING + EVALUATION + PLAYER DRILLS</footer>
         </div>
       </section>
     </main>
