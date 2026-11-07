@@ -39,10 +39,13 @@ export default function App() {
   useEffect(() => {
     let alive = true;
     if (!supabase) { setConnection("Missing project settings"); return; }
-    supabase.auth.getSession().then(({ error }) => {
-      if (alive) setConnection(error ? "Configured · auth check failed" : "Configured · API reachable");
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (alive) { setSignedIn(!!data.session); setSessionEmail(data.session?.user.email || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     }).catch(() => alive && setConnection("Configured · network unavailable"));
-    return () => { alive = false; };
+    const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (alive) { setSignedIn(!!session); setSessionEmail(session?.user.email || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+    });
+    return () => { alive = false; authSub.subscription.unsubscribe(); };
   }, []);
 
   const signIn = async () => { if (!supabase) return; const { error } = await supabase.auth.signInWithPassword({ email: sessionEmail.trim(), password: sessionPassword }); setNotice(error ? error.message : "Signed in. Cloud sync is enabled."); };
