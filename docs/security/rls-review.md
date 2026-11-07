@@ -1,32 +1,20 @@
-# Security review gate
+# Security review and current controls
 
 ## Browser application
+- Only the Supabase project URL and publishable key are used by the Vite browser client.
+- Never place a secret/service-role key in frontend code, repository files or screenshots.
+- RLS is enabled on the current public application tables.
+- Authenticated team records are scoped by team membership.
+- Tournament writes are restricted to active owners/coaches.
+- Drill assignments are readable by team members; only owners/coaches can create/delete them. Assigned players can update completion fields for their own tasks.
+- Trigger-only functions and the tournament slot seeder are not directly executable through the public API.
 
-- Only the Supabase project URL and publishable key may be exposed in Vite browser environment variables.
-- Never put a secret key or legacy service-role key in frontend code, repository files, screenshots or chat.
-- Publishable keys do not replace authorization; every exposed table requires appropriate RLS.
-- Authorization must use trusted server-controlled claims/relations, not user-editable metadata.
+## Remaining dashboard action
+- Supabase Auth leaked-password protection is a project-level dashboard setting and must be enabled by a project administrator.
+- Email Provider enablement, Confirm Email, OTP template, and production SMTP are also dashboard-level configuration and require a manual check.
 
-## Policy review
-
-For every table, document:
-- who can SELECT, INSERT, UPDATE and DELETE;
-- row ownership and team-membership checks;
-- whether UPDATE has both USING and WITH CHECK;
-- whether UPDATE has a compatible SELECT policy;
-- whether policies overlap or broaden access unexpectedly;
-- whether views use security_invoker where required;
-- whether privileged functions are necessary and tightly granted.
-
-## Existing project items to inspect
-
-- 13 SECURITY DEFINER functions reported with authenticated EXECUTE access.
-- Leaked-password protection reported disabled.
-- 15 policy performance notices.
-- Duplicate/overlapping SELECT policies on team_settings.
-
-Do not apply blanket fixes. Inspect the SQL definitions and intended access model first.
-
-## Release gate
-
-No production auth/data workflows until schema mapping, RLS tests, role tests, backup/restore plan and a reviewed migration are complete.
+## Remaining engineering checks
+- Review intentionally exposed SECURITY DEFINER RPCs and retain only those needed by app flows or RLS policies.
+- Run role-based tests for owner, coach, assigned player and ordinary member.
+- Validate OTP signup against the actual Supabase email template and SMTP delivery.
+- Add automated end-to-end tests before treating the app as fully production-verified.
