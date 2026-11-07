@@ -18,18 +18,21 @@ function readPlayers(): Player[] {
 export default function App() {
   const [section, setSection] = useState<Section>("Overview");
   const [players, setPlayers] = useState<Player[]>(readPlayers);
-  const [week, setWeek] = useState("2026-W45");
-  const [day, setDay] = useState(1);
-  const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>({});
+  const [week, setWeek] = useState(() => localStorage.getItem("squad-os-week") || "2026-W45");
+  const [day, setDay] = useState(() => Number(localStorage.getItem("squad-os-day") || 1));
+  const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-matches") || "{}"); } catch { return {}; } });
   const [notice, setNotice] = useState("");
   const [connection, setConnection] = useState("Checking Supabase…");
   const [newName, setNewName] = useState("");
   const [newRole, setNewRole] = useState("Substitute");
-  const [drillDone, setDrillDone] = useState<Record<string, boolean>>({});
-  const [notes, setNotes] = useState<Record<string, string>>({});
+  const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-drills") || "{}"); } catch { return {}; } });
+  const [notes, setNotes] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-notes") || "{}"); } catch { return {}; } });
   const [query, setQuery] = useState("");
 
   useEffect(() => { localStorage.setItem("squad-os-roster", JSON.stringify(players)); }, [players]);
+  useEffect(() => { localStorage.setItem("squad-os-matches", JSON.stringify(matches)); }, [matches]);
+  useEffect(() => { localStorage.setItem("squad-os-drills", JSON.stringify(drillDone)); }, [drillDone]);
+  useEffect(() => { localStorage.setItem("squad-os-notes", JSON.stringify(notes)); }, [notes]);
   useEffect(() => {
     let alive = true;
     if (!supabase) { setConnection("Missing project settings"); return; }
