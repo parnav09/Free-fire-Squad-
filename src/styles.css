@@ -100,3 +100,16 @@ button{cursor:pointer;font:inherit}
 .notice button{background:none;border:0;color:inherit}
 @media(max-width:1000px){.match-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.match-grid{gap:8px}.match-card{padding:13px}.player-row{gap:8px;padding:11px}.add-form{width:100%}.add-form input,.add-form select{width:100%;max-width:none}}
+
+/* SQUAD OS · account authentication surfaces */
+.auth-card{margin-top:20px;border:1px solid #20304c;border-radius:18px;background:linear-gradient(145deg,#0c1425,#080c16);padding:18px;box-shadow:0 22px 60px #0003}
+.auth-switch{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border-radius:12px;background:#050914;margin-bottom:22px}
+.auth-switch button{border:0;border-radius:9px;background:transparent;color:#8190aa;padding:12px;font-size:13px;font-weight:600;cursor:pointer}
+.auth-switch button.active{background:linear-gradient(135deg,#123c65,#253b78);color:#eaf7ff;box-shadow:0 5px 18px #06172c}
+.auth-fields{display:grid;gap:15px}.auth-field{display:grid;gap:8px}.auth-field>span{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#8fa5c6}
+.auth-field input{width:100%;box-sizing:border-box;border:1px solid #26344d;border-radius:11px;background:#070d19;color:#eaf2ff;padding:14px 13px;font-size:14px;outline:none;transition:border .2s,box-shadow .2s}
+.auth-field input:focus{border-color:#35a9ef;box-shadow:0 0 0 3px #1595e51c}.auth-field input::placeholder{color:#52627c}
+.auth-show{display:flex;align-items:center;gap:9px;color:#91a0b9;font-size:12px}.auth-show input{accent-color:#28a9f4}
+.auth-hint{font-size:11px;color:#7d91ad;margin-top:-6px}.auth-submit{width:100%;justify-content:center;display:flex;align-items:center;gap:12px;padding:14px!important;margin-top:4px}.auth-submit:disabled{opacity:.45;cursor:not-allowed}
+.auth-foot{display:flex;align-items:center;gap:8px;border-top:1px solid #1b2639;margin-top:18px;padding-top:15px;color:#647893;font-size:10px}.auth-lock{color:#54c6ff}
+@media(max-width:600px){.auth-card{padding:14px;border-radius:14px}.auth-fields{gap:13px}.auth-field input{padding:13px}}
