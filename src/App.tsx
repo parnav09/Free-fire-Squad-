@@ -180,7 +180,6 @@ export default function App() {
       const { data, error } = await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id", cycle.id).order("match_day").order("match_number");
       if (error) throw error;
       setSharedMatches(data || []);
-      setMatches(prev=>({...prev,...Object.fromEntries((data||[]).map(row=>[`${week}-D${row.match_day}-M${row.match_number}`,{placement:row.placement??12,kills:row.kills??0}]))}));
       setNotice("Shared scoreboard refreshed.");
     } catch (e) { setNotice(e instanceof Error ? e.message : "Refresh failed."); }
   };
@@ -190,6 +189,48 @@ export default function App() {
   const saveEvaluation=async()=>{if(!supabase||!team||!signedIn){setNotice("Sign in and join a team to save evaluations in cloud.");return;}try{const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Session expired.");const {error}=await supabase.from("daily_scores").insert({team_id:team.id,score_date:evalDate,player_id:evalPlayer,evaluator_id:user.id,...evalScores,notes:evalNotes.trim()||null,improvement_target:evalTarget.trim()||null});if(error)throw error;const {data,error:he}=await supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100);if(he)throw he;setEvalHistory(data||[]);setNotice("Player evaluation saved to squad cloud.");}catch(e){setNotice(e instanceof Error?e.message:"Evaluation save failed.");}};
   const saveCloudTraining = async (activity:string,done:boolean) => {setCloudTraining(p=>({...p,[activity]:done}));if(!supabase||!team||!signedIn)return;try{const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {error}=await supabase.from("training_log").upsert({team_id:team.id,log_date:trainingDate,activity,done,updated_by:user.id},{onConflict:"team_id,log_date,activity"});if(error)throw error;setNotice("Training checklist synced for the squad.");}catch(e){setNotice(e instanceof Error?e.message:"Cloud training save failed.");}};
   const saveSessionNotes = async () => { if(!supabase||!team||!signedIn)return; try { const {data:{user}}=await supabase.auth.getUser(); if(!user)throw new Error("Session expired."); const {error}=await supabase.from("training_session_notes").upsert({team_id:team.id,note_date:trainingDate,notes:cloudSessionNotes.trim(),updated_by:user.id},{onConflict:"team_id,note_date"}); if(error)throw error; setNotice("Session notes saved to squad cloud."); } catch(e) { setNotice(e instanceof Error?e.message:"Session notes cloud save failed."); } };
+  useEffect(() => {
+    if (!supabase || !signedIn || !team) return;
+    let active = true;
+    const channel = supabase.channel(`squad-os-${team.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "tournament_matches", filter: `team_id=eq.${team.id}` }, async () => {
+        const start = weekMonday(week);
+        const { data: cycle } = await supabase.from("tournament_cycles").select("id").eq("team_id", team.id).eq("cycle_start", start).maybeSingle();
+        if (!cycle) { if (active) setSharedMatches([]); return; }
+        const { data } = await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id", cycle.id).order("match_day").order("match_number");
+        if (active) setSharedMatches(data || []);
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "tournament_cycles", filter: `team_id=eq.${team.id}` }, async () => {
+        const start = weekMonday(week);
+        const { data: cycle } = await supabase.from("tournament_cycles").select("id").eq("team_id", team.id).eq("cycle_start", start).maybeSingle();
+        if (!cycle) { if (active) setSharedMatches([]); return; }
+        const { data } = await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id", cycle.id).order("match_day").order("match_number");
+        if (active) setSharedMatches(data || []);
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "training_log", filter: `team_id=eq.${team.id}` }, async () => {
+        const { data } = await supabase.from("training_log").select("activity,done").eq("team_id", team.id).eq("log_date", trainingDate);
+        if (active) setCloudTraining(Object.fromEntries((data || []).map(x => [x.activity, !!x.done])));
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "training_session_notes", filter: `team_id=eq.${team.id}` }, async () => {
+        const { data } = await supabase.from("training_session_notes").select("notes").eq("team_id", team.id).eq("note_date", trainingDate).maybeSingle();
+        if (active) setCloudSessionNotes(data?.notes || "");
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "daily_scores", filter: `team_id=eq.${team.id}` }, async () => {
+        const { data } = await supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target").eq("team_id", team.id).order("score_date", { ascending: false }).limit(100);
+        if (active) setEvalHistory(data || []);
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "player_drill_assignments", filter: `team_id=eq.${team.id}` }, () => {
+        if (active) loadAssignments().catch(e => setNotice(e.message));
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "team_members", filter: `team_id=eq.${team.id}` }, () => {
+        if (active) loadTeam().catch(e => setNotice(e instanceof Error ? e.message : "Team roster refresh failed."));
+      })
+      .subscribe(status => {
+        if (active && status === "SUBSCRIBED") setConnection("Signed in · live squad sync active");
+      });
+    return () => { active = false; void supabase.removeChannel(channel); };
+  }, [signedIn, team?.id, week, trainingDate]);
+
   const analyticsMatches = signedIn && team ? sharedMatches.filter(m=>m.placement!==null || m.kills>0) : Object.values(matches);
   const totalMatches = analyticsMatches.length;
   const points = analyticsMatches.reduce((sum, m) => sum + (m.placement === 1 ? 12 : m.placement === 2 ? 9 : m.placement === 3 ? 8 : m.placement === 4 ? 7 : m.placement === 5 ? 6 : m.placement === 6 ? 5 : m.placement === 7 ? 4 : m.placement === 8 ? 3 : m.placement === 9 ? 2 : m.placement === 10 ? 1 : 0) + m.kills, 0);
