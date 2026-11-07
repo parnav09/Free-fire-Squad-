@@ -36,7 +36,7 @@ export default function App() {
   const [connection, setConnection] = useState("Checking Supabase…");
   const [sessionUsername, setSessionUsername] = useState("");
   const [sessionPassword, setSessionPassword] = useState("");
-  const [authMode, setAuthMode] = useState<"signin"|"signup">("signup");
+  const [authMode, setAuthMode] = useState<"signin"|"signup">("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
   const [recoveryMode, setRecoveryMode] = useState(false);
