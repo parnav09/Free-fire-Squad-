@@ -36,7 +36,7 @@ export default function App() {
   const [teamCode, setTeamCode] = useState("");
   const [teamDescription, setTeamDescription] = useState("");
   const [team, setTeam] = useState<{id:string;team_name:string;invite_code:string;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
-  const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
+  const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>[]>([]);
   const [teamBusy, setTeamBusy] = useState(false);
 
   useEffect(() => { localStorage.setItem("squad-os-roster", JSON.stringify(players)); }, [players]);
@@ -61,12 +61,12 @@ export default function App() {
   const loadTeam = async () => {
     if (!supabase) return;
     const {data:{user}}=await supabase.auth.getUser(); if(!user) {setTeam(null);setTeamMembers([]);return;}
-    const {data:membership,error}=await supabase.from("team_members").select("id,team_id,user_id,player_number,assigned_role,membership_role,status").eq("user_id",user.id).eq("status","active").limit(1).maybeSingle();
+    const {data:membership,error}=await supabase.from("team_members").select("id,team_id,user_id,player_number,assigned_role,membership_role,status").eq("user_id",user.id).limit(1).maybeSingle();
     if(error) throw error;
     if(!membership){setTeam(null);setTeamMembers([]);return;}
     const {data:t,error:te}=await supabase.from("teams").select("id,team_name,invite_code").eq("id",membership.team_id).single(); if(te)throw te;
     setTeam({...t,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});
-    const {data:members,error:me}=await supabase.from("team_members").select("id,user_id,player_number,assigned_role,membership_role,status").eq("team_id",t.id).eq("status","active").order("player_number");
+    const {data:members,error:me}=await supabase.from("team_members").select("id,user_id,player_number,assigned_role,membership_role,status").eq("team_id",t.id).order("player_number");
     if(me)throw me;
     const ids=(members||[]).map(x=>x.user_id);
     const {data:profiles,error:pe}=await supabase.from("profiles").select("id,display_name").in("id",ids); if(pe)throw pe;
@@ -74,7 +74,7 @@ export default function App() {
   };
   const createTeam = async () => { if(!supabase||!teamName.trim())return; setTeamBusy(true); try { const {data,error}=await supabase.rpc("create_team",{p_name:teamName.trim(),p_description:teamDescription.trim(),p_timezone:"Asia/Kolkata"}); if(error)throw error; await loadTeam();setTeamName("");setTeamDescription("");setNotice("Team created. Share the Invite Code with your squad."); } catch(e){setNotice(e instanceof Error?e.message:"Team creation failed.");} finally{setTeamBusy(false);} };
   const joinTeam = async () => { if(!supabase||!teamCode.trim())return; setTeamBusy(true); try { const {error}=await supabase.rpc("join_team",{p_code:teamCode.trim().toUpperCase()}); if(error)throw error; await loadTeam();setTeamCode("");setNotice("Joined team successfully."); } catch(e){setNotice(e instanceof Error?e.message:"Could not join team.");} finally{setTeamBusy(false);} };
-  const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error; const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
+  const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { if(player>=1&&player<=5){const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error;} const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
   useEffect(()=>{if(signedIn)loadTeam().catch(e=>setNotice(e instanceof Error?e.message:"Could not load team."));else{setTeam(null);setTeamMembers([]);}},[signedIn]);
   const weekMonday = (w: string) => { const m=w.match(/^(\\d{4})-W(\\d{2})$/); if(!m) return new Date().toISOString().slice(0,10); const y=Number(m[1]), n=Number(m[2]); const d=new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+1+(n-1)*7); return d.toISOString().slice(0,10); };
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function App() {
               {team ? <>
                 <h3 style={{marginTop:8}}>{team.team_name} <span className="active-tag">{team.membership_role}</span></h3>
                 <p>Invite code <strong style={{letterSpacing:2,fontSize:18}}>{team.invite_code}</strong> · share this code privately with teammates.</p>
-                <div className="player-list">{teamMembers.map(m=><article className="player-row" key={m.id}><span className="player-id">{m.player_number?"P"+m.player_number:"—"}</span><div><b>{m.display_name}</b><small>{m.membership_role} · {m.assigned_role||"Role not assigned"}</small></div>{team.membership_role==="owner"&&m.membership_role!=="owner"?<div className="add-form"><select defaultValue={String(m.player_number||0)} onChange={e=>assignMember(m.id,Number(e.target.value),m.assigned_role||"Player")}><option value="0">Unassigned</option>{[1,2,3,4,5].map(n=><option value={n} key={n}>P{n}</option>)}</select><select defaultValue={m.assigned_role||"Player"} onChange={e=>assignMember(m.id,Number(m.player_number||0),e.target.value)}>{["Primary Rusher","Secondary Rusher","Third Rusher / Flank","Sniper / IGL","Substitute","Player"].map(x=><option key={x}>{x}</option>)}</select></div>:null}</article>)}</div>
+                <div className="player-list">{teamMembers.map(m=><article className="player-row" key={m.id}><span className="player-id">{m.player_number?"P"+m.player_number:"—"}</span><div><b>{m.display_name}</b><small>{m.membership_role} · {m.assigned_role||"Role not assigned"}</small></div>{team.membership_role==="owner"&&m.membership_role!=="owner"?<div className="add-form"><select defaultValue={String(m.player_number||1)} onChange={e=>assignMember(m.id,Number(e.target.value),m.assigned_role||"Player")}>{[1,2,3,4,5].map(n=><option value={n} key={n}>P{n}</option>)}</select><select defaultValue={m.assigned_role||"Player"} onChange={e=>assignMember(m.id,Number(m.player_number||0),e.target.value)}>{["Primary Rusher","Secondary Rusher","Third Rusher / Flank","Sniper / IGL","Substitute","Player"].map(x=><option key={x}>{x}</option>)}</select></div>:null}</article>)}</div>
               </>:<>
                 <h3 style={{marginTop:8}}>Create a team or join with code</h3><p>Team owner creates one squad. Players use the invite code from their own accounts.</p>
                 <div className="add-form"><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="Team name"/><input value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Description (optional)"/><button className="primary-button" disabled={teamBusy||!teamName.trim()} onClick={createTeam}>{teamBusy?"Working…":"Create team"}</button></div>
