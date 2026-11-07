@@ -23,6 +23,9 @@ export default function App() {
   const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-matches") || "{}"); } catch { return {}; } });
   const [notice, setNotice] = useState("");
   const [connection, setConnection] = useState("Checking Supabase…");
+  const [sessionEmail, setSessionEmail] = useState("");
+  const [sessionPassword, setSessionPassword] = useState("");
+  const [signedIn, setSignedIn] = useState(false);
   const [newName, setNewName] = useState("");
   const [newRole, setNewRole] = useState("Substitute");
   const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-drills") || "{}"); } catch { return {}; } });
@@ -42,6 +45,25 @@ export default function App() {
     return () => { alive = false; };
   }, []);
 
+  const signIn = async () => { if (!supabase) return; const { error } = await supabase.auth.signInWithPassword({ email: sessionEmail.trim(), password: sessionPassword }); setNotice(error ? error.message : "Signed in. Cloud sync is enabled."); };
+  const signUp = async () => { if (!supabase) return; const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword }); setNotice(error ? error.message : "Account created. Check email verification if required."); };
+  const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
+  const weekMonday = (w: string) => { const m=w.match(/^(\\d{4})-W(\\d{2})$/); if(!m) return new Date().toISOString().slice(0,10); const y=Number(m[1]), n=Number(m[2]); const d=new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+1+(n-1)*7); return d.toISOString().slice(0,10); };
+  useEffect(() => {
+    if (!supabase || !signedIn) return;
+    let cancelled=false;
+    (async()=>{ try {
+      const {data:{user}}=await supabase.auth.getUser(); if(!user) return;
+      const {data:team}=await supabase.from("teams").select("id").eq("owner_id",user.id).limit(1).maybeSingle(); if(!team) {setConnection("Signed in · no owned team found");return;}
+      const start=weekMonday(week); const end=new Date(start+"T00:00:00Z"); end.setUTCDate(end.getUTCDate()+6);
+      const {data:cycle,error:cycleErr}=await supabase.from("tournament_cycles").upsert({team_id:team.id,cycle_start:start,cycle_end:end.toISOString().slice(0,10),title:"Weekly Tournament",status:"active",created_by:user.id},{onConflict:"team_id,cycle_start"}).select("id").single();
+      if(cycleErr||!cycle) {setConnection("Signed in · cycle sync needs review");return;}
+      const rows=Object.entries(matches).map(([key,m])=>{const mt=key.match(/-D(\\d+)-M(\\d+)$/);return mt?{cycle_id:cycle.id,team_id:team.id,match_day:Number(mt[1]),match_number:Number(mt[2]),placement:m.placement,kills:m.kills,points:(m.placement===1?12:m.placement===2?9:m.placement===3?8:m.placement===4?7:m.placement===5?6:m.placement===6?5:m.placement===7?4:m.placement===8?3:m.placement===9?2:m.placement===10?1:0)+m.kills,status:"draft",recorded_by:user.id}:null}).filter(Boolean);
+      if(rows.length){const {error}=await supabase.from("tournament_matches").upsert(rows,{onConflict:"cycle_id,match_day,match_number"});if(error)throw error;}
+      if(!cancelled)setConnection("Signed in · cloud sync active");
+    } catch {if(!cancelled)setConnection("Signed in · sync retry needed");} })();
+    return()=>{cancelled=true};
+  },[signedIn,matches,week]);
   const totalMatches = Object.keys(matches).length;
   const points = Object.values(matches).reduce((sum, m) => sum + (m.placement === 1 ? 12 : m.placement === 2 ? 9 : m.placement === 3 ? 8 : m.placement === 4 ? 7 : m.placement === 5 ? 6 : m.placement === 6 ? 5 : m.placement === 7 ? 4 : m.placement === 8 ? 3 : m.placement === 9 ? 2 : m.placement === 10 ? 1 : 0) + m.kills, 0);
   const filteredPlayers = useMemo(() => players.filter(p => (p.name + p.role).toLowerCase().includes(query.toLowerCase())), [players, query]);
@@ -70,7 +92,8 @@ export default function App() {
           <p className="intro">A focused workspace for tournament results, player development and team performance. Records below are currently stored locally on this browser.</p>
           {notice && <div className="notice">{notice}<button onClick={()=>setNotice("")}>×</button></div>}
           {section==="Overview" && <>
-            <div className="section-heading"><div><div className="eyebrow">AT A GLANCE</div><h2>Squad overview</h2></div><span className="phase-pill">M2 / INTERACTIVE</span></div>
+            <div className="section-heading"><div><div className="eyebrow">AT A GLANCE</div><h2>Squad overview</h2></div><span className="phase-pill">M2 / INTERACTIVE</span></div>            <section className="connection-panel"><div><div className="eyebrow">SUPABASE AUTH</div><h3>{signedIn ? "Cloud account connected" : "Sign in to sync"}</h3><p>{signedIn ? sessionEmail+" · tournament match records sync to TITAN BOLD" : "Email/password account access. Local progress remains available offline."}</p></div>{signedIn?<button className="primary-button" onClick={signOut}>Sign out</button>:<div className="add-form"><input type="email" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="Email"/><input type="password" value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Password"/><button className="primary-button" onClick={signIn}>Sign in</button><button className="secondary-button" onClick={signUp}>Create account</button></div>}</section>
+
             <div className="foundation-grid">
               {[["Roster",players.length+" / 10","Configured players"],["Match records",String(totalMatches),"Current browser"],["Week points",String(points),"Placement + kills"],["Cloud",isSupabaseConfigured?"Configured":"Pending","Auth check only"]].map(([a,b,c],i)=><article className="foundation-card" key={a}><div className="card-index">0{i+1}</div><div className="card-label">{a}</div><div className="card-value">{b}</div><div className="card-detail">{c}</div></article>)}
             </div>
