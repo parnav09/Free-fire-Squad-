@@ -38,6 +38,9 @@ export default function App() {
   const [sessionPassword, setSessionPassword] = useState("");
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signup");
   const [showPassword, setShowPassword] = useState(false);
+  const [recoveryEmail, setRecoveryEmail] = useState("");
+  const [recoveryMode, setRecoveryMode] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
   const [signedIn, setSignedIn] = useState(false);
   const [sessionUserId, setSessionUserId] = useState("");
 
@@ -78,8 +81,11 @@ export default function App() {
     supabase.auth.getSession().then(({ data, error }) => {
       if (alive) { setSignedIn(!!data.session); setSessionUserId(data.session?.user.id || ""); setSessionUsername(data.session?.user.user_metadata?.username || data.session?.user.user_metadata?.display_name || data.session?.user.email?.split("@")[0] || ""); setDisplayName(data.session?.user.user_metadata?.display_name || data.session?.user.user_metadata?.username || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     }).catch(() => alive && setConnection("Configured · network unavailable"));
-    const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (alive) { setSignedIn(!!session); setSessionUserId(session?.user.id || ""); setSessionUsername(session?.user.user_metadata?.username || session?.user.user_metadata?.display_name || session?.user.email?.split("@")[0] || ""); setDisplayName(session?.user.user_metadata?.display_name || session?.user.user_metadata?.username || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+    const { data: authSub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (alive) {
+        if (event === "PASSWORD_RECOVERY") setRecoveryMode(true);
+        setSignedIn(!!session); setSessionUserId(session?.user.id || ""); setSessionUsername(session?.user.user_metadata?.username || session?.user.user_metadata?.display_name || session?.user.email?.split("@")[0] || ""); setDisplayName(session?.user.user_metadata?.display_name || session?.user.user_metadata?.username || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required");
+      }
     });
     return () => { alive = false; authSub.subscription.unsubscribe(); };
   }, []);
@@ -96,11 +102,34 @@ export default function App() {
       body: { identifier, password: sessionPassword },
     });
     if (error || !data?.session?.access_token || !data?.session?.refresh_token) {
-      setNotice(data?.error || error?.message || "Invalid username or password.");
+      let message = data?.error;
+      const context = (error as { context?: unknown } | null)?.context;
+      if (!message && context instanceof Response) {
+        try { const body = await context.clone().json(); message = body?.error || body?.message; } catch { /* keep the safe fallback */ }
+      }
+      setNotice(message || "Login failed. Check your username/Gmail and password, or use Forgot password.");
       return;
     }
     const { error: sessionError } = await supabase.auth.setSession(data.session);
     setNotice(sessionError ? sessionError.message : "Signed in. Squad cloud sync is enabled.");
+  };
+
+  const requestPasswordReset = async () => {
+    if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
+    const email = recoveryEmail.trim();
+    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return setNotice("Enter the Gmail address linked to your SQUAD OS account.");
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+    if (error) return setNotice(error.message.includes("redirect") ? "Password reset redirect is not allowed yet. The app URL must be added in Supabase Auth → URL Configuration." : error.message);
+    setNotice("If this Gmail belongs to your account, a password reset link has been sent. Check Inbox and Spam.");
+  };
+
+  const saveRecoveredPassword = async () => {
+    if (!supabase) return setNotice("Supabase is not configured.");
+    if (newPassword.length < 8 || newPassword.length > 128) return setNotice("New password must be 8–128 characters.");
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) return setNotice(error.message);
+    setRecoveryMode(false); setNewPassword(""); setSessionPassword("");
+    setNotice("Password updated. Your account is ready.");
   };
 
   const signUp = async () => {
@@ -261,15 +290,16 @@ export default function App() {
           {onboarding?<>
             {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>}
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
-              {!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
+              {recoveryMode?<><h2>Set a new password</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Your Gmail reset link is verified. Choose a new password for this account.</p><label className="auth-field"><span>NEW PASSWORD</span><input type="password" autoComplete="new-password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} placeholder="At least 8 characters"/></label><button className="primary-button auth-submit" disabled={newPassword.length<8} onClick={saveRecoveredPassword}>Save new password →</button></div></div></>:!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
                 <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setNotice("");}}>Sign in</button></div>
                 <div className="auth-fields">
-                  <label className="auth-field"><span>USERNAME</span><input autoComplete="username" type="text" value={sessionUsername} onChange={e=>setSessionUsername(e.target.value.toLowerCase().replace(/[^a-z0-9.-]/g,"").slice(0,24))} placeholder="3–24 characters"/></label>
+                  <label className="auth-field"><span>{authMode==="signin"?"USERNAME OR GMAIL":"USERNAME"}</span><input autoComplete="username" type="text" value={sessionUsername} onChange={e=>setSessionUsername(authMode==="signup"?e.target.value.toLowerCase().replace(/[^a-z0-9.-]/g,"").slice(0,24):e.target.value.trim().slice(0,254))} placeholder={authMode==="signin"?"Your username or Gmail":"3–24 characters"}/></label>
                   <label className="auth-field"><span>PASSWORD</span><input autoComplete={authMode==="signup"?"new-password":"current-password"} type={showPassword?"text":"password"} value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder={authMode==="signup"?"Create password (8+ characters)":"Your password"}/></label>
                   <label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label>
                   <button className="primary-button auth-submit" disabled={!sessionUsername.trim()||!sessionPassword} onClick={authMode==="signup"?signUp:signIn}>{authMode==="signup"?"Create account":"Sign in"} <span>→</span></button>
-                  {authMode==="signup"&&<p className="auth-foot">No email inbox is used. Before the first signup, the team admin must turn OFF Supabase Confirm Email. Lost passwords require team-admin recovery.</p>}
-                </div><div className="auth-foot">SQUAD OS · Username + password</div></div></>:<>
+                  {authMode==="signin"&&<div className="auth-reset"><label className="auth-field"><span>GMAIL FOR PASSWORD RESET</span><input type="email" autoComplete="email" value={recoveryEmail} onChange={e=>setRecoveryEmail(e.target.value)} placeholder="Enter your account Gmail"/></label><button className="text-button" onClick={requestPasswordReset}>Forgot password? Send reset link</button></div>}
+                  {authMode==="signup"&&<p className="auth-foot">Existing accounts can sign in with username or Gmail. Use the Gmail reset link if you no longer know the password.</p>}
+                </div><div className="auth-foot">SQUAD OS · Username/Gmail + password</div></div></>:<>
                 <h2>Account connected</h2><p>Signed in as <b>{sessionUsername}</b></p>
                 <div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="IGN / display name"/><button className="secondary-button" onClick={async()=>{if(!displayName.trim())return setNotice("Enter IGN first.");const {error}=await supabase!.rpc("set_display_name",{p_name:displayName.trim()});setNotice(error?error.message:"IGN saved.");}}>Save IGN</button><button className="secondary-button" onClick={signOut}>Sign out</button></div>
                 <div className="divider"/><div className="eyebrow">TEAM SETUP</div><h2>{team?"Team connected ✓":"Create or join a team"}</h2>
