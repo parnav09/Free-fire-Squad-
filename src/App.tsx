@@ -94,6 +94,19 @@ export default function App() {
     return()=>{cancelled=true};
   },[signedIn,matches,week]);
   useEffect(()=>{ if(!supabase||!signedIn||!team)return; let cancelled=false; (async()=>{ try { const start=weekMonday(week); const {data:cycle}=await supabase.from("tournament_cycles").select("id").eq("team_id",team.id).eq("cycle_start",start).maybeSingle(); if(!cycle){if(!cancelled)setSharedMatches([]);return;} const {data,error}=await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id",cycle.id).order("match_day").order("match_number"); if(error)throw error; if(!cancelled)setSharedMatches(data||[]); }catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Shared scoreboard unavailable.");} })(); return()=>{cancelled=true}; },[signedIn,team?.id,week]);
+  const refreshSharedMatches = async () => {
+    if (!supabase || !team) return;
+    try {
+      const start = weekMonday(week);
+      const { data: cycle, error: ce } = await supabase.from("tournament_cycles").select("id").eq("team_id", team.id).eq("cycle_start", start).maybeSingle();
+      if (ce) throw ce;
+      if (!cycle) { setSharedMatches([]); setNotice("No tournament cycle exists for this week yet."); return; }
+      const { data, error } = await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id", cycle.id).order("match_day").order("match_number");
+      if (error) throw error;
+      setSharedMatches(data || []);
+      setNotice("Shared scoreboard refreshed.");
+    } catch (e) { setNotice(e instanceof Error ? e.message : "Refresh failed."); }
+  };
   const totalMatches = Object.keys(matches).length;
   const points = Object.values(matches).reduce((sum, m) => sum + (m.placement === 1 ? 12 : m.placement === 2 ? 9 : m.placement === 3 ? 8 : m.placement === 4 ? 7 : m.placement === 5 ? 6 : m.placement === 6 ? 5 : m.placement === 7 ? 4 : m.placement === 8 ? 3 : m.placement === 9 ? 2 : m.placement === 10 ? 1 : 0) + m.kills, 0);
   const filteredPlayers = useMemo(() => players.filter(p => (p.name + p.role).toLowerCase().includes(query.toLowerCase())), [players, query]);
@@ -119,7 +132,7 @@ export default function App() {
         <div className="content">
           <div className="eyebrow">SQUAD MANAGEMENT PLATFORM · M2</div>
           <h1>{section==="Overview" ? <>Control the squad.<br/><span>Track every week.</span></> : <>{section}.<br/><span>Team operations.</span></>}</h1>
-          <p className="intro">A focused workspace for tournament results, player development and team performance. Records below are currently stored locally on this browser.</p>
+          <p className="intro">A focused workspace for tournament results, player development and team performance. Match entries and training notes are browser-local; team membership and weekly match rows use Supabase.</p>
           {notice && <div className="notice">{notice}<button onClick={()=>setNotice("")}>×</button></div>}
           {section==="Overview" && <>
             <div className="section-heading"><div><div className="eyebrow">AT A GLANCE</div><h2>Squad overview</h2></div><span className="phase-pill">M2 / INTERACTIVE</span></div>            <section className="connection-panel"><div><div className="eyebrow">SUPABASE AUTH</div><h3>{signedIn ? "Cloud account connected" : "Sign in to sync"}</h3><p>{signedIn ? sessionEmail+" · tournament match records sync to TITAN BOLD" : "Email/password account access. Local progress remains available offline."}</p></div>{signedIn?<button className="primary-button" onClick={signOut}>Sign out</button>:<div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Display / IGN name"/><input type="email" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="Email"/><input type="password" value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Password"/><button className="primary-button" onClick={signIn}>Sign in</button><button className="secondary-button" onClick={signUp}>Create account</button></div>}</section>
@@ -146,7 +159,7 @@ export default function App() {
             <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><span className="phase-pill">42 MATCH SLOTS</span></div>
             <div className="toolbar"><label>Week <input value={week} onChange={e=>setWeek(e.target.value)} placeholder="YYYY-W##"/></label><label>Day <select value={day} onChange={e=>setDay(Number(e.target.value))}>{Array.from({length:7},(_,i)=><option value={i+1} key={i}>Day {i+1} · {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][i]}</option>)}</select></label></div>
             <div className="match-grid">{Array.from({length:6},(_,i)=>{const key=week+"-D"+day+"-M"+(i+1);const m=matches[key]||{placement:12,kills:0};return <article className="match-card" key={key}><div className="card-index">MATCH 0{i+1}</div><h3>Match {i+1}</h3><label>Placement<select value={m.placement} onChange={e=>saveMatch(key,"placement",Number(e.target.value))}>{Array.from({length:12},(_,j)=><option key={j} value={j+1}>{j+1===12?"12+ / Other":j+1}</option>)}</select></label><label>Kills<input type="number" min="0" value={m.kills} onChange={e=>saveMatch(key,"kills",Math.max(0,Number(e.target.value)))}/></label></article>})}</div>
-            {signedIn&&team&&<section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">TEAM CLOUD SCOREBOARD</div><h3>Shared results · {sharedMatches.length}/42 slots</h3><p>Results submitted by team owner/coach appear here for every team member.</p><div className="player-list">{sharedMatches.map(m=><article className="player-row" key={m.match_day+"-"+m.match_number}><span className="player-id">D{m.match_day} M{m.match_number}</span><div><b>Place {m.placement??"—"} · {m.kills??0} kills · {m.points??0} pts</b><small>{m.status}</small></div></article>)}</div></section>}
+            {signedIn&&team&&<section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">TEAM CLOUD SCOREBOARD</div><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,flexWrap:"wrap"}}><h3>Shared results · {sharedMatches.filter(m=>m.placement!=null).length}/42 scored slots</h3><button className="secondary-button" onClick={refreshSharedMatches}>Refresh</button></div><p>Team-wide weekly match ledger. Blank slots are seeded; scores sync from the owner/coach browser.</p><div className="player-list">{sharedMatches.map(m=><article className="player-row" key={m.match_day+"-"+m.match_number}><span className="player-id">D{m.match_day} M{m.match_number}</span><div><b>Place {m.placement??"—"} · {m.kills??0} kills · {m.points??0} pts</b><small>{m.status}</small></div></article>)}</div></section>}
             <p className="footer-note">Prototype scoring: placement 1–10 = 12,9,8,7,6,5,4,3,2,1 points; 11/12 = 0. Add kills. Not an official tournament scoring preset.</p>
           </>}
           {section==="Training" && <>
@@ -163,9 +176,9 @@ export default function App() {
           {section==="Analytics" && <>
             <div className="section-heading"><div><div className="eyebrow">PERFORMANCE SNAPSHOT</div><h2>Current week</h2></div><span className="phase-pill">BROWSER DATA</span></div>
             <div className="foundation-grid">{[["Recorded matches",totalMatches],["Placement + kills points",points],["Average kills",totalMatches?(Object.values(matches).reduce((s,m)=>s+m.kills,0)/totalMatches).toFixed(1):"0.0"],["Roster size",players.length]].map(([a,b],i)=><article className="foundation-card" key={String(a)}><div className="card-index">0{i+1}</div><div className="card-label">{a}</div><div className="card-value">{b}</div></article>)}</div>
-            <section className="connection-panel"><div><div className="eyebrow">DATA WARNING</div><h3>Not yet shared across players</h3><p>These analytics are browser-local prototype data. Supabase tables, team login and realtime sync are the next integration stage.</p></div></section>
+            <section className="connection-panel"><div><div className="eyebrow">DATA WARNING</div><h3>Analytics are still browser-local</h3><p>Tournament match rows are shared in Supabase; these summary metrics still calculate from this browser’s local entries.</p></div></section>
           </>}
-          <footer className="footer-note">M2 WORKSPACE PROTOTYPE · LOCAL STORAGE · NO SHARED LIVE DATA YET</footer>
+          <footer className="footer-note">M2 · TEAM CLOUD MATCH LEDGER + LOCAL TRAINING / ANALYTICS</footer>
         </div>
       </section>
     </main>
