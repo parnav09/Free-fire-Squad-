@@ -149,7 +149,7 @@ export default function App() {
         <div className="brand-mark">S</div><div className="brand-copy"><span className="brand-name">SQUAD OS</span><span className="brand-caption">TEAM OPERATIONS</span></div>
         <div className="sidebar-divider"/>{!onboarding&&<><div className="nav-label">WORKSPACE</div>
         {nav.map(n => <button key={n} className={"nav-item "+(section===n?"nav-item-active":"nav-item-muted")} onClick={()=>setSection(n)}><span className="nav-dot"/>{n}</button>)}
-        <div className="sidebar-bottom">M2 · WORKSPACE</div>
+        <div className="sidebar-bottom">SQUAD OS · WORKSPACE</div></>}
       </aside>
       <section className="main-panel">
         <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><div className="system-status"><i/> {connection.toUpperCase()}</div></header>
