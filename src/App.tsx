@@ -27,6 +27,7 @@ export default function App() {
   const [sessionEmail, setSessionEmail] = useState("");
   const [sessionPassword, setSessionPassword] = useState("");
   const [signedIn, setSignedIn] = useState(false);
+  const [emailVerified,setEmailVerified]=useState(false);
   const [newName, setNewName] = useState("");
   const [newRole, setNewRole] = useState("Substitute");
   const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-drills") || "{}"); } catch { return {}; } });
@@ -61,10 +62,10 @@ export default function App() {
     let alive = true;
     if (!supabase) { setConnection("Missing project settings"); return; }
     supabase.auth.getSession().then(({ data, error }) => {
-      if (alive) { setSignedIn(!!data.session); setSessionEmail(data.session?.user.email || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+      if (alive) { setSignedIn(!!data.session); setEmailVerified(!!data.session?.user.email_confirmed_at); setSessionEmail(data.session?.user.email || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     }).catch(() => alive && setConnection("Configured · network unavailable"));
     const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (alive) { setSignedIn(!!session); setSessionEmail(session?.user.email || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+      if (alive) { setSignedIn(!!session); setEmailVerified(!!session?.user.email_confirmed_at); setSessionEmail(session?.user.email || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     });
     return () => { alive = false; authSub.subscription.unsubscribe(); };
   }, []);
@@ -75,6 +76,7 @@ export default function App() {
   const updateAssignment=async(id:string,status:string)=>{if(!supabase)return;const {error}=await supabase.from("player_drill_assignments").update({status,completed_at:status==="completed"?new Date().toISOString():null}).eq("id",id);if(error){setNotice(error.message);return;}await loadAssignments();};
   const signIn = async () => { if (!supabase) return; const { error } = await supabase.auth.signInWithPassword({ email: sessionEmail.trim(), password: sessionPassword }); setNotice(error ? error.message : "Signed in. Cloud sync is enabled."); };
   const signUp = async () => { if (!supabase) return; if (!displayName.trim()) { setNotice("Enter your in-game/display name before creating account."); return; } const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword, options: { data: { display_name: displayName.trim() } } }); setNotice(error ? error.message : "Account created. If email verification is enabled, verify email then sign in."); };
+  const resendVerification=async()=>{if(!supabase||!sessionEmail.trim())return;const {error}=await supabase.auth.resend({type:"signup",email:sessionEmail.trim()});setNotice(error?error.message:"Verification email sent again. Check inbox and spam.");};
   const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
   const loadTeam = async () => {
     if (!supabase) return;
@@ -139,19 +141,32 @@ export default function App() {
     setPlayers(prev => [...prev, { id: "P" + (prev.length + 1), name: newName.trim(), role: newRole, status: "Active" }]);
     setNewName(""); setNotice("Player added to this device.");
   };
-  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Analytics"];
+  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Assignments", "Analytics"];
+  const onboarding=!signedIn||!emailVerified||!team;
   return (
     <main className="app-shell">
       <aside className="sidebar">
         <div className="brand-mark">S</div><div className="brand-copy"><span className="brand-name">SQUAD OS</span><span className="brand-caption">TEAM OPERATIONS</span></div>
-        <div className="sidebar-divider"/><div className="nav-label">WORKSPACE</div>
+        <div className="sidebar-divider"/>{!onboarding&&<><div className="nav-label">WORKSPACE</div>
         {nav.map(n => <button key={n} className={"nav-item "+(section===n?"nav-item-active":"nav-item-muted")} onClick={()=>setSection(n)}><span className="nav-dot"/>{n}</button>)}
         <div className="sidebar-bottom">M2 · WORKSPACE</div>
       </aside>
       <section className="main-panel">
         <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><div className="system-status"><i/> {connection.toUpperCase()}</div></header>
         <div className="content">
-          <div className="eyebrow">SQUAD MANAGEMENT PLATFORM · M2</div>
+          {onboarding?<>
+            <div className="eyebrow">SQUAD OS · ACCOUNT SETUP</div><h1>One step at a time.<br/><span>Squad, synced.</span></h1>
+            <p className="intro">Complete each step in order. The next screen unlocks automatically after confirmation.</p>
+            <section className="connection-panel" style={{display:"block",maxWidth:680}}>
+              <div className="eyebrow">STEP 1 · ACCOUNT</div><h2>{signedIn?(emailVerified?"Email verified ✓":"Verify your email"):"Sign in / Create account"}</h2>
+              {!signedIn?<div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="In-game name / IGN"/><input type="email" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="Gmail / email address"/><input type="password" value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Password (min 6 characters)"/><button className="primary-button" onClick={signIn}>Sign in</button><button className="secondary-button" onClick={signUp}>Create account</button></div>:!emailVerified?<><p>Verification email sent to <b>{sessionEmail}</b>. Open Gmail, tap the Supabase confirmation link, then return here. After confirmation, this page advances.</p><button className="primary-button" onClick={resendVerification}>Resend verification email</button><button className="secondary-button" onClick={async()=>{await supabase?.auth.refreshSession();const {data}=await supabase!.auth.getSession();setEmailVerified(!!data.session?.user.email_confirmed_at);setNotice(data.session?.user.email_confirmed_at?"Email verified!":"Still waiting for email verification.");}}>I verified · Check again</button><button className="secondary-button" onClick={signOut}>Use another account</button></>:<>
+              <p>Verified account: <b>{sessionEmail}</b></p><div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Your IGN / display name"/><button className="secondary-button" onClick={async()=>{if(!displayName.trim())return setNotice("Enter IGN first.");const {error}=await supabase!.rpc("set_display_name",{p_name:displayName.trim()});setNotice(error?error.message:"IGN saved.");}}>Save IGN</button></div>
+            </>}
+            {signedIn&&emailVerified&&<><div className="divider"/><div className="eyebrow">STEP 2 · TEAM</div><h2>{team?"Team connected ✓":"Create or join a team"}</h2>{team?<><p><b>{team.team_name}</b> · {team.membership_role} · Invite code {team.invite_code}</p><button className="primary-button" onClick={()=>setSection("Overview")}>Open SQUAD OS →</button></>:<><p>Create your squad, or join an existing team using its invite code.</p><div className="add-form"><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="New team name"/><input value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Team description (optional)"/><button className="primary-button" disabled={teamBusy||!teamName.trim()} onClick={createTeam}>{teamBusy?"Creating…":"Create team"}</button></div><div className="add-form" style={{marginTop:12}}><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase())} placeholder="Existing team invite code" maxLength={8}/><button className="secondary-button" disabled={teamBusy||teamCode.trim().length<6} onClick={joinTeam}>{teamBusy?"Joining…":"Join team"}</button></div></>}</>}
+          </section>
+          </>:<>
+          <div className="eyebrow">SQUAD MANAGEMENT PLATFORM · M3</div>
+
           <h1>{section==="Overview" ? <>Control the squad.<br/><span>Track every week.</span></> : <>{section}.<br/><span>Team operations.</span></>}</h1>
           <p className="intro">A focused workspace for tournament results, player development and team performance. Match entries and training notes are browser-local; team membership and weekly match rows use Supabase.</p>
           {notice && <div className="notice">{notice}<button onClick={()=>setNotice("")}>×</button></div>}
