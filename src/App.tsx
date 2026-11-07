@@ -205,8 +205,8 @@ export default function App() {
             <div className="section-heading"><div><div className="eyebrow">INDIVIDUAL PRACTICE</div><h2>Drill assignments</h2></div><span className="phase-pill">{assignmentRows.filter(x=>x.status==="completed").length}/{assignmentRows.length} DONE</span></div>
             <section className="connection-panel" style={{display:"block"}}>
               {!signedIn||!team?<p>Sign in and join/create a squad to use cloud assignments.</p>:<>
-              <div className="toolbar"><label>Player<select value={assignmentPlayer} onChange={e=>setAssignmentPlayer(e.target.value)}><option value="">Choose player</option>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · P{m.player_number||"—"}</option>)}</select></label><label>Due date<input type="date" value={assignmentDate} onChange={e=>setAssignmentDate(e.target.value}/></label></div>
-              <label className="notes-label">Drill title<input value={assignmentTitle} onChange={e=>setAssignmentTitle(e.target.value}/></label><label className="notes-label">Exact task<textarea value={assignmentDesc} onChange={e=>setAssignmentDesc(e.target.value}/></label>
+              <div className="toolbar"><label>Player<select value={assignmentPlayer} onChange={e=>setAssignmentPlayer(e.target.value)}><option value="">Choose player</option>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · P{m.player_number||"—"}</option>)}</select></label><label>Due date<input type="date" value={assignmentDate} onChange={e=>setAssignmentDate(e.target.value)}/></label></div>
+              <label className="notes-label">Drill title<input value={assignmentTitle} onChange={e=>setAssignmentTitle(e.target.value)}/></label><label className="notes-label">Exact task<textarea value={assignmentDesc} onChange={e=>setAssignmentDesc(e.target.value)}/></label>
               <button className="primary-button" onClick={createAssignment} disabled={!assignmentPlayer||!assignmentTitle.trim()}>Assign drill</button>
               </>}
             </section>
