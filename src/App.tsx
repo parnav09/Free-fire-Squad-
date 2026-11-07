@@ -27,6 +27,8 @@ export default function App() {
   const [sessionEmail, setSessionEmail] = useState("");
   const [sessionPassword, setSessionPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [signupStage, setSignupStage] = useState<"details"|"verify">("details");
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signup");
   const [showPassword, setShowPassword] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
@@ -90,8 +92,23 @@ export default function App() {
     if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(sessionEmail.trim())) return setNotice("Enter a valid email address.");
     if (sessionPassword.length < 8) return setNotice("Password must be at least 8 characters.");
     if (sessionPassword !== confirmPassword) return setNotice("Passwords do not match.");
-    const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword, options: { data: { display_name: displayName.trim() }, emailRedirectTo: window.location.origin } });
-    setNotice(error ? error.message : "Account created. If you are not signed in automatically, disable Email Confirmations in Supabase Auth settings.");
+    const { error } = await supabase.auth.signUp({ email: sessionEmail.trim().toLowerCase(), password: sessionPassword, options: { data: { display_name: displayName.trim() } } });
+    if (error) return setNotice(error.message);
+    setSignupStage("verify");
+    setNotice("Verification code sent to your email. Enter the 6-digit code to activate your account.");
+  };
+  const verifySignupCode = async () => {
+    if (!supabase) return;
+    if (!/^\\d{6}$/.test(verificationCode.trim())) return setNotice("Enter the 6-digit email code.");
+    const { error } = await supabase.auth.verifyOtp({ email: sessionEmail.trim().toLowerCase(), token: verificationCode.trim(), type: "signup" });
+    if (error) return setNotice(error.message);
+    setSignupStage("details"); setVerificationCode(""); setConfirmPassword("");
+    setNotice("Email verified. Account activated and signed in.");
+  };
+  const resendSignupCode = async () => {
+    if (!supabase) return;
+    const { error } = await supabase.auth.resend({ type: "signup", email: sessionEmail.trim().toLowerCase() });
+    setNotice(error ? error.message : "A fresh verification code has been sent.");
   };
 
   const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
@@ -175,15 +192,18 @@ export default function App() {
             {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>}
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
               {!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
-                <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setNotice("");}}>Sign in</button></div>
+                <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setSignupStage("details");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setSignupStage("details");setNotice("");}}>Sign in</button></div>
                 <div className="auth-fields">
-                  {authMode==="signup"&&<label className="auth-field"><span>IGN / DISPLAY NAME</span><input autoComplete="nickname" value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Your in-game name"/></label>}
-                  <label className="auth-field"><span>EMAIL</span><input autoComplete="email" type="email" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="Email address"/></label>
-                  <label className="auth-field"><span>PASSWORD</span><input autoComplete={authMode==="signup"?"new-password":"current-password"} type={showPassword?"text":"password"} value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder={authMode==="signup"?"Create password (8+ characters)":"Your password"}/></label>
-                  {authMode==="signup"&&<label className="auth-field"><span>CONFIRM PASSWORD</span><input autoComplete="new-password" type={showPassword?"text":"password"} value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} placeholder="Repeat password"/></label>}
+                  {authMode==="signup"&&signupStage==="details"&&<><label className="auth-field"><span>IGN / IN-GAME NAME</span><input autoComplete="nickname" value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Your in-game name"/></label>
+                  <label className="auth-field"><span>GMAIL / EMAIL</span><input autoComplete="email" type="email" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="name@gmail.com"/></label>
+                  <label className="auth-field"><span>PASSWORD</span><input autoComplete="new-password" type={showPassword?"text":"password"} value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Create password (8+ characters)"/></label>
+                  <label className="auth-field"><span>CONFIRM PASSWORD</span><input autoComplete="new-password" type={showPassword?"text":"password"} value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} placeholder="Repeat password"/></label></>}
+                  {authMode==="signup"&&signupStage==="verify"&&<><div className="otp-info"><b>Check your inbox</b><span>We sent a 6-digit code to</span><strong>{sessionEmail}</strong></div><label className="auth-field"><span>EMAIL VERIFICATION CODE</span><input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={verificationCode} onChange={e=>setVerificationCode(e.target.value.replace(/\\D/g,"").slice(0,6))} placeholder="000000"/></label><button className="secondary-button otp-resend" onClick={resendSignupCode}>Resend code</button></>}
+                  {authMode==="signin"&&<><label className="auth-field"><span>EMAIL</span><input autoComplete="email" type="email" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="Your verified email"/></label><label className="auth-field"><span>PASSWORD</span><input autoComplete="current-password" type={showPassword?"text":"password"} value={sessionPassword} onChange={e=>setSessionPassword(e.target.value} placeholder="Your password"/></label></>}
                   <label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label>
-                  <button className="primary-button auth-submit" disabled={!sessionEmail.trim()||!sessionPassword||(authMode==="signup"&&(!displayName.trim()||!confirmPassword))} onClick={authMode==="signup"?signUp:signIn}>{authMode==="signup"?"Create account":"Sign in"} <span>→</span></button>
-                </div><div className="auth-foot">Supabase Auth · Password protected</div>
+                  <button className="primary-button auth-submit" disabled={authMode==="signup"?(signupStage==="details"?(!sessionEmail.trim()||!sessionPassword||!displayName.trim()||!confirmPassword):verificationCode.length!==6):(!sessionEmail.trim()||!sessionPassword)} onClick={authMode==="signup"?(signupStage==="details"?signUp:verifySignupCode):signIn}>{authMode==="signup"?(signupStage==="details"?"Send verification code":"Verify & create account"):"Sign in"} <span>→</span></button>
+                  {authMode==="signup"&&signupStage==="verify"&&<button className="text-button" onClick={()=>setSignupStage("details")}>← Edit account details</button>}
+                </div></div><div className="auth-foot">Supabase Auth · Password protected</div>
               </div></>:<>
                 <h2>Account connected</h2><p>Signed in as <b>{sessionEmail}</b></p>
                 <div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="IGN / display name"/><button className="secondary-button" onClick={async()=>{if(!displayName.trim())return setNotice("Enter IGN first.");const {error}=await supabase!.rpc("set_display_name",{p_name:displayName.trim()});setNotice(error?error.message:"IGN saved.");}}>Save IGN</button><button className="secondary-button" onClick={signOut}>Sign out</button></div>
