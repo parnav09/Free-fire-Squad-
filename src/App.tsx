@@ -53,6 +53,7 @@ export default function App() {
   const [teamName, setTeamName] = useState("");
   const [teamCode, setTeamCode] = useState("");
   const [teamDescription, setTeamDescription] = useState("");
+  const [teamScreen, setTeamScreen] = useState<"choice" | "create" | "join">("choice");
   const [team, setTeam] = useState<{id:string;team_name:string;invite_code:string;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
   const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
   const [teamBusy, setTeamBusy] = useState(false);
@@ -179,7 +180,7 @@ export default function App() {
     const {data:profiles,error:pe}=await supabase.from("profiles").select("id,display_name").in("id",ids); if(pe)throw pe;
     setTeamMembers((members||[]).map(x=>({...x,display_name:profiles?.find(p=>p.id===x.user_id)?.display_name||"Player"})));
   };
-  const createTeam = async () => { if(!supabase||!teamName.trim())return; setTeamBusy(true); try { if(displayName.trim()){const {error:ne}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});if(ne)throw ne;} const {error}=await supabase.rpc("create_team",{p_name:teamName.trim(),p_description:teamDescription.trim(),p_timezone:"Asia/Kolkata"}); if(error)throw error; await loadTeam();setTeamName("");setTeamDescription("");setNotice("Team created. Share the Invite Code with your squad."); } catch(e){setNotice(e instanceof Error?e.message:"Team creation failed.");} finally{setTeamBusy(false);} };
+  const createTeam = async () => { if(!supabase||!teamName.trim()||!displayName.trim()){setNotice("Enter your IGN and team name first.");return;} setTeamBusy(true); try { if(displayName.trim()){const {error:ne}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});if(ne)throw ne;} const {error}=await supabase.rpc("create_team",{p_name:teamName.trim(),p_description:teamDescription.trim(),p_timezone:"Asia/Kolkata"}); if(error)throw error; await loadTeam();setTeamName("");setTeamDescription("");setNotice("Team created. Share the Invite Code with your squad."); } catch(e){setNotice(e instanceof Error?e.message:"Team creation failed.");} finally{setTeamBusy(false);} };
   const joinTeam = async () => { if(!supabase||!teamCode.trim())return; setTeamBusy(true); try { if(!displayName.trim()){throw new Error("Enter your IGN/display name first.");} const {error:ne}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});if(ne)throw ne; const {error}=await supabase.rpc("join_team",{p_code:teamCode.trim().toUpperCase()}); if(error)throw error; await loadTeam();setTeamCode("");setNotice("Joined team successfully."); } catch(e){setNotice(e instanceof Error?e.message:"Could not join team.");} finally{setTeamBusy(false);} };
   const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { if(player>=1&&player<=5){const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error;} const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
   useEffect(()=>{if(signedIn)loadTeam().catch(e=>setNotice(e instanceof Error?e.message:"Could not load team."));else{setTeam(null);setTeamMembers([]);setMatchesHydratedKey("");}},[signedIn]);
@@ -300,14 +301,51 @@ export default function App() {
                   {authMode==="signin"&&<div className="auth-reset"><label className="auth-field"><span>GMAIL FOR PASSWORD RESET</span><input type="email" autoComplete="email" value={recoveryEmail} onChange={e=>setRecoveryEmail(e.target.value)} placeholder="Enter your account Gmail"/></label><button className="text-button" onClick={requestPasswordReset}>Forgot password? Send reset link</button></div>}
                   {authMode==="signup"&&<p className="auth-foot">Existing accounts can sign in with username or Gmail. Use the Gmail reset link if you no longer know the password.</p>}
                 </div><div className="auth-foot">SQUAD OS · Username/Gmail + password</div></div></>:<>
-                <h2>Account connected</h2><p>Signed in as <b>{sessionUsername}</b></p>
-                <div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="IGN / display name"/><button className="secondary-button" onClick={async()=>{if(!displayName.trim())return setNotice("Enter IGN first.");const {error}=await supabase!.rpc("set_display_name",{p_name:displayName.trim()});setNotice(error?error.message:"IGN saved.");}}>Save IGN</button><button className="secondary-button" onClick={signOut}>Sign out</button></div>
-                <div className="divider"/><div className="eyebrow">TEAM SETUP</div><h2>{team?"Team connected ✓":"Create or join a team"}</h2>
-                {team?<><p><b>{team.team_name}</b> · {team.membership_role} · Invite code {team.invite_code}</p><button className="primary-button" onClick={()=>setSection("Overview")}>Open SQUAD OS →</button></>:<>
-                  <p>Create your squad, or join an existing team using its invite code.</p>
-                  <div className="add-form"><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="New team name"/><input value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Team description (optional)"/><button className="primary-button" disabled={teamBusy||!teamName.trim()} onClick={createTeam}>{teamBusy?"Creating…":"Create team"}</button></div>
-                  <div className="add-form" style={{marginTop:12}}><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase())} placeholder="Existing team invite code" maxLength={8}/><button className="secondary-button" disabled={teamBusy||teamCode.trim().length<6} onClick={joinTeam}>{teamBusy?"Joining…":"Join team"}</button></div>
-                </>}
+                <div className="team-onboarding">
+                  <div className="eyebrow">STEP 02 · TEAM SETUP</div>
+                  {teamScreen==="choice" ? <>
+                    <div className="team-hero">
+                      <span className="team-step">ACCOUNT READY</span>
+                      <h2>Choose your team path.</h2>
+                      <p>Your login is complete. Now create a new squad or join one that already exists. These are separate steps and separate screens.</p>
+                    </div>
+                    <div className="team-choice-grid">
+                      <button className="team-choice-card" onClick={()=>{setTeamScreen("create");setNotice("");}}>
+                        <span className="team-choice-icon">＋</span>
+                        <span className="eyebrow">START A NEW SQUAD</span>
+                        <strong>Create New Team</strong>
+                        <small>Set up your team space and become its owner.</small>
+                        <span className="team-choice-action">Continue <b>→</b></span>
+                      </button>
+                      <button className="team-choice-card" onClick={()=>{setTeamScreen("join");setNotice("");}}>
+                        <span className="team-choice-icon">↗</span>
+                        <span className="eyebrow">ALREADY HAVE A SQUAD?</span>
+                        <strong>Join Existing Team</strong>
+                        <small>Enter the invite code shared by your team owner.</small>
+                        <span className="team-choice-action">Continue <b>→</b></span>
+                      </button>
+                    </div>
+                    <div className="team-onboarding-footer"><span>Signed in as <b>{sessionUsername}</b></span><button className="text-button" onClick={signOut}>Sign out</button></div>
+                  </> : teamScreen==="create" ? <>
+                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}>← Back to team options</button>
+                    <div className="team-hero"><span className="team-step">TEAM SETUP · 01 / 02</span><h2>Create your team.</h2><p>Enter the team identity. An invite code will be generated after successful creation.</p></div>
+                    <div className="team-form-card">
+                      <label className="auth-field"><span>YOUR IN-GAME NAME / IGN</span><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Enter your Free Fire IGN" maxLength={32}/></label>
+                      <label className="auth-field"><span>TEAM NAME</span><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="e.g. NOVA ESPORTS" maxLength={40}/></label>
+                      <label className="auth-field"><span>TEAM DESCRIPTION · OPTIONAL</span><textarea value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Short description of your squad" rows={3}/></label>
+                      <button className="primary-button auth-submit" disabled={teamBusy||!displayName.trim()||!teamName.trim()} onClick={createTeam}>{teamBusy?"Creating team…":"Create Team →"}</button>
+                    </div>
+                  </> : <>
+                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}>← Back to team options</button>
+                    <div className="team-hero"><span className="team-step">TEAM SETUP · 02 / 02</span><h2>Join your squad.</h2><p>Use the invite code provided by your team owner. You will join that team's shared workspace.</p></div>
+                    <div className="team-form-card">
+                      <label className="auth-field"><span>YOUR IN-GAME NAME / IGN</span><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Enter your Free Fire IGN" maxLength={32}/></label>
+                      <label className="auth-field"><span>TEAM INVITE CODE</span><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase().replace(/\s/g,""))} placeholder="Enter invite code" maxLength={8} autoCapitalize="characters"/></label>
+                      <button className="primary-button auth-submit" disabled={teamBusy||!displayName.trim()||teamCode.trim().length<6} onClick={joinTeam}>{teamBusy?"Joining team…":"Join Existing Team →"}</button>
+                    </div>
+                  </>}
+                </div>
+              </>}
               </>}
             </section>
           </>:<>
