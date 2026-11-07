@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { isSupabaseConfigured, supabase } from "./lib/supabase/client";
 
-type Section = "Overview" | "Tournament" | "Training" | "Players" | "Analytics";
+type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Analytics";
 type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
   { id: "P1", name: "Player 1", role: "Primary Rusher", status: "Active" },
@@ -41,6 +41,12 @@ export default function App() {
   const [teamBusy, setTeamBusy] = useState(false);
   const [cloudTraining, setCloudTraining] = useState<Record<string, boolean>>({});
   const [trainingDate, setTrainingDate] = useState(() => new Date().toLocaleDateString("en-CA"));
+  const [evalPlayer,setEvalPlayer]=useState("P1");
+  const [evalDate,setEvalDate]=useState(()=>new Date().toLocaleDateString("en-CA"));
+  const [evalScores,setEvalScores]=useState<Record<string,number>>({communication:5,coordination:5,decision_making:5,role_execution:5,map_awareness:5});
+  const [evalNotes,setEvalNotes]=useState("");
+  const [evalTarget,setEvalTarget]=useState("");
+  const [evalHistory,setEvalHistory]=useState<Array<{id:string;player_id:string;score_date:string;communication:number;coordination:number;decision_making:number;role_execution:number;map_awareness:number;total:number|null;notes:string|null;improvement_target:string|null}>>([]);
 
   useEffect(() => { localStorage.setItem("squad-os-roster", JSON.stringify(players)); }, [players]);
   useEffect(() => { localStorage.setItem("squad-os-matches", JSON.stringify(matches)); }, [matches]);
@@ -110,6 +116,8 @@ export default function App() {
     } catch (e) { setNotice(e instanceof Error ? e.message : "Refresh failed."); }
   };
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_log").select("activity,done").eq("team_id",team.id).eq("log_date",trainingDate);if(error)throw error;if(!cancelled)setCloudTraining(Object.fromEntries((data||[]).map(x=>[x.activity,!!x.done])));}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Cloud training load failed.");}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
+  useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100);if(error)throw error;if(!cancelled)setEvalHistory(data||[]);}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Evaluation history unavailable.");}})();return()=>{cancelled=true};},[signedIn,team?.id]);
+  const saveEvaluation=async()=>{if(!supabase||!team||!signedIn){setNotice("Sign in and join a team to save evaluations in cloud.");return;}try{const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Session expired.");const {error}=await supabase.from("daily_scores").insert({team_id:team.id,score_date:evalDate,player_id:evalPlayer,evaluator_id:user.id,...evalScores,notes:evalNotes.trim()||null,improvement_target:evalTarget.trim()||null});if(error)throw error;const {data,error:he}=await supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100);if(he)throw he;setEvalHistory(data||[]);setNotice("Player evaluation saved to squad cloud.");}catch(e){setNotice(e instanceof Error?e.message:"Evaluation save failed.");}};
   const saveCloudTraining = async (activity:string,done:boolean) => {setCloudTraining(p=>({...p,[activity]:done}));if(!supabase||!team||!signedIn)return;try{const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {error}=await supabase.from("training_log").upsert({team_id:team.id,log_date:trainingDate,activity,done,updated_by:user.id},{onConflict:"team_id,log_date,activity"});if(error)throw error;setNotice("Training checklist synced for the squad.");}catch(e){setNotice(e instanceof Error?e.message:"Cloud training save failed.");}};
   const totalMatches = Object.keys(matches).length;
   const points = Object.values(matches).reduce((sum, m) => sum + (m.placement === 1 ? 12 : m.placement === 2 ? 9 : m.placement === 3 ? 8 : m.placement === 4 ? 7 : m.placement === 5 ? 6 : m.placement === 6 ? 5 : m.placement === 7 ? 4 : m.placement === 8 ? 3 : m.placement === 9 ? 2 : m.placement === 10 ? 1 : 0) + m.kills, 0);
@@ -122,7 +130,7 @@ export default function App() {
     setPlayers(prev => [...prev, { id: "P" + (prev.length + 1), name: newName.trim(), role: newRole, status: "Active" }]);
     setNewName(""); setNotice("Player added to this device.");
   };
-  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Analytics"];
+  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Analytics"];
   return (
     <main className="app-shell">
       <aside className="sidebar">
@@ -176,6 +184,18 @@ export default function App() {
             <input className="search-input" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search players or roles…"/>
             <div className="player-list">{filteredPlayers.map(p=><article className="player-row" key={p.id}><span className="player-id">{p.id}</span><div><b>{p.name}</b><small>{p.role}</small></div><span className="active-tag">{p.status}</span><button className="delete-button" onClick={()=>setPlayers(prev=>prev.filter(x=>x.id!==p.id))}>Remove</button></article>)}</div>
             <section className="connection-panel add-player"><div><div className="eyebrow">ADD PLAYER</div><h3>Roster slot</h3><p>Maximum ten roster entries in this local prototype.</p></div><div className="add-form"><input value={newName} onChange={e=>setNewName(e.target.value)} placeholder="Player name"/><select value={newRole} onChange={e=>setNewRole(e.target.value)}>{["Primary Rusher","Secondary Rusher","Third Rusher / Flank","Sniper / IGL","Substitute"].map(x=><option key={x}>{x}</option>)}</select><button className="primary-button" disabled={players.length>=10||!newName.trim()} onClick={addPlayer}>Add</button></div></section>
+          </>}
+          {section==="Evaluation" && <>
+            <div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT</div><h2>Daily evaluation</h2></div><span className="phase-pill">{signedIn&&team?"SUPABASE":"CLOUD LOGIN REQUIRED"}</span></div>
+            <section className="connection-panel" style={{display:"block"}}>
+              <div className="toolbar"><label>Player<select value={evalPlayer} onChange={e=>setEvalPlayer(e.target.value)}>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · {m.assigned_role||("P"+m.player_number)}</option>)}{teamMembers.length===0&&players.map(p=><option key={p.id} value={p.id}>{p.id} · {p.name}</option>)}</select></label><label>Date<input type="date" value={evalDate} onChange={e=>setEvalDate(e.target.value)}/></label></div>
+              <p>Rate observable performance from 0–10. Score saves to the shared team record.</p>
+              <div className="drill-list">{[["communication","Communication"],["coordination","Coordination"],["decision_making","Decision Making"],["role_execution","Role Execution"],["map_awareness","Map Awareness"]].map(([k,label])=><label className="drill-row" key={k}><span><b>{label}</b><small>{evalScores[k]} / 10</small></span><input type="range" min="0" max="10" value={evalScores[k]} onChange={e=>setEvalScores(p=>({...p,[k]:Number(e.target.value)}))}/></label>)}</div>
+              <div className="foundation-card" style={{marginTop:12}}><div className="card-label">TOTAL SCORE</div><div className="card-value">{Object.values(evalScores).reduce((a,b)=>a+b,0)} / 50</div></div>
+              <label className="notes-label">Improvement target<input value={evalTarget} onChange={e=>setEvalTarget(e.target.value)} placeholder="One measurable focus for next session"/></label><label className="notes-label">Evaluator notes<textarea value={evalNotes} onChange={e=>setEvalNotes(e.target.value)} placeholder="What worked, what needs correction…"/></label>
+              <button className="primary-button" style={{marginTop:14}} onClick={saveEvaluation}>Save evaluation to cloud</button>
+            </section>
+            <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">RECENT EVALUATIONS · {evalHistory.length}</div><div className="player-list">{evalHistory.map(e=><article className="player-row" key={e.id}><span className="player-id">{e.score_date}</span><div><b>{teamMembers.find(m=>m.user_id===e.player_id)?.display_name||e.player_id.slice(0,8)} · {e.total??"—"}/50</b><small>Com {e.communication} · Coord {e.coordination} · Decisions {e.decision_making} · Role {e.role_execution} · Map {e.map_awareness}</small>{e.improvement_target&&<small>Target: {e.improvement_target}</small>}{e.notes&&<small>Notes: {e.notes}</small>}</div></article>)}</div></section>
           </>}
           {section==="Analytics" && <>
             <div className="section-heading"><div><div className="eyebrow">PERFORMANCE SNAPSHOT</div><h2>Current week</h2></div><span className="phase-pill">BROWSER DATA</span></div>
