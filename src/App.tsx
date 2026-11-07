@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { isSupabaseConfigured, supabase } from "./lib/supabase/client";
 
-type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics";
+type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Settings";
 type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
   { id: "P1", name: "Player 1", role: "Primary Rusher", status: "Active" },
@@ -10,6 +10,14 @@ const initialPlayers: Player[] = [
   { id: "P4", name: "Player 4", role: "Sniper / IGL", status: "Active" },
 ];
 
+async function makeSquareTeamLogo(file: File, x: number, y: number): Promise<File> {
+  const image = await new Promise<HTMLImageElement>((resolve, reject) => { const img = new Image(); img.onload=()=>resolve(img); img.onerror=reject; img.src=URL.createObjectURL(file); });
+  const side=Math.min(image.naturalWidth,image.naturalHeight), sx=(image.naturalWidth-side)*(x/100), sy=(image.naturalHeight-side)*(y/100);
+  const canvas=document.createElement("canvas");canvas.width=512;canvas.height=512;const ctx=canvas.getContext("2d");if(!ctx)throw new Error("Image crop is unavailable.");
+  ctx.drawImage(image,sx,sy,side,side,0,0,512,512);URL.revokeObjectURL(image.src);
+  const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Could not crop image.")),"image/jpeg",.88));
+  return new File([blob],"team-logo.jpg",{type:"image/jpeg"});
+}
 function currentISOWeekKey(date = new Date()): string {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const weekday = d.getUTCDay() || 7;
@@ -55,6 +63,8 @@ export default function App() {
   const [teamDescription, setTeamDescription] = useState("");
   const [teamLogoFile, setTeamLogoFile] = useState<File|null>(null);
   const [teamLogoPreview, setTeamLogoPreview] = useState("");
+  const [teamLogoCropX, setTeamLogoCropX] = useState(50);
+  const [teamLogoCropY, setTeamLogoCropY] = useState(50);
   const [teamScreen, setTeamScreen] = useState<"choice" | "create" | "join">("choice");
   const [team, setTeam] = useState<{id:string;team_name:string;invite_code:string;avatar_url?:string|null;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
   const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
@@ -277,7 +287,7 @@ export default function App() {
     setPlayers(prev => [...prev, { id: "P" + (prev.length + 1), name: newName.trim(), role: newRole, status: "Active" }]);
     setNewName(""); setNotice("Player added to this device.");
   };
-  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Assignments", "Analytics"];
+  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Assignments", "Analytics", "Settings"];
   const onboarding=!signedIn||!team;
   return (
     <main className="app-shell">
@@ -419,6 +429,20 @@ export default function App() {
               </>}
             </section>
             <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">SQUAD TASK BOARD · {assignmentRows.length}</div><div className="player-list">{assignmentRows.map(a=><article className="player-row" key={a.id}><span className="player-id">{a.due_date}</span><div><b>{teamMembers.find(m=>m.user_id===a.player_id)?.display_name||a.player_id.slice(0,8)} · {a.drill_title}</b><small>{a.drill_description}</small><small>Status: {a.status}</small>{a.completion_note&&<small>{a.completion_note}</small>}</div>{a.player_id===sessionUserId||!!team&&["owner","coach"].includes(team.membership_role)?<button className="secondary-button" onClick={()=>updateAssignment(a.id,a.status==="completed"?"assigned":"completed")}>{a.status==="completed"?"Undo":"Complete"}</button>:null}</article>)}</div></section>
+          </>}
+          {section==="Settings" && <>
+            <div className="section-heading"><div><div className="eyebrow">SQUAD CONFIGURATION</div><h2>Settings</h2></div><span className="phase-pill">TEAM PROFILE</span></div>
+            {!signedIn||!team?<section className="connection-panel"><h3>Team profile unavailable</h3><p>Sign in and create or join a team first.</p></section>:<>
+              <section className="connection-panel team-profile-settings" style={{display:"block"}}>
+                <div className="eyebrow">TEAM PROFILE</div>
+                <div className="team-live-header"><div className="team-live-logo">{team.avatar_url?<img src={team.avatar_url} alt={team.team_name+" logo"}/>:<span>{team.team_name.slice(0,1).toUpperCase()}</span>}</div><div><h3>{team.team_name}</h3><p>Team logo · square 1:1 format</p></div></div>
+                <div className="team-logo-settings-row"><div className="team-logo-preview settings-logo-preview">{teamLogoPreview?<img src={teamLogoPreview} alt="Crop preview" style={{objectFit:"cover",objectPosition:teamLogoCropX+"% "+teamLogoCropY+"%"}}/>:<span className="team-logo-letter">{team.team_name.slice(0,1).toUpperCase()}</span>}<span className="logo-orbit"/></div>
+                  <div className="team-logo-copy"><strong>{teamLogoFile?"New logo selected":"Current team logo"}</strong><small>Tap + to choose an image from your phone gallery. Crop is locked to a 1:1 square (512 × 512 output).</small>
+                    <label className="team-upload-button" htmlFor="settings-team-logo">＋</label><input id="settings-team-logo" className="team-file-input" type="file" accept="image/png,image/jpeg,image/webp" onChange={e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>5*1024*1024){setNotice("Logo must be 5 MB or smaller.");e.target.value="";return;}setTeamLogoFile(f);setTeamLogoPreview(URL.createObjectURL(f));setTeamLogoCropX(50);setTeamLogoCropY(50);}}/>
+                  </div></div>
+                {teamLogoFile&&<div className="crop-controls"><label>Horizontal crop <input type="range" min="0" max="100" value={teamLogoCropX} onChange={e=>setTeamLogoCropX(Number(e.target.value))}/></label><label>Vertical crop <input type="range" min="0" max="100" value={teamLogoCropY} onChange={e=>setTeamLogoCropY(Number(e.target.value))}/></label><button className="secondary-button" onClick={()=>{setTeamLogoFile(null);setTeamLogoPreview("");}}>Cancel selection</button></div>}
+                <button className="primary-button" disabled={!teamLogoFile||teamBusy} onClick={async()=>{if(!supabase||!teamLogoFile)return;setTeamBusy(true);try{const cropped=await makeSquareTeamLogo(teamLogoFile,teamLogoCropX,teamLogoCropY);const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Sign in again to update the logo.");const path=user.id+"/"+team.id+".jpg";const {error:up}=await supabase.storage.from("team-avatars").upload(path,cropped,{upsert:true,contentType:"image/jpeg"});if(up)throw up;const {data:pub}=supabase.storage.from("team-avatars").getPublicUrl(path);const {error:av}=await supabase.from("teams").update({avatar_url:pub.publicUrl+"?v="+Date.now()}).eq("id",team.id);if(av)throw av;await loadTeam();setTeamLogoFile(null);setTeamLogoPreview("");setNotice("Team logo updated.");}catch(e){setNotice(e instanceof Error?e.message:"Logo update failed.");}finally{setTeamBusy(false);}}}>{teamBusy?"Saving logo…":"Save Team Logo"}</button>
+              </section></>}
           </>}
           {section==="Analytics" && <>
             <div className="section-heading"><div><div className="eyebrow">PERFORMANCE SNAPSHOT</div><h2>Current week</h2></div><span className="phase-pill">BROWSER DATA</span></div>
