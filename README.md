@@ -1,42 +1,52 @@
 # SQUAD OS
 
-Free Fire squad management and performance platform.
+Free Fire squad operations, tournament tracking and player development workspace.
 
-## Project status
+## Current implementation
 
-**M1 — Foundation scaffold.** This repository is the clean implementation workspace. The previous `ff-squad` repository and the existing Supabase project are separate and have not been modified.
+The production web app is deployed on Vercel and connected to the **FF Squad** Supabase project.
 
-## Product rules captured
+Implemented sections:
+- Overview and team workspace
+- Weekly tournament ledger (7 days × 6 match slots)
+- Team training checklist and shared session notes
+- Player roster and role assignment
+- Player evaluations with five 0–10 categories, notes and improvement targets
+- Individual drill assignments and completion tracking
+- Analytics from the shared tournament ledger when signed in
+- Supabase email/password authentication with email OTP signup verification
 
-- One fixed squad, with weekly roster snapshots.
-- Weekly tournament cycle: Monday through Sunday.
-- Six scheduled tournament matches per day (42 per full cycle).
-- Sunday finalization and next-week registration are separate workflows.
-- Scoring rules are configurable and versioned; no unofficial points are hard-coded as official.
-- Practice matches are stored separately from tournament matches.
-- Player feedback distinguishes private evaluator notes from player-visible feedback.
-- Offline-first local persistence and safe cloud synchronization are planned.
+## Data and permissions
+
+- Supabase Auth identifies users; team membership and role checks govern shared records.
+- The browser uses only the Supabase URL and publishable key.
+- Tournament entries are writable by team owners/coaches; other members can view the shared ledger.
+- Training logs, session notes, evaluations and assignments use team-scoped RLS.
+- Local roster/match drafts and signed-out practice data remain browser-local.
+- Analytics use cloud match rows for signed-in team members and local records otherwise.
+
+## Not yet implemented
+
+- Secure IGN/username-based login (requires a server-side lookup function and protected secret)
+- IndexedDB offline-first queue and conflict-safe background sync
+- PWA install/offline shell
+- Full Supabase Realtime subscriptions; current shared views load on sign-in/date/week changes and can be manually refreshed
+- Automated browser-level end-to-end tests
 
 ## Stack
 
 - React + TypeScript + Vite
-- Supabase Auth / PostgreSQL / Realtime (client uses publishable key only)
-- Dexie + IndexedDB (to be added with the offline-data phase)
-- PWA support (to be added after the application shell is stable)
-
-## Requirements
-
-- Node.js 22.12 or newer
-- npm 10 or newer
+- Supabase Auth + PostgreSQL
+- Vercel production deployment
 
 ## Local setup
 
 1. Install dependencies: `npm install`
 2. Copy `.env.example` to `.env.local`
-3. Add the Supabase project URL and **publishable** key to `.env.local`
-4. Start the development server: `npm run dev`
+3. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`
+4. Run `npm run dev`
 
-Do not put a Supabase secret/service-role key in any `VITE_*` variable or browser code.
+Never place a Supabase secret/service-role key in a `VITE_*` variable or browser code.
 
 ## Commands
 
@@ -45,8 +55,6 @@ Do not put a Supabase secret/service-role key in any `VITE_*` variable or browse
 - `npm run build` — production build
 - `npm run preview` — preview the production build
 
-## Safety boundary for database work
+## Database migrations
 
-The existing Supabase project is currently treated as **read-only**. No migrations, SQL writes, policy changes, function changes, data edits, or destructive operations are part of this scaffold. A target schema and migration plan must be reviewed before any database mutation.
-
-See `docs/architecture/` and `docs/security/` for the current decisions and legacy audit notes.
+Schema changes are applied to the connected FF Squad Supabase project through reviewed migrations. Keep migrations additive where possible and preserve existing team data.
