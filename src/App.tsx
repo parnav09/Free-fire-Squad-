@@ -172,11 +172,9 @@ export default function App() {
         <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><div className="system-status"><i/> {connection.toUpperCase()}</div></header>
         <div className="content">
           {onboarding?<>
-
-            {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>
+            {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>}
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
-              <h2>{signedIn?"Account connected":authMode==="signup"?"Create account":"Sign in"}</h2>
-              {!signedIn?<div className="auth-card">
+              {!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
                 <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setNotice("");}}>Sign in</button></div>
                 <div className="auth-fields">
                   {authMode==="signup"&&<label className="auth-field"><span>IGN / DISPLAY NAME</span><input autoComplete="nickname" value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Your in-game name"/></label>}
@@ -185,10 +183,18 @@ export default function App() {
                   {authMode==="signup"&&<label className="auth-field"><span>CONFIRM PASSWORD</span><input autoComplete="new-password" type={showPassword?"text":"password"} value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} placeholder="Repeat password"/></label>}
                   <label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label>
                   <button className="primary-button auth-submit" disabled={!sessionEmail.trim()||!sessionPassword||(authMode==="signup"&&(!displayName.trim()||!confirmPassword))} onClick={authMode==="signup"?signUp:signIn}>{authMode==="signup"?"Create account":"Sign in"} <span>→</span></button>
-                </div>
-              </div>:<><p>Signed in as <b>{sessionEmail}</b></p><div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="IGN / display name"/><button className="secondary-button" onClick={async()=>{if(!displayName.trim())return setNotice("Enter IGN first.");const {error}=await supabase!.rpc("set_display_name",{p_name:displayName.trim()});setNotice(error?error.message:"IGN saved.");}}>Save IGN</button></div>}
-            {signedIn&&<><div className="divider"/><div className="eyebrow">STEP 2 · TEAM</div><h2>{team?"Team connected ✓":"Create or join a team"}</h2>{team?<><p><b>{team.team_name}</b> · {team.membership_role} · Invite code {team.invite_code}</p><button className="primary-button" onClick={()=>setSection("Overview")}>Open SQUAD OS →</button></>:<><p>Create your squad, or join an existing team using its invite code.</p><div className="add-form"><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="New team name"/><input value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Team description (optional)"/><button className="primary-button" disabled={teamBusy||!teamName.trim()} onClick={createTeam}>{teamBusy?"Creating…":"Create team"}</button></div><div className="add-form" style={{marginTop:12}}><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase())} placeholder="Existing team invite code" maxLength={8}/><button className="secondary-button" disabled={teamBusy||teamCode.trim().length<6} onClick={joinTeam}>{teamBusy?"Joining…":"Join team"}</button></div></>}</>}
-          </section>
+                </div><div className="auth-foot">Supabase Auth · Password protected</div>
+              </div></>:<>
+                <h2>Account connected</h2><p>Signed in as <b>{sessionEmail}</b></p>
+                <div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="IGN / display name"/><button className="secondary-button" onClick={async()=>{if(!displayName.trim())return setNotice("Enter IGN first.");const {error}=await supabase!.rpc("set_display_name",{p_name:displayName.trim()});setNotice(error?error.message:"IGN saved.");}}>Save IGN</button><button className="secondary-button" onClick={signOut}>Sign out</button></div>
+                <div className="divider"/><div className="eyebrow">TEAM SETUP</div><h2>{team?"Team connected ✓":"Create or join a team"}</h2>
+                {team?<><p><b>{team.team_name}</b> · {team.membership_role} · Invite code {team.invite_code}</p><button className="primary-button" onClick={()=>setSection("Overview")}>Open SQUAD OS →</button></>:<>
+                  <p>Create your squad, or join an existing team using its invite code.</p>
+                  <div className="add-form"><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="New team name"/><input value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Team description (optional)"/><button className="primary-button" disabled={teamBusy||!teamName.trim()} onClick={createTeam}>{teamBusy?"Creating…":"Create team"}</button></div>
+                  <div className="add-form" style={{marginTop:12}}><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase())} placeholder="Existing team invite code" maxLength={8}/><button className="secondary-button" disabled={teamBusy||teamCode.trim().length<6} onClick={joinTeam}>{teamBusy?"Joining…":"Join team"}</button></div>
+                </>}
+              </>}
+            </section>
           </>:<>
           <div className="eyebrow">SQUAD MANAGEMENT PLATFORM · M3</div>
 
