@@ -34,11 +34,8 @@ export default function App() {
   const [sharedMatches, setSharedMatches] = useState<Array<{match_day:number;match_number:number;placement:number|null;kills:number;points:number|null;status:string}>>([]);
   const [matchesHydratedKey, setMatchesHydratedKey] = useState("");
   const [connection, setConnection] = useState("Checking Supabase…");
-  const [sessionEmail, setSessionEmail] = useState("");
+  const [sessionUsername, setSessionUsername] = useState("");
   const [sessionPassword, setSessionPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [signupStage, setSignupStage] = useState<"details"|"verify">("details");
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signup");
   const [showPassword, setShowPassword] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
@@ -79,10 +76,10 @@ export default function App() {
     let alive = true;
     if (!supabase) { setConnection("Missing project settings"); return; }
     supabase.auth.getSession().then(({ data, error }) => {
-      if (alive) { setSignedIn(!!data.session); setSessionUserId(data.session?.user.id || ""); setSessionEmail(data.session?.user.email || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+      if (alive) { setSignedIn(!!data.session); setSessionUserId(data.session?.user.id || ""); setSessionUsername(data.session?.user.user_metadata?.username || data.session?.user.user_metadata?.display_name || data.session?.user.email?.split("@")[0] || ""); setDisplayName(data.session?.user.user_metadata?.display_name || data.session?.user.user_metadata?.username || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     }).catch(() => alive && setConnection("Configured · network unavailable"));
     const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (alive) { setSignedIn(!!session); setSessionUserId(session?.user.id || ""); setSessionEmail(session?.user.email || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+      if (alive) { setSignedIn(!!session); setSessionUserId(session?.user.id || ""); setSessionUsername(session?.user.user_metadata?.username || session?.user.user_metadata?.display_name || session?.user.email?.split("@")[0] || ""); setDisplayName(session?.user.user_metadata?.display_name || session?.user.user_metadata?.username || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     });
     return () => { alive = false; authSub.subscription.unsubscribe(); };
   }, []);
@@ -93,45 +90,49 @@ export default function App() {
   const updateAssignment=async(id:string,status:string)=>{if(!supabase||!team)return;const {error}=await supabase.from("player_drill_assignments").update({status,completed_at:status==="completed"?new Date().toISOString():null}).eq("id",id);if(error){setNotice(error.message);return;}await loadAssignments();};
   const signIn = async () => {
     if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
-    const identifier = sessionEmail.trim();
-    if (!identifier || !sessionPassword) return setNotice("Enter your email or IGN and password.");
-    if (identifier.includes("@")) {
-      const { error } = await supabase.auth.signInWithPassword({ email: identifier.toLowerCase(), password: sessionPassword });
-      setNotice(error ? error.message : "Signed in. Cloud sync is enabled.");
-      return;
-    }
-    const { data, error } = await supabase.functions.invoke("login-with-ign", { body: { identifier, password: sessionPassword } });
+    const identifier = sessionUsername.trim();
+    if (!identifier || !sessionPassword) return setNotice("Enter your username and password.");
+    const { data, error } = await supabase.functions.invoke("login-with-ign", {
+      body: { identifier, password: sessionPassword },
+    });
     if (error || !data?.session?.access_token || !data?.session?.refresh_token) {
-      setNotice(data?.error || error?.message || "IGN login failed. Try your email address.");
+      setNotice(data?.error || error?.message || "Invalid username or password.");
       return;
     }
     const { error: sessionError } = await supabase.auth.setSession(data.session);
-    setNotice(sessionError ? sessionError.message : "Signed in with IGN. Cloud sync is enabled.");
+    setNotice(sessionError ? sessionError.message : "Signed in. Squad cloud sync is enabled.");
   };
+
   const signUp = async () => {
     if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
-    if (!displayName.trim()) return setNotice("Enter your IGN / display name.");
-    if (!sessionEmail.trim()) return setNotice("Enter your email address.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sessionEmail.trim())) return setNotice("Enter a valid email address.");
-    if (sessionPassword.length < 8) return setNotice("Password must be at least 8 characters.");
-    if (sessionPassword !== confirmPassword) return setNotice("Passwords do not match.");
-    const { error } = await supabase.auth.signUp({ email: sessionEmail.trim().toLowerCase(), password: sessionPassword, options: { data: { display_name: displayName.trim() } } });
-    if (error) return setNotice(error.message);
-    setSignupStage("verify");
-    setNotice("Verification code sent to your email. Enter the 6-digit code to activate your account.");
-  };
-  const verifySignupCode = async () => {
-    if (!supabase) return;
-    if (!/^\d{6}$/.test(verificationCode.trim())) return setNotice("Enter the 6-digit email code.");
-    const { error } = await supabase.auth.verifyOtp({ email: sessionEmail.trim().toLowerCase(), token: verificationCode.trim(), type: "signup" });
-    if (error) return setNotice(error.message);
-    setSignupStage("details"); setVerificationCode(""); setConfirmPassword("");
-    setNotice("Email verified. Account activated and signed in.");
-  };
-  const resendSignupCode = async () => {
-    if (!supabase) return;
-    const { error } = await supabase.auth.resend({ type: "signup", email: sessionEmail.trim().toLowerCase() });
-    setNotice(error ? error.message : "A fresh verification code has been sent.");
+    const username = sessionUsername.trim().toLowerCase();
+    if (!/^[a-z0-9][a-z0-9.-]{2,23}$/.test(username)) {
+      return setNotice("Username must be 3–24 characters: lowercase letters, numbers, dots or hyphens.");
+    }
+    if (sessionPassword.length < 8 || sessionPassword.length > 128) {
+      return setNotice("Password must be between 8 and 128 characters.");
+    }
+    const internalEmail = `${username}@accounts.squad-os.invalid`;
+    const { data, error } = await supabase.auth.signUp({
+      email: internalEmail,
+      password: sessionPassword,
+      options: { data: { display_name: username, username } },
+    });
+    if (error) {
+      const message = error.message || "";
+      setNotice(/profiles_display_name_lower_uidx|duplicate key|already registered|already been registered/i.test(message)
+        ? "That username is already taken. Choose another one."
+        : message);
+      return;
+    }
+    if (!data.session) {
+      setNotice("Signup is blocked because Supabase Email Confirmation is still ON. The team admin must turn it OFF in Supabase Auth → Settings before creating username-only accounts. Do not retry this username until that setting is changed.");
+      return;
+    }
+    setSessionUsername(username);
+    setDisplayName(username);
+    setAuthMode("signin");
+    setNotice("Account created. You are signed in and cloud sync is ready.");
   };
 
   const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
@@ -261,19 +262,15 @@ export default function App() {
             {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>}
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
               {!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
-                <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setSignupStage("details");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setSignupStage("details");setNotice("");}}>Sign in</button></div>
+                <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setNotice("");}}>Sign in</button></div>
                 <div className="auth-fields">
-                  {authMode==="signup"&&signupStage==="details"&&<><label className="auth-field"><span>IGN / IN-GAME NAME</span><input autoComplete="nickname" value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Your in-game name"/></label>
-                  <label className="auth-field"><span>GMAIL / EMAIL</span><input autoComplete="email" type="email" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="name@gmail.com"/></label>
-                  <label className="auth-field"><span>PASSWORD</span><input autoComplete="new-password" type={showPassword?"text":"password"} value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Create password (8+ characters)"/></label>
-                  <label className="auth-field"><span>CONFIRM PASSWORD</span><input autoComplete="new-password" type={showPassword?"text":"password"} value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} placeholder="Repeat password"/></label></>}
-                  {authMode==="signup"&&signupStage==="verify"&&<><div className="otp-info"><b>Check your inbox</b><span>We sent a 6-digit code to</span><strong>{sessionEmail}</strong></div><label className="auth-field"><span>EMAIL VERIFICATION CODE</span><input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={verificationCode} onChange={e=>setVerificationCode(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="000000"/></label><button className="secondary-button otp-resend" onClick={resendSignupCode}>Resend code</button></>}
-                  {authMode==="signin"&&<><label className="auth-field"><span>EMAIL OR IGN</span><input autoComplete="username" type="text" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="Your email or in-game name"/></label><label className="auth-field"><span>PASSWORD</span><input autoComplete="current-password" type={showPassword?"text":"password"} value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Your password"/></label></>}
+                  <label className="auth-field"><span>USERNAME</span><input autoComplete="username" type="text" value={sessionUsername} onChange={e=>setSessionUsername(e.target.value.toLowerCase().replace(/[^a-z0-9.-]/g,"").slice(0,24))} placeholder="3–24 characters"/></label>
+                  <label className="auth-field"><span>PASSWORD</span><input autoComplete={authMode==="signup"?"new-password":"current-password"} type={showPassword?"text":"password"} value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder={authMode==="signup"?"Create password (8+ characters)":"Your password"}/></label>
                   <label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label>
-                  <button className="primary-button auth-submit" disabled={authMode==="signup"?(signupStage==="details"?(!sessionEmail.trim()||!sessionPassword||!displayName.trim()||!confirmPassword):verificationCode.length!==6):(!sessionEmail.trim()||!sessionPassword)} onClick={authMode==="signup"?(signupStage==="details"?signUp:verifySignupCode):signIn}>{authMode==="signup"?(signupStage==="details"?"Send verification code":"Verify & create account"):"Sign in"} <span>→</span></button>
-                  {authMode==="signup"&&signupStage==="verify"&&<button className="text-button" onClick={()=>setSignupStage("details")}>← Edit account details</button>}
-                </div><div className="auth-foot">Supabase Auth · Password protected</div></div></>:<>
-                <h2>Account connected</h2><p>Signed in as <b>{sessionEmail}</b></p>
+                  <button className="primary-button auth-submit" disabled={!sessionUsername.trim()||!sessionPassword} onClick={authMode==="signup"?signUp:signIn}>{authMode==="signup"?"Create account":"Sign in"} <span>→</span></button>
+                  {authMode==="signup"&&<p className="auth-foot">No email inbox is used. Usernames are unique. Lost passwords require team-admin recovery.</p>}
+                </div><div className="auth-foot">SQUAD OS · Username + password</div></div></>:<>
+                <h2>Account connected</h2><p>Signed in as <b>{sessionUsername}</b></p>
                 <div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="IGN / display name"/><button className="secondary-button" onClick={async()=>{if(!displayName.trim())return setNotice("Enter IGN first.");const {error}=await supabase!.rpc("set_display_name",{p_name:displayName.trim()});setNotice(error?error.message:"IGN saved.");}}>Save IGN</button><button className="secondary-button" onClick={signOut}>Sign out</button></div>
                 <div className="divider"/><div className="eyebrow">TEAM SETUP</div><h2>{team?"Team connected ✓":"Create or join a team"}</h2>
                 {team?<><p><b>{team.team_name}</b> · {team.membership_role} · Invite code {team.invite_code}</p><button className="primary-button" onClick={()=>setSection("Overview")}>Open SQUAD OS →</button></>:<>
@@ -290,7 +287,7 @@ export default function App() {
           <p className="intro">A focused workspace for tournament results, player development and team performance. Match entries and training notes are browser-local; team membership and weekly match rows use Supabase.</p>
           {notice && <div className="notice">{notice}<button onClick={()=>setNotice("")}>×</button></div>}
           {section==="Overview" && <>
-            <div className="section-heading"><div><div className="eyebrow">AT A GLANCE</div><h2>Squad overview</h2></div><span className="phase-pill">M2 / INTERACTIVE</span></div>            <section className="connection-panel"><div><div className="eyebrow">SUPABASE AUTH</div><h3>{signedIn ? "Cloud account connected" : "Sign in to sync"}</h3><p>{signedIn ? sessionEmail+" · squad cloud sync is enabled" : "Email/password account access. Local progress remains available offline."}</p></div>{signedIn?<button className="primary-button" onClick={signOut}>Sign out</button>:<div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Display / IGN name"/><input type="text" autoComplete="username" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="Email or IGN"/><input type="password" value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Password"/><button className="primary-button" onClick={signIn}>Sign in</button><button className="secondary-button" onClick={signUp}>Create account</button></div>}</section>
+            <div className="section-heading"><div><div className="eyebrow">AT A GLANCE</div><h2>Squad overview</h2></div><span className="phase-pill">M2 / INTERACTIVE</span></div>            <section className="connection-panel"><div><div className="eyebrow">SUPABASE AUTH</div><h3>{signedIn ? "Cloud account connected" : "Sign in to sync"}</h3><p>{signedIn ? sessionUsername+" · squad cloud sync is enabled" : "Username/password account access. Local progress remains available offline."}</p></div>{signedIn?<button className="primary-button" onClick={signOut}>Sign out</button>:<div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Display / IGN name"/><input type="text" autoComplete="username" value={sessionUsername} onChange={e=>setSessionUsername(e.target.value)} placeholder="Email or IGN"/><input type="password" value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Password"/><button className="primary-button" onClick={signIn}>Sign in</button><button className="secondary-button" onClick={signUp}>Create account</button></div>}</section>
 
             {signedIn && <div className="add-form" style={{marginBottom:12}}><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Your IGN / display name"/><button className="secondary-button" onClick={async()=>{if(!supabase)return;const {error}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});setNotice(error?error.message:"Display name saved.");}}>Save IGN</button></div>}
             <section className="connection-panel" style={{display:"block",marginBottom:22}}>
