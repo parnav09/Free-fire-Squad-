@@ -77,8 +77,22 @@ export default function App() {
   useEffect(()=>{if(signedIn&&team)loadAssignments().catch(e=>setNotice(e.message));},[signedIn,team?.id]);
   const createAssignment=async()=>{if(!supabase||!team||!assignmentPlayer||!assignmentTitle.trim())return;const {data:{user}}=await supabase.auth.getUser();const {error}=await supabase.from("player_drill_assignments").insert({team_id:team.id,player_id:assignmentPlayer,assigned_by:user?.id,drill_title:assignmentTitle.trim(),drill_description:assignmentDesc.trim(),due_date:assignmentDate});if(error){setNotice(error.message);return;}setNotice("Drill assigned.");await loadAssignments();};
   const updateAssignment=async(id:string,status:string)=>{if(!supabase)return;const {error}=await supabase.from("player_drill_assignments").update({status,completed_at:status==="completed"?new Date().toISOString():null}).eq("id",id);if(error){setNotice(error.message);return;}await loadAssignments();};
-  const signIn = async () => { if (!supabase) return; const { error } = await supabase.auth.signInWithPassword({ email: sessionEmail.trim(), password: sessionPassword }); setNotice(error ? error.message : "Signed in. Cloud sync is enabled."); };
-  const signUp = async () => { if (!supabase) return; if (!displayName.trim()) { setNotice("Enter your in-game/display name before creating account."); return; } const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword, options: { data: { display_name: displayName.trim() } } }); setNotice(error ? error.message : "Account created. If email verification is enabled, verify email then sign in."); };
+  const signIn = async () => {
+    if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
+    if (!sessionEmail.trim() || !sessionPassword) return setNotice("Enter both email and password.");
+    const { error } = await supabase.auth.signInWithPassword({ email: sessionEmail.trim(), password: sessionPassword });
+    setNotice(error ? error.message : "Signed in. Cloud sync is enabled.");
+  };
+  const signUp = async () => {
+    if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
+    if (!displayName.trim()) return setNotice("Enter your IGN / display name.");
+    if (!sessionEmail.trim()) return setNotice("Enter your email address.");
+    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(sessionEmail.trim())) return setNotice("Enter a valid email address.");
+    if (sessionPassword.length < 8) return setNotice("Password must be at least 8 characters.");
+    if (sessionPassword !== confirmPassword) return setNotice("Passwords do not match.");
+    const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword, options: { data: { display_name: displayName.trim() }, emailRedirectTo: window.location.origin } });
+    setNotice(error ? error.message : "Account created. Check your email and confirm the verification link.");
+  };
   const resendVerification=async()=>{if(!supabase||!sessionEmail.trim())return;const {error}=await supabase.auth.resend({type:"signup",email:sessionEmail.trim()});setNotice(error?error.message:"Verification email sent again. Check inbox and spam.");};
   const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
   const loadTeam = async () => {
@@ -160,6 +174,7 @@ export default function App() {
           {onboarding?<>
             <div className="eyebrow">SQUAD OS · ACCOUNT SETUP</div><h1>One step at a time.<br/><span>Squad, synced.</span></h1>
             <p className="intro">Complete each step in order. The next screen unlocks automatically after confirmation.</p>
+            {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
               <div className="eyebrow">STEP 1 · ACCOUNT</div><h2>{signedIn?(emailVerified?"Email verified ✓":"Verify your email"):authMode==="signup"?"Create your account":"Welcome back"}</h2>
               {!signedIn?<div className="auth-card">
