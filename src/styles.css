@@ -175,3 +175,14 @@ button{border-radius:9px;clip-path:inset(0 round 9px);touch-action:manipulation}
 .team-live-header p{margin:6px 0 0;color:#8ca0bc;font-size:12px}
 .team-separate-page-note{padding:12px 14px;border:1px dashed #28425f;border-radius:12px;color:#8fa4bf;font-size:12px;line-height:1.6}
 @media(max-width:560px){.team-logo-picker{align-items:flex-start;gap:12px;padding:12px}.team-logo-preview{flex-basis:76px;width:76px;height:76px;border-radius:20px}.team-logo-letter{font-size:47px}.team-logo-copy small{max-width:230px}.team-live-header{align-items:flex-start}.team-live-header .secondary-button{width:100%}}
+
+/* Settings → Team Profile logo editor */
+.team-logo-settings-row{display:flex;align-items:center;gap:18px;margin:16px 0 18px;flex-wrap:wrap}
+.settings-logo-preview{width:104px;height:104px;flex:0 0 104px;border-radius:22px;overflow:hidden}
+.settings-logo-preview img{width:100%;height:100%;display:block}
+.team-logo-settings-row .team-logo-copy{display:flex;flex-direction:column;align-items:flex-start;gap:8px;max-width:360px}
+.team-logo-settings-row .team-upload-button{width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;font-size:26px;line-height:1;box-shadow:0 0 18px #13b9e633}
+.crop-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 18px;padding:14px;border:1px solid #19304b;border-radius:12px;background:#080e1b}
+.crop-controls label{display:flex;flex-direction:column;gap:8px;color:#91a7c3;font-size:12px}
+.crop-controls input[type=range]{width:100%;accent-color:#38c8f3}
+@media(max-width:560px){.crop-controls{grid-template-columns:1fr}.team-logo-settings-row{align-items:flex-start}}
