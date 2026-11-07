@@ -48,6 +48,11 @@ export default function App() {
   const [evalTarget,setEvalTarget]=useState("");
   const [evalHistory,setEvalHistory]=useState<Array<{id:string;player_id:string;score_date:string;communication:number;coordination:number;decision_making:number;role_execution:number;map_awareness:number;total:number|null;notes:string|null;improvement_target:string|null}>>([]);
 
+  const [assignmentPlayer,setAssignmentPlayer]=useState("");
+  const [assignmentTitle,setAssignmentTitle]=useState("Comms: short info + confirmation");
+  const [assignmentDesc,setAssignmentDesc]=useState("Practice concise enemy/location callouts, repeat IGL orders, and confirm role.");
+  const [assignmentDate,setAssignmentDate]=useState(()=>new Date().toLocaleDateString("en-CA"));
+  const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
   useEffect(() => { localStorage.setItem("squad-os-roster", JSON.stringify(players)); }, [players]);
   useEffect(() => { localStorage.setItem("squad-os-matches", JSON.stringify(matches)); }, [matches]);
   useEffect(() => { localStorage.setItem("squad-os-drills", JSON.stringify(drillDone)); }, [drillDone]);
