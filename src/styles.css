@@ -124,3 +124,28 @@ button{border-radius:9px;clip-path:inset(0 round 9px);touch-action:manipulation}
 .otp-info b{font-size:15px;color:#dff7ff}.otp-info strong{color:#6edcf4;font-size:13px;overflow-wrap:anywhere}
 .otp-resend{width:100%;padding:11px;border:1px solid #263c58;background:#0b1425;color:#9ec9e8}
 .text-button{background:transparent;border:0;color:#79cbed;padding:10px;font-size:12px}
+
+/* Dedicated, independent team onboarding screens */
+.team-onboarding{width:100%;max-width:760px;margin:0 auto;padding:clamp(18px,4vw,34px);border:1px solid #1d2b43;border-radius:22px;background:radial-gradient(ellipse at 85% 0%,#102746 0%,#0a1222 42%,#080d18 100%);box-shadow:0 24px 70px #0008;position:relative;overflow:hidden}
+.team-onboarding:before{content:"";position:absolute;inset:0 auto auto 0;width:100%;height:2px;background:linear-gradient(90deg,#42d6f5,#3879ef,#9b83ff);opacity:.9}
+.team-hero{padding:24px 0 22px;max-width:620px}
+.team-step{display:inline-flex;padding:6px 10px;border:1px solid #285071;border-radius:99px;background:#0b2034;color:#72d9f4;font-size:10px;font-weight:800;letter-spacing:1.2px}
+.team-hero h2{font-size:clamp(27px,5vw,38px);line-height:1.08;letter-spacing:-1.2px;margin:17px 0 10px;color:#eef7ff}
+.team-hero p{max-width:560px;color:#91a4bf;line-height:1.7;font-size:13px;margin:0}
+.team-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:8px 0 20px}
+.team-choice-card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-height:220px;padding:22px;text-align:left;border:1px solid #263c59;background:linear-gradient(145deg,#101e33,#0a1220 75%);color:#eaf5ff;border-radius:17px;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}
+.team-choice-card:hover{transform:translateY(-3px);border-color:#3e9fce;box-shadow:0 15px 35px #0005}
+.team-choice-icon{display:grid;place-items:center;width:42px;height:42px;border:1px solid #28638a;border-radius:13px;background:#0c2940;color:#65d9f4;font-size:25px}
+.team-choice-card .eyebrow{font-size:9px;color:#69cce9;letter-spacing:1.1px}
+.team-choice-card strong{font-size:20px;letter-spacing:-.4px}
+.team-choice-card small{font-size:12px;line-height:1.6;color:#8fa2bd;max-width:230px}
+.team-choice-action{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:auto;padding-top:13px;border-top:1px solid #24354d;color:#78d7f1;font-size:12px;font-weight:700}
+.team-choice-action b{font-size:18px}
+.team-onboarding-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:12px;border-top:1px solid #1d2c43;color:#7488a4;font-size:11px}
+.team-onboarding-footer b{color:#c8d8eb}
+.team-back{margin:4px 0 0;padding-left:0}
+.team-form-card{display:flex;flex-direction:column;gap:16px;max-width:560px;padding:22px;border:1px solid #263b56;border-radius:16px;background:#080f1cdd;box-shadow:0 18px 45px #0004}
+.team-form-card .auth-field input,.team-form-card .auth-field textarea{width:100%;box-sizing:border-box}
+.team-form-card .auth-field textarea{resize:vertical;min-height:88px;padding:13px 14px;border:1px solid #26364d;border-radius:10px;background:#080f1c;color:#e8f3ff;font:inherit;font-size:13px}
+.team-form-card .auth-field textarea:focus{outline:none;border-color:#35a9ef;box-shadow:0 0 0 3px #1595e51c}
+@media(max-width:620px){.team-onboarding{padding:18px 14px;border-radius:16px}.team-choice-grid{grid-template-columns:1fr}.team-choice-card{min-height:185px;padding:18px}.team-form-card{padding:16px}.team-hero{padding:20px 0}}
