@@ -39,6 +39,8 @@ export default function App() {
   const [team, setTeam] = useState<{id:string;team_name:string;invite_code:string;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
   const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
   const [teamBusy, setTeamBusy] = useState(false);
+  const [cloudTraining, setCloudTraining] = useState<Record<string, boolean>>({});
+  const [trainingDate, setTrainingDate] = useState(() => new Date().toLocaleDateString("en-CA"));
 
   useEffect(() => { localStorage.setItem("squad-os-roster", JSON.stringify(players)); }, [players]);
   useEffect(() => { localStorage.setItem("squad-os-matches", JSON.stringify(matches)); }, [matches]);
@@ -107,6 +109,8 @@ export default function App() {
       setNotice("Shared scoreboard refreshed.");
     } catch (e) { setNotice(e instanceof Error ? e.message : "Refresh failed."); }
   };
+  useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_log").select("activity,done").eq("team_id",team.id).eq("log_date",trainingDate);if(error)throw error;if(!cancelled)setCloudTraining(Object.fromEntries((data||[]).map(x=>[x.activity,!!x.done])));}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Cloud training load failed.");}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
+  const saveCloudTraining = async (activity:string,done:boolean) => {setCloudTraining(p=>({...p,[activity]:done}));if(!supabase||!team||!signedIn)return;try{const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {error}=await supabase.from("training_log").upsert({team_id:team.id,log_date:trainingDate,activity,done,updated_by:user.id},{onConflict:"team_id,log_date,activity"});if(error)throw error;setNotice("Training checklist synced for the squad.");}catch(e){setNotice(e instanceof Error?e.message:"Cloud training save failed.");}};
   const totalMatches = Object.keys(matches).length;
   const points = Object.values(matches).reduce((sum, m) => sum + (m.placement === 1 ? 12 : m.placement === 2 ? 9 : m.placement === 3 ? 8 : m.placement === 4 ? 7 : m.placement === 5 ? 6 : m.placement === 6 ? 5 : m.placement === 7 ? 4 : m.placement === 8 ? 3 : m.placement === 9 ? 2 : m.placement === 10 ? 1 : 0) + m.kills, 0);
   const filteredPlayers = useMemo(() => players.filter(p => (p.name + p.role).toLowerCase().includes(query.toLowerCase())), [players, query]);
@@ -164,7 +168,7 @@ export default function App() {
           </>}
           {section==="Training" && <>
             <div className="section-heading"><div><div className="eyebrow">PRACTICE BLOCK</div><h2>Team drill checklist</h2></div><span className="phase-pill">LOCAL CHECKLIST</span></div>
-            <div className="drill-list">{["IGL call clarity · short and actionable","Trade spacing · pair stays connected","Rotation timing · move before pressure","Reset discipline · regroup before re-entry","Post-match review · one fix per match"].map((d,i)=><label className="drill-row" key={d}><input type="checkbox" checked={!!drillDone[d]} onChange={e=>setDrillDone(p=>({...p,[d]:e.target.checked}))}/><span><b>0{i+1} / {d}</b><small>Mark only after the team completes and reviews it.</small></span></label>)}</div>
+            <div className="toolbar"><label>Training date <input type="date" value={trainingDate} onChange={e=>setTrainingDate(e.target.value}/></label><span className="phase-pill">{signedIn&&team?"SQUAD CLOUD":"LOCAL ONLY"}</span></div><div className="drill-list">{["IGL call clarity · short and actionable","Trade spacing · pair stays connected","Rotation timing · move before pressure","Reset discipline · regroup before re-entry","Post-match review · one fix per match"].map((d,i)=><label className="drill-row" key={d}><input type="checkbox" checked={signedIn&&team?!!cloudTraining[d]:!!drillDone[d]} onChange={e=>{if(signedIn&&team)saveCloudTraining(d,e.target.checked);else setDrillDone(p=>({...p,[d]:e.target.checked}));}}/><span><b>0{i+1} / {d}</b><small>Mark only after the team completes and reviews it.</small></span></label>)}</div>
             <label className="notes-label">Session notes<textarea value={notes.training||""} onChange={e=>setNotes(p=>({...p,training:e.target.value}))} placeholder="Calls missed, timing issue, next session target…"/></label>
           </>}
           {section==="Players" && <>
