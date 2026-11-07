@@ -113,3 +113,14 @@ button{cursor:pointer;font:inherit}
 .auth-hint{font-size:11px;color:#7d91ad;margin-top:-6px}.auth-submit{width:100%;justify-content:center;display:flex;align-items:center;gap:12px;padding:14px!important;margin-top:4px}.auth-submit:disabled{opacity:.45;cursor:not-allowed}
 .auth-foot{display:flex;align-items:center;gap:8px;border-top:1px solid #1b2639;margin-top:18px;padding-top:15px;color:#647893;font-size:10px}.auth-lock{color:#54c6ff}
 @media(max-width:600px){.auth-card{padding:14px;border-radius:14px}.auth-fields{gap:13px}.auth-field input{padding:13px}}
+
+
+/* Rounded visual + pointer hit regions for all interactive controls */
+button{border-radius:9px;clip-path:inset(0 round 9px);touch-action:manipulation}
+.auth-switch button{clip-path:inset(0 round 9px)}
+.auth-submit{clip-path:inset(0 round 11px)}
+.primary-button,.secondary-button,.delete-button,.text-button{clip-path:inset(0 round 9px)}
+.otp-info{display:flex;flex-direction:column;gap:7px;padding:16px;border:1px solid #243c58;border-radius:12px;background:#081326;color:#8ea6c4;font-size:12px}
+.otp-info b{font-size:15px;color:#dff7ff}.otp-info strong{color:#6edcf4;font-size:13px;overflow-wrap:anywhere}
+.otp-resend{width:100%;padding:11px;border:1px solid #263c58;background:#0b1425;color:#9ec9e8}
+.text-button{background:transparent;border:0;color:#79cbed;padding:10px;font-size:12px}
