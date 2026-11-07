@@ -53,8 +53,10 @@ export default function App() {
   const [teamName, setTeamName] = useState("");
   const [teamCode, setTeamCode] = useState("");
   const [teamDescription, setTeamDescription] = useState("");
+  const [teamLogoFile, setTeamLogoFile] = useState<File|null>(null);
+  const [teamLogoPreview, setTeamLogoPreview] = useState("");
   const [teamScreen, setTeamScreen] = useState<"choice" | "create" | "join">("choice");
-  const [team, setTeam] = useState<{id:string;team_name:string;invite_code:string;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
+  const [team, setTeam] = useState<{id:string;team_name:string;invite_code:string;avatar_url?:string|null;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
   const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
   const [teamBusy, setTeamBusy] = useState(false);
   const [cloudTraining, setCloudTraining] = useState<Record<string, boolean>>({});
@@ -172,7 +174,7 @@ export default function App() {
     const {data:membership,error}=await supabase.from("team_members").select("id,team_id,user_id,player_number,assigned_role,membership_role,status").eq("user_id",user.id).limit(1).maybeSingle();
     if(error) throw error;
     if(!membership){setTeam(null);setTeamMembers([]);return;}
-    const {data:t,error:te}=await supabase.from("teams").select("id,team_name,invite_code").eq("id",membership.team_id).single(); if(te)throw te;
+    const {data:t,error:te}=await supabase.from("teams").select("id,team_name,invite_code,avatar_url").eq("id",membership.team_id).single(); if(te)throw te;
     setTeam({...t,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});
     const {data:members,error:me}=await supabase.from("team_members").select("id,user_id,player_number,assigned_role,membership_role,status").eq("team_id",t.id).order("player_number");
     if(me)throw me;
@@ -180,7 +182,7 @@ export default function App() {
     const {data:profiles,error:pe}=await supabase.from("profiles").select("id,display_name").in("id",ids); if(pe)throw pe;
     setTeamMembers((members||[]).map(x=>({...x,display_name:profiles?.find(p=>p.id===x.user_id)?.display_name||"Player"})));
   };
-  const createTeam = async () => { if(!supabase||!teamName.trim()||!displayName.trim()){setNotice("Enter your IGN and team name first.");return;} setTeamBusy(true); try { if(displayName.trim()){const {error:ne}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});if(ne)throw ne;} const {error}=await supabase.rpc("create_team",{p_name:teamName.trim(),p_description:teamDescription.trim(),p_timezone:"Asia/Kolkata"}); if(error)throw error; await loadTeam();setTeamName("");setTeamDescription("");setNotice("Team created. Share the Invite Code with your squad."); } catch(e){setNotice(e instanceof Error?e.message:"Team creation failed.");} finally{setTeamBusy(false);} };
+  const createTeam = async () => { if(!supabase||teamName.trim().length<2){setNotice("Team name must be at least 2 characters.");return;} setTeamBusy(true); try { const finalIGN=displayName.trim()||sessionUsername.trim()||"Squad Player"; const {error:ne}=await supabase.rpc("set_display_name",{p_name:finalIGN});if(ne)throw ne; const {error}=await supabase.rpc("create_team",{p_name:teamName.trim(),p_description:teamDescription.trim()||null,p_timezone:"Asia/Kolkata"}); if(error)throw error; await loadTeam(); if(teamLogoFile&&supabase){const {data:{user}}=await supabase.auth.getUser();if(user&&team){const ext=teamLogoFile.name.split(".").pop()?.toLowerCase()||"jpg";const path=`${user.id}/${team.id}.${ext}`;const {error:up}=await supabase.storage.from("team-avatars").upload(path,teamLogoFile,{upsert:true,contentType:teamLogoFile.type});if(up)throw up;const {data:pub}=supabase.storage.from("team-avatars").getPublicUrl(path);const {error:av}=await supabase.from("teams").update({avatar_url:pub.publicUrl}).eq("id",team.id);if(av)throw av;await loadTeam();}} setTeamName("");setTeamDescription("");setTeamLogoFile(null);setTeamLogoPreview("");setTeamScreen("choice");setNotice("Team created. Invite code and teammates are now available in Team panel."); } catch(e){setNotice(e instanceof Error?e.message:"Team creation failed.");} finally{setTeamBusy(false);} };
   const joinTeam = async () => { if(!supabase||!teamCode.trim())return; setTeamBusy(true); try { if(!displayName.trim()){throw new Error("Enter your IGN/display name first.");} const {error:ne}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});if(ne)throw ne; const {error}=await supabase.rpc("join_team",{p_code:teamCode.trim().toUpperCase()}); if(error)throw error; await loadTeam();setTeamCode("");setNotice("Joined team successfully."); } catch(e){setNotice(e instanceof Error?e.message:"Could not join team.");} finally{setTeamBusy(false);} };
   const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { if(player>=1&&player<=5){const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error;} const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
   useEffect(()=>{if(signedIn)loadTeam().catch(e=>setNotice(e instanceof Error?e.message:"Could not load team."));else{setTeam(null);setTeamMembers([]);setMatchesHydratedKey("");}},[signedIn]);
@@ -330,10 +332,14 @@ export default function App() {
                     <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}>← Back to team options</button>
                     <div className="team-hero"><span className="team-step">TEAM SETUP · 01 / 02</span><h2>Create your team.</h2><p>Enter the team identity. An invite code will be generated after successful creation.</p></div>
                     <div className="team-form-card">
-                      <label className="auth-field"><span>YOUR IN-GAME NAME / IGN</span><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Enter your Free Fire IGN" maxLength={32}/></label>
-                      <label className="auth-field"><span>TEAM NAME</span><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="e.g. NOVA ESPORTS" maxLength={40}/></label>
-                      <label className="auth-field"><span>TEAM DESCRIPTION · OPTIONAL</span><textarea value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Short description of your squad" rows={3}/></label>
-                      <button className="primary-button auth-submit" disabled={teamBusy||!displayName.trim()||!teamName.trim()} onClick={createTeam}>{teamBusy?"Creating team…":"Create Team →"}</button>
+                      <div className="team-logo-picker">
+                        <div className="team-logo-preview" aria-label="Team logo preview">{teamLogoPreview?<img src={teamLogoPreview} alt="Selected team logo"/>:<span className="team-logo-letter">{(teamName.trim()[0]||"T").toUpperCase()}</span>}<span className="logo-orbit"></span></div>
+                        <div className="team-logo-copy"><span className="eyebrow">TEAM EMBLEM · OPTIONAL</span><strong>{teamLogoFile?"Custom emblem selected":"Auto-generated emblem"}</strong><small>Upload a square image from your gallery, or leave it blank to use a stylized team initial.</small><label className="team-upload-button" htmlFor="team-logo-file">＋ Choose from Gallery</label><input id="team-logo-file" className="team-file-input" type="file" accept="image/png,image/jpeg,image/webp" onChange={e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>5*1024*1024){setNotice("Logo must be 5 MB or smaller.");e.target.value="";return;}setTeamLogoFile(f);setTeamLogoPreview(URL.createObjectURL(f));}}/><button className="text-button" type="button" onClick={()=>{setTeamLogoFile(null);setTeamLogoPreview("");}}>Use generated emblem</button></div>
+                      </div>
+                      <label className="auth-field"><span>TEAM NAME <b className="required-mark">*</b></span><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="e.g. NOVA ESPORTS" maxLength={50}/></label>
+                      <label className="auth-field"><span>TEAM DESCRIPTION · OPTIONAL</span><textarea value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Short description of your squad (optional)" rows={3}/></label>
+                      <div className="team-create-hint"><icon>✦</icon> Team name is the only required field. Logo and description are optional.</div>
+                      <button className="primary-button auth-submit" disabled={teamBusy||teamName.trim().length<2} onClick={createTeam}>{teamBusy?"Creating team…":"Create Team →"}</button>
                     </div>
                   </> : <>
                     <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}>← Back to team options</button>
@@ -360,12 +366,11 @@ export default function App() {
             <section className="connection-panel" style={{display:"block",marginBottom:22}}>
               <div className="eyebrow">TEAM COLLABORATION · SUPABASE</div>
               {team ? <>
-                <h3 style={{marginTop:8}}>{team.team_name} <span className="active-tag">{team.membership_role}</span></h3>
-                <p>Invite code <strong style={{letterSpacing:2,fontSize:18}}>{team.invite_code}</strong> · share this code privately with teammates.</p>
+                <div className="team-live-header"><div className="team-live-logo">{team.avatar_url?<img src={team.avatar_url} alt={team.team_name+" logo"}/>:<span>{team.team_name.slice(0,1).toUpperCase()}</span>}</div><div><h3>{team.team_name} <span className="active-tag">{team.membership_role}</span></h3><p>Squad identity · Invite code <strong style={{letterSpacing:2,fontSize:18}}>{team.invite_code}</strong></p></div><button className="secondary-button" onClick={()=>GenUI.copy(team.invite_code)}>Copy Code</button></div>
                 <div className="player-list">{teamMembers.map(m=><article className="player-row" key={m.id}><span className="player-id">{m.player_number?"P"+m.player_number:"—"}</span><div><b>{m.display_name}</b><small>{m.membership_role} · {m.assigned_role||"Role not assigned"}</small></div>{team.membership_role==="owner"&&m.membership_role!=="owner"?<div className="add-form"><select defaultValue={String(m.player_number||1)} onChange={e=>assignMember(m.id,Number(e.target.value),m.assigned_role||"Player")}>{[1,2,3,4,5].map(n=><option value={n} key={n}>P{n}</option>)}</select><select defaultValue={m.assigned_role||"Player"} onChange={e=>assignMember(m.id,Number(m.player_number||0),e.target.value)}>{["Primary Rusher","Secondary Rusher","Third Rusher / Flank","Sniper / IGL","Substitute","Player"].map(x=><option key={x}>{x}</option>)}</select></div>:null}</article>)}</div>
               </>:<>
                 <h3 style={{marginTop:8}}>Create a team or join with code</h3><p>Team owner creates one squad. Players use the invite code from their own accounts.</p>
-                <div className="add-form"><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="Team name"/><input value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Description (optional)"/><button className="primary-button" disabled={teamBusy||!teamName.trim()} onClick={createTeam}>{teamBusy?"Working…":"Create team"}</button></div>
+                <p className="team-separate-page-note">Create or join a squad from the dedicated Team Setup screen above. Team creation is not embedded here.</p>
                 <div className="add-form" style={{marginTop:12}}><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase())} placeholder="8-character invite code" maxLength={8}/><button className="secondary-button" disabled={teamBusy||teamCode.trim().length<6} onClick={joinTeam}>Join team</button></div>
               </>}
             </section>
