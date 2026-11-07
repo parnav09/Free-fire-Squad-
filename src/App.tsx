@@ -36,7 +36,7 @@ export default function App() {
   const [teamCode, setTeamCode] = useState("");
   const [teamDescription, setTeamDescription] = useState("");
   const [team, setTeam] = useState<{id:string;team_name:string;invite_code:string;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
-  const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>[]>([]);
+  const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
   const [teamBusy, setTeamBusy] = useState(false);
 
   useEffect(() => { localStorage.setItem("squad-os-roster", JSON.stringify(players)); }, [players]);
