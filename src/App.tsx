@@ -42,6 +42,7 @@ export default function App() {
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signup");
   const [showPassword, setShowPassword] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
+  const [sessionUserId, setSessionUserId] = useState("");
 
   const [newName, setNewName] = useState("");
   const [newRole, setNewRole] = useState("Substitute");
@@ -78,18 +79,18 @@ export default function App() {
     let alive = true;
     if (!supabase) { setConnection("Missing project settings"); return; }
     supabase.auth.getSession().then(({ data, error }) => {
-      if (alive) { setSignedIn(!!data.session); setSessionEmail(data.session?.user.email || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+      if (alive) { setSignedIn(!!data.session); setSessionUserId(data.session?.user.id || ""); setSessionEmail(data.session?.user.email || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     }).catch(() => alive && setConnection("Configured · network unavailable"));
     const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (alive) { setSignedIn(!!session); setSessionEmail(session?.user.email || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+      if (alive) { setSignedIn(!!session); setSessionUserId(session?.user.id || ""); setSessionEmail(session?.user.email || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     });
     return () => { alive = false; authSub.subscription.unsubscribe(); };
   }, []);
 
   const loadAssignments=async()=>{if(!supabase||!team)return;const {data,error}=await supabase.from("player_drill_assignments").select("id,player_id,drill_title,drill_description,due_date,status,completion_note").eq("team_id",team.id).order("due_date",{ascending:false}).limit(100);if(error)throw error;setAssignmentRows(data||[]);};
   useEffect(()=>{if(signedIn&&team)loadAssignments().catch(e=>setNotice(e.message));},[signedIn,team?.id]);
-  const createAssignment=async()=>{if(!supabase||!team||!assignmentPlayer||!assignmentTitle.trim())return;const {data:{user}}=await supabase.auth.getUser();const {error}=await supabase.from("player_drill_assignments").insert({team_id:team.id,player_id:assignmentPlayer,assigned_by:user?.id,drill_title:assignmentTitle.trim(),drill_description:assignmentDesc.trim(),due_date:assignmentDate});if(error){setNotice(error.message);return;}setNotice("Drill assigned.");await loadAssignments();};
-  const updateAssignment=async(id:string,status:string)=>{if(!supabase)return;const {error}=await supabase.from("player_drill_assignments").update({status,completed_at:status==="completed"?new Date().toISOString():null}).eq("id",id);if(error){setNotice(error.message);return;}await loadAssignments();};
+  const createAssignment=async()=>{if(!supabase||!team||!["owner","coach"].includes(team.membership_role)||!assignmentPlayer||!assignmentTitle.trim())return;const {data:{user}}=await supabase.auth.getUser();const {error}=await supabase.from("player_drill_assignments").insert({team_id:team.id,player_id:assignmentPlayer,assigned_by:user?.id,drill_title:assignmentTitle.trim(),drill_description:assignmentDesc.trim(),due_date:assignmentDate});if(error){setNotice(error.message);return;}setNotice("Drill assigned.");await loadAssignments();};
+  const updateAssignment=async(id:string,status:string)=>{if(!supabase||!team)return;const {error}=await supabase.from("player_drill_assignments").update({status,completed_at:status==="completed"?new Date().toISOString():null}).eq("id",id);if(error){setNotice(error.message);return;}await loadAssignments();};
   const signIn = async () => {
     if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
     if (!sessionEmail.trim() || !sessionPassword) return setNotice("Enter both email and password.");
@@ -168,6 +169,7 @@ export default function App() {
       const { data, error } = await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id", cycle.id).order("match_day").order("match_number");
       if (error) throw error;
       setSharedMatches(data || []);
+      setMatches(prev=>({...prev,...Object.fromEntries((data||[]).map(row=>[`${week}-D${row.match_day}-M${row.match_number}`,{placement:row.placement??12,kills:row.kills??0}]))}));
       setNotice("Shared scoreboard refreshed.");
     } catch (e) { setNotice(e instanceof Error ? e.message : "Refresh failed."); }
   };
@@ -263,7 +265,7 @@ export default function App() {
             <p className="footer-note">Prototype scoring: placement 1–10 = 12,9,8,7,6,5,4,3,2,1 points; 11/12 = 0. Add kills. Not an official tournament scoring preset.</p>
           </>}
           {section==="Training" && <>
-            <div className="section-heading"><div><div className="eyebrow">PRACTICE BLOCK</div><h2>Team drill checklist</h2></div><span className="phase-pill">LOCAL CHECKLIST</span></div>
+            <div className="section-heading"><div><div className="eyebrow">PRACTICE BLOCK</div><h2>Team drill checklist</h2></div><span className="phase-pill">{signedIn&&team?"SQUAD CLOUD":"LOCAL CHECKLIST"}</span></div>
             <div className="toolbar"><label>Training date <input type="date" value={trainingDate} onChange={e=>setTrainingDate(e.target.value)}/></label><span className="phase-pill">{signedIn&&team?"SQUAD CLOUD":"LOCAL ONLY"}</span></div><div className="drill-list">{["IGL call clarity · short and actionable","Trade spacing · pair stays connected","Rotation timing · move before pressure","Reset discipline · regroup before re-entry","Post-match review · one fix per match"].map((d,i)=><label className="drill-row" key={d}><input type="checkbox" checked={signedIn&&team?!!cloudTraining[d]:!!drillDone[d]} onChange={e=>{if(signedIn&&team)saveCloudTraining(d,e.target.checked);else setDrillDone(p=>({...p,[d]:e.target.checked}));}}/><span><b>0{i+1} / {d}</b><small>Mark only after the team completes and reviews it.</small></span></label>)}</div>
             <label className="notes-label">Session notes<textarea value={signedIn&&team?cloudSessionNotes:(notes.training||"")} onChange={e=>signedIn&&team?setCloudSessionNotes(e.target.value):setNotes(p=>({...p,training:e.target.value}))} placeholder="Calls missed, timing issue, next session target…"/></label>{signedIn&&team&&<button className="primary-button" onClick={saveSessionNotes}>Save session notes to cloud</button>}
           </>}
@@ -288,13 +290,13 @@ export default function App() {
           {section==="Assignments" && <>
             <div className="section-heading"><div><div className="eyebrow">INDIVIDUAL PRACTICE</div><h2>Drill assignments</h2></div><span className="phase-pill">{assignmentRows.filter(x=>x.status==="completed").length}/{assignmentRows.length} DONE</span></div>
             <section className="connection-panel" style={{display:"block"}}>
-              {!signedIn||!team?<p>Sign in and join/create a squad to use cloud assignments.</p>:<>
+              {!signedIn||!team?<p>Sign in and join/create a squad to use cloud assignments.</p>:!["owner","coach"].includes(team.membership_role)?<p>Only the team owner or coach can assign new drills. You can update your own assigned tasks below.</p>:<>
               <div className="toolbar"><label>Player<select value={assignmentPlayer} onChange={e=>setAssignmentPlayer(e.target.value)}><option value="">Choose player</option>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · P{m.player_number||"—"}</option>)}</select></label><label>Due date<input type="date" value={assignmentDate} onChange={e=>setAssignmentDate(e.target.value)}/></label></div>
               <label className="notes-label">Drill title<input value={assignmentTitle} onChange={e=>setAssignmentTitle(e.target.value)}/></label><label className="notes-label">Exact task<textarea value={assignmentDesc} onChange={e=>setAssignmentDesc(e.target.value)}/></label>
               <button className="primary-button" onClick={createAssignment} disabled={!assignmentPlayer||!assignmentTitle.trim()}>Assign drill</button>
               </>}
             </section>
-            <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">SQUAD TASK BOARD · {assignmentRows.length}</div><div className="player-list">{assignmentRows.map(a=><article className="player-row" key={a.id}><span className="player-id">{a.due_date}</span><div><b>{teamMembers.find(m=>m.user_id===a.player_id)?.display_name||a.player_id.slice(0,8)} · {a.drill_title}</b><small>{a.drill_description}</small><small>Status: {a.status}</small>{a.completion_note&&<small>{a.completion_note}</small>}</div><button className="secondary-button" onClick={()=>updateAssignment(a.id,a.status==="completed"?"assigned":"completed")}>{a.status==="completed"?"Undo":"Complete"}</button></article>)}</div></section>
+            <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">SQUAD TASK BOARD · {assignmentRows.length}</div><div className="player-list">{assignmentRows.map(a=><article className="player-row" key={a.id}><span className="player-id">{a.due_date}</span><div><b>{teamMembers.find(m=>m.user_id===a.player_id)?.display_name||a.player_id.slice(0,8)} · {a.drill_title}</b><small>{a.drill_description}</small><small>Status: {a.status}</small>{a.completion_note&&<small>{a.completion_note}</small>}</div>{a.player_id===sessionUserId||!!team&&["owner","coach"].includes(team.membership_role)?<button className="secondary-button" onClick={()=>updateAssignment(a.id,a.status==="completed"?"assigned":"completed")}>{a.status==="completed"?"Undo":"Complete"}</button>:null}</article>)}</div></section>
           </>}
           {section==="Analytics" && <>
             <div className="section-heading"><div><div className="eyebrow">PERFORMANCE SNAPSHOT</div><h2>Current week</h2></div><span className="phase-pill">BROWSER DATA</span></div>
