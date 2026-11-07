@@ -346,7 +346,6 @@ export default function App() {
                   </>}
                 </div>
               </>}
-              </>}
             </section>
           </>:<>
           <div className="eyebrow">SQUAD MANAGEMENT PLATFORM · M3</div>
