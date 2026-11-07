@@ -31,6 +31,13 @@ export default function App() {
   const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-drills") || "{}"); } catch { return {}; } });
   const [notes, setNotes] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-notes") || "{}"); } catch { return {}; } });
   const [query, setQuery] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [teamName, setTeamName] = useState("");
+  const [teamCode, setTeamCode] = useState("");
+  const [teamDescription, setTeamDescription] = useState("");
+  const [team, setTeam] = useState<{id:string;team_name:string;invite_code:string;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
+  const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
+  const [teamBusy, setTeamBusy] = useState(false);
 
   useEffect(() => { localStorage.setItem("squad-os-roster", JSON.stringify(players)); }, [players]);
   useEffect(() => { localStorage.setItem("squad-os-matches", JSON.stringify(matches)); }, [matches]);
@@ -49,8 +56,26 @@ export default function App() {
   }, []);
 
   const signIn = async () => { if (!supabase) return; const { error } = await supabase.auth.signInWithPassword({ email: sessionEmail.trim(), password: sessionPassword }); setNotice(error ? error.message : "Signed in. Cloud sync is enabled."); };
-  const signUp = async () => { if (!supabase) return; const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword }); setNotice(error ? error.message : "Account created. Check email verification if required."); };
+  const signUp = async () => { if (!supabase) return; if (!displayName.trim()) { setNotice("Enter your in-game/display name before creating account."); return; } const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword, options: { data: { display_name: displayName.trim() } } }); setNotice(error ? error.message : "Account created. If email verification is enabled, verify email then sign in."); };
   const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
+  const loadTeam = async () => {
+    if (!supabase) return;
+    const {data:{user}}=await supabase.auth.getUser(); if(!user) {setTeam(null);setTeamMembers([]);return;}
+    const {data:membership,error}=await supabase.from("team_members").select("id,team_id,user_id,player_number,assigned_role,membership_role,status").eq("user_id",user.id).eq("status","active").limit(1).maybeSingle();
+    if(error) throw error;
+    if(!membership){setTeam(null);setTeamMembers([]);return;}
+    const {data:t,error:te}=await supabase.from("teams").select("id,team_name,invite_code").eq("id",membership.team_id).single(); if(te)throw te;
+    setTeam({...t,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});
+    const {data:members,error:me}=await supabase.from("team_members").select("id,user_id,player_number,assigned_role,membership_role,status").eq("team_id",t.id).eq("status","active").order("player_number");
+    if(me)throw me;
+    const ids=(members||[]).map(x=>x.user_id);
+    const {data:profiles,error:pe}=await supabase.from("profiles").select("id,display_name").in("id",ids); if(pe)throw pe;
+    setTeamMembers((members||[]).map(x=>({...x,display_name:profiles?.find(p=>p.id===x.user_id)?.display_name||"Player"})));
+  };
+  const createTeam = async () => { if(!supabase||!teamName.trim())return; setTeamBusy(true); try { const {data,error}=await supabase.rpc("create_team",{p_name:teamName.trim(),p_description:teamDescription.trim(),p_timezone:"Asia/Kolkata"}); if(error)throw error; await loadTeam();setTeamName("");setTeamDescription("");setNotice("Team created. Share the Invite Code with your squad."); } catch(e){setNotice(e instanceof Error?e.message:"Team creation failed.");} finally{setTeamBusy(false);} };
+  const joinTeam = async () => { if(!supabase||!teamCode.trim())return; setTeamBusy(true); try { const {error}=await supabase.rpc("join_team",{p_code:teamCode.trim().toUpperCase()}); if(error)throw error; await loadTeam();setTeamCode("");setNotice("Joined team successfully."); } catch(e){setNotice(e instanceof Error?e.message:"Could not join team.");} finally{setTeamBusy(false);} };
+  const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error; const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
+  useEffect(()=>{if(signedIn)loadTeam().catch(e=>setNotice(e instanceof Error?e.message:"Could not load team."));else{setTeam(null);setTeamMembers([]);}},[signedIn]);
   const weekMonday = (w: string) => { const m=w.match(/^(\\d{4})-W(\\d{2})$/); if(!m) return new Date().toISOString().slice(0,10); const y=Number(m[1]), n=Number(m[2]); const d=new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+1+(n-1)*7); return d.toISOString().slice(0,10); };
   useEffect(() => {
     if (!supabase || !signedIn) return;
@@ -95,8 +120,20 @@ export default function App() {
           <p className="intro">A focused workspace for tournament results, player development and team performance. Records below are currently stored locally on this browser.</p>
           {notice && <div className="notice">{notice}<button onClick={()=>setNotice("")}>×</button></div>}
           {section==="Overview" && <>
-            <div className="section-heading"><div><div className="eyebrow">AT A GLANCE</div><h2>Squad overview</h2></div><span className="phase-pill">M2 / INTERACTIVE</span></div>            <section className="connection-panel"><div><div className="eyebrow">SUPABASE AUTH</div><h3>{signedIn ? "Cloud account connected" : "Sign in to sync"}</h3><p>{signedIn ? sessionEmail+" · tournament match records sync to TITAN BOLD" : "Email/password account access. Local progress remains available offline."}</p></div>{signedIn?<button className="primary-button" onClick={signOut}>Sign out</button>:<div className="add-form"><input type="email" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="Email"/><input type="password" value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Password"/><button className="primary-button" onClick={signIn}>Sign in</button><button className="secondary-button" onClick={signUp}>Create account</button></div>}</section>
+            <div className="section-heading"><div><div className="eyebrow">AT A GLANCE</div><h2>Squad overview</h2></div><span className="phase-pill">M2 / INTERACTIVE</span></div>            <section className="connection-panel"><div><div className="eyebrow">SUPABASE AUTH</div><h3>{signedIn ? "Cloud account connected" : "Sign in to sync"}</h3><p>{signedIn ? sessionEmail+" · tournament match records sync to TITAN BOLD" : "Email/password account access. Local progress remains available offline."}</p></div>{signedIn?<button className="primary-button" onClick={signOut}>Sign out</button>:<div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Display / IGN name"/><input type="email" value={sessionEmail} onChange={e=>setSessionEmail(e.target.value)} placeholder="Email"/><input type="password" value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Password"/><button className="primary-button" onClick={signIn}>Sign in</button><button className="secondary-button" onClick={signUp}>Create account</button></div>}</section>
 
+            <section className="connection-panel" style={{display:"block",marginBottom:22}}>
+              <div className="eyebrow">TEAM COLLABORATION · SUPABASE</div>
+              {team ? <>
+                <h3 style={{marginTop:8}}>{team.team_name} <span className="active-tag">{team.membership_role}</span></h3>
+                <p>Invite code <strong style={{letterSpacing:2,fontSize:18}}>{team.invite_code}</strong> · share this code privately with teammates.</p>
+                <div className="player-list">{teamMembers.map(m=><article className="player-row" key={m.id}><span className="player-id">{m.player_number?"P"+m.player_number:"—"}</span><div><b>{m.display_name}</b><small>{m.membership_role} · {m.assigned_role||"Role not assigned"}</small></div>{team.membership_role==="owner"&&m.membership_role!=="owner"?<div className="add-form"><select defaultValue={String(m.player_number||0)} onChange={e=>assignMember(m.id,Number(e.target.value),m.assigned_role||"Player")}><option value="0">Unassigned</option>{[1,2,3,4,5].map(n=><option value={n} key={n}>P{n}</option>)}</select><select defaultValue={m.assigned_role||"Player"} onChange={e=>assignMember(m.id,Number(m.player_number||0),e.target.value)}>{["Primary Rusher","Secondary Rusher","Third Rusher / Flank","Sniper / IGL","Substitute","Player"].map(x=><option key={x}>{x}</option>)}</select></div>:null}</article>)}</div>
+              </>:<>
+                <h3 style={{marginTop:8}}>Create a team or join with code</h3><p>Team owner creates one squad. Players use the invite code from their own accounts.</p>
+                <div className="add-form"><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="Team name"/><input value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Description (optional)"/><button className="primary-button" disabled={teamBusy||!teamName.trim()} onClick={createTeam}>{teamBusy?"Working…":"Create team"}</button></div>
+                <div className="add-form" style={{marginTop:12}}><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase())} placeholder="8-character invite code" maxLength={8}/><button className="secondary-button" disabled={teamBusy||teamCode.trim().length<6} onClick={joinTeam}>Join team</button></div>
+              </>}
+            </section>
             <div className="foundation-grid">
               {[["Roster",players.length+" / 10","Configured players"],["Match records",String(totalMatches),"Current browser"],["Week points",String(points),"Placement + kills"],["Cloud",isSupabaseConfigured?"Configured":"Pending","Auth check only"]].map(([a,b,c],i)=><article className="foundation-card" key={a}><div className="card-index">0{i+1}</div><div className="card-label">{a}</div><div className="card-value">{b}</div><div className="card-detail">{c}</div></article>)}
             </div>
