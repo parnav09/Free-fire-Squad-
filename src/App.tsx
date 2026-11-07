@@ -91,7 +91,7 @@ export default function App() {
     if (sessionPassword.length < 8) return setNotice("Password must be at least 8 characters.");
     if (sessionPassword !== confirmPassword) return setNotice("Passwords do not match.");
     const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword, options: { data: { display_name: displayName.trim() }, emailRedirectTo: window.location.origin } });
-    setNotice(error ? error.message : "Account created. Check your email and confirm the verification link.");
+    setNotice(error ? error.message : "Account created. If you are not signed in automatically, disable Email Confirmations in Supabase Auth settings.");
   };
   const resendVerification=async()=>{if(!supabase||!sessionEmail.trim())return;const {error}=await supabase.auth.resend({type:"signup",email:sessionEmail.trim()});setNotice(error?error.message:"Verification email sent again. Check inbox and spam.");};
   const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
@@ -172,10 +172,10 @@ export default function App() {
         <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><div className="system-status"><i/> {connection.toUpperCase()}</div></header>
         <div className="content">
           {onboarding?<>
-            <div className="eyebrow">SQUAD OS</div><h1>{signedIn?"Set up your squad":"Account"}</h1>
+
             {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
-              <div className="eyebrow">STEP 1 · ACCOUNT</div><h2>{signedIn?(emailVerified?"Email verified ✓":"Verify your email"):authMode==="signup"?"Create your account":"Welcome back"}</h2>
+              <h2>{signedIn?"Account connected":authMode==="signup"?"Create account":"Sign in"}</h2>
               {!signedIn?<div className="auth-card">
                 <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setNotice("");}}>Sign in</button></div>
                 <div className="auth-fields">
