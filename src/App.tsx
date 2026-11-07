@@ -238,6 +238,7 @@ export default function App() {
             <section className="connection-panel"><div><div className="eyebrow">DATA WARNING</div><h3>Analytics are still browser-local</h3><p>Tournament match rows are shared in Supabase; these summary metrics still calculate from this browser’s local entries.</p></div></section>
           </>}
           <footer className="footer-note">M3 · CLOUD MATCHES + TRAINING + EVALUATION + PLAYER DRILLS</footer>
+          </>}
         </div>
       </section>
     </main>
