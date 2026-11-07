@@ -30,7 +30,7 @@ export default function App() {
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signup");
   const [showPassword, setShowPassword] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
-  const [emailVerified,setEmailVerified]=useState(false);
+
   const [newName, setNewName] = useState("");
   const [newRole, setNewRole] = useState("Substitute");
   const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-drills") || "{}"); } catch { return {}; } });
@@ -65,10 +65,10 @@ export default function App() {
     let alive = true;
     if (!supabase) { setConnection("Missing project settings"); return; }
     supabase.auth.getSession().then(({ data, error }) => {
-      if (alive) { setSignedIn(!!data.session); setEmailVerified(!!data.session?.user.email_confirmed_at); setSessionEmail(data.session?.user.email || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+      if (alive) { setSignedIn(!!data.session); setSessionEmail(data.session?.user.email || ""); setConnection(error ? "Configured · auth check failed" : data.session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     }).catch(() => alive && setConnection("Configured · network unavailable"));
     const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (alive) { setSignedIn(!!session); setEmailVerified(!!session?.user.email_confirmed_at); setSessionEmail(session?.user.email || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
+      if (alive) { setSignedIn(!!session); setSessionEmail(session?.user.email || ""); setConnection(session ? "Signed in · cloud enabled" : "Configured · sign in required"); }
     });
     return () => { alive = false; authSub.subscription.unsubscribe(); };
   }, []);
@@ -93,7 +93,7 @@ export default function App() {
     const { error } = await supabase.auth.signUp({ email: sessionEmail.trim(), password: sessionPassword, options: { data: { display_name: displayName.trim() }, emailRedirectTo: window.location.origin } });
     setNotice(error ? error.message : "Account created. If you are not signed in automatically, disable Email Confirmations in Supabase Auth settings.");
   };
-  const resendVerification=async()=>{if(!supabase||!sessionEmail.trim())return;const {error}=await supabase.auth.resend({type:"signup",email:sessionEmail.trim()});setNotice(error?error.message:"Verification email sent again. Check inbox and spam.");};
+
   const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
   const loadTeam = async () => {
     if (!supabase) return;
