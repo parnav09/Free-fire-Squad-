@@ -523,6 +523,10 @@ export default function App() {
           </>}
           {section==="Settings" && <>
             <div className="section-heading"><div><h2>Team settings</h2></div></div>
+            {signedIn&&<section className="connection-panel account-settings-panel">
+              <div className="eyebrow">ACCOUNT & SECURITY</div><h3>Session controls</h3><p>Log out of this device. Your team records and account remain stored securely in the cloud.</p>
+              <button className="secondary-button settings-logout-button" type="button" onClick={()=>setConfirmAction("logout")}>Log Out</button>
+            </section>}
             {!signedIn||!team?<section className="connection-panel"><h3>Team profile unavailable</h3><p>Sign in and create or join a team first.</p></section>:<>
               <section className="connection-panel team-profile-settings" style={{display:"block"}}>
                 <div className="eyebrow">TEAM PROFILE</div>
@@ -533,10 +537,6 @@ export default function App() {
                   </div></div>
                 {teamLogoFile&&<div className="crop-controls"><label>Horizontal crop <input type="range" min="0" max="100" value={teamLogoCropX} onChange={e=>setTeamLogoCropX(Number(e.target.value))}/></label><label>Vertical crop <input type="range" min="0" max="100" value={teamLogoCropY} onChange={e=>setTeamLogoCropY(Number(e.target.value))}/></label><button className="secondary-button" onClick={()=>{setTeamLogoFile(null);setTeamLogoPreview("");}}>Cancel selection</button></div>}
                 <button className="primary-button" disabled={!teamLogoFile||teamBusy} onClick={async()=>{if(!supabase||!teamLogoFile)return;setTeamBusy(true);try{const cropped=await makeSquareTeamLogo(teamLogoFile,teamLogoCropX,teamLogoCropY);const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Sign in again to update the logo.");const path=user.id+"/"+team.id+".jpg";const {error:up}=await supabase.storage.from("team-avatars").upload(path,cropped,{upsert:true,contentType:"image/jpeg"});if(up)throw up;const {data:pub}=supabase.storage.from("team-avatars").getPublicUrl(path);const {error:av}=await supabase.from("teams").update({avatar_url:pub.publicUrl+"?v="+Date.now()}).eq("id",team.id);if(av)throw av;await loadTeam();setTeamLogoFile(null);setTeamLogoPreview("");setNotice("Team logo updated.");}catch(e){setNotice(e instanceof Error?e.message:"Logo update failed.");}finally{setTeamBusy(false);}}}>{teamBusy?"Saving logo…":"Save Team Logo"}</button>
-              </section>
-              <section className="connection-panel account-settings-panel">
-                <div className="eyebrow">ACCOUNT & SECURITY</div><h3>Session controls</h3><p>Log out of this device. Your team records and account remain stored securely in the cloud.</p>
-                <button className="secondary-button settings-logout-button" type="button" onClick={()=>setConfirmAction("logout")}>Log Out</button>
               </section>
               <section className="connection-panel backup-panel">
                 <div className="backup-panel-head"><div><div className="eyebrow">OWNER TOOLS · DATA PORTABILITY</div><h3>Team backup & restore</h3><p>Export roster, tournament history, training, evaluations, assignments, team settings and related records as a portable JSON backup.</p></div><span className="backup-lock">OWNER ONLY</span></div>
