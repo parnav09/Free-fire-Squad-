@@ -205,6 +205,49 @@ export default function App() {
   };
 
   const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
+  const downloadTeamBackup=async()=>{
+    if(!supabase||team?.membership_role!=="owner")return;
+    setBackupBusy(true);setBackupStatus("");
+    try{
+      const {data,error}=await supabase.rpc("get_team_backup");if(error)throw error;
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+      const url=URL.createObjectURL(blob);const a=document.createElement("a");
+      a.href=url;a.download="SQUAD-OS-"+team.team_name.replace(/[^a-z0-9-_]+/gi,"-")+"-"+new Date().toISOString().slice(0,10)+".json";
+      document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+      setBackupStatus("Backup exported successfully. Keep the JSON file somewhere safe.");
+    }catch(e){setBackupStatus(e instanceof Error?e.message:"Backup export failed.");}
+    finally{setBackupBusy(false);}
+  };
+  const importTeamBackup=async()=>{
+    if(!supabase||team?.membership_role!=="owner"||!backupFile)return;
+    setBackupBusy(true);setBackupStatus("");
+    try{
+      const backup=JSON.parse(await backupFile.text());
+      if(backup?.format!=="squad-os-team-backup"||backup?.schema_version!==1)throw new Error("This is not a supported SQUAD OS backup file.");
+      const {data,error}=await supabase.rpc("restore_team_backup",{p_backup:backup});if(error)throw error;
+      await loadTeam();await loadAssignments();setBackupFile(null);setConfirmAction(null);
+      setBackupStatus("Restore complete. "+(data?.restored_rows??0)+" records restored to this team.");
+      setNotice("Team backup restored successfully.");
+    }catch(e){setBackupStatus(e instanceof Error?e.message:"Backup import failed.");}
+    finally{setBackupBusy(false);}
+  };
+  const confirmLogout=async()=>{
+    if(!supabase)return;setTeamBusy(true);
+    try{const {error}=await supabase.auth.signOut();if(error)throw error;setConfirmAction(null);setNotice("Signed out successfully. Your cloud data remains saved.");}
+    catch(e){setNotice(e instanceof Error?e.message:"Logout failed.");}
+    finally{setTeamBusy(false);}
+  };
+  const confirmLeaveTeam=async()=>{
+    if(!supabase||!team)return;setTeamBusy(true);
+    try{
+      const activeOthers=teamMembers.filter(m=>m.status==="active"&&m.user_id!==sessionUserId);
+      const transfer=team.membership_role==="owner"&&activeOthers.length?leaveTransferTo||null:null;
+      const {data,error}=await supabase.rpc("leave_team",{p_new_owner:transfer});if(error)throw error;
+      setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");setConfirmAction(null);setLeaveTransferTo("");
+      setNotice(data?.deletion_scheduled_at?"You left the team. Empty-team deletion is scheduled after the 48-hour recovery window.":"You left the team. Ownership has been transferred where required.");
+    }catch(e){setNotice(e instanceof Error?e.message:"Could not leave team.");}
+    finally{setTeamBusy(false);}
+  };
   const loadTeam = async () => {
     if (!supabase) return;
     const {data:{user}}=await supabase.auth.getUser(); if(!user) {setTeam(null);setTeamMembers([]);return;}
