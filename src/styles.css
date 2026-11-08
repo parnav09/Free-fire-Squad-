@@ -308,3 +308,23 @@ input[type=checkbox],input[type=range]{min-height:0;accent-color:#79cce8}
  .nav-item:hover:not(.nav-item-active){background:#10172a;color:#c5d3ed}
  .primary-button:hover:not(:disabled){border-color:#6b67bd;filter:brightness(1.12)}
 }
+
+.team-admin-panel{margin-top:16px;display:block}
+.team-admin-panel h3{font-size:15px;margin:0 0 14px}
+.admin-setting{display:grid;gap:8px;font-size:12px;color:#b7c5df}
+.admin-setting select{width:100%;max-width:480px}
+.admin-setting small{color:#8495b5;font-size:11px;line-height:1.5}
+.admin-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.admin-section-title h3{margin:0}
+.request-list{display:grid;gap:10px}
+.request-card{padding:14px;border:1px solid #25334d;border-radius:12px;background:linear-gradient(145deg,rgba(16,26,47,.8),rgba(10,14,28,.75));display:grid;gap:12px}
+.request-person{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.request-person b{font-size:14px;color:#e6edff}
+.request-person small{font-size:10px;color:#8394b4}
+.request-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.request-controls label{display:grid;gap:6px;font-size:11px;color:#aebed9}
+.request-controls select{width:100%;min-width:0}
+.request-actions{display:flex;gap:8px;flex-wrap:wrap}
+.request-actions button{flex:1;min-width:120px}
+.join-pending{font-size:12px;color:#8fe2ce;background:rgba(30,120,100,.12);border:1px solid rgba(69,190,160,.2);padding:10px 12px;border-radius:9px}
+@media(max-width:620px){.request-controls{grid-template-columns:1fr}.request-actions button{min-width:0}.request-card{padding:12px}}
