@@ -47,7 +47,10 @@ export default function App() {
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
-  const [recoveryMode, setRecoveryMode] = useState(false);\n  const [recoveryStep, setRecoveryStep] = useState<"email"|"otp"|"password">("email");\n  const [recoveryOtp, setRecoveryOtp] = useState("");\n  const [recoveryBusy, setRecoveryBusy] = useState(false);
+  const [recoveryMode, setRecoveryMode] = useState(false);
+  const [recoveryStep, setRecoveryStep] = useState<"email"|"otp"|"password">("email");
+  const [recoveryOtp, setRecoveryOtp] = useState("");
+  const [recoveryBusy, setRecoveryBusy] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [signedIn, setSignedIn] = useState(false);
   const [sessionUserId, setSessionUserId] = useState("");
