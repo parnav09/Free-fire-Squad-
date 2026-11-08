@@ -384,18 +384,31 @@ export default function App() {
         if (nameError.code === "PGRST203") throw new Error("Account profile RPC is ambiguous. The server schema fix is not active yet; refresh after the database migration.");
         throw new Error(nameError.message || "Could not save your player name.");
       }
+      const createStartedAt = new Date().toISOString();
       const { data, error: createError } = await supabase.rpc("create_team", {
         p_name: cleanName, p_description: cleanDescription || null, p_timezone: "Asia/Kolkata"
       });
       if (createError) {
-        const msg = createError.message || "";
-        if (/duplicate|unique/i.test(msg)) throw new Error("A team with this identifier already exists. Change the team name and retry.");
-        if (/not signed in|jwt/i.test(msg)) throw new Error("Your session expired. Sign in again, then create the team.");
-        if (/2 to 48|char_length/i.test(msg)) throw new Error("Team name must be 2–48 characters.");
-        throw new Error(msg || "The server rejected team creation. No team was created.");
+        // RPC may commit on the server and lose its response during a network timeout.
+        // Reconcile before telling the user to retry, preventing accidental duplicate squads.
+        const { data: recovered } = await supabase.from("teams").select("id")
+          .eq("owner_id", sessionUserId).eq("team_name", cleanName)
+          .gte("created_at", createStartedAt).order("created_at", { ascending: false })
+          .limit(1).maybeSingle();
+        if (recovered?.id) {
+          createdTeamId = recovered.id;
+          console.warn("Recovered team creation after ambiguous RPC response:", createError.message);
+        } else {
+          const msg = createError.message || "";
+          if (/PGRST203/i.test(msg)) throw new Error("Server RPC schema is still refreshing. Wait a few seconds, reload, then try once.");
+          if (/not signed in|jwt/i.test(msg)) throw new Error("Your session expired. Sign in again, then create the team.");
+          if (/2 to 48|char_length/i.test(msg)) throw new Error("Team name must be 2–48 characters.");
+          throw new Error("Team creation could not be confirmed. Check your Team panel or reload before retrying. Details: " + (msg || "network/server error"));
+        }
+      } else {
+        createdTeamId = typeof data === "string" ? data : Array.isArray(data) ? data[0] : null;
       }
-      createdTeamId = typeof data === "string" ? data : Array.isArray(data) ? data[0] : null;
-      if (!createdTeamId) throw new Error("The server returned no Team ID. Refresh Team Setup before retrying.");
+      if (!createdTeamId) throw new Error("The server returned no Team ID. Check your Team panel before retrying.");
       localStorage.setItem("squad-os-active-team", createdTeamId);
       setTeamName(""); setTeamDescription(""); setTeamLogoFile(null); setTeamLogoPreview(""); setTeamScreen("choice");
       let logoWarning = "";
