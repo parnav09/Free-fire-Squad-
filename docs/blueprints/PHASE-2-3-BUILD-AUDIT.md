@@ -21,11 +21,11 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 - [x] CI configured for feature branch.
 
 ## Verification status
-- TypeScript/build: CI has a known successful run at commit 90868c04 before subsequent agenda/evaluation/template edits; rerun required against current HEAD.
+- TypeScript/build: GitHub Actions typecheck + production build passed at commit 0c37d617 (current feature head).
 - Supabase migration apply: success (schema migration + member task update policy + templates seed).
 - Data persistence/CRUD through authenticated app: not yet end-to-end manually tested.
 - Mobile visual QA: not yet manually inspected on user's Android device.
-- Preview deployment: not created; Vercel deployment API quota currently exhausted for 24 hours.
+- Preview deployment: latest auto-preview attempt for an earlier broken commit failed; Vercel deployment API quota reached (24-hour limit), so current commit preview is not available yet.
 - Production: not merged/deployed; do not merge until preview/manual QA and final acceptance.
 
 ## Remaining Phase 2–3 work
@@ -40,4 +40,4 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 - Cross-link plan → session → results → next task/plan; timeline/audit.
 - Add robust validation, retry/optimistic UI and confirm destructive actions.
 - RLS tests for member, coach, owner, cross-team and archived records.
-- Current branch CI, preview deploy when quota allows, Android visual QA and final phase checklist.
+- Current PR #9 is open against feature/owner-power-toggle (not merged). Preview deploy when quota allows, Android visual QA and final phase checklist.
