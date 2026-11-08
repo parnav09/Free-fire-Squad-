@@ -209,7 +209,7 @@ export default function App() {
     if(!supabase||team?.membership_role!=="owner")return;
     setBackupBusy(true);setBackupStatus("");
     try{
-      const {data,error}=await supabase.rpc("get_team_backup");if(error)throw error;
+      const {data,error}=await supabase.rpc("get_team_backup_for_team",{p_team_id:team.id});if(error)throw error;
       let logoDataUrl:string|null=null;
       if(team.avatar_url){
         try{const response=await fetch(team.avatar_url);if(response.ok){const imageBlob=await response.blob();if(imageBlob.size<=5*1024*1024){logoDataUrl=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error("Could not read team logo."));reader.readAsDataURL(imageBlob);});}}}catch{logoDataUrl=null;}
@@ -229,7 +229,7 @@ export default function App() {
     try{
       const backup=JSON.parse(await backupFile.text());
       if(backup?.format!=="squad-os-team-backup"||backup?.schema_version!==1)throw new Error("This is not a supported SQUAD OS backup file.");
-      const {data,error}=await supabase.rpc("restore_team_backup",{p_backup:backup});if(error)throw error;
+      const {data,error}=await supabase.rpc("restore_team_backup_for_team",{p_backup:backup,p_team_id:team.id});if(error)throw error;
       const local=backup.local_device_data;
       if(local&&Array.isArray(local.players))setPlayers(local.players);
       if(local&&typeof local.week==="string")setWeek(local.week);
@@ -263,7 +263,7 @@ export default function App() {
     try{
       const activeOthers=teamMembers.filter(m=>m.status==="active"&&m.user_id!==sessionUserId);
       const transfer=team.membership_role==="owner"&&activeOthers.length?leaveTransferTo||null:null;
-      const {data,error}=await supabase.rpc("leave_team",{p_new_owner:transfer});if(error)throw error;
+      const {data,error}=await supabase.rpc("leave_team_for_team",{p_team_id:team.id,p_new_owner:transfer});if(error)throw error;
       setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");setConfirmAction(null);setLeaveTransferTo("");
       setNotice(data?.deletion_scheduled_at?"You left the team. Empty-team deletion is scheduled after the 48-hour recovery window.":"You left the team. Ownership has been transferred where required.");
     }catch(e){setNotice(e instanceof Error?e.message:"Could not leave team.");}
