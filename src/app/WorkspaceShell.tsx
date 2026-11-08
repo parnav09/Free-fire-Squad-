@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { Section } from "./types";
+import Button from "../components/ui/Button";
 
 type WorkspaceShellProps = {
   section: Section;
@@ -36,16 +37,15 @@ export default function WorkspaceShell({
               {nav.map((item) => {
                 const active = section === item || (item === "Settings" && section === "Profile");
                 return (
-                  <button
+                  <Button
                     key={item}
-                    type="button"
                     className={"nav-item " + (active ? "nav-item-active" : "nav-item-muted")}
                     aria-current={active ? "page" : undefined}
                     onClick={() => onNavigate(item)}
                   >
                     <span className="nav-dot" aria-hidden="true" />
                     {item}
-                  </button>
+                  </Button>
                 );
               })}
             </nav>
