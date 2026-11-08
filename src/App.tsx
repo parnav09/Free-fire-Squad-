@@ -72,6 +72,11 @@ export default function App() {
   const [team, setTeam] = useState<{id:string;membership_id:string;team_name:string;invite_code:string;avatar_url?:string|null;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
   const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
   const [teamBusy, setTeamBusy] = useState(false);
+  const [confirmAction,setConfirmAction]=useState<"logout"|"leave"|"import"|null>(null);
+  const [leaveTransferTo,setLeaveTransferTo]=useState("");
+  const [backupFile,setBackupFile]=useState<File|null>(null);
+  const [backupBusy,setBackupBusy]=useState(false);
+  const [backupStatus,setBackupStatus]=useState("");
   const [joinRequests,setJoinRequests]=useState<Array<{id:string;user_id:string;requested_at:string;display_name:string;status:string}>>([]);
   const [requestStatus,setRequestStatus]=useState<string>("");
   const [requestSlot,setRequestSlot]=useState<Record<string,string>>({});
