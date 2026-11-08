@@ -400,3 +400,11 @@ input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:18px;mi
 .overview-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:620px){.overview-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:380px){.overview-stats{grid-template-columns:1fr}}
+
+/* Phase 2 · mobile interaction/accessibility hardening */
+button,.primary-button,.secondary-button,.danger-button,.text-button,.team-upload-button{min-height:44px;}
+input:not([type=checkbox]):not([type=range]),select,textarea{min-height:44px;}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #69d9ef;outline-offset:3px;}
+.roster-capacity-panel .admin-setting{max-width:420px;}
+.roster-capacity-panel select{width:100%;margin-top:8px;}
+@media(max-width:620px){.request-controls,.request-actions{width:100%;}.request-controls label{flex:1;min-width:0;}.request-controls select{width:100%;}.request-actions button{flex:1;}}
