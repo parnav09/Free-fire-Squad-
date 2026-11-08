@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import Button from "../components/ui/Button";
 
 type AppErrorBoundaryProps = {
   children: ReactNode;
@@ -39,9 +40,9 @@ export default class AppErrorBoundary extends Component<
               The app could not render this screen. Reload the workspace to try again.
               Your saved team records are not intentionally changed by this recovery screen.
             </p>
-            <button className="primary-button" type="button" onClick={this.handleReload}>
+            <Button variant="primary" onClick={this.handleReload}>
               Reload workspace
-            </button>
+            </Button>
           </section>
         </main>
       );
