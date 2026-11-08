@@ -17,7 +17,7 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 - [x] Eighteen reusable competitive training templates (communication, entry/trade, backup, flank, rotation, retreat/regroup, end-zone, role execution, post-match review); copy to team library.
 - [x] Training sessions: individual/squad/communication/IGL/role session, link plan/drill, date/duration/instructions, lifecycle.
 - [x] Session participant selection and attendance (present/absent/excused/pending), individual participation notes and incomplete-session rollback on participant insert failure.
-- [x] Training evaluation: player attempt, score /100, role-weighted execution/communication/coordination/decision/consistency rubric, feedback, reflection, next action, repeat attempt history.\n- [x] Evaluation next action can generate a linked follow-up player task tied to the originating training session.
+- [x] Training evaluation: player attempt, score /100, role-weighted execution/communication/coordination/decision/consistency rubric, feedback, reflection, next action, repeat attempt history.\n- [x] Evaluation next action can generate a linked follow-up player task tied to the originating training session.\n- [x] Task board status chips/counts, player filter and overdue indicator.\n- [x] Weekly planning roll-up: planned minutes and scrim-match totals.
 - [x] Task completion reflection, coach feedback and review status.
 - [x] Data schema/migrations: plans, agenda blocks, tasks, drills, sessions, results; team membership RLS and coach/owner write policies.
 - [x] Applied schema and template seed to Supabase project xaixnqvyoswcvvkydrmh.
@@ -25,7 +25,7 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 - [x] CI configured for feature branch.
 
 ## Verification status
-- TypeScript/build: GitHub Actions typecheck + production build passed at commit 4511e121; newer agenda/follow-up additions are awaiting latest CI at commit bf6b568d.
+- TypeScript/build: GitHub Actions typecheck + production build passed at current code checkpoint commit 9709429b (latest subsequent task-board/week-summary UI changes still require their own latest-head CI confirmation).
 - Supabase migration apply: success (schema migration + member task update policy + templates seed).
 - Data persistence/CRUD through authenticated app: not yet end-to-end manually tested.
 - Mobile visual QA: not yet manually inspected on user's Android device.
