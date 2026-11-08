@@ -633,3 +633,5 @@ button:disabled,.team-upload-button:has(input:disabled){opacity:.48;cursor:not-a
 .pt-task-status-filters{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 13px}.pt-task-status-filters button{display:inline-flex;align-items:center;gap:6px;border:1px solid #24334f;background:#0c1525;color:#7f95bb;border-radius:8px;padding:7px 9px;font-size:9px;cursor:pointer;text-transform:capitalize}.pt-task-status-filters button.active{border-color:#586fe5;background:#172344;color:#b8caff}.pt-task-status-filters small{font-size:8px;color:#6c84ad}
 
 .pt-week-summary{display:flex;flex-wrap:wrap;gap:8px;padding:10px 2px 2px;color:#7188af;font-size:10px}.pt-week-summary span{display:flex;gap:5px;align-items:center;border:1px solid #1e2c45;background:#0a1120;border-radius:8px;padding:7px 10px}.pt-week-summary b{color:#c1d2f5;font-size:11px}
+
+.pt-chip.overdue{border-color:#6b3b42;background:#2b151c;color:#f39aa7;font-weight:900;letter-spacing:.04em}
