@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import useAccessibleDialog from "./app/useAccessibleDialog";
 
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 
@@ -532,6 +533,7 @@ export default function App() {
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
   const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Assignments", "Analytics", "Settings"];
   const onboarding=!signedIn||!team;
+  const confirmDialogRef = useAccessibleDialog<HTMLElement>(Boolean(confirmAction), () => setConfirmAction(null));
   return (
     <main className="app-shell">
       <aside className="sidebar">
@@ -726,11 +728,11 @@ export default function App() {
             <AnalyticsSection totalMatches={totalMatches} points={points} analyticsMatches={analyticsMatches} rosterSize={players.length}/>
           </Suspense>}
           {confirmAction&&<div className="confirm-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setConfirmAction(null);}}>
-            <section className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+            <section ref={confirmDialogRef} className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-description" tabIndex={-1}>
               <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?"↗":confirmAction==="leave"?"⇥":"↻"}</div>
               <div className="eyebrow">{confirmAction==="logout"?"ACCOUNT SESSION":confirmAction==="leave"?"TEAM MEMBERSHIP":"DATA RESTORE"}</div>
               <h3 id="confirm-title">{confirmAction==="logout"?"Log out of SQUAD OS?":confirmAction==="leave"?"Leave this team?":"Restore this team backup?"}</h3>
-              <p>{confirmAction==="logout"?"You will be signed out on this device. Your account and team data will remain safe.":confirmAction==="leave"?"Your membership will end immediately. If you are the last active member, the empty team will be queued for deletion after 48 hours.":"This replaces the current team roster and team records with the selected backup. Download a fresh backup first if you need a rollback point."}</p>
+              <p id="confirm-description">{confirmAction==="logout"?"You will be signed out on this device. Your account and team data will remain safe.":confirmAction==="leave"?"Your membership will end immediately. If you are the last active member, the empty team will be queued for deletion after 48 hours.":"This replaces the current team roster and team records with the selected backup. Download a fresh backup first if you need a rollback point."}</p>
               {confirmAction==="leave"&&team?.membership_role==="owner"&&teamMembers.some(m=>m.status==="active"&&m.user_id!==sessionUserId)&&<label className="confirm-transfer-field">Transfer team ownership to<select value={leaveTransferTo} onChange={e=>setLeaveTransferTo(e.target.value)}><option value="">Select new owner</option>{teamMembers.filter(m=>m.status==="active"&&m.user_id!==sessionUserId).map(m=><option key={m.user_id} value={m.user_id}>P{m.player_number||"—"} · {m.display_name}</option>)}</select></label>}
               <div className="confirm-actions"><button className="secondary-button" type="button" disabled={teamBusy||backupBusy} onClick={()=>setConfirmAction(null)}>Cancel</button><button className="danger-button" type="button" disabled={teamBusy||backupBusy||(confirmAction==="leave"&&team?.membership_role==="owner"&&teamMembers.some(m=>m.status==="active"&&m.user_id!==sessionUserId)&&!leaveTransferTo)||(confirmAction==="import"&&!backupFile)} onClick={()=>confirmAction==="logout"?confirmLogout():confirmAction==="leave"?confirmLeaveTeam():importTeamBackup()}>{teamBusy||backupBusy?"Working…":confirmAction==="logout"?"Confirm Log Out":confirmAction==="leave"?"Confirm Leave":"Confirm Restore"}</button></div>
             </section>
