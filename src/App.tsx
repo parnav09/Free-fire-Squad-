@@ -219,7 +219,7 @@ export default function App() {
       const url=URL.createObjectURL(blob);const a=document.createElement("a");
       a.href=url;a.download="SQUAD-OS-"+team.team_name.replace(/[^a-z0-9-_]+/gi,"-")+"-"+new Date().toISOString().slice(0,10)+".json";
       document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
-      setBackupStatus("Backup exported successfully. Keep the JSON file somewhere safe.");
+      setBackupStatus("Backup exported successfully. "+(logoDataUrl?"Team logo image is included. ":"Team logo image could not be embedded; the existing logo URL is retained. ")+"Keep the JSON file somewhere safe.");
     }catch(e){setBackupStatus(e instanceof Error?e.message:"Backup export failed.");}
     finally{setBackupBusy(false);}
   };
