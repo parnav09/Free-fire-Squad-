@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import useAccessibleDialog from "./app/useAccessibleDialog";
+import WorkspaceShell from "./app/WorkspaceShell";
+import type { Section } from "./app/types";
 
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 
 
-type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Profile" | "Settings";
 type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
   { id: "P1", name: "Player 1", role: "Primary Rusher", status: "Active" },
@@ -535,16 +536,14 @@ export default function App() {
   const onboarding=!signedIn||!team;
   const confirmDialogRef = useAccessibleDialog<HTMLElement>(Boolean(confirmAction), () => setConfirmAction(null));
   return (
-    <main className="app-shell">
-      <aside className="sidebar">
-        <div className="brand-mark">S</div><div className="brand-copy"><span className="brand-name">SQUAD OS</span><span className="brand-caption">TEAM OPERATIONS</span></div>
-        <div className="sidebar-divider"/>{!onboarding&&<><div className="nav-label">WORKSPACE</div>
-        {nav.map(n => <button key={n} className={"nav-item "+((section===n||(n==="Settings"&&section==="Profile"))?"nav-item-active":"nav-item-muted")} onClick={()=>setSection(n)}><span className="nav-dot"/>{n}</button>)}
-        <div className="sidebar-bottom">SQUAD OS · WORKSPACE</div></>}
-      </aside>
-      <section className="main-panel">
-        <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><div className={"sync-indicator sync-"+syncState} role="status" aria-live="polite" aria-label={"Team sync status: "+syncLabel} title={"Team sync status: "+syncLabel}><i/><span>{syncLabel}</span></div></header>
-        <div className="content">
+    <WorkspaceShell
+      section={section}
+      nav={nav}
+      syncState={syncState}
+      syncLabel={syncLabel}
+      showNavigation={!onboarding}
+      onNavigate={setSection}
+    >
           {onboarding?<>
             {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>}
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
@@ -739,8 +738,6 @@ export default function App() {
           </div>}
           <footer className="footer-note">SQUAD OS · TEAM WORKSPACE</footer>
           </>}
-        </div>
-      </section>
-    </main>
+    </WorkspaceShell>
   );
 }
