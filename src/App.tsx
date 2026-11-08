@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+
+const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 
 
 type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Profile" | "Settings";
@@ -716,11 +718,9 @@ export default function App() {
               </section>
               </>}
           </>}
-          {section==="Analytics" && <>
-            <div className="section-heading"><div><div className="eyebrow">PERFORMANCE SNAPSHOT</div><h2>Current week</h2></div><span className="phase-pill">WEEKLY SUMMARY</span></div>
-            <div className="foundation-grid">{[["Recorded matches",totalMatches],["Placement + kills points",points],["Average kills",totalMatches?(analyticsMatches.reduce((s,m)=>s+m.kills,0)/totalMatches).toFixed(1):"0.0"],["Roster size",players.length]].map(([a,b],i)=><article className="foundation-card" key={String(a)}><div className="card-index">0{i+1}</div><div className="card-label">{a}</div><div className="card-value">{b}</div></article>)}</div>
-            <section className="connection-panel"><div><div className="eyebrow">SQUAD PERFORMANCE</div><h3>Current team records</h3><p>Metrics are calculated from the selected team’s match history.</p></div></section>
-          </>}
+          {section==="Analytics" && <Suspense fallback={<section className="connection-panel" role="status">Loading analytics…</section>}>
+            <AnalyticsSection totalMatches={totalMatches} points={points} analyticsMatches={analyticsMatches} rosterSize={players.length}/>
+          </Suspense>}
           {confirmAction&&<div className="confirm-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setConfirmAction(null);}}>
             <section className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
               <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?"↗":confirmAction==="leave"?"⇥":"↻"}</div>
