@@ -33,8 +33,6 @@ button, input { font: inherit; }
 .main-panel { flex: 1; min-width: 0; }
 .topbar { height: 72px; padding: 0 5.5%; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
 .breadcrumb span { margin: 0 9px; color: #49536d; }
-.system-status { color: #a8b1c9; font-size: 9px; letter-spacing: .12em; display: flex; align-items: center; gap: 9px; }
-.system-status i { width: 6px; height: 6px; border-radius: 50%; background: #8a7cff; box-shadow: 0 0 10px #8a7cff; }
 .content { max-width: 1120px; margin: 0 auto; padding: 64px 5.5% 34px; }
 .eyebrow { color: var(--cyan); }
 h1 { margin: 18px 0 16px; font-size: clamp(38px, 5.4vw, 66px); line-height: 1.04; letter-spacing: -.055em; font-weight: 750; }
@@ -62,7 +60,6 @@ h3 { margin: 8px 0 7px; font-size: 15px; }
   .nav-item-active { margin-top: 34px; width: 40px; height: 40px; overflow: hidden; color: transparent; padding: 0; display: grid; place-items: center; }
   .nav-dot { margin: 0; }
   .topbar { height: 58px; padding: 0 18px; }
-  .system-status { font-size: 8px; }
   .content { padding: 42px 18px 28px; }
   .section-heading { margin-top: 42px; align-items: start; flex-direction: column; }
   .foundation-grid { gap: 9px; }
@@ -273,7 +270,6 @@ input[type=checkbox],input[type=range]{min-height:0;accent-color:#79cce8}
  .main-panel{width:100%}
  .topbar{height:48px;padding:0 14px}
  .breadcrumb{font-size:9px;letter-spacing:.08em}
- .system-status{font-size:8px;max-width:48%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
  .content{padding:22px 14px 24px}
  .page-title{font-size:23px;margin-bottom:16px}
  .section-heading{margin:20px 0 12px}
