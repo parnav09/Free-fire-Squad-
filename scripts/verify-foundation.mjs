@@ -29,10 +29,10 @@ test("interactive controls retain a 44px minimum target", () => {
 });
 
 test("primary navigation and gallery/backup controls inherit full touch targets", () => {
-  assert.match(foundation, /button,[\\s\\S]*?min-height:\\s*var\\(--tap-min\\)/);
-  assert.match(foundation, /\\.sidebar \\.nav-item[\\s\\S]*?min-height:\\s*54px/);
-  assert.match(foundation, /\\.team-upload-button,[\\s\\S]*?min-height:\\s*var\\(--tap-min\\)/);
-  assert.match(foundation, /touch-action:\\s*manipulation/);
+  assert.match(foundation, /button,[\s\S]*?min-height:\s*var\(--tap-min\)/);
+  assert.match(foundation, /\.sidebar \.nav-item[\s\S]*?min-height:\s*54px/);
+  assert.match(foundation, /\.team-upload-button,[\s\S]*?min-height:\s*var\(--tap-min\)/);
+  assert.match(foundation, /touch-action:\s*manipulation/);
 });
 
 test("responsive foundation covers phone, tablet and wide desktop layouts", () => {
