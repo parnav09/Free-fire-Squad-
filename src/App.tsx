@@ -169,7 +169,7 @@ export default function App() {
       return;
     }
     const { error: sessionError } = await supabase.auth.setSession(data.session);
-    setNotice(sessionError ? sessionError.message : "Signed in. Squad cloud sync is enabled.");
+    setNotice(sessionError ? sessionError.message : "Signed in successfully.");
   };
 
   const requestPasswordReset = async () => {
@@ -227,16 +227,16 @@ export default function App() {
       return;
     }
     if (!data.session) {
-      setNotice("Signup is blocked because Supabase Email Confirmation is still ON. The team admin must turn it OFF in Supabase Auth → Settings before creating username-only accounts. Do not retry this username until that setting is changed.");
+      setNotice("Account setup is unavailable right now. Please try again later.");
       return;
     }
     setSessionUsername(username);
     setDisplayName(username);
     setAuthMode("signin");
-    setNotice("Account created. You are signed in and cloud sync is ready.");
+    setNotice("Account created. You are signed in.");
   };
 
-  const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out. Local records remain on this device."); } };
+  const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out successfully."); } };
   const downloadTeamBackup=async()=>{
     if(!supabase||team?.membership_role!=="owner")return;
     setBackupBusy(true);setBackupStatus("");
@@ -336,20 +336,21 @@ export default function App() {
   const weekMonday = (w: string) => { const m=w.match(/^(\d{4})-W(\d{2})$/); if(!m) return new Date().toISOString().slice(0,10); const y=Number(m[1]), n=Number(m[2]); const d=new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+(n-1)*7); return d.toISOString().slice(0,10); };
   useEffect(() => {
     if (!supabase || !signedIn || !team || matchesHydratedKey !== `${team.id}:${week}`) return;
+    setConnection("Syncing…");
     let cancelled=false;
     (async()=>{ try {
       const {data:{user}}=await supabase.auth.getUser(); if(!user) return;
-      if(!["owner","coach"].includes(team.membership_role)) { setConnection("Signed in · scoreboard is read-only for this role"); return; }
+      if(!["owner","coach"].includes(team.membership_role)) return;
       const start=weekMonday(week); const end=new Date(start+"T00:00:00Z"); end.setUTCDate(end.getUTCDate()+6);
       const {data:cycle,error:cycleErr}=await supabase.from("tournament_cycles").upsert({team_id:team.id,cycle_start:start,cycle_end:end.toISOString().slice(0,10),title:"Weekly Tournament",status:"active",created_by:user.id},{onConflict:"team_id,cycle_start"}).select("id").single();
-      if(cycleErr||!cycle) {setConnection("Signed in · cycle sync needs review");return;}
+      if(cycleErr||!cycle) {setConnection("Signed in · sync retry needed");return;}
       const rows=Object.entries(matches).filter(([key])=>key.startsWith(`${week}-D`)).flatMap(([key,m])=>{const mt=key.match(/-D(\d+)-M(\d+)$/);return mt?[{cycle_id:cycle.id,team_id:team.id,match_day:Number(mt[1]),match_number:Number(mt[2]),placement:m.placement,kills:m.kills,points:(m.placement===1?12:m.placement===2?9:m.placement===3?8:m.placement===4?7:m.placement===5?6:m.placement===6?5:m.placement===7?4:m.placement===8?3:m.placement===9?2:m.placement===10?1:0)+m.kills,status:"draft",recorded_by:user.id}]:[]});
       if(rows.length){const {error}=await supabase.from("tournament_matches").upsert(rows,{onConflict:"cycle_id,match_day,match_number"});if(error)throw error;}
       if(!cancelled)setConnection("Signed in · cloud sync active");
     } catch {if(!cancelled)setConnection("Signed in · sync retry needed");} })();
     return()=>{cancelled=true};
   },[signedIn,team?.id,team?.membership_role,matches,week,matchesHydratedKey]);
-  useEffect(()=>{ if(!supabase||!signedIn||!team)return; let cancelled=false; (async()=>{ try { const start=weekMonday(week); const {data:cycle}=await supabase.from("tournament_cycles").select("id").eq("team_id",team.id).eq("cycle_start",start).maybeSingle(); if(!cycle){if(!cancelled){setSharedMatches([]);setMatchesHydratedKey(`${team.id}:${week}`);}return;} const {data,error}=await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id",cycle.id).order("match_day").order("match_number"); if(error)throw error; if(!cancelled){setSharedMatches(data||[]);setMatches(prev=>({...prev,...Object.fromEntries((data||[]).map(row=>[`${week}-D${row.match_day}-M${row.match_number}`,{placement:row.placement??12,kills:row.kills??0}]))}));setMatchesHydratedKey(`${team.id}:${week}`);}}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Shared scoreboard unavailable.");} })(); return()=>{cancelled=true}; },[signedIn,team?.id,week]);
+  useEffect(()=>{ if(!supabase||!signedIn||!team)return; setConnection("Syncing…"); let cancelled=false; (async()=>{ try { const start=weekMonday(week); const {data:cycle}=await supabase.from("tournament_cycles").select("id").eq("team_id",team.id).eq("cycle_start",start).maybeSingle(); if(!cycle){if(!cancelled){setSharedMatches([]);setMatchesHydratedKey(`${team.id}:${week}`);setConnection("Signed in · cloud sync active");}return;} const {data,error}=await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id",cycle.id).order("match_day").order("match_number"); if(error)throw error; if(!cancelled){setSharedMatches(data||[]);setMatches(prev=>({...prev,...Object.fromEntries((data||[]).map(row=>[`${week}-D${row.match_day}-M${row.match_number}`,{placement:row.placement??12,kills:row.kills??0}]))}));setMatchesHydratedKey(`${team.id}:${week}`);setConnection("Signed in · cloud sync active");}}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Shared scoreboard unavailable.");}} })(); return()=>{cancelled=true}; },[signedIn,team?.id,week]);
   const refreshSharedMatches = async () => {
     if (!supabase || !team) return;
     try {
@@ -366,9 +367,9 @@ export default function App() {
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_log").select("activity,done").eq("team_id",team.id).eq("log_date",trainingDate);if(error)throw error;if(!cancelled)setCloudTraining(Object.fromEntries((data||[]).map(x=>[x.activity,!!x.done])));}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Cloud training load failed.");}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_session_notes").select("notes").eq("team_id",team.id).eq("note_date",trainingDate).maybeSingle();if(error)throw error;if(!cancelled)setCloudSessionNotes(data?.notes||"");}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Cloud session notes unavailable.");}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100);if(error)throw error;if(!cancelled)setEvalHistory(data||[]);}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Evaluation history unavailable.");}})();return()=>{cancelled=true};},[signedIn,team?.id]);
-  const saveEvaluation=async()=>{if(!supabase||!team||!signedIn){setNotice("Sign in and join a team to save evaluations.");return;}try{const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Session expired.");const {error}=await supabase.from("daily_scores").insert({team_id:team.id,score_date:evalDate,player_id:evalPlayer,evaluator_id:user.id,...evalScores,notes:evalNotes.trim()||null,improvement_target:evalTarget.trim()||null});if(error)throw error;const {data,error:he}=await supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100);if(he)throw he;setEvalHistory(data||[]);setNotice("Player evaluation saved.");}catch(e){setNotice(e instanceof Error?e.message:"Evaluation save failed.");}};
-  const saveCloudTraining = async (activity:string,done:boolean) => {setCloudTraining(p=>({...p,[activity]:done}));if(!supabase||!team||!signedIn)return;try{const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {error}=await supabase.from("training_log").upsert({team_id:team.id,log_date:trainingDate,activity,done,updated_by:user.id},{onConflict:"team_id,log_date,activity"});if(error)throw error;setNotice("Training checklist saved.");}catch(e){setNotice(e instanceof Error?e.message:"Cloud training save failed.");}};
-  const saveSessionNotes = async () => { if(!supabase||!team||!signedIn)return; try { const {data:{user}}=await supabase.auth.getUser(); if(!user)throw new Error("Session expired."); const {error}=await supabase.from("training_session_notes").upsert({team_id:team.id,note_date:trainingDate,notes:cloudSessionNotes.trim(),updated_by:user.id},{onConflict:"team_id,note_date"}); if(error)throw error; setNotice("Session notes saved."); } catch(e) { setNotice(e instanceof Error?e.message:"Session notes cloud save failed."); } };
+  const saveEvaluation=async()=>{if(!supabase||!team||!signedIn){setNotice("Sign in and join a team to save evaluations.");return;}setConnection("Syncing…");try{const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Session expired.");const {error}=await supabase.from("daily_scores").insert({team_id:team.id,score_date:evalDate,player_id:evalPlayer,evaluator_id:user.id,...evalScores,notes:evalNotes.trim()||null,improvement_target:evalTarget.trim()||null});if(error)throw error;const {data,error:he}=await supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100);if(he)throw he;setEvalHistory(data||[]);setConnection("Signed in · cloud sync active");setNotice("Player evaluation saved.");}catch(e){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Evaluation save failed.");}};
+  const saveCloudTraining = async (activity:string,done:boolean) => {setCloudTraining(p=>({...p,[activity]:done}));if(!supabase||!team||!signedIn)return;setConnection("Syncing…");try{const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {error}=await supabase.from("training_log").upsert({team_id:team.id,log_date:trainingDate,activity,done,updated_by:user.id},{onConflict:"team_id,log_date,activity"});if(error)throw error;setConnection("Signed in · cloud sync active");setNotice("Training checklist saved.");}catch(e){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Training checklist save failed.");}};
+  const saveSessionNotes = async () => { if(!supabase||!team||!signedIn)return; setConnection("Syncing…"); try { const {data:{user}}=await supabase.auth.getUser(); if(!user)throw new Error("Session expired."); const {error}=await supabase.from("training_session_notes").upsert({team_id:team.id,note_date:trainingDate,notes:cloudSessionNotes.trim(),updated_by:user.id},{onConflict:"team_id,note_date"}); if(error)throw error; setConnection("Signed in · cloud sync active");setNotice("Session notes saved."); } catch(e) { setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Session notes save failed."); } };
   useEffect(() => {
     const client = supabase;
     if (!client || !signedIn || !team) return;
@@ -408,6 +409,7 @@ export default function App() {
       })
       .subscribe(status => {
         if (active && status === "SUBSCRIBED") setConnection("Signed in · live squad sync active");
+        else if (active && ["CHANNEL_ERROR","TIMED_OUT","CLOSED"].includes(status)) setConnection("Signed in · sync retry needed");
       });
     return () => { active = false; void client.removeChannel(channel); };
   }, [signedIn, team?.id, week, trainingDate]);
@@ -624,7 +626,7 @@ export default function App() {
               <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?"↗":confirmAction==="leave"?"⇥":"↻"}</div>
               <div className="eyebrow">{confirmAction==="logout"?"ACCOUNT SESSION":confirmAction==="leave"?"TEAM MEMBERSHIP":"DATA RESTORE"}</div>
               <h3 id="confirm-title">{confirmAction==="logout"?"Log out of SQUAD OS?":confirmAction==="leave"?"Leave this team?":"Restore this team backup?"}</h3>
-              <p>{confirmAction==="logout"?"You will be signed out on this device. Your account and cloud team data will not be deleted.":confirmAction==="leave"?"Your membership will end immediately. If you are the last active member, the empty team will be queued for deletion after 48 hours.":"This replaces the current team roster and team records with the selected backup. Download a fresh backup first if you need a rollback point."}</p>
+              <p>{confirmAction==="logout"?"You will be signed out on this device. Your account and team data will remain safe.":confirmAction==="leave"?"Your membership will end immediately. If you are the last active member, the empty team will be queued for deletion after 48 hours.":"This replaces the current team roster and team records with the selected backup. Download a fresh backup first if you need a rollback point."}</p>
               {confirmAction==="leave"&&team?.membership_role==="owner"&&teamMembers.some(m=>m.status==="active"&&m.user_id!==sessionUserId)&&<label className="confirm-transfer-field">Transfer team ownership to<select value={leaveTransferTo} onChange={e=>setLeaveTransferTo(e.target.value)}><option value="">Select new owner</option>{teamMembers.filter(m=>m.status==="active"&&m.user_id!==sessionUserId).map(m=><option key={m.user_id} value={m.user_id}>P{m.player_number||"—"} · {m.display_name}</option>)}</select></label>}
               <div className="confirm-actions"><button className="secondary-button" type="button" disabled={teamBusy||backupBusy} onClick={()=>setConfirmAction(null)}>Cancel</button><button className="danger-button" type="button" disabled={teamBusy||backupBusy||(confirmAction==="leave"&&team?.membership_role==="owner"&&teamMembers.some(m=>m.status==="active"&&m.user_id!==sessionUserId)&&!leaveTransferTo)||(confirmAction==="import"&&!backupFile)} onClick={()=>confirmAction==="logout"?confirmLogout():confirmAction==="leave"?confirmLeaveTeam():importTeamBackup()}>{teamBusy||backupBusy?"Working…":confirmAction==="logout"?"Confirm Log Out":confirmAction==="leave"?"Confirm Leave":"Confirm Restore"}</button></div>
             </section>
