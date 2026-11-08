@@ -408,3 +408,143 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .roster-capacity-panel .admin-setting{max-width:420px;}
 .roster-capacity-panel select{width:100%;margin-top:8px;}
 @media(max-width:620px){.request-controls,.request-actions{width:100%;}.request-controls label{flex:1;min-width:0;}.request-controls select{width:100%;}.request-actions button{flex:1;}}
+
+
+/* Team creation — cohesive premium form, predictable controls and mobile hitboxes */
+.team-form-card{display:grid;gap:16px;padding:clamp(16px,3.5vw,24px);border:1px solid rgba(94,137,213,.24);border-radius:18px;background:linear-gradient(155deg,rgba(13,24,44,.96),rgba(8,13,25,.98) 58%,rgba(17,13,35,.94));box-shadow:0 18px 48px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.025)}
+.team-form-card .auth-field{display:grid;gap:8px;min-width:0}
+.team-form-card .auth-field>span{display:flex;align-items:center;gap:6px;color:#a9bbd9;font-size:10px;font-weight:800;letter-spacing:.105em;line-height:1.4}
+.team-form-card .auth-field input,.team-form-card .auth-field textarea{width:100%;min-width:0;min-height:48px;padding:12px 14px;border:1px solid #2a3c5b;border-radius:11px;background:linear-gradient(180deg,#091326,#0a1020);color:#edf4ff;font-size:14px;font-weight:500;line-height:1.45;font-family:inherit;box-shadow:inset 0 1px 2px rgba(0,0,0,.18);transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
+.team-form-card .auth-field textarea{min-height:96px;resize:vertical}
+.team-form-card .auth-field input::placeholder,.team-form-card .auth-field textarea::placeholder{color:#627491;opacity:1}
+.team-form-card .auth-field input:focus,.team-form-card .auth-field textarea:focus{outline:none;border-color:#5da9ef;background:#0b172b;box-shadow:0 0 0 3px rgba(75,155,238,.14),0 0 22px rgba(48,128,220,.07)}
+.team-form-card .auth-field input:focus-visible,.team-form-card .auth-field textarea:focus-visible{outline:2px solid #73d9ee;outline-offset:2px}
+.team-form-card .team-logo-picker{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:15px;padding:14px;border:1px solid rgba(76,111,171,.22);border-radius:13px;background:linear-gradient(130deg,rgba(18,31,54,.8),rgba(10,16,30,.72))}
+.team-form-card .team-logo-preview{width:76px;height:76px;border-radius:15px;border:1px solid rgba(95,159,236,.34);background:radial-gradient(circle at 25% 15%,rgba(59,132,229,.25),transparent 55%),#091224;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+.team-form-card .team-logo-copy{display:grid;gap:6px;min-width:0}
+.team-form-card .team-logo-copy strong{color:#e3edff;font-size:12px;line-height:1.4}
+.team-form-card .team-logo-copy small{color:#8497b5;font-size:11px;line-height:1.55}
+.team-form-card .team-upload-button{width:max-content;max-width:100%;min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 13px;border:1px solid rgba(88,157,236,.34);border-radius:9px;background:linear-gradient(135deg,rgba(31,75,130,.36),rgba(20,39,72,.62));color:#c6e4ff;font-size:11px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.team-form-card .team-upload-button:hover{border-color:#65b7ff;background:rgba(36,83,139,.42)}
+.team-form-card .team-form-hint,.team-create-hint{display:flex;align-items:flex-start;gap:9px;padding:11px 12px;border:1px solid rgba(76,133,206,.18);border-radius:10px;background:rgba(20,42,73,.22);color:#9db4d5;font-size:11px;line-height:1.55}
+.team-form-card .team-create-hint span{color:#7bdcf1;flex:none}
+.team-form-card .auth-submit{width:100%;min-height:52px;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(100,190,255,.42);border-radius:12px;background:linear-gradient(120deg,#1769bd 0%,#2452b8 52%,#5140a8 100%);color:#fff;font-size:13px;font-weight:850;letter-spacing:.025em;box-shadow:0 10px 24px rgba(26,75,170,.2),inset 0 1px rgba(255,255,255,.12);transition:filter .15s ease,transform .15s ease,box-shadow .15s ease}
+.team-form-card .auth-submit:hover:not(:disabled){filter:brightness(1.09);box-shadow:0 12px 30px rgba(33,98,202,.3),inset 0 1px rgba(255,255,255,.16)}
+.team-form-card .auth-submit:active:not(:disabled){transform:translateY(1px) scale(.995)}
+.team-form-card .auth-submit:disabled{opacity:.52;filter:saturate(.55);cursor:not-allowed;box-shadow:none}
+.team-form-card .auth-submit:focus-visible,.team-form-card .team-upload-button:focus-visible,.team-form-card .text-button:focus-visible{outline:2px solid #78dff2;outline-offset:3px}
+.team-back{min-height:44px;display:inline-flex;align-items:center;padding:0 10px;border-radius:9px;color:#a9c9f6}
+.team-back:hover{background:rgba(62,111,184,.12);color:#d5e8ff}
+.team-hero p{max-width:62ch;line-height:1.65}
+@media(max-width:480px){.team-form-card{padding:14px;gap:14px;border-radius:15px}.team-form-card .team-logo-picker{grid-template-columns:64px minmax(0,1fr);gap:12px;padding:11px}.team-form-card .team-logo-preview{width:64px;height:64px;border-radius:13px}.team-form-card .team-upload-button{width:100%;padding:0 8px}.team-form-card .auth-field input,.team-form-card .auth-field textarea{font-size:16px}.team-form-card .auth-submit{min-height:50px}}
+@media(prefers-reduced-motion:reduce){.team-form-card *{transition:none!important}}
+
+
+/* SQUAD OS · Phase 1 premium interaction system */
+:root{
+  --squad-ink:#05060b;
+  --squad-surface:#080d19;
+  --squad-surface-raised:#0d1628;
+  --squad-border:rgba(111,145,201,.24);
+  --squad-border-strong:rgba(105,177,235,.48);
+  --squad-text:#eaf2ff;
+  --squad-muted:#91a2bf;
+  --squad-cyan:#78dff2;
+  --squad-blue:#347fd5;
+  --squad-violet:#7564d9;
+  --squad-focus:0 0 0 3px rgba(84,174,239,.18);
+}
+/* Consistent medium-scale native select controls with a clearly visible custom chevron. */
+select{
+  -webkit-appearance:none;
+  appearance:none;
+  min-height:46px;
+  min-width:0;
+  max-width:100%;
+  padding:0 42px 0 13px !important;
+  border:1px solid var(--squad-border-strong) !important;
+  border-radius:11px !important;
+  color:var(--squad-text) !important;
+  background-color:#0a1426 !important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2378dff2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat:no-repeat !important;
+  background-position:right 14px center !important;
+  background-size:15px 15px !important;
+  box-shadow:inset 0 1px rgba(255,255,255,.025),0 3px 10px rgba(0,0,0,.10);
+  font-size:12px;font-weight:600;line-height:1.2;font-family:inherit;
+  cursor:pointer;
+  transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease;
+}
+select:hover:not(:disabled){border-color:rgba(120,190,246,.72)!important;background-color:#0d1b32!important}
+select:focus-visible{outline:none!important;border-color:#78dff2!important;box-shadow:var(--squad-focus),inset 0 1px rgba(255,255,255,.04)!important}
+select:disabled{opacity:.52;cursor:not-allowed}
+select option{background:#0b1426;color:#eaf2ff}
+.toolbar label select{width:clamp(190px,24vw,270px);min-height:46px}
+.match-card select{width:100%;min-height:44px;padding-left:11px!important;padding-right:37px!important;background-position:right 11px center!important}
+.add-form select{width:auto;min-width:190px;max-width:100%}
+.admin-setting select,.confirm-transfer-field select,.request-controls select,.roster-capacity-panel select{width:100%;min-height:46px}
+.team-switcher select{min-height:44px;padding-left:12px!important;padding-right:38px!important;background-position:right 12px center!important}
+.profile-role-block select{width:100%;min-height:48px;font-size:13px}
+@media(max-width:620px){
+  .toolbar label{min-width:0}
+  .toolbar label select{width:100%;min-width:0}
+  .add-form select{width:100%;min-width:0}
+}
+/* Button hierarchy: primary, secondary, danger and quiet actions share geometry and states. */
+button,.team-upload-button,.backup-file-picker{
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.primary-button,.auth-submit{
+  color:#f7fbff!important;
+  border:1px solid rgba(114,190,255,.48)!important;
+  background:linear-gradient(112deg,#176bbd 0%,#2456b9 54%,#5142a7 100%)!important;
+  box-shadow:0 7px 19px rgba(22,74,158,.19),inset 0 1px rgba(255,255,255,.13);
+}
+.primary-button:hover:not(:disabled),.auth-submit:hover:not(:disabled){filter:brightness(1.1);box-shadow:0 9px 24px rgba(34,101,194,.27),inset 0 1px rgba(255,255,255,.16)}
+.secondary-button{
+  color:#c9e4ff!important;
+  border:1px solid rgba(100,145,204,.34)!important;
+  background:linear-gradient(145deg,rgba(22,39,66,.94),rgba(12,21,38,.98))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.035);
+}
+.secondary-button:hover:not(:disabled){border-color:rgba(120,184,239,.62)!important;background:linear-gradient(145deg,#1a3457,#10213b)!important;color:#f0f8ff!important}
+.settings-logout-button{
+  color:#ffd4dc!important;
+  border:1px solid rgba(236,105,130,.4)!important;
+  background:linear-gradient(135deg,rgba(119,39,62,.55),rgba(57,23,43,.9))!important;
+}
+.settings-logout-button:hover:not(:disabled){border-color:rgba(255,133,155,.7)!important;background:linear-gradient(135deg,rgba(145,43,70,.7),rgba(73,25,48,.96))!important}
+.team-back{
+  display:inline-flex!important;align-items:center;gap:9px;
+  width:max-content;max-width:100%;min-height:42px!important;
+  padding:0 12px!important;border:1px solid transparent!important;
+  border-radius:10px!important;background:transparent!important;
+  color:#a9c9f6!important;font-size:12px;font-weight:650;
+}
+.team-back:hover{border-color:rgba(105,164,225,.2)!important;background:rgba(62,111,184,.13)!important}
+.ui-icon{display:inline-block;flex:0 0 auto;vertical-align:middle}
+button .ui-icon{margin-left:2px}
+.team-choice-action{display:flex;align-items:center;justify-content:space-between}
+.team-choice-action .ui-icon{color:#8adcf1}
+.auth-submit .ui-icon{margin-left:3px}
+.section-heading>.secondary-button{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.backup-actions .primary-button{display:flex;align-items:center;justify-content:center;gap:8px}
+.confirm-icon{display:grid;place-items:center}
+.confirm-icon .ui-icon{margin:0}
+/* Profile and security controls no longer inherit browser-default light button styling. */
+.profile-settings-entry,.account-settings-panel{border-color:rgba(95,137,202,.23)}
+.account-settings-panel .settings-logout-button{min-width:136px}
+button:focus-visible,.team-upload-button:focus-visible,.backup-file-picker:focus-within{
+  outline:2px solid #78dff2!important;outline-offset:3px;
+}
+button:disabled,.team-upload-button:has(input:disabled){opacity:.48;cursor:not-allowed;filter:saturate(.65)}
+@media(max-width:620px){
+  .section-heading{align-items:center;gap:10px;flex-wrap:wrap}
+  .section-heading>.secondary-button{min-height:42px;padding:0 11px}
+  .team-back{min-height:42px!important}
+  .account-settings-panel .settings-logout-button{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  select,button,.team-upload-button{transition:none!important}
+}
