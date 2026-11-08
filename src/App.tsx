@@ -412,7 +412,7 @@ export default function App() {
                         <span className="team-choice-action">Continue <b>→</b></span>
                       </button>
                     </div>
-                    <div className="team-onboarding-footer"><span>Signed in as <b>{sessionUsername}</b></span><button className="text-button" onClick={signOut}>Sign out</button></div>
+                    <div className="team-onboarding-footer"><span>Signed in as <b>{sessionUsername}</b></span><button className="text-button" onClick={()=>setConfirmAction("logout")}>Sign out</button></div>
                   </> : teamScreen==="create" ? <>
                     <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}>← Back to team options</button>
                     <div className="team-hero"><span className="team-step">TEAM SETUP · 01 / 02</span><h2>Create your team.</h2><p>Enter the team identity. An invite code will be generated after successful creation.</p></div>
@@ -518,6 +518,7 @@ export default function App() {
               </div>
               <button className="primary-button" disabled={!signedIn||!displayName.trim()} onClick={async()=>{if(!supabase||!signedIn)return;const name=displayName.trim();const {error}=await supabase.rpc("set_display_name",{p_name:name});if(error){setNotice(error.message.includes("profiles_display_name_lower_uidx")||error.message.toLowerCase().includes("duplicate key")?"This IGN is already taken by another account. Choose a unique IGN.":error.message);return;}await supabase.auth.updateUser({data:{display_name:name}});setDisplayName(name);setNotice("IGN updated. Historical records remain linked to your account.");}}>Save IGN</button>
               <div className="profile-meta"><span>Account ID</span><code>{sessionUserId?sessionUserId.slice(0,8)+"…":"—"}</code></div>
+              {signedIn&&team&&<section className="account-danger-zone"><div><span className="eyebrow">TEAM MEMBERSHIP</span><strong>Leave this team</strong><small>Your team access ends immediately. Team records stay protected; an empty team enters a 48-hour deletion grace period.</small></div><button className="danger-button" type="button" onClick={()=>setConfirmAction("leave")}>Leave Team</button></section>}
             </section>
           </>}
           {section==="Settings" && <>
