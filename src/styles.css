@@ -617,3 +617,5 @@ button:disabled,.team-upload-button:has(input:disabled){opacity:.48;cursor:not-a
 .pt-drill-edit{display:flex;flex-direction:column;gap:7px;padding:10px;margin:9px 0;border:1px solid #293957;border-radius:10px;background:#0a1120}.pt-drill-edit input,.pt-drill-edit textarea,.pt-drill-edit select{box-sizing:border-box;min-width:0;width:100%;background:#0d1728;border:1px solid #263550;border-radius:8px;padding:8px;color:#dce7ff;font-size:10px}.pt-drill-edit>div{display:grid;grid-template-columns:1fr 1fr .6fr;gap:6px}
 
 .pt-plan-edit textarea{box-sizing:border-box;min-width:0;width:100%;background:#0d1728;border:1px solid #263550;border-radius:8px;padding:8px;color:#dce7ff;font-size:10px;resize:vertical}
+
+.pt-drill-details{margin:9px 0;padding:9px 10px;border:1px solid #202c44;border-radius:9px;background:#0a1120;color:#91a5ca;font-size:10px}.pt-drill-details summary{cursor:pointer;color:#9fb4e2;font-weight:700}.pt-drill-details p{margin:8px 0}.pt-drill-details ol{padding-left:18px;margin:8px 0}.pt-drill-details li{padding:3px 0;line-height:1.5}
