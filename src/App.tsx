@@ -131,27 +131,26 @@ export default function App() {
   };
 
   const requestPasswordReset = async () => {
-    if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
-    const email = recoveryEmail.trim().toLowerCase();
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return setNotice("Enter the registered email address.");
+    if (!supabase) return setNotice("Supabase is not configured.");
+    const email=recoveryEmail.trim().toLowerCase(), username=sessionUsername.trim();
+    if(!email||!username)return setNotice("Enter username and the recovery email linked to your account.");
     setRecoveryBusy(true);
-    const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+    const {data,error}=await supabase.functions.invoke("account-recovery",{body:{action:"request",username,email}});
     setRecoveryBusy(false);
-    if (error) return setNotice("OTP could not be sent. Confirm this email is registered and Supabase Email OTP is enabled.");
-    setRecoveryStep("otp");
-    setNotice("A verification code was sent if this email is registered. Check Inbox and Spam.");
+    if(error||data?.error)return setNotice(data?.error||"Could not request recovery code.");
+    setRecoveryStep("otp");setNotice(data.message||"If details match, OTP has been sent.");
   };
 
   const verifyRecoveryOtp = async () => {
-    if (!supabase) return setNotice("Supabase is not configured.");
-    const email = recoveryEmail.trim().toLowerCase(), token = recoveryOtp.trim();
-    if (!/^\\d{6}$/.test(token)) return setNotice("Enter the 6-digit OTP.");
+    if(!supabase)return setNotice("Supabase is not configured.");
+    if(!/^\\d{6}$/.test(recoveryOtp))return setNotice("Enter the 6-digit OTP.");
+    if(newPassword.length<8||newPassword.length>128)return setNotice("New password must be 8–128 characters.");
     setRecoveryBusy(true);
-    const { data, error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+    const {data,error}=await supabase.functions.invoke("account-recovery",{body:{action:"verify",username:sessionUsername.trim(),email:recoveryEmail.trim().toLowerCase(),otp:recoveryOtp,newPassword}});
     setRecoveryBusy(false);
-    if (error || !data.session) return setNotice("OTP invalid or expired. Request a fresh code.");
-    setRecoveryStep("password"); setRecoveryMode(true); setRecoveryOtp("");
-    setNotice("Email verified. Set a new password.");
+    if(error||data?.error)return setNotice(data?.error||"Verification failed.");
+    setRecoveryMode(false);setRecoveryStep("email");setRecoveryOtp("");setNewPassword("");setSessionPassword("");
+    setAuthMode("signin");setNotice("Password updated. Sign in with your username and new password.");
   };
 
   const saveRecoveredPassword = async () => {
