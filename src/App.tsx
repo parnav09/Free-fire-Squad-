@@ -3,6 +3,7 @@ import useAccessibleDialog from "./app/useAccessibleDialog";
 import WorkspaceShell from "./app/WorkspaceShell";
 import type { Section } from "./app/types";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers } from "./app/foundation-utils";
+import type { Player } from "./app/foundation-utils";
 
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 
