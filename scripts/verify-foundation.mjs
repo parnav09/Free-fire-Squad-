@@ -128,10 +128,10 @@ test("App delegates stable foundation helpers to a dedicated module", () => {
 
 
 test("App delegates team-scoped local persistence to its dedicated hook", () => {
-  assert.match(app, /useTeamLocalData\\(team\\?\\.id\\)/);
-  assert.doesNotMatch(app, /squad-os-legacy-local-migrated/);
-  assert.match(localDataHook, /squad-os-legacy-local-migrated/);
-  assert.match(localDataHook, /setPlayers\\(readScoped/);
-  assert.match(localDataHook, /localStorage\\.setItem\\("squad-os:"/);
-  assert.match(localDataHook, /setHydratedFor\\(teamId\\)/);
+  assert.ok(app.includes("useTeamLocalData(team?.id)"));
+  assert.ok(!app.includes("squad-os-legacy-local-migrated"));
+  assert.ok(localDataHook.includes("squad-os-legacy-local-migrated"));
+  assert.ok(localDataHook.includes("setPlayers(readScoped"));
+  assert.ok(localDataHook.includes('localStorage.setItem("squad-os:"'));
+  assert.ok(localDataHook.includes("setHydratedFor(teamId)"));
 });
