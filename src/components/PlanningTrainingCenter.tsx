@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase/client";
 
 type Member = { id:string; user_id:string; display_name:string; player_number:number|null; assigned_role:string|null; membership_role:string; status:string };
 type Plan = { id:string; title:string; plan_date:string; plan_type:string; focus:string; status:string; planned_minutes:number; notes:string; review_notes:string };
-type Drill = { id:string; title:string; category:string; difficulty:string; duration_minutes:number; objective:string; setup:string; steps:string[]; success_criteria:string; role_tags:string[]; archived:boolean; is_template:boolean };
+type Drill = { id:string; title:string; category:string; difficulty:string; duration_minutes:number; objective:string; setup:string; steps:string[]; success_criteria:string; role_tags:string[]; tags:string[]; archived:boolean; is_template:boolean };
 type Task = { id:string; title:string; player_member_id:string|null; plan_id:string|null; due_date:string|null; status:string; priority:string; instructions:string; completion_note:string; review_feedback:string };
 type Block = {id:string;plan_id:string;title:string;category:string;instructions:string;expected_outcome:string;duration_minutes:number;sort_order:number};
 type Session = { id:string; title:string; session_type:string; scheduled_at:string|null; duration_minutes:number; status:string; drill_id:string|null; plan_id:string|null; instructions:string; coach_notes:string };
