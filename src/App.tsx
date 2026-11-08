@@ -47,7 +47,7 @@ export default function App() {
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
-  const [recoveryMode, setRecoveryMode] = useState(false);
+  const [recoveryMode, setRecoveryMode] = useState(false);\n  const [recoveryStep, setRecoveryStep] = useState<"email"|"otp"|"password">("email");\n  const [recoveryOtp, setRecoveryOtp] = useState("");\n  const [recoveryBusy, setRecoveryBusy] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [signedIn, setSignedIn] = useState(false);
   const [sessionUserId, setSessionUserId] = useState("");
@@ -129,11 +129,26 @@ export default function App() {
 
   const requestPasswordReset = async () => {
     if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
-    const email = recoveryEmail.trim();
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return setNotice("Enter the Gmail address linked to your SQUAD OS account.");
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
-    if (error) return setNotice(error.message.includes("redirect") ? "Password reset redirect is not allowed yet. The app URL must be added in Supabase Auth → URL Configuration." : error.message);
-    setNotice("If this Gmail belongs to your account, a password reset link has been sent. Check Inbox and Spam.");
+    const email = recoveryEmail.trim().toLowerCase();
+    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return setNotice("Enter the registered email address.");
+    setRecoveryBusy(true);
+    const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+    setRecoveryBusy(false);
+    if (error) return setNotice("OTP could not be sent. Confirm this email is registered and Supabase Email OTP is enabled.");
+    setRecoveryStep("otp");
+    setNotice("A verification code was sent if this email is registered. Check Inbox and Spam.");
+  };
+
+  const verifyRecoveryOtp = async () => {
+    if (!supabase) return setNotice("Supabase is not configured.");
+    const email = recoveryEmail.trim().toLowerCase(), token = recoveryOtp.trim();
+    if (!/^\\d{6}$/.test(token)) return setNotice("Enter the 6-digit OTP.");
+    setRecoveryBusy(true);
+    const { data, error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
+    setRecoveryBusy(false);
+    if (error || !data.session) return setNotice("OTP invalid or expired. Request a fresh code.");
+    setRecoveryStep("password"); setRecoveryMode(true); setRecoveryOtp("");
+    setNotice("Email verified. Set a new password.");
   };
 
   const saveRecoveredPassword = async () => {
@@ -141,7 +156,7 @@ export default function App() {
     if (newPassword.length < 8 || newPassword.length > 128) return setNotice("New password must be 8–128 characters.");
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     if (error) return setNotice(error.message);
-    setRecoveryMode(false); setNewPassword(""); setSessionPassword("");
+    setRecoveryMode(false); setRecoveryStep("email"); setNewPassword(""); setSessionPassword("");
     setNotice("Password updated. Your account is ready.");
   };
 
