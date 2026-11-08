@@ -272,16 +272,14 @@ export default function App() {
   const loadTeam = async () => {
     if (!supabase) return;
     const {data:{user}}=await supabase.auth.getUser(); if(!user) {setTeam(null);setTeamMembers([]);return;}
-    const {data:membership,error}=await supabase.from("team_members").select("id,team_id,user_id,player_number,assigned_role,membership_role,status").eq("user_id",user.id).limit(1).maybeSingle();
+    const {data:membership,error}=await supabase.from("team_members").select("id,team_id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("user_id",user.id).eq("status","active").limit(1).maybeSingle();
     if(error) throw error;
     if(!membership){setTeam(null);setTeamMembers([]);return;}
     const {data:t,error:te}=await supabase.from("teams").select("id,team_name,invite_code,avatar_url").eq("id",membership.team_id).single(); if(te)throw te;
-    setTeam({...t,membership_id:membership.id,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});
-    const {data:members,error:me}=await supabase.from("team_members").select("id,user_id,player_number,assigned_role,membership_role,status").eq("team_id",t.id).order("player_number");
+    setTeam({...t,membership_id:membership.id,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});if(membership.display_name)setDisplayName(membership.display_name);
+    const {data:members,error:me}=await supabase.from("team_members").select("id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("team_id",t.id).order("player_number");
     if(me)throw me;
-    const ids=(members||[]).map(x=>x.user_id);
-    const {data:profiles,error:pe}=await supabase.from("profiles").select("id,display_name").in("id",ids); if(pe)throw pe;
-    setTeamMembers((members||[]).map(x=>({...x,display_name:profiles?.find(p=>p.id===x.user_id)?.display_name||"Player"})));
+    setTeamMembers((members||[]).map(x=>({...x,display_name:x.display_name||"Player"})));
     const {data:jr}=await supabase.from("team_join_requests").select("id,user_id,requested_at,status").eq("team_id",t.id).eq("status","pending").order("requested_at");const reqs=jr||[];const reqIds=reqs.map(q=>q.user_id);const {data:rp}=reqIds.length?await supabase.from("profiles").select("id,display_name").in("id",reqIds):{data:[]};setJoinRequests(reqs.map(q=>({...q,display_name:rp?.find(p=>p.id===q.user_id)?.display_name||"New player"})));
     const {data:ig}=await supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","igl_user_id").maybeSingle();setIglUserId(String(ig?.setting_value||""));
   };
@@ -537,7 +535,7 @@ export default function App() {
                 <label className="auth-field"><span>PLAYER SLOT · P1–P5</span><input value={team?.player_number?("P"+team.player_number):"Not assigned"} readOnly/></label>
                 <div className="profile-role-block"><label className="auth-field"><span>MY PLAYER ROLE / SLOT</span>{team?.membership_role==="owner"?<select value={String(team.player_number||1)} onChange={e=>saveOwnerRole(Number(e.target.value))}>{[{n:1,label:"P1 · Primary Rusher"},{n:2,label:"P2 · Secondary Rusher"},{n:3,label:"P3 · Third Rusher"},{n:4,label:"P4 · Sniper"},{n:5,label:"P5 · Substitute"}].map(x=><option key={x.n} value={x.n}>{x.label}</option>)}</select>:<input value={team?.assigned_role||"Not assigned"} readOnly/>}</label>{team?.membership_role==="owner"&&<label className="auth-field"><span>TEAM IGL · SEPARATE DESIGNATION</span><select value={iglUserId} onChange={e=>saveIGL(e.target.value)}><option value="">Select IGL player</option>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>P{m.player_number||"—"} · {m.display_name}</option>)}</select><small>IGL selection does not change player role/slot. Select P1–P5 independently.</small></label>}</div>
               </div>
-              <button className="primary-button" disabled={!signedIn||!displayName.trim()} onClick={async()=>{if(!supabase||!signedIn)return;const name=displayName.trim();const {error}=await supabase.rpc("set_display_name",{p_name:name});if(error){setNotice(error.message.includes("profiles_display_name_lower_uidx")||error.message.toLowerCase().includes("duplicate key")?"This IGN is already taken by another account. Choose a unique IGN.":error.message);return;}await supabase.auth.updateUser({data:{display_name:name}});setDisplayName(name);setNotice("IGN updated. Historical records remain linked to your account.");}}>Save IGN</button>
+              <button className="primary-button" disabled={!signedIn||!displayName.trim()} onClick={async()=>{if(!supabase||!signedIn)return;const name=displayName.trim();const {error}=await supabase.rpc("set_display_name",{p_name:name,p_team_id:team?.id||null});if(error){setNotice(error.message);return;}if(!team)await supabase.auth.updateUser({data:{display_name:name}});setDisplayName(name);setTeamMembers(rows=>rows.map(m=>m.user_id===sessionUserId?{...m,display_name:name}:m));setNotice(team?"Team IGN updated. This name is unique only inside this team.":"Default IGN updated for future team membership.");}}>Save IGN</button>
               <div className="profile-meta"><span>Account ID</span><code>{sessionUserId?sessionUserId.slice(0,8)+"…":"—"}</code></div>
               {signedIn&&team&&<section className="account-danger-zone"><div><span className="eyebrow">TEAM MEMBERSHIP</span><strong>Leave this team</strong><small>Your team access ends immediately. Team records stay protected; an empty team enters a 48-hour deletion grace period.</small></div><button className="danger-button" type="button" onClick={()=>setConfirmAction("leave")}>Leave Team</button></section>}
             </section>
