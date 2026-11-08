@@ -3,6 +3,21 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 
 
+
+type UiIconName = "arrow-left" | "arrow-right" | "chevron-right" | "log-out" | "download" | "external-link" | "users";
+function UiIcon({ name, size = 16 }: { name: UiIconName; size?: number }) {
+  const paths: Record<UiIconName, React.ReactNode> = {
+    "arrow-left": <><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></>,
+    "arrow-right": <><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></>,
+    "chevron-right": <path d="m9 18 6-6-6-6"/>,
+    "log-out": <><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></>,
+    "download": <><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></>,
+    "external-link": <><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></>,
+    "users": <><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>
+  };
+  return <svg className="ui-icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">{paths[name]}</svg>;
+}
+
 type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Profile" | "Settings";
 type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
@@ -95,6 +110,7 @@ export default function App() {
   const [requestSlot,setRequestSlot]=useState<Record<string,string>>({});
   const [requestRole,setRequestRole]=useState<Record<string,string>>({});
   const [iglUserId,setIglUserId]=useState<string>("");
+  const [rosterCapacity,setRosterCapacity]=useState(4);
   const [cloudTraining, setCloudTraining] = useState<Record<string, boolean>>({});
   const [cloudSessionNotes, setCloudSessionNotes] = useState("");
   const [trainingDate, setTrainingDate] = useState(() => new Date().toLocaleDateString("en-CA"));
@@ -346,14 +362,18 @@ export default function App() {
     localStorage.setItem("squad-os-active-team",membership.team_id);
     const {data:t,error:te}=await supabase.from("teams").select("id,team_name,invite_code,avatar_url").eq("id",membership.team_id).single(); if(te)throw te;
     setTeam({...t,membership_id:membership.id,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});if(membership.display_name)setDisplayName(membership.display_name);
-    const [membersResult,requestsResult,iglResult]=await Promise.all([
+    const [membersResult,requestsResult,iglResult,capacityResult]=await Promise.all([
       supabase.from("team_members").select("id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("team_id",t.id).order("player_number"),
       supabase.from("team_join_requests").select("id,user_id,requested_at,status").eq("team_id",t.id).eq("status","pending").order("requested_at"),
       supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","igl_user_id").maybeSingle(),
+      supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","roster_capacity").maybeSingle(),
     ]);
     if(membersResult.error)throw membersResult.error;
     if(requestsResult.error)throw requestsResult.error;
     if(iglResult.error)throw iglResult.error;
+    if(capacityResult.error)throw capacityResult.error;
+    const capacityValue=Number(capacityResult.data?.setting_value);
+    setRosterCapacity(Number.isInteger(capacityValue)&&capacityValue>=4&&capacityValue<=10?capacityValue:((await supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","fifth_player").maybeSingle()).data?.setting_value===true?5:4));
     setTeamMembers((membersResult.data||[]).map(x=>({...x,display_name:x.display_name||"Player"})));
     const reqs=requestsResult.data||[];
     const reqIds=reqs.map(q=>q.user_id);
@@ -363,12 +383,85 @@ export default function App() {
     setIglUserId(String(iglResult.data?.setting_value||""));
     setConnection("Syncing…");
   };
-  const createTeam = async () => { if(!supabase||teamName.trim().length<2){setNotice("Team name must be at least 2 characters.");return;} setTeamBusy(true); try { const finalIGN=displayName.trim()||sessionUsername.trim()||"Squad Player"; const {error:ne}=await supabase.rpc("set_display_name",{p_name:finalIGN});if(ne)throw ne; const {data:createdTeamId,error}=await supabase.rpc("create_team",{p_name:teamName.trim(),p_description:teamDescription.trim()||null,p_timezone:"Asia/Kolkata"}); if(error)throw error; if(!createdTeamId)throw new Error("Team was created but its ID was not returned."); localStorage.setItem("squad-os-active-team",createdTeamId); await loadTeam(createdTeamId); if(teamLogoFile&&supabase&&sessionUserId){const ext=teamLogoFile.name.split(".").pop()?.toLowerCase()||"jpg";const path=`${sessionUserId}/${createdTeamId}.${ext}`;const {error:up}=await supabase.storage.from("team-avatars").upload(path,teamLogoFile,{upsert:true,contentType:teamLogoFile.type});if(up)throw up;const {data:pub}=supabase.storage.from("team-avatars").getPublicUrl(path);const {error:av}=await supabase.from("teams").update({avatar_url:pub.publicUrl}).eq("id",createdTeamId);if(av)throw av;await loadTeam(createdTeamId);} setTeamName("");setTeamDescription("");setTeamLogoFile(null);setTeamLogoPreview("");setTeamScreen("choice");setNotice("Team created. Invite code and teammates are now available in Team panel."); } catch(e){setNotice(e instanceof Error?e.message:"Team creation failed.");} finally{setTeamBusy(false);} };
+  const createTeam = async () => {
+    if (!supabase || !sessionUserId) { setNotice("Sign in again before creating a team."); return; }
+    const cleanName = teamName.trim();
+    const cleanDescription = teamDescription.trim();
+    if (cleanName.length < 2 || cleanName.length > 48) { setNotice("Team name must be 2–48 characters."); return; }
+    if (cleanDescription.length > 240) { setNotice("Description must be 240 characters or fewer."); return; }
+    if (teamBusy) return;
+    setTeamBusy(true);
+    let createdTeamId: string | null = null;
+    try {
+      const finalIGN = (displayName.trim() || sessionUsername.trim() || "Squad Player").slice(0, 40);
+      const { error: nameError } = await supabase.rpc("set_display_name", { p_name: finalIGN });
+      if (nameError) {
+        if (nameError.code === "PGRST203") throw new Error("Account profile RPC is ambiguous. The server schema fix is not active yet; refresh after the database migration.");
+        throw new Error(nameError.message || "Could not save your player name.");
+      }
+      const createStartedAt = new Date().toISOString();
+      const { data, error: createError } = await supabase.rpc("create_team", {
+        p_name: cleanName, p_description: cleanDescription || null, p_timezone: "Asia/Kolkata"
+      });
+      if (createError) {
+        // RPC may commit on the server and lose its response during a network timeout.
+        // Reconcile before telling the user to retry, preventing accidental duplicate squads.
+        const { data: recovered } = await supabase.from("teams").select("id")
+          .eq("owner_id", sessionUserId).eq("team_name", cleanName)
+          .gte("created_at", createStartedAt).order("created_at", { ascending: false })
+          .limit(1).maybeSingle();
+        if (recovered?.id) {
+          createdTeamId = recovered.id;
+          console.warn("Recovered team creation after ambiguous RPC response:", createError.message);
+        } else {
+          const msg = createError.message || "";
+          if (/PGRST203/i.test(msg)) throw new Error("Server RPC schema is still refreshing. Wait a few seconds, reload, then try once.");
+          if (/not signed in|jwt/i.test(msg)) throw new Error("Your session expired. Sign in again, then create the team.");
+          if (/2 to 48|char_length/i.test(msg)) throw new Error("Team name must be 2–48 characters.");
+          throw new Error("Team creation could not be confirmed. Check your Team panel or reload before retrying. Details: " + (msg || "network/server error"));
+        }
+      } else {
+        createdTeamId = typeof data === "string" ? data : Array.isArray(data) ? data[0] : null;
+      }
+      if (!createdTeamId) throw new Error("The server returned no Team ID. Check your Team panel before retrying.");
+      localStorage.setItem("squad-os-active-team", createdTeamId);
+      setTeamName(""); setTeamDescription(""); setTeamLogoFile(null); setTeamLogoPreview(""); setTeamScreen("choice");
+      let logoWarning = "";
+      if (teamLogoFile) {
+        try {
+          const ext = (teamLogoFile.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+          const path = `${sessionUserId}/${createdTeamId}.${ext}`;
+          const { error: uploadError } = await supabase.storage.from("team-avatars").upload(path, teamLogoFile, { upsert: true, contentType: teamLogoFile.type });
+          if (uploadError) throw uploadError;
+          const { data: pub } = supabase.storage.from("team-avatars").getPublicUrl(path);
+          const { error: avatarError } = await supabase.from("teams").update({ avatar_url: pub.publicUrl }).eq("id", createdTeamId);
+          if (avatarError) throw avatarError;
+        } catch (logoError) {
+          logoWarning = " Team was created; logo upload failed. You can add the logo later in Team Settings.";
+          console.error("Team logo upload failed after team creation:", logoError);
+        }
+      }
+      try {
+        await loadTeam(createdTeamId);
+        setNotice("Team created successfully. Invite code is available in the Team panel." + logoWarning);
+      } catch (loadError) {
+        console.error("Team created but workspace refresh failed:", loadError);
+        setNotice("Team was created successfully (ID: " + createdTeamId + "), but its workspace did not refresh. Reload the page; do not create it again." + logoWarning);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Team creation failed. Please retry.";
+      setNotice(message);
+      console.error("Team creation failed before confirmed success:", error);
+    } finally {
+      setTeamBusy(false);
+    }
+  };
   const joinTeam = async () => { if(!supabase||!teamCode.trim())return; setTeamBusy(true); try { if(!displayName.trim()){throw new Error("Enter your IGN/display name first.");} const {error:ne}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});if(ne)throw ne; const {error}=await supabase.rpc("request_join_team",{p_code:teamCode.trim().toUpperCase()}); if(error)throw error; setTeamCode("");setRequestStatus("Pending owner approval · access activates after slot assignment.");setNotice("Join request sent. Wait for the owner to approve your player slot and role."); } catch(e){setNotice(e instanceof Error?e.message:"Could not join team.");} finally{setTeamBusy(false);} };
-  const reviewJoinRequest=async(id:string,approve:boolean)=>{if(!supabase||team?.membership_role!=="owner")return;const slot=Number(requestSlot[id]||0),role=requestRole[id]||"Primary Rusher";if(approve&&(!slot||slot>5)){setNotice("Choose a player slot first.");return;}try{const {error}=await supabase.rpc("review_team_join_request",{p_request:id,p_player:slot,p_role:role,p_approve:approve});if(error)throw error;await loadTeam();setNotice(approve?"Player approved and added to roster.":"Join request declined.");}catch(e){setNotice(e instanceof Error?e.message:"Request review failed.");}};
+  const reviewJoinRequest=async(id:string,approve:boolean)=>{if(!supabase||team?.membership_role!=="owner")return;const slot=Number(requestSlot[id]||0),role=requestRole[id]||"Primary Rusher";if(approve&&(!slot||slot>rosterCapacity)){setNotice("Choose a player slot within the current roster capacity.");return;}try{const {error}=await supabase.rpc("review_team_join_request",{p_request:id,p_player:slot,p_role:role,p_approve:approve});if(error)throw error;await loadTeam();setNotice(approve?"Player approved and added to roster.":"Join request declined.");}catch(e){setNotice(e instanceof Error?e.message:"Request review failed.");}};
+  const saveRosterCapacity=async(value:number)=>{if(!supabase||team?.membership_role!=="owner"||value<4||value>10)return;setTeamBusy(true);try{const {error}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"roster_capacity",setting_value:value,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(error)throw error;setRosterCapacity(value);setNotice("Roster capacity saved. Existing members remain assigned; new slots are available up to P"+value+".");}catch(e){setNotice(e instanceof Error?e.message:"Roster capacity update failed.");}finally{setTeamBusy(false);}};
   const saveIGL=async(userId:string)=>{if(!supabase||team?.membership_role!=="owner")return;try{const {error}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"igl_user_id",setting_value:userId,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(error)throw error;setIglUserId(userId);setNotice(userId?"IGL designation updated.":"IGL designation cleared.");}catch(e){setNotice(e instanceof Error?e.message:"IGL setting failed.");}};
-  const saveOwnerRole=async(slot:number)=>{if(!supabase||team?.membership_role!=="owner"||!team.membership_id)return;const roleBySlot:Record<number,string>={1:"Primary Rusher",2:"Secondary Rusher",3:"Third Rusher",4:"Sniper",5:"Substitute"};const occupied=teamMembers.find(m=>m.status==="active"&&m.player_number===slot&&m.user_id!==sessionUserId);if(occupied){setNotice("That player slot is already occupied. Move or reassign that player first.");return;}try{if(slot===5){const {error:fe}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"fifth_player",setting_value:true,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(fe)throw fe;}const {error}=await supabase.rpc("assign_member",{p_member:team.membership_id,p_player:slot,p_activate:true});if(error)throw error;const {error:re}=await supabase.from("team_members").update({assigned_role:roleBySlot[slot]}).eq("id",team.membership_id);if(re)throw re;await loadTeam();setNotice("Your player slot and role were updated.");}catch(e){setNotice(e instanceof Error?e.message:"Could not update owner role.");}};
-  const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { if(player>=1&&player<=5){const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error;} const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
+  const saveOwnerRole=async(slot:number)=>{if(!supabase||team?.membership_role!=="owner"||!team.membership_id)return;const roleBySlot:Record<number,string>={1:"Primary Rusher",2:"Secondary Rusher",3:"Third Rusher",4:"Sniper",5:"Substitute"};const occupied=teamMembers.find(m=>m.status==="active"&&m.player_number===slot&&m.user_id!==sessionUserId);if(occupied){setNotice("That player slot is already occupied. Move or reassign that player first.");return;}try{const {error}=await supabase.rpc("assign_member",{p_member:team.membership_id,p_player:slot,p_activate:true});if(error)throw error;const {error:re}=await supabase.from("team_members").update({assigned_role:roleBySlot[slot]||"Substitute"}).eq("id",team.membership_id);if(re)throw re;await loadTeam();setNotice("Your player slot and role were updated.");}catch(e){setNotice(e instanceof Error?e.message:"Could not update owner role.");}};
+  const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { if(player>=1&&player<=rosterCapacity){const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error;} const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
   useEffect(()=>{if(signedIn)loadTeam().catch(e=>{setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Could not load team.");});else{setTeam(null);setTeamMembers([]);setMatchesHydratedKey("");}},[signedIn]);
   const weekMonday = (w: string) => { const m=w.match(/^(\d{4})-W(\d{2})$/); if(!m) return new Date().toISOString().slice(0,10); const y=Number(m[1]), n=Number(m[2]); const d=new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+(n-1)*7); return d.toISOString().slice(0,10); };
   const persistMatchSnapshot = async (teamSnapshot: NonNullable<typeof team>, weekSnapshot: string, matchSnapshot: typeof matches, userId: string) => {
@@ -525,8 +618,11 @@ export default function App() {
   };
   const addPlayer = () => {
     if (!newName.trim() || players.length >= 10) return;
-    setPlayers(prev => [...prev, { id: "P" + (prev.length + 1), name: newName.trim(), role: newRole, status: "Active" }]);
-    setNewName(""); setNotice("Player added to this device.");
+    const usedSlots = new Set(players.map(p => Number(p.id.replace(/^P/i, ""))).filter(n => Number.isInteger(n) && n >= 1 && n <= 10));
+    const nextSlot = Array.from({ length: 10 }, (_, i) => i + 1).find(n => !usedSlots.has(n));
+    if (!nextSlot) return setNotice("All ten roster slots are already used.");
+    setPlayers(prev => [...prev, { id: "P" + nextSlot, name: newName.trim(), role: newRole, status: "Active" }]);
+    setNewName(""); setNotice("Player P" + nextSlot + " added to this device roster.");
   };
   const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
@@ -546,13 +642,13 @@ export default function App() {
           {onboarding?<>
             {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>}
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
-              {recoveryMode?<><h2>Set a new password</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Email verified. Choose a new password. Never share it by email.</p><label className="auth-field"><span>NEW PASSWORD</span><input type={showPassword?"text":"password"} autoComplete="new-password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} placeholder="At least 8 characters"/></label><label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label><button className="primary-button auth-submit" disabled={newPassword.length<8||recoveryBusy} onClick={saveRecoveredPassword}>Save new password →</button></div></div></>:recoveryStep==="otp"?<><h2>Verify email</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Enter the 6-digit code sent to {recoveryEmail}. It expires soon.</p><label className="auth-field"><span>EMAIL OTP</span><input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={recoveryOtp} onChange={e=>setRecoveryOtp(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="000000"/></label><button className="primary-button auth-submit" disabled={recoveryOtp.length!==6||recoveryBusy} onClick={verifyRecoveryOtp}>{recoveryBusy?"Verifying…":"Verify code →"}</button><button className="text-button" disabled={recoveryBusy} onClick={requestPasswordReset}>Resend code</button><button className="text-button" onClick={()=>{setRecoveryStep("email");setRecoveryOtp("");setNotice("");}}>Use another email</button></div></div></>:!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
+              {recoveryMode?<><h2>Set a new password</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Email verified. Choose a new password. Never share it by email.</p><label className="auth-field"><span>NEW PASSWORD</span><input type={showPassword?"text":"password"} autoComplete="new-password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} placeholder="At least 8 characters"/></label><label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label><button className="primary-button auth-submit" disabled={newPassword.length<8||recoveryBusy} onClick={saveRecoveredPassword}>Save new password <UiIcon name="arrow-right"/></button></div></div></>:recoveryStep==="otp"?<><h2>Verify email</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Enter the 6-digit code sent to {recoveryEmail}. It expires soon.</p><label className="auth-field"><span>EMAIL OTP</span><input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={recoveryOtp} onChange={e=>setRecoveryOtp(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="000000"/></label><button className="primary-button auth-submit" disabled={recoveryOtp.length!==6||recoveryBusy} onClick={verifyRecoveryOtp}>{recoveryBusy?"Verifying…":<>Verify code <UiIcon name="arrow-right"/></>}</button><button className="text-button" disabled={recoveryBusy} onClick={requestPasswordReset}>Resend code</button><button className="text-button" onClick={()=>{setRecoveryStep("email");setRecoveryOtp("");setNotice("");}}>Use another email</button></div></div></>:!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
                 <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setNotice("");}}>Sign in</button></div>
                 <div className="auth-fields">
                   <label className="auth-field"><span>{authMode==="signin"?"USERNAME OR GMAIL":"USERNAME"}</span><input autoComplete="username" type="text" value={sessionUsername} onChange={e=>setSessionUsername(authMode==="signup"?e.target.value.toLowerCase().replace(/[^a-z0-9.-]/g,"").slice(0,24):e.target.value.trim().slice(0,254))} placeholder={authMode==="signin"?"Your username or Gmail":"3–24 characters"}/></label>
                   <label className="auth-field"><span>PASSWORD</span><input autoComplete={authMode==="signup"?"new-password":"current-password"} type={showPassword?"text":"password"} value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder={authMode==="signup"?"Create password (8+ characters)":"Your password"}/></label>
                   <label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label>
-                  <button className="primary-button auth-submit" disabled={!sessionUsername.trim()||!sessionPassword} onClick={authMode==="signup"?signUp:signIn}>{authMode==="signup"?"Create account":"Sign in"} <span>→</span></button>
+                  <button className="primary-button auth-submit" disabled={!sessionUsername.trim()||!sessionPassword} onClick={authMode==="signup"?signUp:signIn}>{authMode==="signup"?"Create account":"Sign in"} <UiIcon name="arrow-right"/></button>
                   {authMode==="signin"&&<div className="auth-reset"><label className="auth-field"><span>REGISTERED EMAIL FOR RECOVERY</span><input type="email" autoComplete="email" value={recoveryEmail} onChange={e=>setRecoveryEmail(e.target.value)} placeholder="Enter account email"/></label><button className="text-button" disabled={recoveryBusy} onClick={requestPasswordReset}>{recoveryBusy?"Sending OTP…":"Forgot password? Send OTP"}</button></div>}
                   {authMode==="signup"&&<p className="auth-foot">Existing accounts can sign in with username or Gmail. Use the Gmail reset link if you no longer know the password.</p>}
                 </div><div className="auth-foot">SQUAD OS · Username/Gmail + password</div></div></>:<>
@@ -570,37 +666,37 @@ export default function App() {
                         <span className="eyebrow">START A NEW SQUAD</span>
                         <strong>Create New Team</strong>
                         <small>Set up your team space and become its owner.</small>
-                        <span className="team-choice-action">Continue <b>→</b></span>
+                        <span className="team-choice-action">Continue <UiIcon name="chevron-right"/></span>
                       </button>
                       <button className="team-choice-card" onClick={()=>{setTeamScreen("join");setNotice("");}}>
-                        <span className="team-choice-icon">↗</span>
+                        <span className="team-choice-icon"><UiIcon name="users" size={20}/></span>
                         <span className="eyebrow">ALREADY HAVE A SQUAD?</span>
                         <strong>Join Existing Team</strong>
                         <small>Enter the invite code shared by your team owner.</small>
-                        <span className="team-choice-action">Continue <b>→</b></span>
+                        <span className="team-choice-action">Continue <UiIcon name="chevron-right"/></span>
                       </button>
                     </div>
                     <div className="team-onboarding-footer"><span>Signed in as <b>{sessionUsername}</b></span><button className="text-button" onClick={()=>setConfirmAction("logout")}>Sign out</button></div>
                   </> : teamScreen==="create" ? <>
-                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}>← Back to team options</button>
+                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}><UiIcon name="arrow-left"/> Back to team options</button>
                     <div className="team-hero"><span className="team-step">TEAM SETUP · 01 / 02</span><h2>Create your team.</h2><p>Enter the team identity. An invite code will be generated after successful creation.</p></div>
                     <div className="team-form-card">
                       <div className="team-logo-picker">
                         <div className="team-logo-preview" aria-label="Team logo preview">{teamLogoPreview?<img src={teamLogoPreview} alt="Selected team logo"/>:<span className="team-logo-letter">{(teamName.trim()[0]||"T").toUpperCase()}</span>}<span className="logo-orbit"></span></div>
                         <div className="team-logo-copy"><span className="eyebrow">TEAM EMBLEM · OPTIONAL</span><strong>{teamLogoFile?"Custom emblem selected":"Auto-generated emblem"}</strong><small>Upload a square image from your gallery, or leave it blank to use a stylized team initial.</small><label className="team-upload-button" htmlFor="team-logo-file">＋ Choose from Gallery</label><input id="team-logo-file" className="team-file-input" type="file" accept="image/png,image/jpeg,image/webp" onChange={e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>5*1024*1024){setNotice("Logo must be 5 MB or smaller.");e.target.value="";return;}setTeamLogoFile(f);setTeamLogoPreview(URL.createObjectURL(f));}}/><button className="text-button" type="button" onClick={()=>{setTeamLogoFile(null);setTeamLogoPreview("");}}>Use generated emblem</button></div>
                       </div>
-                      <label className="auth-field"><span>TEAM NAME <b className="required-mark">*</b></span><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="e.g. NOVA ESPORTS" maxLength={50}/></label>
-                      <label className="auth-field"><span>TEAM DESCRIPTION · OPTIONAL</span><textarea value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Short description of your squad (optional)" rows={3}/></label>
+                      <label className="auth-field"><span>TEAM NAME <b className="required-mark">*</b></span><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="e.g. NOVA ESPORTS" maxLength={48}/></label>
+                      <label className="auth-field"><span>TEAM DESCRIPTION · OPTIONAL</span><textarea value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Short description of your squad (optional)" rows={3} maxLength={240}/></label>
                       <div className="team-create-hint"><span aria-hidden="true">✦</span> Team name is the only required field. Logo and description are optional.</div>
-                      <button className="primary-button auth-submit" disabled={teamBusy||teamName.trim().length<2} onClick={createTeam}>{teamBusy?"Creating team…":"Create Team →"}</button>
+                      <button className="primary-button auth-submit" disabled={teamBusy||teamName.trim().length<2} onClick={createTeam}>{teamBusy?"Creating team…":<>Create Team <UiIcon name="arrow-right"/></>}</button>
                     </div>
                   </> : <>
-                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}>← Back to team options</button>
+                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}><UiIcon name="arrow-left"/> Back to team options</button>
                     <div className="team-hero"><span className="team-step">TEAM SETUP · 02 / 02</span><h2>Join your squad.</h2><p>Use the invite code provided by your team owner. You will join that team's shared workspace.</p></div>
                     <div className="team-form-card">
                       <label className="auth-field"><span>YOUR IN-GAME NAME / IGN</span><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Enter your Free Fire IGN" maxLength={32}/></label>
                       <label className="auth-field"><span>TEAM INVITE CODE</span><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase().replace(/\s/g,""))} placeholder="Enter invite code" maxLength={8} autoCapitalize="characters"/></label>
-                      <button className="primary-button auth-submit" disabled={teamBusy||!displayName.trim()||teamCode.trim().length<6} onClick={joinTeam}>{teamBusy?"Joining team…":"Join Existing Team →"}</button>
+                      <button className="primary-button auth-submit" disabled={teamBusy||!displayName.trim()||teamCode.trim().length<6} onClick={joinTeam}>{teamBusy?"Joining team…":<>Join Existing Team <UiIcon name="arrow-right"/></>}</button>
                     </div>
                   </>}
                 </div>
@@ -619,9 +715,9 @@ export default function App() {
               <div className="eyebrow">TEAM COLLABORATION</div>
               {team ? <>
                 <div className="team-live-header"><div className="team-live-logo">{team.avatar_url?<img src={team.avatar_url} alt={team.team_name+" logo"}/>:<span>{team.team_name.slice(0,1).toUpperCase()}</span>}</div><div><h3>{team.team_name} <span className="active-tag">{team.membership_role}</span></h3><p>Squad identity · Invite code <strong style={{letterSpacing:2,fontSize:18}}>{team.invite_code}</strong></p></div><button className="secondary-button" onClick={async()=>{try{await navigator.clipboard.writeText(team.invite_code);setNotice("Invite code copied.");}catch{setNotice("Copy failed. Select the invite code manually.");}}}>Copy Code</button>{teamChoices.length>1&&<label className="team-switcher"><span>ACTIVE TEAM</span><select value={team.id} onChange={e=>{const next=e.target.value;localStorage.setItem("squad-os-active-team",next);loadTeam(next).then(()=>setNotice("Switched team workspace. Each team keeps its own roster and records.")).catch(err=>setNotice(err.message||"Could not switch team."));}}>{teamChoices.map(choice=><option key={choice.id} value={choice.id}>{choice.team_name} · {choice.membership_role}</option>)}</select></label>}</div>
-                <div className="player-list">{teamMembers.map(m=><article className="player-row" key={m.id}><span className="player-id">{m.player_number?"P"+m.player_number:"—"}</span><div><b>{m.display_name}</b><small>{m.membership_role} · {m.assigned_role||"Role not assigned"}{m.user_id===iglUserId?" / IGL":""}</small></div>{team.membership_role==="owner"&&m.membership_role!=="owner"?<div className="add-form"><select defaultValue={String(m.player_number||1)} onChange={e=>assignMember(m.id,Number(e.target.value),m.assigned_role||"Player")}>{[1,2,3,4,5].map(n=><option value={n} key={n}>P{n}</option>)}</select><select defaultValue={m.assigned_role||"Player"} onChange={e=>assignMember(m.id,Number(m.player_number||0),e.target.value)}>{["Primary Rusher","Secondary Rusher","Third Rusher","Sniper","Substitute"].map(x=><option key={x}>{x}</option>)}</select></div>:null}</article>)}</div>
+                <div className="player-list">{teamMembers.map(m=><article className="player-row" key={m.id}><span className="player-id">{m.player_number?"P"+m.player_number:"—"}</span><div><b>{m.display_name}</b><small>{m.membership_role} · {m.assigned_role||"Role not assigned"}{m.user_id===iglUserId?" / IGL":""}</small></div>{team.membership_role==="owner"&&m.membership_role!=="owner"?<div className="add-form"><select defaultValue={String(m.player_number||1)} onChange={e=>assignMember(m.id,Number(e.target.value),m.assigned_role||"Player")}>{Array.from({length:rosterCapacity},(_,i)=>i+1).map(n=><option value={n} key={n}>P{n}</option>)}</select><select defaultValue={m.assigned_role||"Player"} onChange={e=>assignMember(m.id,Number(m.player_number||0),e.target.value)}>{["Primary Rusher","Secondary Rusher","Third Rusher","Sniper","Substitute"].map(x=><option key={x}>{x}</option>)}</select></div>:null}</article>)}</div>
                 {team.membership_role==="owner"&&<section className="connection-panel team-admin-panel"><h3>IGL designation</h3><label className="admin-setting">IGL player<select value={iglUserId} onChange={e=>saveIGL(e.target.value)}><option value="">Not assigned</option>{teamMembers.filter(m=>m.status==="active").map(m=><option value={m.user_id} key={m.user_id}>P{m.player_number||"—"} · {m.display_name} ({m.assigned_role||"Unassigned"})</option>)}</select><small>Separate designation. Shows “Role / IGL” without changing the base role.</small></label></section>}
-                {team.membership_role==="owner"&&<section className="connection-panel team-admin-panel"><div className="admin-section-title"><h3>Join requests</h3><span className="active-tag">{joinRequests.length} pending</span></div>{joinRequests.length===0?<p className="muted">No pending requests.</p>:<div className="request-list">{joinRequests.map(q=><article className="request-card" key={q.id}><div className="request-person"><b>{q.display_name}</b><small>{new Date(q.requested_at).toLocaleDateString()}</small></div><div className="request-controls"><label>Player slot<select value={requestSlot[q.id]||""} onChange={e=>setRequestSlot(p=>({...p,[q.id]:e.target.value}))}><option value="">Select slot</option>{[1,2,3,4,5].filter(n=>!teamMembers.some(m=>m.status==="active"&&m.player_number===n)).map(n=><option key={n} value={n}>P{n}</option>)}</select></label><label>Role<select value={requestRole[q.id]||"Primary Rusher"} onChange={e=>setRequestRole(p=>({...p,[q.id]:e.target.value}))}>{["Primary Rusher","Secondary Rusher","Third Rusher","Sniper","Substitute"].map(role=><option key={role}>{role}</option>)}</select></label></div><div className="request-actions"><button className="primary-button" onClick={()=>reviewJoinRequest(q.id,true)}>Approve & add</button><button className="secondary-button" onClick={()=>reviewJoinRequest(q.id,false)}>Decline</button></div></article>)}</div>}</section>}
+                {team.membership_role==="owner"&&<section className="connection-panel team-admin-panel"><div className="admin-section-title"><h3>Join requests</h3><span className="active-tag">{joinRequests.length} pending</span></div>{joinRequests.length===0?<p className="muted">No pending requests.</p>:<div className="request-list">{joinRequests.map(q=><article className="request-card" key={q.id}><div className="request-person"><b>{q.display_name}</b><small>{new Date(q.requested_at).toLocaleDateString()}</small></div><div className="request-controls"><label>Player slot<select value={requestSlot[q.id]||""} onChange={e=>setRequestSlot(p=>({...p,[q.id]:e.target.value}))}><option value="">Select slot</option>{Array.from({length:rosterCapacity},(_,i)=>i+1).filter(n=>!teamMembers.some(m=>m.status==="active"&&m.player_number===n)).map(n=><option key={n} value={n}>P{n}</option>)}</select></label><label>Role<select value={requestRole[q.id]||"Primary Rusher"} onChange={e=>setRequestRole(p=>({...p,[q.id]:e.target.value}))}>{["Primary Rusher","Secondary Rusher","Third Rusher","Sniper","Substitute"].map(role=><option key={role}>{role}</option>)}</select></label></div><div className="request-actions"><button className="primary-button" onClick={()=>reviewJoinRequest(q.id,true)}>Approve & add</button><button className="secondary-button" onClick={()=>reviewJoinRequest(q.id,false)}>Decline</button></div></article>)}</div>}</section>}
               </>:<>
                 <h3 style={{marginTop:8}}>Create a team or join with code</h3><p>Team owner creates one squad. Players use the invite code from their own accounts.</p>
                 <p className="team-separate-page-note">Create or join a squad from the dedicated Team Setup screen above. Team creation is not embedded here.</p>
@@ -631,7 +727,7 @@ export default function App() {
             <div className="foundation-grid overview-stats">
               {[["Roster",players.length+" / 10","Configured players"],["Match records",String(totalMatches),"Current week"],["Week points",String(points),"Placement + kills"]].map(([a,b,c],i)=><article className="foundation-card" key={a}><div className="card-index">0{i+1}</div><div className="card-label">{a}</div><div className="card-value">{b}</div><div className="card-detail">{c}</div></article>)}
             </div>
-            <section className="connection-panel"><div><div className="eyebrow">NEXT ACTION</div><h3>Start with the tournament ledger</h3><p>Choose Tournament to record six matches per day, seven days per week. Training and roster are separate sections.</p></div><button className="primary-button" onClick={()=>setSection("Tournament")}>Open tournament →</button></section>
+            <section className="connection-panel"><div><div className="eyebrow">NEXT ACTION</div><h3>Start with the tournament ledger</h3><p>Choose Tournament to record six matches per day, seven days per week. Training and roster are separate sections.</p></div><button className="primary-button" onClick={()=>setSection("Tournament")}>Open tournament <UiIcon name="arrow-right"/></button></section>
           </>}
           {section==="Tournament" && <>
             <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><span className="phase-pill">42 MATCH SLOTS</span></div>
@@ -675,14 +771,14 @@ export default function App() {
             <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">SQUAD TASK BOARD · {assignmentRows.length}</div><div className="player-list">{assignmentRows.map(a=><article className="player-row" key={a.id}><span className="player-id">{a.due_date}</span><div><b>{teamMembers.find(m=>m.user_id===a.player_id)?.display_name||a.player_id.slice(0,8)} · {a.drill_title}</b><small>{a.drill_description}</small><small>Status: {a.status}</small>{a.completion_note&&<small>{a.completion_note}</small>}</div>{a.player_id===sessionUserId||!!team&&["owner","coach"].includes(team.membership_role)?<button className="secondary-button" onClick={()=>updateAssignment(a.id,a.status==="completed"?"assigned":"completed")}>{a.status==="completed"?"Undo":"Complete"}</button>:null}</article>)}</div></section>
           </>}
           {section==="Profile" && <>
-            <div className="section-heading"><div><h2>Player profile</h2></div><button className="secondary-button" type="button" onClick={()=>setSection("Settings")}>← Back to Settings</button></div>
+            <div className="section-heading"><div><h2>Player profile</h2></div><button className="secondary-button" type="button" onClick={()=>setSection("Settings")}><UiIcon name="arrow-left"/> Back to Settings</button></div>
             <section className="connection-panel profile-panel">
               <div className="profile-identity"><span className="profile-avatar">{(displayName||sessionUsername||"P").slice(0,1).toUpperCase()}</span><div><strong>{displayName||sessionUsername||"Player"}</strong><small>{team?.team_name||"No team selected"} · {team?.membership_role||"Account"}</small></div></div>
               <div className="profile-fields">
                 <label className="auth-field"><span>IN-GAME NAME (IGN)</span><input value={displayName} maxLength={32} onChange={e=>setDisplayName(e.target.value)} placeholder="Your Free Fire IGN"/></label>
                 <label className="auth-field"><span>ACCOUNT USERNAME</span><input value={sessionUsername} readOnly/></label>
-                <label className="auth-field"><span>PLAYER SLOT · P1–P5</span><input value={team?.player_number?("P"+team.player_number):"Not assigned"} readOnly/></label>
-                <div className="profile-role-block"><label className="auth-field"><span>MY PLAYER ROLE / SLOT</span>{team?.membership_role==="owner"?<select value={String(team.player_number||1)} onChange={e=>saveOwnerRole(Number(e.target.value))}>{[{n:1,label:"P1 · Primary Rusher"},{n:2,label:"P2 · Secondary Rusher"},{n:3,label:"P3 · Third Rusher"},{n:4,label:"P4 · Sniper"},{n:5,label:"P5 · Substitute"}].map(x=><option key={x.n} value={x.n}>{x.label}</option>)}</select>:<input value={team?.assigned_role||"Not assigned"} readOnly/>}</label>{team?.membership_role==="owner"&&<label className="auth-field"><span>TEAM IGL · SEPARATE DESIGNATION</span><select value={iglUserId} onChange={e=>saveIGL(e.target.value)}><option value="">Select IGL player</option>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>P{m.player_number||"—"} · {m.display_name}</option>)}</select><small>IGL selection does not change player role/slot. Select P1–P5 independently.</small></label>}</div>
+                <label className="auth-field"><span>PLAYER SLOT · TEAM ASSIGNMENT</span><input value={team?.player_number?("P"+team.player_number):"Not assigned"} readOnly/><small>This is your actual team slot. Choose one below to assign it.</small></label>
+                <div className="profile-role-block"><label className="auth-field"><span>MY PLAYER ROLE / SLOT</span>{team?.membership_role==="owner"?<select value={String(team.player_number??"")} onChange={e=>{if(e.target.value)saveOwnerRole(Number(e.target.value));}}><option value="">Choose team slot…</option>{Array.from({length:Math.max(rosterCapacity,players.length,teamMembers.reduce((max,m)=>Math.max(max,m.player_number||0),0))},(_,i)=>i+1).map(n=><option key={n} value={n}>{n===1?"P1 · Primary Rusher":n===2?"P2 · Secondary Rusher":n===3?"P3 · Third Rusher":n===4?"P4 · Sniper":`P${n} · Substitute`}</option>)}</select>:<input value={team?.assigned_role||"Not assigned"} readOnly/>}</label>{team?.membership_role==="owner"&&<label className="auth-field"><span>TEAM IGL · SEPARATE DESIGNATION</span><select value={iglUserId} onChange={e=>saveIGL(e.target.value)}><option value="">Select IGL player</option>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>P{m.player_number||"—"} · {m.display_name}</option>)}</select><small>IGL selection does not change player role/slot. Select P1–P10 independently.</small></label>}</div>
               </div>
               <button className="primary-button" disabled={!signedIn||!displayName.trim()} onClick={async()=>{if(!supabase||!signedIn)return;const name=displayName.trim();const {error}=await supabase.rpc("set_display_name",{p_name:name,p_team_id:team?.id||null});if(error){setNotice(error.message.includes("team_members_team_display_name_lower_uidx")?"This IGN is already used in this team. Choose a different IGN.":error.message);return;}if(!team)await supabase.auth.updateUser({data:{display_name:name}});setDisplayName(name);setTeamMembers(rows=>rows.map(m=>m.user_id===sessionUserId?{...m,display_name:name}:m));setNotice(team?"Team IGN updated. This name is unique only inside this team.":"Default IGN updated for future team membership.");}}>Save IGN</button>
               
@@ -693,7 +789,7 @@ export default function App() {
             <div className="section-heading"><div><h2>Settings</h2></div></div>
             <section className="connection-panel profile-settings-entry">
               <div><div className="eyebrow">ACCOUNT</div><h3>Player profile</h3><p>View and update your IGN, account details, player slot, role and IGL information.</p></div>
-              <button className="primary-button" type="button" onClick={()=>setSection("Profile")}>Open Profile →</button>
+              <button className="primary-button" type="button" onClick={()=>setSection("Profile")}>Open Profile <UiIcon name="arrow-right"/></button>
             </section>
             {signedIn&&<section className="connection-panel account-settings-panel">
               <div className="eyebrow">ACCOUNT & SECURITY</div><h3>Session controls</h3><p>Log out of this device. Your team records and account remain saved securely.</p>
@@ -710,10 +806,11 @@ export default function App() {
                 {teamLogoFile&&<div className="crop-controls"><label>Horizontal crop <input type="range" min="0" max="100" value={teamLogoCropX} onChange={e=>setTeamLogoCropX(Number(e.target.value))}/></label><label>Vertical crop <input type="range" min="0" max="100" value={teamLogoCropY} onChange={e=>setTeamLogoCropY(Number(e.target.value))}/></label><button className="secondary-button" onClick={()=>{setTeamLogoFile(null);setTeamLogoPreview("");}}>Cancel selection</button></div>}
                 <button className="primary-button" disabled={!teamLogoFile||teamBusy} onClick={async()=>{if(!supabase||!teamLogoFile)return;setTeamBusy(true);try{const cropped=await makeSquareTeamLogo(teamLogoFile,teamLogoCropX,teamLogoCropY);const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Sign in again to update the logo.");const path=user.id+"/"+team.id+".jpg";const {error:up}=await supabase.storage.from("team-avatars").upload(path,cropped,{upsert:true,contentType:"image/jpeg"});if(up)throw up;const {data:pub}=supabase.storage.from("team-avatars").getPublicUrl(path);const {error:av}=await supabase.from("teams").update({avatar_url:pub.publicUrl+"?v="+Date.now()}).eq("id",team.id);if(av)throw av;await loadTeam();setTeamLogoFile(null);setTeamLogoPreview("");setNotice("Team logo updated.");}catch(e){setNotice(e instanceof Error?e.message:"Logo update failed.");}finally{setTeamBusy(false);}}}>{teamBusy?"Saving logo…":"Save Team Logo"}</button>
               </section>
+            {team.membership_role==="owner"&&<section className="connection-panel team-admin-panel roster-capacity-panel"><div className="eyebrow">ROSTER CONFIGURATION</div><h3>Player capacity</h3><p>Default is 4 core players. Set an expanded roster from 4 up to 10; approval and slot assignment enforce this limit on the server.</p><label className="admin-setting">Maximum active player slots<select value={rosterCapacity} disabled={teamBusy} onChange={e=>saveRosterCapacity(Number(e.target.value))}>{Array.from({length:7},(_,i)=>i+4).map(n=><option key={n} value={n}>{n} players · P1–P{n}</option>)}</select><small>Changing capacity never deletes or unassigns current players. Reduce only after moving players out of higher slots.</small></label></section>}
               <section className="connection-panel backup-panel">
                 <div className="backup-panel-head"><div><div className="eyebrow">OWNER TOOLS · DATA PORTABILITY</div><h3>Team backup & restore</h3><p>Export roster, tournament history, training, evaluations, assignments, team settings and related records as a portable JSON backup.</p></div><span className="backup-lock">OWNER ONLY</span></div>
                 {team.membership_role==="owner"?<>
-                  <div className="backup-actions"><button className="primary-button" type="button" disabled={backupBusy} onClick={downloadTeamBackup}>{backupBusy?"Preparing…":"↓ Download Full Backup"}</button><label className="backup-file-picker">＋ Choose Backup File<input type="file" accept=".json,application/json" onChange={e=>{setBackupFile(e.target.files?.[0]||null);setBackupStatus("");}}/></label></div>
+                  <div className="backup-actions"><button className="primary-button" type="button" disabled={backupBusy} onClick={downloadTeamBackup}>{backupBusy?"Preparing…":<><UiIcon name="download"/> Download Full Backup</>}</button><label className="backup-file-picker">＋ Choose Backup File<input type="file" accept=".json,application/json" onChange={e=>{setBackupFile(e.target.files?.[0]||null);setBackupStatus("");}}/></label></div>
                   {backupFile&&<div className="backup-file-selected"><span>{backupFile.name}</span><button className="text-button" type="button" onClick={()=>setBackupFile(null)}>Remove</button></div>}
                   <button className="secondary-button backup-import-button" type="button" disabled={!backupFile||backupBusy} onClick={()=>setConfirmAction("import")}>{backupBusy?"Restoring…":"Import & Restore Backup"}</button>
                   <small className="backup-warning">Restore replaces the current team roster and records with the selected backup. Your signed-in account remains the team owner. Use a backup exported by SQUAD OS.</small>
@@ -727,7 +824,7 @@ export default function App() {
           </Suspense>}
           {confirmAction&&<div className="confirm-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setConfirmAction(null);}}>
             <section className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
-              <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?"↗":confirmAction==="leave"?"⇥":"↻"}</div>
+              <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?<UiIcon name="log-out" size={19}/>:confirmAction==="leave"?<UiIcon name="external-link" size={19}/>:<UiIcon name="download" size={19}/>}</div>
               <div className="eyebrow">{confirmAction==="logout"?"ACCOUNT SESSION":confirmAction==="leave"?"TEAM MEMBERSHIP":"DATA RESTORE"}</div>
               <h3 id="confirm-title">{confirmAction==="logout"?"Log out of SQUAD OS?":confirmAction==="leave"?"Leave this team?":"Restore this team backup?"}</h3>
               <p>{confirmAction==="logout"?"You will be signed out on this device. Your account and team data will remain safe.":confirmAction==="leave"?"Your membership will end immediately. If you are the last active member, the empty team will be queued for deletion after 48 hours.":"This replaces the current team roster and team records with the selected backup. Download a fresh backup first if you need a rollback point."}</p>

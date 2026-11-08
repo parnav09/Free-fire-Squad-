@@ -1,0 +1,19 @@
+name: Phase 2 CI
+on:
+  push:
+    branches: [main, phase-2-roster-capacity, fix/team-create-rpc-ui]
+  pull_request:
+    branches: [main, phase-2-roster-capacity]
+permissions:
+  contents: read
+jobs:
+  typecheck-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+      - run: npm install
+      - run: npm run typecheck
+      - run: npm run build
