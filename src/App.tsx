@@ -2,8 +2,8 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import useAccessibleDialog from "./app/useAccessibleDialog";
 import WorkspaceShell from "./app/WorkspaceShell";
 import type { Section } from "./app/types";
-import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers } from "./app/foundation-utils";
-import type { Player } from "./app/foundation-utils";
+import { makeSquareTeamLogo } from "./app/foundation-utils";
+import useTeamLocalData from "./app/useTeamLocalData";
 
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 
@@ -18,10 +18,6 @@ export default function App() {
   const pendingMatchScopeRef = useRef("");
   const activeMatchScopeRef = useRef("");
   const [section, setSection] = useState<Section>("Overview");
-  const [players, setPlayers] = useState<Player[]>(readPlayers);
-  const [week, setWeek] = useState(() => localStorage.getItem("squad-os-week") || currentISOWeekKey());
-  const [day, setDay] = useState(() => Number(localStorage.getItem("squad-os-day") || 1));
-  const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-matches") || "{}"); } catch { return {}; } });
   const [notice, setNotice] = useState("");
   const [sharedMatches, setSharedMatches] = useState<Array<{match_day:number;match_number:number;placement:number|null;kills:number;points:number|null;status:string}>>([]);
   const [matchesHydratedKey, setMatchesHydratedKey] = useState("");
@@ -42,8 +38,6 @@ export default function App() {
 
   const [newName, setNewName] = useState("");
   const [newRole, setNewRole] = useState("Substitute");
-  const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-drills") || "{}"); } catch { return {}; } });
-  const [notes, setNotes] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-notes") || "{}"); } catch { return {}; } });
   const [query, setQuery] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [teamName, setTeamName] = useState("");
@@ -55,7 +49,6 @@ export default function App() {
   const [teamLogoCropY, setTeamLogoCropY] = useState(50);
   const [teamScreen, setTeamScreen] = useState<"choice" | "create" | "join">("choice");
   const [team, setTeam] = useState<{id:string;membership_id:string;team_name:string;invite_code:string;avatar_url?:string|null;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
-  const [localDataHydratedFor,setLocalDataHydratedFor]=useState("");
   const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
   const [teamChoices,setTeamChoices]=useState<Array<{id:string;team_name:string;membership_role:string}>>([]);
   const [teamBusy, setTeamBusy] = useState(false);
@@ -84,40 +77,7 @@ export default function App() {
   const [assignmentDesc,setAssignmentDesc]=useState("Practice concise enemy/location callouts, repeat IGL orders, and confirm role.");
   const [assignmentDate,setAssignmentDate]=useState(()=>new Date().toLocaleDateString("en-CA"));
   const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
-  // Local-only records are isolated by immutable team UUID. Legacy unscoped data is migrated once to the first team opened.
-  useEffect(()=>{
-    if(!team?.id){setLocalDataHydratedFor("");return;}
-    const id=team.id, prefix="squad-os:"+id+":";
-    const migrateLegacy=localStorage.getItem("squad-os-legacy-local-migrated")!=="1";
-    const readScoped=<T,>(key:string,fallback:T):T=>{
-      const raw=localStorage.getItem(prefix+key);
-      if(raw!==null){try{return JSON.parse(raw) as T;}catch{return fallback;}}
-      return fallback;
-    };
-    setPlayers(readScoped("roster",migrateLegacy?players:initialPlayers));
-    setWeek(readScoped("week",migrateLegacy?week:currentISOWeekKey()));
-    setDay(readScoped("day",migrateLegacy?day:1));
-    setMatches(readScoped("matches",migrateLegacy?matches:{}));
-    setDrillDone(readScoped("drills",migrateLegacy?drillDone:{}));
-    setNotes(readScoped("notes",migrateLegacy?notes:{}));
-    if(migrateLegacy)localStorage.setItem("squad-os-legacy-local-migrated","1");
-    setLocalDataHydratedFor(id);
-  },[team?.id]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":roster",JSON.stringify(players));},[players,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":week",JSON.stringify(week));},[week,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":day",JSON.stringify(day));},[day,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":matches",JSON.stringify(matches));},[matches,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":drills",JSON.stringify(drillDone));},[drillDone,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":notes",JSON.stringify(notes));},[notes,team?.id,localDataHydratedFor]);
-  useEffect(() => {
-    const onOnline=()=>{setIsOnline(true);setConnection("Syncing…");};
-    const onOffline=()=>{setIsOnline(false);setConnection("Offline");};
-    window.addEventListener("online",onOnline);
-    window.addEventListener("offline",onOffline);
-    return()=>{window.removeEventListener("online",onOnline);window.removeEventListener("offline",onOffline);};
-  }, []);
-
-  useEffect(() => {
+  const { players, setPlayers, week, setWeek, day, setDay, matches, setMatches, drillDone, setDrillDone, notes, setNotes } = useTeamLocalData(team?.id);\n  useEffect(() => {
     let active = true;
     import("./lib/supabase/client")
       .then(({ supabase: client }) => {
