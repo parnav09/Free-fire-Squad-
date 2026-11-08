@@ -70,6 +70,7 @@ export default function App() {
   const [teamLogoCropY, setTeamLogoCropY] = useState(50);
   const [teamScreen, setTeamScreen] = useState<"choice" | "create" | "join">("choice");
   const [team, setTeam] = useState<{id:string;membership_id:string;team_name:string;invite_code:string;avatar_url?:string|null;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
+  const [localDataHydratedFor,setLocalDataHydratedFor]=useState("");
   const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
   const [teamBusy, setTeamBusy] = useState(false);
   const [confirmAction,setConfirmAction]=useState<"logout"|"leave"|"import"|null>(null);
@@ -97,10 +98,31 @@ export default function App() {
   const [assignmentDesc,setAssignmentDesc]=useState("Practice concise enemy/location callouts, repeat IGL orders, and confirm role.");
   const [assignmentDate,setAssignmentDate]=useState(()=>new Date().toLocaleDateString("en-CA"));
   const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
-  useEffect(() => { localStorage.setItem("squad-os-roster", JSON.stringify(players)); }, [players]);
-  useEffect(() => { localStorage.setItem("squad-os-matches", JSON.stringify(matches)); }, [matches]);
-  useEffect(() => { localStorage.setItem("squad-os-drills", JSON.stringify(drillDone)); }, [drillDone]);
-  useEffect(() => { localStorage.setItem("squad-os-notes", JSON.stringify(notes)); }, [notes]);
+  // Local-only records are isolated by immutable team UUID. Legacy unscoped data is migrated once to the first team opened.
+  useEffect(()=>{
+    if(!team?.id){setLocalDataHydratedFor("");return;}
+    const id=team.id, prefix="squad-os:"+id+":";
+    const migrateLegacy=localStorage.getItem("squad-os-legacy-local-migrated")!=="1";
+    const readScoped=<T,>(key:string,fallback:T):T=>{
+      const raw=localStorage.getItem(prefix+key);
+      if(raw!==null){try{return JSON.parse(raw) as T;}catch{return fallback;}}
+      return fallback;
+    };
+    setPlayers(readScoped("roster",migrateLegacy?players:initialPlayers));
+    setWeek(readScoped("week",migrateLegacy?week:currentISOWeekKey()));
+    setDay(readScoped("day",migrateLegacy?day:1));
+    setMatches(readScoped("matches",migrateLegacy?matches:{}));
+    setDrillDone(readScoped("drills",migrateLegacy?drillDone:{}));
+    setNotes(readScoped("notes",migrateLegacy?notes:{}));
+    if(migrateLegacy)localStorage.setItem("squad-os-legacy-local-migrated","1");
+    setLocalDataHydratedFor(id);
+  },[team?.id]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":roster",JSON.stringify(players));},[players,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":week",JSON.stringify(week));},[week,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":day",JSON.stringify(day));},[day,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":matches",JSON.stringify(matches));},[matches,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":drills",JSON.stringify(drillDone));},[drillDone,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":notes",JSON.stringify(notes));},[notes,team?.id,localDataHydratedFor]);
   useEffect(() => {
     let alive = true;
     if (!supabase) { setConnection("Missing project settings"); return; }
