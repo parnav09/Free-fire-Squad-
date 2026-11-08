@@ -60,3 +60,33 @@ test("shared confirmation dialog supports focus trap, Escape and focus restorati
   assert.match(dialogHook, /firstItem\.focus\(\)/);
   assert.match(dialogHook, /lastItem\.focus\(\)/);
 });
+
+function relativeLuminance(hex) {
+  const channels = hex.match(/[a-f0-9]{2}/gi).map((part) => Number.parseInt(part, 16) / 255);
+  const linear = channels.map((value) => value <= 0.04045
+    ? value / 12.92
+    : ((value + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+}
+
+function contrastRatio(foreground, background) {
+  const a = relativeLuminance(foreground);
+  const b = relativeLuminance(background);
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
+
+test("core text and accent colors meet WCAG AA contrast against their intended dark surfaces", () => {
+  const pairs = [
+    ["#EEF3FF", "#05060B"],
+    ["#B0BDD5", "#080B14"],
+    ["#8493AD", "#05060B"],
+    ["#70D8ED", "#05060B"],
+    ["#9B86F4", "#05060B"],
+  ];
+  for (const [foreground, background] of pairs) {
+    assert.ok(
+      contrastRatio(foreground, background) >= 4.5,
+      `Insufficient contrast for ${foreground} on ${background}`,
+    );
+  }
+});
