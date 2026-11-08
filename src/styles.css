@@ -603,3 +603,5 @@ button:disabled,.team-upload-button:has(input:disabled){opacity:.48;cursor:not-a
 
 .pt-filters{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr) minmax(0,.9fr);gap:7px;margin:0 0 13px}.pt-filters input,.pt-filters select{box-sizing:border-box;min-width:0;width:100%;background:#0b1423;border:1px solid #263550;border-radius:9px;padding:9px;color:#cddcff;font-size:10px}
 @media(max-width:560px){.pt-filters{grid-template-columns:1fr 1fr}.pt-filters input{grid-column:1/-1}}
+
+.pt-map-chip{display:inline-flex;align-items:center;gap:6px;margin:0 0 9px;padding:6px 9px;border:1px solid #3a4d7a;background:#111e38;border-radius:8px;color:#a6bbef;font-size:10px;font-weight:700}
