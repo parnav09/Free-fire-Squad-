@@ -77,7 +77,8 @@ export default function App() {
   const [assignmentDesc,setAssignmentDesc]=useState("Practice concise enemy/location callouts, repeat IGL orders, and confirm role.");
   const [assignmentDate,setAssignmentDate]=useState(()=>new Date().toLocaleDateString("en-CA"));
   const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
-  const { players, setPlayers, week, setWeek, day, setDay, matches, setMatches, drillDone, setDrillDone, notes, setNotes } = useTeamLocalData(team?.id);\n  useEffect(() => {
+  const { players, setPlayers, week, setWeek, day, setDay, matches, setMatches, drillDone, setDrillDone, notes, setNotes } = useTeamLocalData(team?.id);
+  useEffect(() => {
     let active = true;
     import("./lib/supabase/client")
       .then(({ supabase: client }) => {
