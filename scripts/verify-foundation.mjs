@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const [tokens, foundation, entry, html, config, dialogHook, shell, button] = await Promise.all([
+const [tokens, foundation, entry, html, config, dialogHook, shell, button, app, appUtils] = await Promise.all([
   readFile(new URL("../src/styles/tokens.css", import.meta.url), "utf8"),
   readFile(new URL("../src/styles/foundation.css", import.meta.url), "utf8"),
   readFile(new URL("../src/main.tsx", import.meta.url), "utf8"),
@@ -11,6 +11,8 @@ const [tokens, foundation, entry, html, config, dialogHook, shell, button] = awa
   readFile(new URL("../src/app/useAccessibleDialog.ts", import.meta.url), "utf8"),
   readFile(new URL("../src/app/WorkspaceShell.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/ui/Button.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/App.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/app/foundation-utils.ts", import.meta.url), "utf8"),
 ]);
 
 test("brand palette defines the required deep-onxy, cyan and violet tokens", () => {
@@ -104,4 +106,14 @@ test("shared button primitive defaults to safe non-submit behavior", () => {
   assert.match(button, /variant = "unstyled"/);
   assert.match(button, /type = "button"/);
   assert.match(button, /ButtonHTMLAttributes/);
+});
+
+
+test("App delegates stable foundation helpers to a dedicated module", () => {
+  assert.match(app, /from \"\.\/app\/foundation-utils\"/);
+  assert.doesNotMatch(app, /function currentISOWeekKey/);
+  assert.doesNotMatch(app, /function makeSquareTeamLogo/);
+  assert.match(appUtils, /export function currentISOWeekKey/);
+  assert.match(appUtils, /export async function makeSquareTeamLogo/);
+  assert.match(appUtils, /export function readPlayers/);
 });
