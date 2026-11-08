@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const [tokens, foundation, entry, html, config, dialogHook, shell] = await Promise.all([
+const [tokens, foundation, entry, html, config, dialogHook, shell, button] = await Promise.all([
   readFile(new URL("../src/styles/tokens.css", import.meta.url), "utf8"),
   readFile(new URL("../src/styles/foundation.css", import.meta.url), "utf8"),
   readFile(new URL("../src/main.tsx", import.meta.url), "utf8"),
@@ -10,6 +10,7 @@ const [tokens, foundation, entry, html, config, dialogHook, shell] = await Promi
   readFile(new URL("../vite.config.ts", import.meta.url), "utf8"),
   readFile(new URL("../src/app/useAccessibleDialog.ts", import.meta.url), "utf8"),
   readFile(new URL("../src/app/WorkspaceShell.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/components/ui/Button.tsx", import.meta.url), "utf8"),
 ]);
 
 test("brand palette defines the required deep-onxy, cyan and violet tokens", () => {
@@ -97,4 +98,10 @@ test("shared workspace shell owns navigation, active state and sync status", () 
   assert.match(shell, /aria-current=/);
   assert.match(shell, /onNavigate\(item\)/);
   assert.match(shell, /aria-live="polite"/);
+});
+
+test("shared button primitive defaults to safe non-submit behavior", () => {
+  assert.match(button, /variant = "unstyled"/);
+  assert.match(button, /type = "button"/);
+  assert.match(button, /ButtonHTMLAttributes/);
 });
