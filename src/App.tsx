@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
-const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));\nconst PlanningTrainingCenter = lazy(() => import("./components/PlanningTrainingCenter"));
+const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
+const PlanningTrainingCenter = lazy(() => import("./components/PlanningTrainingCenter"));
 
 
 
