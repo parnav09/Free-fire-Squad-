@@ -2,13 +2,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const [tokens, foundation, entry, html, config, dialogHook] = await Promise.all([
+const [tokens, foundation, entry, html, config, dialogHook, shell] = await Promise.all([
   readFile(new URL("../src/styles/tokens.css", import.meta.url), "utf8"),
   readFile(new URL("../src/styles/foundation.css", import.meta.url), "utf8"),
   readFile(new URL("../src/main.tsx", import.meta.url), "utf8"),
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../vite.config.ts", import.meta.url), "utf8"),
   readFile(new URL("../src/app/useAccessibleDialog.ts", import.meta.url), "utf8"),
+  readFile(new URL("../src/app/WorkspaceShell.tsx", import.meta.url), "utf8"),
 ]);
 
 test("brand palette defines the required deep-onxy, cyan and violet tokens", () => {
@@ -89,4 +90,11 @@ test("core text and accent colors meet WCAG AA contrast against their intended d
       `Insufficient contrast for ${foreground} on ${background}`,
     );
   }
+});
+
+test("shared workspace shell owns navigation, active state and sync status", () => {
+  assert.match(shell, /aria-label="Workspace"/);
+  assert.match(shell, /aria-current=/);
+  assert.match(shell, /onNavigate\(item\)/);
+  assert.match(shell, /aria-live="polite"/);
 });
