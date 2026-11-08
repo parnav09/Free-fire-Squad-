@@ -14,7 +14,7 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 - [x] Player task assignment: roster member, due date, priority, plan link, instructions.
 - [x] Task board: status updates, due/priority/context; assigned player update policy.
 - [x] Drill library: custom drill creation/edit, role/category/difficulty/duration/objective/setup/steps/success criteria, archive, searchable filters and expanded protocol preview.
-- [x] Ten reusable competitive training templates (communication, entry/trade, backup, flank, rotation, retreat/regroup, end-zone, role execution, post-match review); copy to team library.
+- [x] Eighteen reusable competitive training templates (communication, entry/trade, backup, flank, rotation, retreat/regroup, end-zone, role execution, post-match review); copy to team library.
 - [x] Training sessions: individual/squad/communication/IGL/role session, link plan/drill, date/duration/instructions, lifecycle.
 - [x] Session participant selection and attendance (present/absent/excused/pending).
 - [x] Training evaluation: player attempt, score /100, optional execution/communication/coordination/decision/consistency rubric, feedback, reflection, repeat attempt history.
@@ -25,7 +25,7 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 - [x] CI configured for feature branch.
 
 ## Verification status
-- TypeScript/build: successful GitHub Actions typecheck + production build at commit 80afbcb3; subsequent drill/plan additions require fresh CI.
+- TypeScript/build: successful GitHub Actions typecheck + production build at commit 8f7403ef; subsequent tactical plan/drill additions require fresh CI.
 - Supabase migration apply: success (schema migration + member task update policy + templates seed).
 - Data persistence/CRUD through authenticated app: not yet end-to-end manually tested.
 - Mobile visual QA: not yet manually inspected on user's Android device.
@@ -34,7 +34,7 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 
 ## Remaining Phase 2–3 work
 - Weekly plan objective/review aggregation and full template-to-plan weekly recurrence.
-- Plan unsaved-change protections, drag/drop reorder (currently up/down controls), and block reorder polish.
+- Plan unsaved-change protections and drag/drop reorder (currently explicit up/down controls).
 - Task blocked-state details and stronger field-level task permissions.
 - Drill steps/setup inline editing, drill detail expansion, and templates with source attribution.
 - Session participant self-service and attendance notification workflow.
@@ -44,4 +44,4 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 - Cross-link plan → session → results → next task/plan; timeline/audit.
 - Add robust validation, retry/optimistic UI and confirm destructive actions.
 - RLS tests for member, coach, owner, cross-team and archived records.
-- Current PR #9 is open against feature/owner-power-toggle (not merged). Preview deploy when quota allows, Android visual QA and final phase checklist.
+- Current PR #9 is open against feature/owner-power-toggle (not merged). Preview deploy when quota allows, Android visual QA and final phase checklist. Supabase drill seed count verified: 18 templates.
