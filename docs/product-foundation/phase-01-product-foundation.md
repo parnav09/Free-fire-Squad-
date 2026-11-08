@@ -1,7 +1,7 @@
 # Phase 01 — Product Foundation
 
 **Project:** SQUAD OS  
-**Status:** Foundation baseline implemented; final acceptance is pending verification.  
+**Status:** Foundation implementation advanced; automated verification is in progress; manual device QA is provisionally accepted pending deployment feedback.  
 **Scope rule:** This phase establishes the product, repository, runtime, design and QA foundation. It does not implement or repair later-phase tournament, training, map, replay, analytics, offline-sync or notification workflows.
 
 ## 1. Product definition
@@ -59,6 +59,7 @@ These belong to later phases and must not be marked complete by Phase 01:
 - TypeScript strict mode remains enabled
 - Production build runs TypeScript validation before Vite bundling
 - npm run test:foundation runs dependency-free Node tests for foundation contracts
+- CI generates package-lock.json, installs from it using npm ci, and commits it to the same-repository Phase 01 PR branch
 - CI must run foundation tests and production build on pull requests and pushes to main
 
 ## 4. Design system
@@ -165,9 +166,9 @@ Still required before Phase 01 can be honestly marked Complete:
 1. CI must pass against the branch.
 2. A real browser build must be reviewed at the viewport matrix above.
 3. Existing primary workflows must be smoke-tested after the foundation CSS layer is added.
-4. The monolithic App.tsx must be decomposed into feature/application modules without changing behavior.
-5. A dependency lockfile and reproducible install strategy should be committed.
-6. The mobile navigation and modal focus behavior must pass interaction testing.
+4. App.tsx has been partially decomposed: shared foundation helpers and team-scoped local persistence now live in dedicated modules; feature-level sections/state still need further modularization.
+5. The CI lockfile-generation + npm ci pipeline must complete and commit package-lock.json.
+6. Manual device QA is provisionally accepted by the project owner; after deployment, any reported Android/tablet/laptop or hitbox issue reopens QA and must be fixed.
 
 ## 10. Completion rule
 
