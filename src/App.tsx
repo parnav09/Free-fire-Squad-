@@ -530,14 +530,14 @@ export default function App() {
   };
   const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
-  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Assignments", "Analytics", "Profile", "Settings"];
+  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Assignments", "Analytics", "Settings"];
   const onboarding=!signedIn||!team;
   return (
     <main className="app-shell">
       <aside className="sidebar">
         <div className="brand-mark">S</div><div className="brand-copy"><span className="brand-name">SQUAD OS</span><span className="brand-caption">TEAM OPERATIONS</span></div>
         <div className="sidebar-divider"/>{!onboarding&&<><div className="nav-label">WORKSPACE</div>
-        {nav.map(n => <button key={n} className={"nav-item "+(section===n?"nav-item-active":"nav-item-muted")} onClick={()=>setSection(n)}><span className="nav-dot"/>{n}</button>)}
+        {nav.map(n => <button key={n} className={"nav-item "+((section===n||(n==="Settings"&&section==="Profile"))?"nav-item-active":"nav-item-muted")} onClick={()=>setSection(n)}><span className="nav-dot"/>{n}</button>)}
         <div className="sidebar-bottom">SQUAD OS · WORKSPACE</div></>}
       </aside>
       <section className="main-panel">
@@ -675,7 +675,7 @@ export default function App() {
             <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">SQUAD TASK BOARD · {assignmentRows.length}</div><div className="player-list">{assignmentRows.map(a=><article className="player-row" key={a.id}><span className="player-id">{a.due_date}</span><div><b>{teamMembers.find(m=>m.user_id===a.player_id)?.display_name||a.player_id.slice(0,8)} · {a.drill_title}</b><small>{a.drill_description}</small><small>Status: {a.status}</small>{a.completion_note&&<small>{a.completion_note}</small>}</div>{a.player_id===sessionUserId||!!team&&["owner","coach"].includes(team.membership_role)?<button className="secondary-button" onClick={()=>updateAssignment(a.id,a.status==="completed"?"assigned":"completed")}>{a.status==="completed"?"Undo":"Complete"}</button>:null}</article>)}</div></section>
           </>}
           {section==="Profile" && <>
-            <div className="section-heading"><div><h2>Player profile</h2></div></div>
+            <div className="section-heading"><div><h2>Player profile</h2></div><button className="secondary-button" type="button" onClick={()=>setSection("Settings")}>← Back to Settings</button></div>
             <section className="connection-panel profile-panel">
               <div className="profile-identity"><span className="profile-avatar">{(displayName||sessionUsername||"P").slice(0,1).toUpperCase()}</span><div><strong>{displayName||sessionUsername||"Player"}</strong><small>{team?.team_name||"No team selected"} · {team?.membership_role||"Account"}</small></div></div>
               <div className="profile-fields">
@@ -690,7 +690,11 @@ export default function App() {
             </section>
           </>}
           {section==="Settings" && <>
-            <div className="section-heading"><div><h2>Team settings</h2></div></div>
+            <div className="section-heading"><div><h2>Settings</h2></div></div>
+            <section className="connection-panel profile-settings-entry">
+              <div><div className="eyebrow">ACCOUNT</div><h3>Player profile</h3><p>View and update your IGN, account details, player slot, role and IGL information.</p></div>
+              <button className="primary-button" type="button" onClick={()=>setSection("Profile")}>Open Profile →</button>
+            </section>
             {signedIn&&<section className="connection-panel account-settings-panel">
               <div className="eyebrow">ACCOUNT & SECURITY</div><h3>Session controls</h3><p>Log out of this device. Your team records and account remain saved securely.</p>
               <button className="secondary-button settings-logout-button" type="button" onClick={()=>setConfirmAction("logout")}>Log Out</button>
