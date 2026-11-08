@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase/client";
 
 type Member = { id:string; user_id:string; display_name:string; player_number:number|null; assigned_role:string|null; membership_role:string; status:string };
