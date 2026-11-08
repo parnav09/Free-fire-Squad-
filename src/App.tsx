@@ -368,7 +368,66 @@ export default function App() {
     setIglUserId(String(iglResult.data?.setting_value||""));
     setConnection("Syncing…");
   };
-  const createTeam = async () => { if(!supabase||teamName.trim().length<2){setNotice("Team name must be at least 2 characters.");return;} setTeamBusy(true); try { const finalIGN=displayName.trim()||sessionUsername.trim()||"Squad Player"; const {error:ne}=await supabase.rpc("set_display_name",{p_name:finalIGN});if(ne)throw ne; const {data:createdTeamId,error}=await supabase.rpc("create_team",{p_name:teamName.trim(),p_description:teamDescription.trim()||null,p_timezone:"Asia/Kolkata"}); if(error)throw error; if(!createdTeamId)throw new Error("Team was created but its ID was not returned."); localStorage.setItem("squad-os-active-team",createdTeamId); await loadTeam(createdTeamId); if(teamLogoFile&&supabase&&sessionUserId){const ext=teamLogoFile.name.split(".").pop()?.toLowerCase()||"jpg";const path=`${sessionUserId}/${createdTeamId}.${ext}`;const {error:up}=await supabase.storage.from("team-avatars").upload(path,teamLogoFile,{upsert:true,contentType:teamLogoFile.type});if(up)throw up;const {data:pub}=supabase.storage.from("team-avatars").getPublicUrl(path);const {error:av}=await supabase.from("teams").update({avatar_url:pub.publicUrl}).eq("id",createdTeamId);if(av)throw av;await loadTeam(createdTeamId);} setTeamName("");setTeamDescription("");setTeamLogoFile(null);setTeamLogoPreview("");setTeamScreen("choice");setNotice("Team created. Invite code and teammates are now available in Team panel."); } catch(e){setNotice(e instanceof Error?e.message:"Team creation failed.");} finally{setTeamBusy(false);} };
+  const createTeam = async () => {
+    if (!supabase || !sessionUserId) { setNotice("Sign in again before creating a team."); return; }
+    const cleanName = teamName.trim();
+    const cleanDescription = teamDescription.trim();
+    if (cleanName.length < 2 || cleanName.length > 48) { setNotice("Team name must be 2–48 characters."); return; }
+    if (cleanDescription.length > 240) { setNotice("Description must be 240 characters or fewer."); return; }
+    if (teamBusy) return;
+    setTeamBusy(true);
+    let createdTeamId: string | null = null;
+    try {
+      const finalIGN = (displayName.trim() || sessionUsername.trim() || "Squad Player").slice(0, 40);
+      const { error: nameError } = await supabase.rpc("set_display_name", { p_name: finalIGN });
+      if (nameError) {
+        if (nameError.code === "PGRST203") throw new Error("Account profile RPC is ambiguous. The server schema fix is not active yet; refresh after the database migration.");
+        throw new Error(nameError.message || "Could not save your player name.");
+      }
+      const { data, error: createError } = await supabase.rpc("create_team", {
+        p_name: cleanName, p_description: cleanDescription || null, p_timezone: "Asia/Kolkata"
+      });
+      if (createError) {
+        const msg = createError.message || "";
+        if (/duplicate|unique/i.test(msg)) throw new Error("A team with this identifier already exists. Change the team name and retry.");
+        if (/not signed in|jwt/i.test(msg)) throw new Error("Your session expired. Sign in again, then create the team.");
+        if (/2 to 48|char_length/i.test(msg)) throw new Error("Team name must be 2–48 characters.");
+        throw new Error(msg || "The server rejected team creation. No team was created.");
+      }
+      createdTeamId = typeof data === "string" ? data : Array.isArray(data) ? data[0] : null;
+      if (!createdTeamId) throw new Error("The server returned no Team ID. Refresh Team Setup before retrying.");
+      localStorage.setItem("squad-os-active-team", createdTeamId);
+      setTeamName(""); setTeamDescription(""); setTeamLogoFile(null); setTeamLogoPreview(""); setTeamScreen("choice");
+      let logoWarning = "";
+      if (teamLogoFile) {
+        try {
+          const ext = (teamLogoFile.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+          const path = `${sessionUserId}/${createdTeamId}.${ext}`;
+          const { error: uploadError } = await supabase.storage.from("team-avatars").upload(path, teamLogoFile, { upsert: true, contentType: teamLogoFile.type });
+          if (uploadError) throw uploadError;
+          const { data: pub } = supabase.storage.from("team-avatars").getPublicUrl(path);
+          const { error: avatarError } = await supabase.from("teams").update({ avatar_url: pub.publicUrl }).eq("id", createdTeamId);
+          if (avatarError) throw avatarError;
+        } catch (logoError) {
+          logoWarning = " Team was created; logo upload failed. You can add the logo later in Team Settings.";
+          console.error("Team logo upload failed after team creation:", logoError);
+        }
+      }
+      try {
+        await loadTeam(createdTeamId);
+        setNotice("Team created successfully. Invite code is available in the Team panel." + logoWarning);
+      } catch (loadError) {
+        console.error("Team created but workspace refresh failed:", loadError);
+        setNotice("Team was created successfully (ID: " + createdTeamId + "), but its workspace did not refresh. Reload the page; do not create it again." + logoWarning);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Team creation failed. Please retry.";
+      setNotice(message);
+      console.error("Team creation failed before confirmed success:", error);
+    } finally {
+      setTeamBusy(false);
+    }
+  };
   const joinTeam = async () => { if(!supabase||!teamCode.trim())return; setTeamBusy(true); try { if(!displayName.trim()){throw new Error("Enter your IGN/display name first.");} const {error:ne}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});if(ne)throw ne; const {error}=await supabase.rpc("request_join_team",{p_code:teamCode.trim().toUpperCase()}); if(error)throw error; setTeamCode("");setRequestStatus("Pending owner approval · access activates after slot assignment.");setNotice("Join request sent. Wait for the owner to approve your player slot and role."); } catch(e){setNotice(e instanceof Error?e.message:"Could not join team.");} finally{setTeamBusy(false);} };
   const reviewJoinRequest=async(id:string,approve:boolean)=>{if(!supabase||team?.membership_role!=="owner")return;const slot=Number(requestSlot[id]||0),role=requestRole[id]||"Primary Rusher";if(approve&&(!slot||slot>rosterCapacity)){setNotice("Choose a player slot within the current roster capacity.");return;}try{const {error}=await supabase.rpc("review_team_join_request",{p_request:id,p_player:slot,p_role:role,p_approve:approve});if(error)throw error;await loadTeam();setNotice(approve?"Player approved and added to roster.":"Join request declined.");}catch(e){setNotice(e instanceof Error?e.message:"Request review failed.");}};
   const saveRosterCapacity=async(value:number)=>{if(!supabase||team?.membership_role!=="owner"||value<4||value>10)return;setTeamBusy(true);try{const {error}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"roster_capacity",setting_value:value,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(error)throw error;setRosterCapacity(value);setNotice("Roster capacity saved. Existing members remain assigned; new slots are available up to P"+value+".");}catch(e){setNotice(e instanceof Error?e.message:"Roster capacity update failed.");}finally{setTeamBusy(false);}};
