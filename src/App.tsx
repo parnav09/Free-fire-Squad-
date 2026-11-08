@@ -154,7 +154,7 @@ export default function App() {
   useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":drills",JSON.stringify(drillDone));},[drillDone,team?.id,localDataHydratedFor]);
   useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":notes",JSON.stringify(notes));},[notes,team?.id,localDataHydratedFor]);
   useEffect(()=>{if(!team?.id){setOwnerPowerEnabled(true);return;}setOwnerPowerEnabled(localStorage.getItem("squad-os:"+team.id+":owner-power")!=="off");},[team?.id]);
-  useEffect(()=>{if(team?.id)localStorage.setItem("squad-os:"+team.id+":owner-power",ownerPowerEnabled?"on":"off");},[team?.id,ownerPowerEnabled]);
+
   useEffect(() => {
     const onOnline=()=>{setIsOnline(true);setConnection("Syncing…");};
     const onOffline=()=>{setIsOnline(false);setConnection("Offline");};
@@ -797,7 +797,7 @@ export default function App() {
             </section>
             {signedIn&&team?.membership_role==="owner"&&<section className="connection-panel owner-power-panel">
               <div className="owner-power-head"><div><div className="eyebrow">OWNER CONTROL CENTER</div><h3>Admin command power</h3><p>Switch owner command controls on or off for this device and active team.</p></div><span className={"owner-power-status "+(ownerPowerEnabled?"is-on":"is-off")}>{ownerPowerEnabled?"POWER ON":"POWER OFF"}</span></div>
-              <label className="owner-power-toggle-row"><span><strong>{ownerPowerEnabled?"Owner commands enabled":"Member interface active"}</strong><small>{ownerPowerEnabled?"Owner-only controls are visible in the workspace.":"Owner controls are hidden; the workspace looks like a regular member view."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={ownerPowerEnabled} onChange={e=>{setOwnerPowerEnabled(e.target.checked);setNotice(e.target.checked?"Owner command power enabled on this device.":"Owner command power disabled. Your account remains the team owner.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label>
+              <label className="owner-power-toggle-row"><span><strong>{ownerPowerEnabled?"Owner commands enabled":"Member interface active"}</strong><small>{ownerPowerEnabled?"Owner-only controls are visible in the workspace.":"Owner controls are hidden; the workspace looks like a regular member view."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={ownerPowerEnabled} onChange={e=>{const next=e.target.checked;setOwnerPowerEnabled(next);if(team?.id)localStorage.setItem("squad-os:"+team.id+":owner-power",next?"on":"off");setNotice(next?"Owner command power enabled on this device.":"Owner command power disabled. Your account remains the team owner.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label>
               <div className="owner-power-foot"><span className="owner-power-dot"/><small>UI visibility only · Team ownership and server permissions are unchanged.</small></div>
             </section>}
             {signedIn&&<section className="connection-panel account-settings-panel">
