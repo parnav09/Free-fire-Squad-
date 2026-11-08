@@ -6,22 +6,26 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 ## Implemented in branch
 - [x] Added Planning and Training navigation routes, reusing workspace auth/team context.
 - [x] Added responsive premium dark UI: hero, KPI cards, tabs, cards, forms, empty/loading/error/success feedback, mobile breakpoints.
-- [x] Planning CRUD: create/edit plan, date/type/focus/duration/notes, status lifecycle, duplicate-to-next-day and archive.\n- [x] Weekly calendar strip with week navigation, day plan counts and date filtering.\n- [x] Tactical plan fields: map, drop zone, rotation/fight notes, scrim match count and room/rules notes.
-- [x] Plan agenda blocks: add ordered block, duration, instructions; blocks render with planned-vs-agenda minutes.\n- [x] Plan review: completed plan can save review notes and move to reviewed.
+- [x] Planning CRUD: create/edit plan, date/type/focus/duration/notes, status lifecycle, duplicate-to-next-day and archive.
+- [x] Weekly calendar strip with week navigation, day plan counts and date filtering.
+- [x] Tactical plan fields: map, drop zone, rotation/fight notes, scrim match count and room/rules notes.
+- [x] Plan agenda blocks: add/edit/delete/reorder, duration, instructions; blocks render with planned-vs-agenda minutes.
 - [x] Plan review: completed plan can save review notes and move to reviewed.
 - [x] Player task assignment: roster member, due date, priority, plan link, instructions.
 - [x] Task board: status updates, due/priority/context; assigned player update policy.
-- [x] Drill library: custom drill creation, role/category/difficulty/duration/objective/setup/steps/success criteria, archive.
+- [x] Drill library: custom drill creation/edit, role/category/difficulty/duration/objective/setup/steps/success criteria, archive, searchable filters and expanded protocol preview.
 - [x] Ten reusable competitive training templates (communication, entry/trade, backup, flank, rotation, retreat/regroup, end-zone, role execution, post-match review); copy to team library.
-- [x] Training sessions: individual/squad/communication/IGL/role session, link plan/drill, date/duration/instructions, lifecycle.\n- [x] Session participant selection and attendance (present/absent/excused/pending).
-- [x] Training evaluation: player attempt, score /100, optional execution/communication/coordination/decision/consistency rubric, feedback, reflection, repeat attempt history.\n- [x] Task completion reflection, coach feedback and review status.
+- [x] Training sessions: individual/squad/communication/IGL/role session, link plan/drill, date/duration/instructions, lifecycle.
+- [x] Session participant selection and attendance (present/absent/excused/pending).
+- [x] Training evaluation: player attempt, score /100, optional execution/communication/coordination/decision/consistency rubric, feedback, reflection, repeat attempt history.
+- [x] Task completion reflection, coach feedback and review status.
 - [x] Data schema/migrations: plans, agenda blocks, tasks, drills, sessions, results; team membership RLS and coach/owner write policies.
 - [x] Applied schema and template seed to Supabase project xaixnqvyoswcvvkydrmh.
 - [x] Build blueprint saved in GitHub docs/blueprints.
 - [x] CI configured for feature branch.
 
 ## Verification status
-- TypeScript/build: GitHub Actions typecheck + production build passed at commit fd94be6d; current source has only documentation updates after that. Re-run on latest doc commit.
+- TypeScript/build: successful GitHub Actions typecheck + production build at commit 80afbcb3; subsequent drill/plan additions require fresh CI.
 - Supabase migration apply: success (schema migration + member task update policy + templates seed).
 - Data persistence/CRUD through authenticated app: not yet end-to-end manually tested.
 - Mobile visual QA: not yet manually inspected on user's Android device.
@@ -30,9 +34,9 @@ Blueprint: PHASE-2-3-PLANNING-TRAINING-MASTER.md
 
 ## Remaining Phase 2–3 work
 - Weekly plan objective/review aggregation and full template-to-plan weekly recurrence.
-- Plan unsaved-change protections and full agenda block edit/reorder/delete.
+- Plan unsaved-change protections, drag/drop reorder (currently up/down controls), and block reorder polish.
 - Task blocked-state details and stronger field-level task permissions.
-- Drill search/filter, drill detail and rubric editing, templates with source attribution.
+- Drill steps/setup inline editing, drill detail expansion, and templates with source attribution.
 - Session participant self-service and attendance notification workflow.
 - Detailed weighted rubric per role/category, feedback visibility and evaluation edit history.
 - Player self-service task view (only their tasks; current list is team-wide in UI).
