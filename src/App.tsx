@@ -79,6 +79,14 @@ export default function App() {
   const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
   const { players, setPlayers, week, setWeek, day, setDay, matches, setMatches, drillDone, setDrillDone, notes, setNotes } = useTeamLocalData(team?.id);
   useEffect(() => {
+    const onOnline = () => { setIsOnline(true); setConnection("Syncing…"); };
+    const onOffline = () => { setIsOnline(false); setConnection("Offline"); };
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    return () => { window.removeEventListener("online", onOnline); window.removeEventListener("offline", onOffline); };
+  }, []);
+
+  useEffect(() => {
     let active = true;
     import("./lib/supabase/client")
       .then(({ supabase: client }) => {
