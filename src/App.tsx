@@ -712,7 +712,7 @@ export default function App() {
           <h1>{section==="Overview" ? <>Control the squad.<br/><span>Track every week.</span></> : <>{section}.<br/><span>Team operations.</span></>}</h1>
           <p className="intro">A focused workspace for tournament results, player development and team performance.</p>
           {notice && <div className="notice">{notice}<button onClick={()=>setNotice("")}>×</button></div>}
-          {(section==="Planning"||section==="Training") && <Suspense fallback={<div className="pt-loading">Opening planning & training workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))}/></Suspense>}\n          {section==="Overview" && <>
+          {(section==="Planning"||section==="Training") && <Suspense fallback={<div className="pt-loading">Opening planning & training workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} initialTab={section==="Training"?"library":"plans"}/></Suspense>}\n          {section==="Overview" && <>
             <div className="section-heading"><div><h2>Squad overview</h2></div></div>
 
             <section className="connection-panel" style={{display:"block",marginBottom:22}}>
