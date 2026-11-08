@@ -381,7 +381,7 @@ export default function App() {
       const rows = Object.entries(matchSnapshot)
         .filter(([key]) => key.startsWith(`${weekSnapshot}-D`))
         .flatMap(([key, match]) => {
-          const parsed = key.match(/-D(\\d+)-M(\\d+)$/);
+          const parsed = key.match(/-D(\d+)-M(\d+)$/);
           return parsed ? [{
             cycle_id: cycle.id, team_id: teamSnapshot.id, match_day: Number(parsed[1]), match_number: Number(parsed[2]),
             placement: match.placement, kills: match.kills,
