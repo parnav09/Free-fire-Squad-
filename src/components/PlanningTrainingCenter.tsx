@@ -11,8 +11,8 @@ const categories=["individual","role","entry-trade","backup","flank","positionin
 const roles=["P1 Primary Rusher","P2 Secondary Rusher","P3 Third Rusher / Flanker","P4 Sniper + IGL","Substitute","All players"];
 const statuses=["draft","scheduled","in_progress","completed","reviewed"];
 const badge=(v:string)=>v.replaceAll("_"," ").replaceAll("-"," ");
-export default function PlanningTrainingCenter({teamId,members,userId,canManage}:{teamId:string;members:Member[];userId:string;canManage:boolean}){
- const [tab,setTab]=useState<"plans"|"tasks"|"library"|"sessions">("plans");
+export default function PlanningTrainingCenter({teamId,members,userId,canManage,initialTab}:{teamId:string;members:Member[];userId:string;canManage:boolean;initialTab?:"plans"|"tasks"|"library"|"sessions"}){
+ const [tab,setTab]=useState<"plans"|"tasks"|"library"|"sessions">(initialTab||"plans");
  const [plans,setPlans]=useState<Plan[]>([]),[drills,setDrills]=useState<Drill[]>([]),[tasks,setTasks]=useState<Task[]>([]),[sessions,setSessions]=useState<Session[]>([]);
  const [busy,setBusy]=useState(false),[loading,setLoading]=useState(true),[error,setError]=useState(""),[notice,setNotice]=useState("");
  const [planTitle,setPlanTitle]=useState("Daily Squad Practice"),[planDate,setPlanDate]=useState(today()),[planType,setPlanType]=useState("daily"),[planFocus,setPlanFocus]=useState("Communication + coordinated fights"),[planMinutes,setPlanMinutes]=useState("240"),[planNotes,setPlanNotes]=useState("");
