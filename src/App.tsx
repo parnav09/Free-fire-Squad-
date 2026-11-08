@@ -6,8 +6,8 @@ type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
   { id: "P1", name: "Player 1", role: "Primary Rusher", status: "Active" },
   { id: "P2", name: "Player 2", role: "Secondary Rusher", status: "Active" },
-  { id: "P3", name: "Player 3", role: "Third Rusher / Flank", status: "Active" },
-  { id: "P4", name: "Player 4", role: "Sniper / IGL", status: "Active" },
+  { id: "P3", name: "Player 3", role: "Third Rusher", status: "Active" },
+  { id: "P4", name: "Player 4", role: "Sniper", status: "Active" },
 ];
 
 async function makeSquareTeamLogo(file: File, x: number, y: number): Promise<File> {
@@ -464,7 +464,7 @@ export default function App() {
               <div className="profile-fields">
                 <label className="auth-field"><span>IN-GAME NAME (IGN)</span><input value={displayName} maxLength={32} onChange={e=>setDisplayName(e.target.value)} placeholder="Your Free Fire IGN"/></label>
                 <label className="auth-field"><span>ACCOUNT USERNAME</span><input value={sessionUsername} readOnly/></label>
-                <label className="auth-field"><span>PLAYER SLOT</span><input value={team?.player_number?("P"+team.player_number):"Not assigned"} readOnly/></label>
+                <label className="auth-field"><span>PLAYER SLOT · P1–P5</span><input value={team?.player_number?("P"+team.player_number):"Not assigned"} readOnly/></label>
                 <label className="auth-field"><span>ROLE</span><input value={(team?.assigned_role||"Not assigned")+(iglUserId===sessionUserId&&iglUserId?" / IGL":"")} readOnly/></label>
               </div>
               <button className="primary-button" disabled={!signedIn||!displayName.trim()} onClick={async()=>{if(!supabase||!signedIn)return;const name=displayName.trim();const {error}=await supabase.rpc("set_display_name",{p_name:name});if(error){setNotice(error.message);return;}await supabase.auth.updateUser({data:{display_name:name}});setNotice("IGN updated. Historical records remain linked to your account.");}}>Save IGN</button>
