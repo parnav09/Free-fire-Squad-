@@ -7,6 +7,8 @@ export default defineConfig({
     host: "0.0.0.0",
   },
   build: {
+    // Keep a stricter bundle budget so future regressions are caught early.
+    chunkSizeWarningLimit: 250,
     // Vite 8 uses Rolldown. Keep app code separate from stable vendor code,
     // and cap vendor chunk targets without suppressing the size warning.
     rolldownOptions: {
