@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import "./PlayerEvaluationRubric.css";
 
 type RatingKey = "coordination" | "communication" | "tradeSupport" | "decisionMaking" | "positioning" | "consistency";
 type Ratings = Record<RatingKey, number>;
