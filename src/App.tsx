@@ -210,7 +210,8 @@ export default function App() {
     setBackupBusy(true);setBackupStatus("");
     try{
       const {data,error}=await supabase.rpc("get_team_backup");if(error)throw error;
-      const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+      const backup={...data,local_device_data:{players,week,day,matches,drillDone,notes}};
+      const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
       const url=URL.createObjectURL(blob);const a=document.createElement("a");
       a.href=url;a.download="SQUAD-OS-"+team.team_name.replace(/[^a-z0-9-_]+/gi,"-")+"-"+new Date().toISOString().slice(0,10)+".json";
       document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
@@ -225,6 +226,13 @@ export default function App() {
       const backup=JSON.parse(await backupFile.text());
       if(backup?.format!=="squad-os-team-backup"||backup?.schema_version!==1)throw new Error("This is not a supported SQUAD OS backup file.");
       const {data,error}=await supabase.rpc("restore_team_backup",{p_backup:backup});if(error)throw error;
+      const local=backup.local_device_data;
+      if(local&&Array.isArray(local.players))setPlayers(local.players);
+      if(local&&typeof local.week==="string")setWeek(local.week);
+      if(local&&Number.isFinite(local.day))setDay(local.day);
+      if(local&&local.matches&&typeof local.matches==="object")setMatches(local.matches);
+      if(local&&local.drillDone&&typeof local.drillDone==="object")setDrillDone(local.drillDone);
+      if(local&&local.notes&&typeof local.notes==="object")setNotes(local.notes);
       await loadTeam();await loadAssignments();setBackupFile(null);setConfirmAction(null);
       setBackupStatus("Restore complete. "+(data?.restored_rows??0)+" records restored to this team.");
       setNotice("Team backup restored successfully.");
