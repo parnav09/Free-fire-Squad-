@@ -153,7 +153,7 @@ export default function App() {
   const createAssignment=async()=>{if(!supabase||!team||!["owner","coach"].includes(team.membership_role)||!assignmentPlayer||!assignmentTitle.trim())return;const {data:{user}}=await supabase.auth.getUser();const {error}=await supabase.from("player_drill_assignments").insert({team_id:team.id,player_id:assignmentPlayer,assigned_by:user?.id,drill_title:assignmentTitle.trim(),drill_description:assignmentDesc.trim(),due_date:assignmentDate});if(error){setNotice(error.message);return;}setNotice("Drill assigned.");await loadAssignments();};
   const updateAssignment=async(id:string,status:string)=>{if(!supabase||!team)return;const {error}=await supabase.from("player_drill_assignments").update({status,completed_at:status==="completed"?new Date().toISOString():null}).eq("id",id);if(error){setNotice(error.message);return;}await loadAssignments();};
   const signIn = async () => {
-    if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
+    if (!supabase) return setNotice("The service is unavailable right now. Please try again later.");
     const identifier = sessionUsername.trim();
     if (!identifier || !sessionPassword) return setNotice("Enter your username and password.");
     const { data, error } = await supabase.functions.invoke("login-with-ign", {
@@ -173,7 +173,7 @@ export default function App() {
   };
 
   const requestPasswordReset = async () => {
-    if (!supabase) return setNotice("Supabase is not configured.");
+    if (!supabase) return setNotice("The service is unavailable right now. Please try again later.");
     const email=recoveryEmail.trim().toLowerCase(), username=sessionUsername.trim();
     if(!email||!username)return setNotice("Enter username and the recovery email linked to your account.");
     setRecoveryBusy(true);
@@ -184,7 +184,7 @@ export default function App() {
   };
 
   const verifyRecoveryOtp = async () => {
-    if(!supabase)return setNotice("Supabase is not configured.");
+    if(!supabase)return setNotice("The service is unavailable right now. Please try again later.");
     if(!/^\\d{6}$/.test(recoveryOtp))return setNotice("Enter the 6-digit OTP.");
     if(newPassword.length<8||newPassword.length>128)return setNotice("New password must be 8–128 characters.");
     setRecoveryBusy(true);
@@ -196,7 +196,7 @@ export default function App() {
   };
 
   const saveRecoveredPassword = async () => {
-    if (!supabase) return setNotice("Supabase is not configured.");
+    if (!supabase) return setNotice("The service is unavailable right now. Please try again later.");
     if (newPassword.length < 8 || newPassword.length > 128) return setNotice("New password must be 8–128 characters.");
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     if (error) return setNotice(error.message);
@@ -205,7 +205,7 @@ export default function App() {
   };
 
   const signUp = async () => {
-    if (!supabase) return setNotice("Supabase is not configured. Check Vercel environment variables.");
+    if (!supabase) return setNotice("The service is unavailable right now. Please try again later.");
     const username = sessionUsername.trim().toLowerCase();
     if (!/^[a-z0-9][a-z0-9.-]{2,23}$/.test(username)) {
       return setNotice("Username must be 3–24 characters: lowercase letters, numbers, dots or hyphens.");
@@ -236,7 +236,6 @@ export default function App() {
     setNotice("Account created. You are signed in.");
   };
 
-  const signOut = async () => { if (supabase) { await supabase.auth.signOut(); setNotice("Signed out successfully."); } };
   const downloadTeamBackup=async()=>{
     if(!supabase||team?.membership_role!=="owner")return;
     setBackupBusy(true);setBackupStatus("");
@@ -332,7 +331,7 @@ export default function App() {
   const saveIGL=async(userId:string)=>{if(!supabase||team?.membership_role!=="owner")return;try{const {error}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"igl_user_id",setting_value:userId,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(error)throw error;setIglUserId(userId);setNotice(userId?"IGL designation updated.":"IGL designation cleared.");}catch(e){setNotice(e instanceof Error?e.message:"IGL setting failed.");}};
   const saveOwnerRole=async(slot:number)=>{if(!supabase||team?.membership_role!=="owner"||!team.membership_id)return;const roleBySlot:Record<number,string>={1:"Primary Rusher",2:"Secondary Rusher",3:"Third Rusher",4:"Sniper",5:"Substitute"};const occupied=teamMembers.find(m=>m.status==="active"&&m.player_number===slot&&m.user_id!==sessionUserId);if(occupied){setNotice("That player slot is already occupied. Move or reassign that player first.");return;}try{if(slot===5){const {error:fe}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"fifth_player",setting_value:true,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(fe)throw fe;}const {error}=await supabase.rpc("assign_member",{p_member:team.membership_id,p_player:slot,p_activate:true});if(error)throw error;const {error:re}=await supabase.from("team_members").update({assigned_role:roleBySlot[slot]}).eq("id",team.membership_id);if(re)throw re;await loadTeam();setNotice("Your player slot and role were updated.");}catch(e){setNotice(e instanceof Error?e.message:"Could not update owner role.");}};
   const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { if(player>=1&&player<=5){const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error;} const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
-  useEffect(()=>{if(signedIn)loadTeam().catch(e=>setNotice(e instanceof Error?e.message:"Could not load team."));else{setTeam(null);setTeamMembers([]);setMatchesHydratedKey("");}},[signedIn]);
+  useEffect(()=>{if(signedIn)loadTeam().catch(e=>{setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Could not load team.");});else{setTeam(null);setTeamMembers([]);setMatchesHydratedKey("");}},[signedIn]);
   const weekMonday = (w: string) => { const m=w.match(/^(\d{4})-W(\d{2})$/); if(!m) return new Date().toISOString().slice(0,10); const y=Number(m[1]), n=Number(m[2]); const d=new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+(n-1)*7); return d.toISOString().slice(0,10); };
   useEffect(() => {
     if (!supabase || !signedIn || !team || matchesHydratedKey !== `${team.id}:${week}`) return;
@@ -365,7 +364,7 @@ export default function App() {
     } catch (e) { setNotice(e instanceof Error ? e.message : "Refresh failed."); }
   };
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_log").select("activity,done").eq("team_id",team.id).eq("log_date",trainingDate);if(error)throw error;if(!cancelled)setCloudTraining(Object.fromEntries((data||[]).map(x=>[x.activity,!!x.done])));}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Cloud training load failed.");}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
-  useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_session_notes").select("notes").eq("team_id",team.id).eq("note_date",trainingDate).maybeSingle();if(error)throw error;if(!cancelled)setCloudSessionNotes(data?.notes||"");}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Cloud session notes unavailable.");}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
+  useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_session_notes").select("notes").eq("team_id",team.id).eq("note_date",trainingDate).maybeSingle();if(error)throw error;if(!cancelled)setCloudSessionNotes(data?.notes||"");}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Session notes could not be loaded.");}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100);if(error)throw error;if(!cancelled)setEvalHistory(data||[]);}catch(e){if(!cancelled)setNotice(e instanceof Error?e.message:"Evaluation history unavailable.");}})();return()=>{cancelled=true};},[signedIn,team?.id]);
   const saveEvaluation=async()=>{if(!supabase||!team||!signedIn){setNotice("Sign in and join a team to save evaluations.");return;}setConnection("Syncing…");try{const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Session expired.");const {error}=await supabase.from("daily_scores").insert({team_id:team.id,score_date:evalDate,player_id:evalPlayer,evaluator_id:user.id,...evalScores,notes:evalNotes.trim()||null,improvement_target:evalTarget.trim()||null});if(error)throw error;const {data,error:he}=await supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100);if(he)throw he;setEvalHistory(data||[]);setConnection("Signed in · cloud sync active");setNotice("Player evaluation saved.");}catch(e){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Evaluation save failed.");}};
   const saveCloudTraining = async (activity:string,done:boolean) => {setCloudTraining(p=>({...p,[activity]:done}));if(!supabase||!team||!signedIn)return;setConnection("Syncing…");try{const {data:{user}}=await supabase.auth.getUser();if(!user)return;const {error}=await supabase.from("training_log").upsert({team_id:team.id,log_date:trainingDate,activity,done,updated_by:user.id},{onConflict:"team_id,log_date,activity"});if(error)throw error;setConnection("Signed in · cloud sync active");setNotice("Training checklist saved.");}catch(e){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Training checklist save failed.");}};
@@ -526,7 +525,7 @@ export default function App() {
                 <div className="add-form" style={{marginTop:12}}><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase())} placeholder="8-character invite code" maxLength={8}/><button className="secondary-button" disabled={teamBusy||teamCode.trim().length<6} onClick={joinTeam}>Request to join</button></div>{requestStatus&&<p className="join-pending">{requestStatus}</p>}
               </>}
             </section>
-            <div className="foundation-grid">
+            <div className="foundation-grid overview-stats">
               {[["Roster",players.length+" / 10","Configured players"],["Match records",String(totalMatches),"Current week"],["Week points",String(points),"Placement + kills"]].map(([a,b,c],i)=><article className="foundation-card" key={a}><div className="card-index">0{i+1}</div><div className="card-label">{a}</div><div className="card-value">{b}</div><div className="card-detail">{c}</div></article>)}
             </div>
             <section className="connection-panel"><div><div className="eyebrow">NEXT ACTION</div><h3>Start with the tournament ledger</h3><p>Choose Tournament to record six matches per day, seven days per week. Training and roster are separate sections.</p></div><button className="primary-button" onClick={()=>setSection("Tournament")}>Open tournament →</button></section>
@@ -564,7 +563,7 @@ export default function App() {
           {section==="Assignments" && <>
             <div className="section-heading"><div><div className="eyebrow">INDIVIDUAL PRACTICE</div><h2>Drill assignments</h2></div><span className="phase-pill">{assignmentRows.filter(x=>x.status==="completed").length}/{assignmentRows.length} DONE</span></div>
             <section className="connection-panel" style={{display:"block"}}>
-              {!signedIn||!team?<p>Sign in and join/create a squad to use cloud assignments.</p>:!["owner","coach"].includes(team.membership_role)?<p>Only the team owner or coach can assign new drills. You can update your own assigned tasks below.</p>:<>
+              {!signedIn||!team?<p>Sign in and join/create a squad to use team assignments.</p>:!["owner","coach"].includes(team.membership_role)?<p>Only the team owner or coach can assign new drills. You can update your own assigned tasks below.</p>:<>
               <div className="toolbar"><label>Player<select value={assignmentPlayer} onChange={e=>setAssignmentPlayer(e.target.value)}><option value="">Choose player</option>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · P{m.player_number||"—"}</option>)}</select></label><label>Due date<input type="date" value={assignmentDate} onChange={e=>setAssignmentDate(e.target.value)}/></label></div>
               <label className="notes-label">Drill title<input value={assignmentTitle} onChange={e=>setAssignmentTitle(e.target.value)}/></label><label className="notes-label">Exact task<textarea value={assignmentDesc} onChange={e=>setAssignmentDesc(e.target.value)}/></label>
               <button className="primary-button" onClick={createAssignment} disabled={!assignmentPlayer||!assignmentTitle.trim()}>Assign drill</button>
