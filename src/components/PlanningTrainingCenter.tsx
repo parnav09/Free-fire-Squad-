@@ -12,7 +12,7 @@ type Result = {id:string;session_id:string;player_member_id:string|null;attempt_
 type Participant = {id:string;session_id:string;player_member_id:string;attendance:string;participation_notes:string};
 const today=()=>new Date().toLocaleDateString("en-CA");
 const categories=["individual","role","entry-trade","backup","flank","positioning","communication","igl","rotation","endgame","squad-coordination"];
-const roles=["P1 Primary Rusher","P2 Secondary Rusher","P3 Third Rusher / Flanker","P4 Sniper + IGL","Substitute","All players"];
+const roles=["P1 Primary Rusher","P2 Secondary Rusher","P3 Third Rusher / Flanker","P4 Sniper + IGL","IGL (Designated Caller)","Substitute","All players"];
 const statuses=["draft","scheduled","in_progress","completed","reviewed"];
 const badge=(v:string)=>v.replaceAll("_"," ").replaceAll("-"," ");const overdue=(t:{due_date:string|null;status:string})=>!!t.due_date&&t.due_date<today()&&!["completed","reviewed","cancelled"].includes(t.status);
 export default function PlanningTrainingCenter({teamId,members,userId,canManage,initialTab}:{teamId:string;members:Member[];userId:string;canManage:boolean;initialTab?:"plans"|"tasks"|"library"|"sessions"}){
