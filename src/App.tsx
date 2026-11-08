@@ -3,6 +3,21 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 
 
+
+type UiIconName = "arrow-left" | "arrow-right" | "chevron-right" | "log-out" | "download" | "external-link" | "users";
+function UiIcon({ name, size = 16 }: { name: UiIconName; size?: number }) {
+  const paths: Record<UiIconName, React.ReactNode> = {
+    "arrow-left": <><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></>,
+    "arrow-right": <><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></>,
+    "chevron-right": <path d="m9 18 6-6-6-6"/>,
+    "log-out": <><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></>,
+    "download": <><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></>,
+    "external-link": <><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></>,
+    "users": <><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>
+  };
+  return <svg className="ui-icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">{paths[name]}</svg>;
+}
+
 type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Profile" | "Settings";
 type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
@@ -627,7 +642,7 @@ export default function App() {
           {onboarding?<>
             {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>}
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
-              {recoveryMode?<><h2>Set a new password</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Email verified. Choose a new password. Never share it by email.</p><label className="auth-field"><span>NEW PASSWORD</span><input type={showPassword?"text":"password"} autoComplete="new-password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} placeholder="At least 8 characters"/></label><label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label><button className="primary-button auth-submit" disabled={newPassword.length<8||recoveryBusy} onClick={saveRecoveredPassword}>Save new password →</button></div></div></>:recoveryStep==="otp"?<><h2>Verify email</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Enter the 6-digit code sent to {recoveryEmail}. It expires soon.</p><label className="auth-field"><span>EMAIL OTP</span><input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={recoveryOtp} onChange={e=>setRecoveryOtp(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="000000"/></label><button className="primary-button auth-submit" disabled={recoveryOtp.length!==6||recoveryBusy} onClick={verifyRecoveryOtp}>{recoveryBusy?"Verifying…":"Verify code →"}</button><button className="text-button" disabled={recoveryBusy} onClick={requestPasswordReset}>Resend code</button><button className="text-button" onClick={()=>{setRecoveryStep("email");setRecoveryOtp("");setNotice("");}}>Use another email</button></div></div></>:!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
+              {recoveryMode?<><h2>Set a new password</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Email verified. Choose a new password. Never share it by email.</p><label className="auth-field"><span>NEW PASSWORD</span><input type={showPassword?"text":"password"} autoComplete="new-password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} placeholder="At least 8 characters"/></label><label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label><button className="primary-button auth-submit" disabled={newPassword.length<8||recoveryBusy} onClick={saveRecoveredPassword}>Save new password <UiIcon name="arrow-right"/></button></div></div></>:recoveryStep==="otp"?<><h2>Verify email</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Enter the 6-digit code sent to {recoveryEmail}. It expires soon.</p><label className="auth-field"><span>EMAIL OTP</span><input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={recoveryOtp} onChange={e=>setRecoveryOtp(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="000000"/></label><button className="primary-button auth-submit" disabled={recoveryOtp.length!==6||recoveryBusy} onClick={verifyRecoveryOtp}>{recoveryBusy?"Verifying…":"Verify code <UiIcon name="arrow-right"/>"}</button><button className="text-button" disabled={recoveryBusy} onClick={requestPasswordReset}>Resend code</button><button className="text-button" onClick={()=>{setRecoveryStep("email");setRecoveryOtp("");setNotice("");}}>Use another email</button></div></div></>:!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
                 <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setNotice("");}}>Sign in</button></div>
                 <div className="auth-fields">
                   <label className="auth-field"><span>{authMode==="signin"?"USERNAME OR GMAIL":"USERNAME"}</span><input autoComplete="username" type="text" value={sessionUsername} onChange={e=>setSessionUsername(authMode==="signup"?e.target.value.toLowerCase().replace(/[^a-z0-9.-]/g,"").slice(0,24):e.target.value.trim().slice(0,254))} placeholder={authMode==="signin"?"Your username or Gmail":"3–24 characters"}/></label>
@@ -651,19 +666,19 @@ export default function App() {
                         <span className="eyebrow">START A NEW SQUAD</span>
                         <strong>Create New Team</strong>
                         <small>Set up your team space and become its owner.</small>
-                        <span className="team-choice-action">Continue <b>→</b></span>
+                        <span className="team-choice-action">Continue <UiIcon name="chevron-right"/></span>
                       </button>
                       <button className="team-choice-card" onClick={()=>{setTeamScreen("join");setNotice("");}}>
                         <span className="team-choice-icon">↗</span>
                         <span className="eyebrow">ALREADY HAVE A SQUAD?</span>
                         <strong>Join Existing Team</strong>
                         <small>Enter the invite code shared by your team owner.</small>
-                        <span className="team-choice-action">Continue <b>→</b></span>
+                        <span className="team-choice-action">Continue <UiIcon name="chevron-right"/></span>
                       </button>
                     </div>
                     <div className="team-onboarding-footer"><span>Signed in as <b>{sessionUsername}</b></span><button className="text-button" onClick={()=>setConfirmAction("logout")}>Sign out</button></div>
                   </> : teamScreen==="create" ? <>
-                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}>← Back to team options</button>
+                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}><UiIcon name="arrow-left"/> Back to team options</button>
                     <div className="team-hero"><span className="team-step">TEAM SETUP · 01 / 02</span><h2>Create your team.</h2><p>Enter the team identity. An invite code will be generated after successful creation.</p></div>
                     <div className="team-form-card">
                       <div className="team-logo-picker">
@@ -673,15 +688,15 @@ export default function App() {
                       <label className="auth-field"><span>TEAM NAME <b className="required-mark">*</b></span><input value={teamName} onChange={e=>setTeamName(e.target.value)} placeholder="e.g. NOVA ESPORTS" maxLength={48}/></label>
                       <label className="auth-field"><span>TEAM DESCRIPTION · OPTIONAL</span><textarea value={teamDescription} onChange={e=>setTeamDescription(e.target.value)} placeholder="Short description of your squad (optional)" rows={3} maxLength={240}/></label>
                       <div className="team-create-hint"><span aria-hidden="true">✦</span> Team name is the only required field. Logo and description are optional.</div>
-                      <button className="primary-button auth-submit" disabled={teamBusy||teamName.trim().length<2} onClick={createTeam}>{teamBusy?"Creating team…":"Create Team →"}</button>
+                      <button className="primary-button auth-submit" disabled={teamBusy||teamName.trim().length<2} onClick={createTeam}>{teamBusy?"Creating team…":<>Create Team <UiIcon name="arrow-right"/></>}</button>
                     </div>
                   </> : <>
-                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}>← Back to team options</button>
+                    <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}><UiIcon name="arrow-left"/> Back to team options</button>
                     <div className="team-hero"><span className="team-step">TEAM SETUP · 02 / 02</span><h2>Join your squad.</h2><p>Use the invite code provided by your team owner. You will join that team's shared workspace.</p></div>
                     <div className="team-form-card">
                       <label className="auth-field"><span>YOUR IN-GAME NAME / IGN</span><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Enter your Free Fire IGN" maxLength={32}/></label>
                       <label className="auth-field"><span>TEAM INVITE CODE</span><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase().replace(/\s/g,""))} placeholder="Enter invite code" maxLength={8} autoCapitalize="characters"/></label>
-                      <button className="primary-button auth-submit" disabled={teamBusy||!displayName.trim()||teamCode.trim().length<6} onClick={joinTeam}>{teamBusy?"Joining team…":"Join Existing Team →"}</button>
+                      <button className="primary-button auth-submit" disabled={teamBusy||!displayName.trim()||teamCode.trim().length<6} onClick={joinTeam}>{teamBusy?"Joining team…":<>Join Existing Team <UiIcon name="arrow-right"/></>}</button>
                     </div>
                   </>}
                 </div>
@@ -712,7 +727,7 @@ export default function App() {
             <div className="foundation-grid overview-stats">
               {[["Roster",players.length+" / 10","Configured players"],["Match records",String(totalMatches),"Current week"],["Week points",String(points),"Placement + kills"]].map(([a,b,c],i)=><article className="foundation-card" key={a}><div className="card-index">0{i+1}</div><div className="card-label">{a}</div><div className="card-value">{b}</div><div className="card-detail">{c}</div></article>)}
             </div>
-            <section className="connection-panel"><div><div className="eyebrow">NEXT ACTION</div><h3>Start with the tournament ledger</h3><p>Choose Tournament to record six matches per day, seven days per week. Training and roster are separate sections.</p></div><button className="primary-button" onClick={()=>setSection("Tournament")}>Open tournament →</button></section>
+            <section className="connection-panel"><div><div className="eyebrow">NEXT ACTION</div><h3>Start with the tournament ledger</h3><p>Choose Tournament to record six matches per day, seven days per week. Training and roster are separate sections.</p></div><button className="primary-button" onClick={()=>setSection("Tournament")}>Open tournament <UiIcon name="arrow-right"/></button></section>
           </>}
           {section==="Tournament" && <>
             <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><span className="phase-pill">42 MATCH SLOTS</span></div>
@@ -756,7 +771,7 @@ export default function App() {
             <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">SQUAD TASK BOARD · {assignmentRows.length}</div><div className="player-list">{assignmentRows.map(a=><article className="player-row" key={a.id}><span className="player-id">{a.due_date}</span><div><b>{teamMembers.find(m=>m.user_id===a.player_id)?.display_name||a.player_id.slice(0,8)} · {a.drill_title}</b><small>{a.drill_description}</small><small>Status: {a.status}</small>{a.completion_note&&<small>{a.completion_note}</small>}</div>{a.player_id===sessionUserId||!!team&&["owner","coach"].includes(team.membership_role)?<button className="secondary-button" onClick={()=>updateAssignment(a.id,a.status==="completed"?"assigned":"completed")}>{a.status==="completed"?"Undo":"Complete"}</button>:null}</article>)}</div></section>
           </>}
           {section==="Profile" && <>
-            <div className="section-heading"><div><h2>Player profile</h2></div><button className="secondary-button" type="button" onClick={()=>setSection("Settings")}>← Back to Settings</button></div>
+            <div className="section-heading"><div><h2>Player profile</h2></div><button className="secondary-button" type="button" onClick={()=>setSection("Settings")}><UiIcon name="arrow-left"/> Back to Settings</button></div>
             <section className="connection-panel profile-panel">
               <div className="profile-identity"><span className="profile-avatar">{(displayName||sessionUsername||"P").slice(0,1).toUpperCase()}</span><div><strong>{displayName||sessionUsername||"Player"}</strong><small>{team?.team_name||"No team selected"} · {team?.membership_role||"Account"}</small></div></div>
               <div className="profile-fields">
@@ -774,7 +789,7 @@ export default function App() {
             <div className="section-heading"><div><h2>Settings</h2></div></div>
             <section className="connection-panel profile-settings-entry">
               <div><div className="eyebrow">ACCOUNT</div><h3>Player profile</h3><p>View and update your IGN, account details, player slot, role and IGL information.</p></div>
-              <button className="primary-button" type="button" onClick={()=>setSection("Profile")}>Open Profile →</button>
+              <button className="primary-button" type="button" onClick={()=>setSection("Profile")}>Open Profile <UiIcon name="arrow-right"/></button>
             </section>
             {signedIn&&<section className="connection-panel account-settings-panel">
               <div className="eyebrow">ACCOUNT & SECURITY</div><h3>Session controls</h3><p>Log out of this device. Your team records and account remain saved securely.</p>
@@ -795,7 +810,7 @@ export default function App() {
               <section className="connection-panel backup-panel">
                 <div className="backup-panel-head"><div><div className="eyebrow">OWNER TOOLS · DATA PORTABILITY</div><h3>Team backup & restore</h3><p>Export roster, tournament history, training, evaluations, assignments, team settings and related records as a portable JSON backup.</p></div><span className="backup-lock">OWNER ONLY</span></div>
                 {team.membership_role==="owner"?<>
-                  <div className="backup-actions"><button className="primary-button" type="button" disabled={backupBusy} onClick={downloadTeamBackup}>{backupBusy?"Preparing…":"↓ Download Full Backup"}</button><label className="backup-file-picker">＋ Choose Backup File<input type="file" accept=".json,application/json" onChange={e=>{setBackupFile(e.target.files?.[0]||null);setBackupStatus("");}}/></label></div>
+                  <div className="backup-actions"><button className="primary-button" type="button" disabled={backupBusy} onClick={downloadTeamBackup}>{backupBusy?"Preparing…":"<><UiIcon name="download"/> Download Full Backup</>"}</button><label className="backup-file-picker">＋ Choose Backup File<input type="file" accept=".json,application/json" onChange={e=>{setBackupFile(e.target.files?.[0]||null);setBackupStatus("");}}/></label></div>
                   {backupFile&&<div className="backup-file-selected"><span>{backupFile.name}</span><button className="text-button" type="button" onClick={()=>setBackupFile(null)}>Remove</button></div>}
                   <button className="secondary-button backup-import-button" type="button" disabled={!backupFile||backupBusy} onClick={()=>setConfirmAction("import")}>{backupBusy?"Restoring…":"Import & Restore Backup"}</button>
                   <small className="backup-warning">Restore replaces the current team roster and records with the selected backup. Your signed-in account remains the team owner. Use a backup exported by SQUAD OS.</small>
@@ -809,7 +824,7 @@ export default function App() {
           </Suspense>}
           {confirmAction&&<div className="confirm-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setConfirmAction(null);}}>
             <section className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
-              <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?"↗":confirmAction==="leave"?"⇥":"↻"}</div>
+              <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?<UiIcon name="log-out" size={19}/>:confirmAction==="leave"?<UiIcon name="external-link" size={19}/>:<UiIcon name="download" size={19}/>}</div>
               <div className="eyebrow">{confirmAction==="logout"?"ACCOUNT SESSION":confirmAction==="leave"?"TEAM MEMBERSHIP":"DATA RESTORE"}</div>
               <h3 id="confirm-title">{confirmAction==="logout"?"Log out of SQUAD OS?":confirmAction==="leave"?"Leave this team?":"Restore this team backup?"}</h3>
               <p>{confirmAction==="logout"?"You will be signed out on this device. Your account and team data will remain safe.":confirmAction==="leave"?"Your membership will end immediately. If you are the last active member, the empty team will be queued for deletion after 48 hours.":"This replaces the current team roster and team records with the selected backup. Download a fresh backup first if you need a rollback point."}</p>
