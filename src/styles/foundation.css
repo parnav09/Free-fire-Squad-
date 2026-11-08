@@ -1,0 +1,270 @@
+/* Product-foundation layer. Loaded after legacy feature styles to standardize the shell. */
+html {
+  min-width: 320px;
+  min-height: 100%;
+  scroll-padding-top: calc(var(--topbar-height) + 12px);
+  scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  scrollbar-color: #34445f var(--color-canvas);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--color-text-primary);
+  background: var(--color-canvas);
+  overflow-x: clip;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--color-text-primary);
+  background:
+    radial-gradient(ellipse at 82% -12%, rgba(66, 103, 165, 0.12), transparent 38%),
+    radial-gradient(ellipse at 12% 105%, rgba(93, 68, 155, 0.08), transparent 36%),
+    var(--color-canvas);
+}
+
+.content {
+  width: min(100%, var(--content-max));
+}
+
+button,
+[role="button"],
+a,
+select,
+input[type="checkbox"],
+input[type="radio"] {
+  touch-action: manipulation;
+}
+
+button,
+.team-upload-button,
+.backup-file-picker,
+.nav-item {
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  min-height: var(--tap-min);
+  max-width: 100%;
+  color: var(--color-text-primary);
+  border-color: var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background-color: var(--color-surface-raised);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 3px;
+  box-shadow: var(--focus-ring);
+}
+
+:where(button, a, input, select, textarea):focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+:where(.player-row, .request-card, .connection-panel, .foundation-card, .match-card) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.notice button {
+  flex: 0 0 var(--tap-min);
+  width: var(--tap-min);
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: rgba(7, 10, 19, 0.94);
+  border-color: var(--color-border);
+}
+
+.topbar {
+  min-height: var(--topbar-height);
+  background: rgba(5, 6, 11, 0.9);
+  border-color: var(--color-border);
+  padding-top: env(safe-area-inset-top);
+}
+
+.section-heading,
+.toolbar,
+.team-live-header,
+.backup-panel-head {
+  min-width: 0;
+}
+
+@media (min-width: 1200px) {
+  .content {
+    padding-left: clamp(32px, 4vw, 64px);
+    padding-right: clamp(32px, 4vw, 64px);
+  }
+
+  .sidebar {
+    width: 248px;
+  }
+}
+
+/* Tablet: keep the desktop information hierarchy without squeezing cards. */
+@media (min-width: 621px) and (max-width: 1024px) {
+  .sidebar {
+    width: 184px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .content {
+    padding-left: clamp(18px, 3vw, 32px);
+    padding-right: clamp(18px, 3vw, 32px);
+  }
+
+  .foundation-grid,
+  .match-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .topbar {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Phone: safe-area-aware, horizontally scrollable navigation with full-size targets. */
+@media (max-width: 620px) {
+  html {
+    scroll-padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+
+  .app-shell {
+    min-height: 100dvh;
+  }
+
+  .sidebar {
+    height: calc(68px + env(safe-area-inset-bottom));
+    min-height: 0;
+    padding: 5px 8px calc(5px + env(safe-area-inset-bottom));
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sidebar .nav-item {
+    flex: 0 0 auto;
+    min-width: 64px;
+    min-height: 54px;
+    scroll-snap-align: center;
+  }
+
+  .main-panel {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom));
+  }
+
+  .topbar {
+    min-height: 52px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .content {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .foundation-grid,
+  .match-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .connection-panel {
+    gap: 14px;
+  }
+
+  .confirm-overlay {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 380px) {
+  .sidebar .nav-item {
+    min-width: 60px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 9px;
+  }
+
+  .content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Short landscape phones: avoid letting the bottom bar consume the viewport. */
+@media (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+  .sidebar {
+    height: calc(58px + env(safe-area-inset-bottom));
+    padding-top: 3px;
+    padding-bottom: calc(3px + env(safe-area-inset-bottom));
+  }
+
+  .sidebar .nav-item {
+    min-height: 48px;
+  }
+
+  .main-panel {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
