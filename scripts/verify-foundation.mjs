@@ -2,12 +2,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const [tokens, foundation, entry, html, config] = await Promise.all([
+const [tokens, foundation, entry, html, config, dialogHook] = await Promise.all([
   readFile(new URL("../src/styles/tokens.css", import.meta.url), "utf8"),
   readFile(new URL("../src/styles/foundation.css", import.meta.url), "utf8"),
   readFile(new URL("../src/main.tsx", import.meta.url), "utf8"),
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../vite.config.ts", import.meta.url), "utf8"),
+  readFile(new URL("../src/app/useAccessibleDialog.ts", import.meta.url), "utf8"),
 ]);
 
 test("brand palette defines the required deep-onxy, cyan and violet tokens", () => {
@@ -50,4 +51,12 @@ test("document declares mobile viewport and dark theme metadata", () => {
 test("Vite config keeps the project on the supported Vite 8 build path", () => {
   assert.match(config, /defineConfig/);
   assert.match(config, /rolldownOptions/);
+});
+
+test("shared confirmation dialog supports focus trap, Escape and focus restoration", () => {
+  assert.match(dialogHook, /event\.key === "Escape"/);
+  assert.match(dialogHook, /event\.key !== "Tab"/);
+  assert.match(dialogHook, /previousFocus\?\.isConnected/);
+  assert.match(dialogHook, /firstItem\.focus\(\)/);
+  assert.match(dialogHook, /lastItem\.focus\(\)/);
 });
