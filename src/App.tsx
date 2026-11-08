@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { isSupabaseConfigured, supabase } from "./lib/supabase/client";
 
-type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Settings";
+type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Profile" | "Settings";
 type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
   { id: "P1", name: "Player 1", role: "Primary Rusher", status: "Active" },
@@ -304,7 +304,7 @@ export default function App() {
     setPlayers(prev => [...prev, { id: "P" + (prev.length + 1), name: newName.trim(), role: newRole, status: "Active" }]);
     setNewName(""); setNotice("Player added to this device.");
   };
-  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Assignments", "Analytics", "Settings"];
+  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Assignments", "Analytics", "Profile", "Settings"];
   const onboarding=!signedIn||!team;
   return (
     <main className="app-shell">
@@ -387,9 +387,8 @@ export default function App() {
           <p className="intro">A focused workspace for tournament results, player development and team performance. Match entries and training notes are browser-local; team membership and weekly match rows use Supabase.</p>
           {notice && <div className="notice">{notice}<button onClick={()=>setNotice("")}>×</button></div>}
           {section==="Overview" && <>
-            <div className="section-heading"><div><div className="eyebrow">AT A GLANCE</div><h2>Squad overview</h2></div><span className="phase-pill">M2 / INTERACTIVE</span></div>            <section className="connection-panel"><div><div className="eyebrow">SUPABASE AUTH</div><h3>{signedIn ? "Cloud account connected" : "Sign in to sync"}</h3><p>{signedIn ? sessionUsername+" · squad cloud sync is enabled" : "Username/password account access. Local progress remains available offline."}</p></div>{signedIn?<button className="primary-button" onClick={signOut}>Sign out</button>:<div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Display / IGN name"/><input type="text" autoComplete="username" value={sessionUsername} onChange={e=>setSessionUsername(e.target.value)} placeholder="Email or IGN"/><input type="password" value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Password"/><button className="primary-button" onClick={signIn}>Sign in</button><button className="secondary-button" onClick={signUp}>Create account</button></div>}</section>
+            <div className="section-heading"><div><h2>Squad overview</h2></div></div>            <section className="connection-panel"><div><div className="eyebrow">SUPABASE AUTH</div><h3>{signedIn ? "Cloud account connected" : "Sign in to sync"}</h3><p>{signedIn ? sessionUsername+" · squad cloud sync is enabled" : "Username/password account access. Local progress remains available offline."}</p></div>{signedIn?<button className="primary-button" onClick={signOut}>Sign out</button>:<div className="add-form"><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Display / IGN name"/><input type="text" autoComplete="username" value={sessionUsername} onChange={e=>setSessionUsername(e.target.value)} placeholder="Email or IGN"/><input type="password" value={sessionPassword} onChange={e=>setSessionPassword(e.target.value)} placeholder="Password"/><button className="primary-button" onClick={signIn}>Sign in</button><button className="secondary-button" onClick={signUp}>Create account</button></div>}</section>
 
-            {signedIn && <div className="add-form" style={{marginBottom:12}}><input value={displayName} onChange={e=>setDisplayName(e.target.value)} placeholder="Your IGN / display name"/><button className="secondary-button" onClick={async()=>{if(!supabase)return;const {error}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});setNotice(error?error.message:"Display name saved.");}}>Save IGN</button></div>}
             <section className="connection-panel" style={{display:"block",marginBottom:22}}>
               <div className="eyebrow">TEAM COLLABORATION · SUPABASE</div>
               {team ? <>
@@ -447,8 +446,22 @@ export default function App() {
             </section>
             <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">SQUAD TASK BOARD · {assignmentRows.length}</div><div className="player-list">{assignmentRows.map(a=><article className="player-row" key={a.id}><span className="player-id">{a.due_date}</span><div><b>{teamMembers.find(m=>m.user_id===a.player_id)?.display_name||a.player_id.slice(0,8)} · {a.drill_title}</b><small>{a.drill_description}</small><small>Status: {a.status}</small>{a.completion_note&&<small>{a.completion_note}</small>}</div>{a.player_id===sessionUserId||!!team&&["owner","coach"].includes(team.membership_role)?<button className="secondary-button" onClick={()=>updateAssignment(a.id,a.status==="completed"?"assigned":"completed")}>{a.status==="completed"?"Undo":"Complete"}</button>:null}</article>)}</div></section>
           </>}
+          {section==="Profile" && <>
+            <div className="section-heading"><div><h2>Player profile</h2></div></div>
+            <section className="connection-panel profile-panel">
+              <div className="profile-identity"><span className="profile-avatar">{(displayName||sessionUsername||"P").slice(0,1).toUpperCase()}</span><div><strong>{displayName||sessionUsername||"Player"}</strong><small>{team?.team_name||"No team selected"} · {team?.membership_role||"Account"}</small></div></div>
+              <div className="profile-fields">
+                <label className="auth-field"><span>IN-GAME NAME (IGN)</span><input value={displayName} maxLength={32} onChange={e=>setDisplayName(e.target.value)} placeholder="Your Free Fire IGN"/></label>
+                <label className="auth-field"><span>ACCOUNT USERNAME</span><input value={sessionUsername} readOnly/></label>
+                <label className="auth-field"><span>PLAYER SLOT</span><input value={team?.player_number?("P"+team.player_number):"Not assigned"} readOnly/></label>
+                <label className="auth-field"><span>ROLE</span><input value={team?.assigned_role||"Not assigned"} readOnly/></label>
+              </div>
+              <button className="primary-button" disabled={!signedIn||!displayName.trim()} onClick={async()=>{if(!supabase||!signedIn)return;const name=displayName.trim();const {error}=await supabase.rpc("set_display_name",{p_name:name});if(error){setNotice(error.message);return;}await supabase.auth.updateUser({data:{display_name:name}});setNotice("IGN updated. Historical records remain linked to your account.");}}>Save IGN</button>
+              <div className="profile-meta"><span>Account ID</span><code>{sessionUserId?sessionUserId.slice(0,8)+"…":"—"}</code></div>
+            </section>
+          </>}
           {section==="Settings" && <>
-            <div className="section-heading"><div><div className="eyebrow">SQUAD CONFIGURATION</div><h2>Settings</h2></div><span className="phase-pill">TEAM PROFILE</span></div>
+            <div className="section-heading"><div><h2>Team settings</h2></div></div>
             {!signedIn||!team?<section className="connection-panel"><h3>Team profile unavailable</h3><p>Sign in and create or join a team first.</p></section>:<>
               <section className="connection-panel team-profile-settings" style={{display:"block"}}>
                 <div className="eyebrow">TEAM PROFILE</div>
