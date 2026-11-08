@@ -210,7 +210,11 @@ export default function App() {
     setBackupBusy(true);setBackupStatus("");
     try{
       const {data,error}=await supabase.rpc("get_team_backup");if(error)throw error;
-      const backup={...data,local_device_data:{players,week,day,matches,drillDone,notes}};
+      let logoDataUrl:string|null=null;
+      if(team.avatar_url){
+        try{const response=await fetch(team.avatar_url);if(response.ok){const imageBlob=await response.blob();if(imageBlob.size<=5*1024*1024){logoDataUrl=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error("Could not read team logo."));reader.readAsDataURL(imageBlob);});}}}catch{logoDataUrl=null;}
+      }
+      const backup={...data,team_logo_data_url:logoDataUrl,local_device_data:{players,week,day,matches,drillDone,notes}};
       const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
       const url=URL.createObjectURL(blob);const a=document.createElement("a");
       a.href=url;a.download="SQUAD-OS-"+team.team_name.replace(/[^a-z0-9-_]+/gi,"-")+"-"+new Date().toISOString().slice(0,10)+".json";
@@ -233,6 +237,15 @@ export default function App() {
       if(local&&local.matches&&typeof local.matches==="object")setMatches(local.matches);
       if(local&&local.drillDone&&typeof local.drillDone==="object")setDrillDone(local.drillDone);
       if(local&&local.notes&&typeof local.notes==="object")setNotes(local.notes);
+      if(typeof backup.team_logo_data_url==="string"&&backup.team_logo_data_url.startsWith("data:image/")){
+        const imageBlob=await (await fetch(backup.team_logo_data_url)).blob();
+        const {data:{user}}=await supabase.auth.getUser();if(!user)throw new Error("Sign in again to restore the team logo.");
+        const ext=imageBlob.type==="image/png"?"png":imageBlob.type==="image/webp"?"webp":"jpg";
+        const logoPath=user.id+"/"+team.id+"."+ext;
+        const {error:uploadError}=await supabase.storage.from("team-avatars").upload(logoPath,imageBlob,{upsert:true,contentType:imageBlob.type||"image/jpeg"});if(uploadError)throw uploadError;
+        const {data:publicLogo}=supabase.storage.from("team-avatars").getPublicUrl(logoPath);
+        const {error:logoUpdateError}=await supabase.from("teams").update({avatar_url:publicLogo.publicUrl+"?v="+Date.now()}).eq("id",team.id);if(logoUpdateError)throw logoUpdateError;
+      }
       await loadTeam();await loadAssignments();setBackupFile(null);setConfirmAction(null);
       setBackupStatus("Restore complete. "+(data?.restored_rows??0)+" records restored to this team.");
       setNotice("Team backup restored successfully.");
