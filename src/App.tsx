@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 
 type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Profile" | "Settings";
@@ -37,6 +37,10 @@ type SupabaseInstance = NonNullable<typeof import("./lib/supabase/client")["supa
 export default function App() {
   const [supabase, setSupabase] = useState<SupabaseInstance | null>(null);
   const [supabaseReady, setSupabaseReady] = useState(false);
+  const matchSyncTimerRef = useRef<number | null>(null);
+  const pendingMatchSyncRef = useRef<(() => Promise<void>) | null>(null);
+  const pendingMatchScopeRef = useRef("");
+  const activeMatchScopeRef = useRef("");
   const [section, setSection] = useState<Section>("Overview");
   const [players, setPlayers] = useState<Player[]>(readPlayers);
   const [week, setWeek] = useState(() => localStorage.getItem("squad-os-week") || currentISOWeekKey());
@@ -147,10 +151,7 @@ export default function App() {
         }
       })
       .catch(() => {
-        if (active) {
-          setSupabaseReady(true);
-          setConnection("Offline");
-        }
+        if (active) setConnection("Offline");
       });
     return () => { active = false; };
   }, []);
@@ -368,52 +369,85 @@ export default function App() {
   const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { if(player>=1&&player<=5){const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error;} const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
   useEffect(()=>{if(signedIn)loadTeam().catch(e=>{setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Could not load team.");});else{setTeam(null);setTeamMembers([]);setMatchesHydratedKey("");}},[signedIn]);
   const weekMonday = (w: string) => { const m=w.match(/^(\d{4})-W(\d{2})$/); if(!m) return new Date().toISOString().slice(0,10); const y=Number(m[1]), n=Number(m[2]); const d=new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+(n-1)*7); return d.toISOString().slice(0,10); };
+  const persistMatchSnapshot = async (teamSnapshot: NonNullable<typeof team>, weekSnapshot: string, matchSnapshot: typeof matches, userId: string) => {
+    try {
+      const start = weekMonday(weekSnapshot);
+      const end = new Date(start + "T00:00:00Z");
+      end.setUTCDate(end.getUTCDate() + 6);
+      const { data: cycle, error: cycleErr } = await supabase!.from("tournament_cycles")
+        .upsert({ team_id: teamSnapshot.id, cycle_start: start, cycle_end: end.toISOString().slice(0, 10), title: "Weekly Tournament", status: "active", created_by: userId }, { onConflict: "team_id,cycle_start" })
+        .select("id").single();
+      if (cycleErr || !cycle) throw cycleErr || new Error("Could not open the current tournament cycle.");
+      const rows = Object.entries(matchSnapshot)
+        .filter(([key]) => key.startsWith(`${weekSnapshot}-D`))
+        .flatMap(([key, match]) => {
+          const parsed = key.match(/-D(\\d+)-M(\\d+)$/);
+          return parsed ? [{
+            cycle_id: cycle.id, team_id: teamSnapshot.id, match_day: Number(parsed[1]), match_number: Number(parsed[2]),
+            placement: match.placement, kills: match.kills,
+            points: (match.placement === 1 ? 12 : match.placement === 2 ? 9 : match.placement === 3 ? 8 : match.placement === 4 ? 7 : match.placement === 5 ? 6 : match.placement === 6 ? 5 : match.placement === 7 ? 4 : match.placement === 8 ? 3 : match.placement === 9 ? 2 : match.placement === 10 ? 1 : 0) + match.kills,
+            status: "draft", recorded_by: userId,
+          }] : [];
+        });
+      if (rows.length) {
+        const { error } = await supabase!.from("tournament_matches").upsert(rows, { onConflict: "cycle_id,match_day,match_number" });
+        if (error) throw error;
+      }
+      if (activeMatchScopeRef.current === `${teamSnapshot.id}:${weekSnapshot}`) setConnection("Signed in · cloud sync active");
+    } catch {
+      if (activeMatchScopeRef.current === `${teamSnapshot.id}:${weekSnapshot}`) setConnection("Signed in · sync retry needed");
+    }
+  };
+
+  const flushPendingMatchSync = () => {
+    if (matchSyncTimerRef.current !== null) window.clearTimeout(matchSyncTimerRef.current);
+    matchSyncTimerRef.current = null;
+    const pending = pendingMatchSyncRef.current;
+    pendingMatchSyncRef.current = null;
+    pendingMatchScopeRef.current = "";
+    if (pending) void pending();
+  };
+
+  const scheduleMatchSync = (matchSnapshot: typeof matches) => {
+    if (!supabase || !signedIn || !team || !sessionUserId || !["owner", "coach"].includes(team.membership_role)) return;
+    const scope = `${team.id}:${week}`;
+    activeMatchScopeRef.current = scope;
+    if (pendingMatchScopeRef.current && pendingMatchScopeRef.current !== scope) {
+      flushPendingMatchSync();
+    } else if (matchSyncTimerRef.current !== null) {
+      window.clearTimeout(matchSyncTimerRef.current);
+      matchSyncTimerRef.current = null;
+    }
+    const teamSnapshot = team;
+    const weekSnapshot = week;
+    const userId = sessionUserId;
+    pendingMatchScopeRef.current = scope;
+    pendingMatchSyncRef.current = () => persistMatchSnapshot(teamSnapshot, weekSnapshot, matchSnapshot, userId);
+    setConnection("Syncing…");
+    matchSyncTimerRef.current = window.setTimeout(() => {
+      matchSyncTimerRef.current = null;
+      const pending = pendingMatchSyncRef.current;
+      pendingMatchSyncRef.current = null;
+      pendingMatchScopeRef.current = "";
+      if (pending) void pending();
+    }, 500);
+  };
+
   useEffect(() => {
     if (!supabase || !signedIn || !team || matchesHydratedKey !== `${team.id}:${week}`) return;
-    setConnection("Syncing…");
-    let cancelled = false;
-    const timer = window.setTimeout(() => {
-      void (async () => {
-        try {
-          const userId = sessionUserId;
-          if (!userId) return;
-          if (!["owner", "coach"].includes(team.membership_role)) {
-            if (!cancelled) setConnection("Signed in · cloud sync active");
-            return;
-          }
-          const start = weekMonday(week);
-          const end = new Date(start + "T00:00:00Z");
-          end.setUTCDate(end.getUTCDate() + 6);
-          const { data: cycle, error: cycleErr } = await supabase.from("tournament_cycles")
-            .upsert({ team_id: team.id, cycle_start: start, cycle_end: end.toISOString().slice(0, 10), title: "Weekly Tournament", status: "active", created_by: userId }, { onConflict: "team_id,cycle_start" })
-            .select("id").single();
-          if (cycleErr || !cycle) throw cycleErr || new Error("Could not open the current tournament cycle.");
-          const rows = Object.entries(matches)
-            .filter(([key]) => key.startsWith(`${week}-D`))
-            .flatMap(([key, match]) => {
-              const parsed = key.match(/-D(\\d+)-M(\\d+)$/);
-              return parsed ? [{
-                cycle_id: cycle.id, team_id: team.id, match_day: Number(parsed[1]), match_number: Number(parsed[2]),
-                placement: match.placement, kills: match.kills,
-                points: (match.placement === 1 ? 12 : match.placement === 2 ? 9 : match.placement === 3 ? 8 : match.placement === 4 ? 7 : match.placement === 5 ? 6 : match.placement === 6 ? 5 : match.placement === 7 ? 4 : match.placement === 8 ? 3 : match.placement === 9 ? 2 : match.placement === 10 ? 1 : 0) + match.kills,
-                status: "draft", recorded_by: userId,
-              }] : [];
-            });
-          if (rows.length) {
-            const { error } = await supabase.from("tournament_matches").upsert(rows, { onConflict: "cycle_id,match_day,match_number" });
-            if (error) throw error;
-          }
-          if (!cancelled) setConnection("Signed in · cloud sync active");
-        } catch {
-          if (!cancelled) setConnection("Signed in · sync retry needed");
-        }
-      })();
-    }, 500);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timer);
-    };
+    activeMatchScopeRef.current = `${team.id}:${week}`;
+    if (["owner", "coach"].includes(team.membership_role)) scheduleMatchSync(matches);
+    else setConnection("Signed in · cloud sync active");
   }, [supabase, signedIn, team?.id, team?.membership_role, sessionUserId, matches, week, matchesHydratedKey]);
+
+  useEffect(() => {
+    const flushOnPageHide = () => flushPendingMatchSync();
+    window.addEventListener("pagehide", flushOnPageHide);
+    return () => {
+      window.removeEventListener("pagehide", flushOnPageHide);
+      flushPendingMatchSync();
+    };
+  }, []);
   useEffect(()=>{ if(!supabase||!signedIn||!team)return; setConnection("Syncing…"); let cancelled=false; (async()=>{ try { const start=weekMonday(week); const {data:cycle}=await supabase.from("tournament_cycles").select("id").eq("team_id",team.id).eq("cycle_start",start).maybeSingle(); if(!cycle){if(!cancelled){setSharedMatches([]);setMatchesHydratedKey(`${team.id}:${week}`);setConnection("Signed in · cloud sync active");}return;} const {data,error}=await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id",cycle.id).order("match_day").order("match_number"); if(error)throw error; if(!cancelled){setSharedMatches(data||[]);setMatches(prev=>({...prev,...Object.fromEntries((data||[]).map(row=>[`${week}-D${row.match_day}-M${row.match_number}`,{placement:row.placement??12,kills:row.kills??0}]))}));setMatchesHydratedKey(`${team.id}:${week}`);setConnection("Signed in · cloud sync active");}}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Shared scoreboard unavailable.");}} })(); return()=>{cancelled=true}; },[signedIn,team?.id,week]);
   const refreshSharedMatches = async () => {
     if (!supabase || !team) return;
