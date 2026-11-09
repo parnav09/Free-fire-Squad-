@@ -2,6 +2,8 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 const PlanningTrainingCenter = lazy(() => import("./components/PlanningTrainingCenter"));
+const PlayerWeeklyInsights = lazy(() => import("./components/PlayerWeeklyInsights"));
+import "./components/PlayerWeeklyInsights.css";
 
 
 
@@ -19,7 +21,7 @@ function UiIcon({ name, size = 16 }: { name: UiIconName; size?: number }) {
   return <svg className="ui-icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">{paths[name]}</svg>;
 }
 
-type Section = "Overview" | "Tournament" | "Planning" | "Training" | "Training Legacy" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Profile" | "Settings";
+type Section = "Overview" | "Tournament" | "Planning" | "Training" | "Training Legacy" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Weekly Review" | "Player Trends" | "Profile" | "Settings";
 type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
   { id: "P1", name: "Player 1", role: "Primary Rusher", status: "Active" },
@@ -631,7 +633,7 @@ export default function App() {
   };
   const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
-  const nav: Section[] = ["Overview", "Tournament", "Planning", "Training", "Players", "Evaluation", "Assignments", "Analytics", "Settings"];
+  const nav: Section[] = ["Overview", "Tournament", "Planning", "Training", "Players", "Evaluation", "Assignments", "Weekly Review", "Player Trends", "Analytics", "Settings"];
   const onboarding=!signedIn||!team;
   return (
     <main className="app-shell">
@@ -829,6 +831,7 @@ export default function App() {
               </section>}
               </>}
           </>}
+          {(section==="Weekly Review"||section==="Player Trends")&&<Suspense fallback={<section className="connection-panel" role="status">Loading player intelligence…</section>}><PlayerWeeklyInsights members={teamMembers} assignments={assignmentRows} evaluations={evalHistory} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} onGenerate={async(playerIds,due)=>{if(!supabase||!team||!sessionUserId)throw new Error("Sign in and select a team first.");const task="Weekly focus · concise comms + map awareness";const eligible=playerIds.filter(pid=>!assignmentRows.some(a=>a.player_id===pid&&a.drill_title===task&&a.due_date>=due.slice(0,4)+"-01-01"&&a.due_date<=due));if(!eligible.length)throw new Error("All selected players already have this weekly task.");const {error}=await supabase.from("player_drill_assignments").insert(eligible.map(player_id=>({team_id:team.id,player_id,assigned_by:sessionUserId,drill_title:task,drill_description:"Practice concise location/info callouts, confirm IGL instructions, and review map positioning as a team. Record one improvement note.",due_date:due})));if(error)throw new Error(error.message);await loadAssignments();}}/></Suspense>}
           {section==="Analytics" && <Suspense fallback={<section className="connection-panel" role="status">Loading analytics…</section>}>
             <AnalyticsSection totalMatches={totalMatches} points={points} analyticsMatches={analyticsMatches} rosterSize={players.length}/>
           </Suspense>}
