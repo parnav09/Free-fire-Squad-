@@ -637,7 +637,6 @@ export default function App() {
   const saveMatch = (slot: string, field: "placement" | "kills", value: number) => {
     const next = { ...(matches[slot] || { placement: 12, kills: 0 }), [field]: value };
     setMatches(prev => ({ ...prev, [slot]: next }));
-    if (field === "kills") setKillDrafts(prev => ({ ...prev, [slot: String(value)] }));
   };
   const addPlayer = () => {
     if (!newName.trim() || players.length >= 10) return;
