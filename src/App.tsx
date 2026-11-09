@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
+const PlanningTrainingCenter = lazy(() => import("./components/PlanningTrainingCenter"));
 
 
 
@@ -18,7 +19,7 @@ function UiIcon({ name, size = 16 }: { name: UiIconName; size?: number }) {
   return <svg className="ui-icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">{paths[name]}</svg>;
 }
 
-type Section = "Overview" | "Tournament" | "Training" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Profile" | "Settings";
+type Section = "Overview" | "Tournament" | "Planning" | "Training" | "Training Legacy" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Profile" | "Settings";
 type Player = { id: string; name: string; role: string; status: string };
 const initialPlayers: Player[] = [
   { id: "P1", name: "Player 1", role: "Primary Rusher", status: "Active" },
@@ -630,7 +631,7 @@ export default function App() {
   };
   const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
-  const nav: Section[] = ["Overview", "Tournament", "Training", "Players", "Evaluation", "Assignments", "Analytics", "Settings"];
+  const nav: Section[] = ["Overview", "Tournament", "Planning", "Training", "Players", "Evaluation", "Assignments", "Analytics", "Settings"];
   const onboarding=!signedIn||!team;
   return (
     <main className="app-shell">
@@ -712,7 +713,7 @@ export default function App() {
           <h1>{section==="Overview" ? <>Control the squad.<br/><span>Track every week.</span></> : <>{section}.<br/><span>Team operations.</span></>}</h1>
           <p className="intro">A focused workspace for tournament results, player development and team performance.</p>
           {notice && <div className="notice">{notice}<button onClick={()=>setNotice("")}>×</button></div>}
-          {section==="Overview" && <>
+          {(section==="Planning"||section==="Training") && <Suspense fallback={<div className="pt-loading">Opening planning & training workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} initialTab={section==="Training"?"library":"plans"}/></Suspense>}\n          {section==="Overview" && <>
             <div className="section-heading"><div><h2>Squad overview</h2></div></div>
 
             <section className="connection-panel" style={{display:"block",marginBottom:22}}>
@@ -740,7 +741,7 @@ export default function App() {
             {signedIn&&team&&<section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">TEAM SCOREBOARD</div><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,flexWrap:"wrap"}}><h3>Shared results · {sharedMatches.filter(m=>m.placement!=null).length}/42 scored slots</h3><button className="secondary-button" onClick={refreshSharedMatches}>Refresh</button></div><p>Shared weekly match ledger. Blank slots are ready for scores.</p><div className="player-list">{sharedMatches.map(m=><article className="player-row" key={m.match_day+"-"+m.match_number}><span className="player-id">D{m.match_day} M{m.match_number}</span><div><b>Place {m.placement??"—"} · {m.kills??0} kills · {m.points??0} pts</b><small>{m.status}</small></div></article>)}</div></section>}
             <p className="footer-note">Prototype scoring: placement 1–10 = 12,9,8,7,6,5,4,3,2,1 points; 11/12 = 0. Add kills. Not an official tournament scoring preset.</p>
           </>}
-          {section==="Training" && <>
+          {section==="Training Legacy" && <>
             <div className="section-heading"><div><div className="eyebrow">PRACTICE BLOCK</div><h2>Team drill checklist</h2></div></div>
             <div className="toolbar"><label>Training date <input type="date" value={trainingDate} onChange={e=>setTrainingDate(e.target.value)}/></label></div><div className="drill-list">{["IGL call clarity · short and actionable","Trade spacing · pair stays connected","Rotation timing · move before pressure","Reset discipline · regroup before re-entry","Post-match review · one fix per match"].map((d,i)=><label className="drill-row" key={d}><input type="checkbox" checked={signedIn&&team?!!cloudTraining[d]:!!drillDone[d]} onChange={e=>{if(signedIn&&team)saveCloudTraining(d,e.target.checked);else setDrillDone(p=>({...p,[d]:e.target.checked}));}}/><span><b>0{i+1} / {d}</b><small>Mark only after the team completes and reviews it.</small></span></label>)}</div>
             <label className="notes-label">Session notes<textarea value={signedIn&&team?cloudSessionNotes:(notes.training||"")} onChange={e=>signedIn&&team?setCloudSessionNotes(e.target.value):setNotes(p=>({...p,training:e.target.value}))} placeholder="Calls missed, timing issue, next session target…"/></label>{signedIn&&team&&<button className="primary-button" onClick={saveSessionNotes}>Save session notes</button>}

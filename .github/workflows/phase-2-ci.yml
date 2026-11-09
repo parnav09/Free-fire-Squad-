@@ -1,9 +1,9 @@
 name: Phase 2 CI
 on:
   push:
-    branches: [main, phase-2-roster-capacity, fix/team-create-rpc-ui]
+    branches: [main, phase-2-roster-capacity, fix/team-create-rpc-ui, feature/phase-2-3-planning-training]
   pull_request:
-    branches: [main, phase-2-roster-capacity]
+    branches: [main, phase-2-roster-capacity, feature/phase-2-3-planning-training]
 permissions:
   contents: read
 jobs:
