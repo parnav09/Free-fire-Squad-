@@ -784,7 +784,7 @@ export default function App() {
                 <div className="score-day-summary">
                   <div><span>DAY {String(day).padStart(2, "0")}</span><strong>{sharedMatches.filter(m => m.match_day === day && m.placement != null).length}/6 scored</strong></div>
                   <div><strong>{sharedMatches.filter(m => m.match_day === day).reduce((sum, m) => sum + (m.kills || 0), 0)}</strong><small>Total kills</small></div>
-                  <div><strong>{sharedMatches.filter(m => m.match_day === day).reduce((sum, m) => sum + (m.points || 0), 0}</strong><small>Total points</small></div>
+                  <div><strong>{sharedMatches.filter(m => m.match_day === day).reduce((sum, m) => sum + (m.points || 0), 0)}</strong><small>Total points</small></div>
                 </div>
                 <div className="score-match-list">
                   {Array.from({length: 6}, (_, idx) => {
