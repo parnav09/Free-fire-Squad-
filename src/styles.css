@@ -806,3 +806,38 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
 .scoreboard-drawer-foot button:disabled{opacity:.35;cursor:not-allowed}
 @media(max-width:640px){.scoreboard-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.score-day-tile{min-height:116px;padding:12px}.scoreboard-overlay{align-items:flex-end}.scoreboard-drawer{max-height:94dvh;border-radius:20px 20px 0 0;padding:16px 12px;padding-bottom:max(18px,env(safe-area-inset-bottom))}.score-match-list{grid-template-columns:1fr;gap:8px}.score-match-detail{padding:12px}.score-day-summary{gap:6px}.score-day-summary>div{padding:10px 8px}.score-day-summary strong{font-size:16px}.score-day-summary>div:first-child strong{font-size:12px}.score-day-tabs button{min-width:64px}.scoreboard-head{align-items:flex-start}.scoreboard-actions{width:100%;justify-content:flex-end}}
 @media(prefers-reduced-motion:reduce){.scoreboard-drawer{animation:none}.score-day-tile{transition:none}}
+
+
+/* Smart Glass Toast — viewport anchored, responsive, never scrolls with page content */
+.smart-toast-layer{
+  position:fixed;inset:0 0 auto 0;z-index:1200;display:flex;justify-content:center;
+  padding:calc(env(safe-area-inset-top, 0px) + 16px) 18px 0;pointer-events:none;
+}
+.smart-toast{
+  --toast-accent:#73d9f4;--toast-glow:rgba(75,190,235,.16);
+  position:relative;display:flex;align-items:center;gap:13px;width:min(100%,560px);
+  min-height:76px;padding:15px 16px 17px;border:1px solid rgba(133,205,239,.25);
+  border-radius:18px;overflow:hidden;pointer-events:auto;
+  background:linear-gradient(135deg,rgba(12,24,43,.84),rgba(15,17,38,.78) 58%,rgba(31,20,57,.78));
+  color:#f2f7ff;box-shadow:0 18px 54px rgba(0,0,0,.42),0 0 0 1px rgba(255,255,255,.035) inset,0 8px 30px var(--toast-glow);
+  -webkit-backdrop-filter:blur(24px) saturate(155%);backdrop-filter:blur(24px) saturate(155%);
+  animation:smart-toast-in .28s cubic-bezier(.2,.8,.2,1) both;
+}
+.smart-toast-success{--toast-accent:#70e5c0;--toast-glow:rgba(65,218,175,.14);border-color:rgba(112,229,192,.25)}
+.smart-toast-error{--toast-accent:#ffc27b;--toast-glow:rgba(255,174,94,.12);border-color:rgba(255,194,123,.28)}
+.smart-toast-info{--toast-accent:#8fc8ff;--toast-glow:rgba(112,171,255,.14)}
+.smart-toast-mark{flex:0 0 34px;width:34px;height:34px;display:grid;place-items:center;border-radius:11px;
+  color:var(--toast-accent);background:color-mix(in srgb,var(--toast-accent) 13%,transparent);
+  border:1px solid color-mix(in srgb,var(--toast-accent) 25%,transparent);font-size:16px;font-weight:800}
+.smart-toast-copy{min-width:0;flex:1}
+.smart-toast-copy strong{display:block;color:var(--toast-accent);font-size:10px;letter-spacing:.105em;text-transform:uppercase;font-weight:750;margin-bottom:4px}
+.smart-toast-copy p{margin:0;color:#e8efff;font-size:13px;line-height:1.5;overflow-wrap:anywhere;white-space:normal}
+.smart-toast-dismiss{flex:0 0 34px;width:34px;height:34px;min-height:34px;border:1px solid rgba(183,201,235,.13);border-radius:10px;
+  background:rgba(255,255,255,.045);color:#aab8d5;font-size:21px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:background .16s,color .16s,border-color .16s}
+.smart-toast-dismiss:hover,.smart-toast-dismiss:focus-visible{background:rgba(132,188,255,.13);border-color:rgba(132,188,255,.3);color:#fff;outline:none}
+.smart-toast-progress{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--toast-accent),rgba(155,131,255,.7));transform-origin:left;animation:smart-toast-life 7s linear forwards;opacity:.72}
+@keyframes smart-toast-in{from{opacity:0;transform:translateY(-12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes smart-toast-life{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+@media(min-width:768px){.smart-toast-layer{padding-top:calc(env(safe-area-inset-top, 0px) + 22px)}.smart-toast{width:min(92vw,600px);padding:17px 18px 19px;gap:15px}.smart-toast-copy p{font-size:13.5px}}
+@media(max-width:480px){.smart-toast-layer{padding-left:12px;padding-right:12px;padding-top:calc(env(safe-area-inset-top, 0px) + 10px)}.smart-toast{gap:10px;min-height:70px;padding:12px 11px 14px;border-radius:15px}.smart-toast-mark{width:30px;height:30px;flex-basis:30px;border-radius:9px}.smart-toast-copy strong{font-size:9px;letter-spacing:.08em}.smart-toast-copy p{font-size:12px;line-height:1.45}.smart-toast-dismiss{width:32px;height:32px;flex-basis:32px;min-height:32px}}
+@media(prefers-reduced-motion:reduce){.smart-toast{animation:none}.smart-toast-progress{animation:none;display:none}}
