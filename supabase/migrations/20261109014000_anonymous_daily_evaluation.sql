@@ -20,3 +20,8 @@ drop trigger if exists daily_scores_lock_date_anonymous on public.daily_scores;
 create trigger daily_scores_lock_date_anonymous
 before insert on public.daily_scores
 for each row execute function public.lock_daily_score_date_and_anonymize();
+
+
+drop policy if exists ds_insert on public.daily_scores;
+create policy ds_insert on public.daily_scores for insert
+with check (evaluator_id is null and can_rate(team_id,player_id) and score_date=(now() at time zone 'Asia/Kolkata')::date);
