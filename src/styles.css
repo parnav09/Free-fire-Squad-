@@ -715,3 +715,13 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
  .mobile-nav-icon{font-size:17px}
  .mobile-more-grid{grid-template-columns:minmax(0,1fr)}
 }
+
+.evolution-hub-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}
+.evolution-hub-card{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:0;min-height:190px;padding:20px;border:1px solid #20344f;border-radius:16px;background:linear-gradient(150deg,#101b2d,#090f1a);color:#e5efff;text-align:left;cursor:pointer;transition:transform .16s,border-color .16s,background .16s}
+.evolution-hub-card:hover{transform:translateY(-2px);border-color:#3a5e88;background:linear-gradient(150deg,#14253b,#0a1120)}
+.evolution-hub-card:active{transform:scale(.985)}
+.evolution-hub-icon{display:grid;place-items:center;width:42px;height:42px;border:1px solid #2c4b69;border-radius:12px;background:#12243a;color:#70d4ee;font-size:23px}
+.evolution-hub-card strong{font-size:15px;letter-spacing:-.02em}
+.evolution-hub-card small{font-size:11px;line-height:1.65;color:#91a5c4}
+.evolution-hub-link{margin-top:auto;padding-top:7px;color:#8fdcf2;font-size:11px;font-weight:750}
+@media(max-width:620px){.evolution-hub-grid{grid-template-columns:minmax(0,1fr);gap:9px}.evolution-hub-card{min-height:140px;padding:16px}.evolution-hub-card small{font-size:12px}}
