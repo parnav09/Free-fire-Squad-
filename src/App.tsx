@@ -801,7 +801,7 @@ export default function App() {
                 <footer className="scoreboard-drawer-foot"><span>Showing Day {day} of 7</span><div><button onClick={() => setDay(Math.max(1, day - 1))} disabled={day === 1}>← Previous</button><button onClick={() => setDay(Math.min(7, day + 1))} disabled={day === 7}>Next →</button></div></footer>
               </div>
             </div>}
-          </section>
+          </section>}
             <p className="footer-note">Prototype scoring: placement 1–10 = 12,9,8,7,6,5,4,3,2,1 points; 11/12 = 0. Add kills. Not an official tournament scoring preset.</p>
           </>}
           {section==="Training Legacy" && <>
