@@ -62,6 +62,7 @@ export default function App() {
   const pendingMatchScopeRef = useRef("");
   const activeMatchScopeRef = useRef("");
   const [section, setSection] = useState<Section>("Overview");
+  const [mobileMore, setMobileMore] = useState(false);
   const [players, setPlayers] = useState<Player[]>(readPlayers);
   const [week, setWeek] = useState(() => localStorage.getItem("squad-os-week") || currentISOWeekKey());
   const [day, setDay] = useState(() => Number(localStorage.getItem("squad-os-day") || 1));
@@ -633,16 +634,21 @@ export default function App() {
   };
   const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
-  const nav: Section[] = ["Overview", "Tournament", "Planning", "Training", "Players", "Evaluation", "Assignments", "Weekly Review", "Player Trends", "Analytics", "Settings"];
+  const nav: Section[] = ["Overview", "Tournament", "Planning", "Training", "Assignments", "Players", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
+  const mainNav: Section[] = ["Overview", "Tournament", "Planning", "Assignments"];
+  const evolutionNav: Section[] = ["Evaluation", "Weekly Review", "Player Trends", "Analytics"];
+  const mobileNavLabel: Record<string,string> = {Overview:"Home",Tournament:"Matches",Planning:"Plan",Assignments:"Tasks",Training:"Training",Players:"Players",Evaluation:"Eval", "Weekly Review":"Review","Player Trends":"Trends",Analytics:"Stats",Profile:"Profile",Settings:"Settings","Training Legacy":"Legacy"};
+  const navIcon: Record<string,string> = {Overview:"⌂",Tournament:"◷",Planning:"▤",Assignments:"✓",Training:"◈",Players:"♙",Evaluation:"◎","Weekly Review":"↗","Player Trends":"⌁",Analytics:"▥",Profile:"♙",Settings:"⚙","Training Legacy":"◫"};
   const onboarding=!signedIn||!team;
   return (
     <main className="app-shell">
       <aside className="sidebar">
         <div className="brand-mark">S</div><div className="brand-copy"><span className="brand-name">SQUAD OS</span><span className="brand-caption">TEAM OPERATIONS</span></div>
         <div className="sidebar-divider"/>{!onboarding&&<><div className="nav-label">WORKSPACE</div>
-        {nav.map(n => <button key={n} className={"nav-item "+((section===n||(n==="Settings"&&section==="Profile"))?"nav-item-active":"nav-item-muted")} onClick={()=>setSection(n)}><span className="nav-dot"/>{n}</button>)}
+        <div className="nav-group-label">COMMAND</div>{mainNav.map(n => <button key={n} className={"nav-item "+(section===n?"nav-item-active":"nav-item-muted")} onClick={()=>setSection(n)}><span className="nav-symbol">{navIcon[n]}</span>{n}</button>)}<div className="nav-group-label">WORKSPACES</div><button className={"nav-item "+(["Training","Training Legacy"].includes(section)?"nav-item-active":"nav-item-muted")} onClick={()=>setSection("Training")}><span className="nav-symbol">◈</span>Training</button><button className={"nav-item "+(["Evaluation","Weekly Review","Player Trends","Analytics"].includes(section)?"nav-item-active":"nav-item-muted")} onClick={()=>setSection("Weekly Review")}><span className="nav-symbol">⌁</span>Evolution<span className="nav-count">4</span></button><button className={"nav-item "+(section==="Players"?"nav-item-active":"nav-item-muted")} onClick={()=>setSection("Players")}><span className="nav-symbol">♙</span>Players</button><div className="nav-group-label">ACCOUNT</div>{(["Profile","Settings"] as Section[]).map(n=><button key={n} className={"nav-item "+(section===n?"nav-item-active":"nav-item-muted")} onClick={()=>setSection(n)}><span className="nav-symbol">{navIcon[n]}</span>{n}</button>)}<div className="nav-group-label nav-more-label">MORE TOOLS</div>{(["Evaluation","Weekly Review","Player Trends","Analytics","Training Legacy"] as Section[]).map(n=><button key={n} className={"nav-item nav-secondary "+(section===n?"nav-item-active":"nav-item-muted")} onClick={()=>setSection(n)}><span className="nav-symbol">{navIcon[n]}</span>{n}</button>)}
         <div className="sidebar-bottom">SQUAD OS · WORKSPACE</div></>}
       </aside>
+      {!onboarding&&<><nav className="mobile-bottom-nav" aria-label="Main navigation">{mainNav.map(n=><button key={n} className={section===n?"mobile-nav-active":""} aria-current={section===n?"page":undefined} onClick={()=>{setSection(n);setMobileMore(false);}}><span className="mobile-nav-icon">{navIcon[n]}</span><small>{mobileNavLabel[n]}</small></button>}<button className={mobileMore||(!mainNav.includes(section)&&section!=="Overview")?"mobile-nav-active":""} aria-expanded={mobileMore} onClick={()=>setMobileMore(v=>!v)}><span className="mobile-nav-icon">☰</span><small>More</small></button></nav>{mobileMore&&<div className="mobile-more-backdrop" onClick={()=>setMobileMore(false)}><section className="mobile-more-sheet" aria-label="More sections" onClick={e=>e.stopPropagation()}><header><strong>All workspaces</strong><button aria-label="Close menu" onClick={()=>setMobileMore(false)}>×</button></header><div className="mobile-more-grid">{nav.filter(n=>!mainNav.includes(n)).map(n=><button key={n} className={section===n?"mobile-more-active":""} onClick={()=>{setSection(n);setMobileMore(false);}}><span>{navIcon[n]}</span>{n==="Evaluation"||n==="Weekly Review"||n==="Player Trends"||n==="Analytics"?"Evolution · "+n:n}</button>)}</div></section></div>}</>}
       <section className="main-panel">
         <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><div className={"sync-indicator sync-"+syncState} role="status" aria-live="polite" aria-label={"Team sync status: "+syncLabel} title={"Team sync status: "+syncLabel}><i/><span>{syncLabel}</span></div></header>
         <div className="content">
