@@ -68,8 +68,10 @@ export default function App() {
   const [players, setPlayers] = useState<Player[]>(readPlayers);
   const [week, setWeek] = useState(() => localStorage.getItem("squad-os-week") || currentISOWeekKey());
   const [day, setDay] = useState(() => Number(localStorage.getItem("squad-os-day") || 1));
+  const [scoreboardExpanded, setScoreboardExpanded] = useState(false);
   const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-matches") || "{}"); } catch { return {}; } });
   const [notice, setNotice] = useState("");
+  useEffect(() => { if (!notice) return; const timer = window.setTimeout(() => setNotice(""), 7000); return () => window.clearTimeout(timer); }, [notice]);
   const [sharedMatches, setSharedMatches] = useState<Array<{match_day:number;match_number:number;placement:number|null;kills:number;points:number|null;status:string}>>([]);
   const [matchesHydratedKey, setMatchesHydratedKey] = useState("");
   const [connection, setConnection] = useState("Checking…");
@@ -642,6 +644,7 @@ export default function App() {
     setPlayers(prev => [...prev, { id: "P" + nextSlot, name: newName.trim(), role: newRole, status: "Active" }]);
     setNewName(""); setNotice("Player P" + nextSlot + " added to this device roster.");
   };
+  const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
   const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
   const nav: Section[] = ["Overview", "Tournament", "StratForge", "Assignments", "Players", "Evolution", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
@@ -662,7 +665,6 @@ export default function App() {
         <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><div className={"sync-indicator sync-"+syncState} role="status" aria-live="polite" aria-label={"Team sync status: "+syncLabel} title={"Team sync status: "+syncLabel}><i/><span>{syncLabel}</span></div></header>
         <div className="content">
           {onboarding?<>
-            {notice&&<div className="notice auth-notice" role="status"><span>{notice}</span><button onClick={()=>setNotice("")} aria-label="Dismiss message">×</button></div>}
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
               {recoveryMode?<><h2>Set a new password</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Email verified. Choose a new password. Never share it by email.</p><label className="auth-field"><span>NEW PASSWORD</span><input type={showPassword?"text":"password"} autoComplete="new-password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} placeholder="At least 8 characters"/></label><label className="auth-show"><input type="checkbox" checked={showPassword} onChange={e=>setShowPassword(e.target.checked)}/> Show password</label><button className="primary-button auth-submit" disabled={newPassword.length<8||recoveryBusy} onClick={saveRecoveredPassword}>Save new password <UiIcon name="arrow-right"/></button></div></div></>:recoveryStep==="otp"?<><h2>Verify email</h2><div className="auth-card"><div className="auth-fields"><p className="auth-hint">Enter the 6-digit code sent to {recoveryEmail}. It expires soon.</p><label className="auth-field"><span>EMAIL OTP</span><input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={recoveryOtp} onChange={e=>setRecoveryOtp(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="000000"/></label><button className="primary-button auth-submit" disabled={recoveryOtp.length!==6||recoveryBusy} onClick={verifyRecoveryOtp}>{recoveryBusy?"Verifying…":<>Verify code <UiIcon name="arrow-right"/></>}</button><button className="text-button" disabled={recoveryBusy} onClick={requestPasswordReset}>Resend code</button><button className="text-button" onClick={()=>{setRecoveryStep("email");setRecoveryOtp("");setNotice("");}}>Use another email</button></div></div></>:!signedIn?<><h2>{authMode==="signup"?"Create account":"Sign in"}</h2><div className="auth-card">
                 <div className="auth-switch"><button className={authMode==="signup"?"active":""} onClick={()=>{setAuthMode("signup");setNotice("");}}>Create account</button><button className={authMode==="signin"?"active":""} onClick={()=>{setAuthMode("signin");setNotice("");}}>Sign in</button></div>
@@ -729,7 +731,7 @@ export default function App() {
 
           <h1>{section==="Overview" ? <>Control the squad.<br/><span>Track every week.</span></> : <>{section}.<br/><span>Team operations.</span></>}</h1>
           <p className="intro">A focused workspace for tournament results, player development and team performance.</p>
-          {notice && <div className="notice">{notice}<button onClick={()=>setNotice("")}>×</button></div>}
+
           {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} canAssignTasks={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))}/></Suspense>}
           {section==="Evolution"&&<><div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · EVOLUTION</div><h2>One place for improvement</h2></div><span className="phase-pill">4 MODULES</span></div><p className="intro">Evaluation, weekly review, player trends and squad analytics stay together. Use the module you need; all records remain team-shared.</p><div className="evolution-hub-grid">{[{title:"Daily Evaluation",desc:"Record communication, coordination, decisions, role execution and map awareness.",to:"Evaluation",icon:"◎"},{title:"Weekly Review",desc:"Review assigned work, roster pulse and improvement focus.",to:"Weekly Review",icon:"↗"},{title:"Player Trends",desc:"Compare recent player scores and track progression.",to:"Player Trends",icon:"⌁"},{title:"Squad Analytics",desc:"Inspect match records and team performance metrics.",to:"Analytics",icon:"▥"}].map(x=><button key={x.to} className="evolution-hub-card" onClick={()=>setSection(x.to as Section)}><span className="evolution-hub-icon">{x.icon}</span><strong>{x.title}</strong><small>{x.desc}</small><span className="evolution-hub-link">Open module →</span></button>)}</div></>}
           {section==="Overview" && <>
@@ -757,7 +759,50 @@ export default function App() {
             <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><span className="phase-pill">42 MATCH SLOTS</span></div>
             <div className="toolbar"><label>Week <input value={week} onChange={e=>setWeek(e.target.value)} placeholder="YYYY-W##"/></label><label>Day <select value={day} onChange={e=>setDay(Number(e.target.value))}>{Array.from({length:7},(_,i)=><option value={i+1} key={i}>Day {i+1} · {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][i]}</option>)}</select></label></div>
             <div className="match-grid">{Array.from({length:6},(_,i)=>{const key=week+"-D"+day+"-M"+(i+1);const remote=sharedMatches.find(x=>x.match_day===day&&x.match_number===i+1);const m=(signedIn&&team&&remote)?{placement:remote.placement??12,kills:remote.kills??0}:(matches[key]||{placement:12,kills:0});return <article className="match-card" key={key}><div className="card-index">MATCH 0{i+1}</div><h3>Match {i+1}</h3><label>Placement<select value={m.placement} disabled={!!team&&!(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))} onChange={e=>saveMatch(key,"placement",Number(e.target.value))}>{Array.from({length:12},(_,j)=><option key={j} value={j+1}>{j+1===12?"12+ / Other":j+1}</option>)}</select></label><label>Kills<input type="number" min="0" value={m.kills} disabled={!!team&&!(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))} onChange={e=>saveMatch(key,"kills",Math.max(0,Number(e.target.value)))}/></label></article>})}</div>
-            {signedIn&&team&&<section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">TEAM SCOREBOARD</div><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,flexWrap:"wrap"}}><h3>Shared results · {sharedMatches.filter(m=>m.placement!=null).length}/42 scored slots</h3><button className="secondary-button" onClick={refreshSharedMatches}>Refresh</button></div><p>Shared weekly match ledger. Blank slots are ready for scores.</p><div className="player-list">{sharedMatches.map(m=><article className="player-row" key={m.match_day+"-"+m.match_number}><span className="player-id">D{m.match_day} M{m.match_number}</span><div><b>Place {m.placement??"—"} · {m.kills??0} kills · {m.points??0} pts</b><small>{m.status}</small></div></article>)}</div></section>}
+            {signedIn&&team&&<section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">TEAM SCOREBOARD</div><div className="scoreboard-head">
+              <div><h3>Shared results · {sharedMatches.filter(m => m.placement != null).length}/42 scored slots</h3><p>Weekly team scoreboard · 7 days × 6 matches</p></div>
+              <div className="scoreboard-actions"><button className="secondary-button score-action" onClick={refreshSharedMatches}>↻ Refresh</button><button className="score-more-button" onClick={() => setScoreboardExpanded(true)} aria-label="More scoreboard details"><span>More</span><b>⋯</b></button></div>
+            </div>
+            <div className="scoreboard-mini-grid">
+              {Array.from({length: 7}, (_, idx) => {
+                const d = idx + 1;
+                const rows = sharedMatches.filter(m => m.match_day === d);
+                const scored = rows.filter(m => m.placement != null).length;
+                const totalKills = rows.reduce((sum, m) => sum + (m.kills || 0), 0);
+                const totalPoints = rows.reduce((sum, m) => sum + (m.points || 0), 0);
+                return <button className="score-day-tile" key={d} onClick={() => { setDay(d); setScoreboardExpanded(true); }}>
+                  <span>DAY {String(d).padStart(2, "0")}</span><strong>{scored}/6</strong><small>{totalKills} kills · {totalPoints} pts</small><i>View matches ↗</i>
+                </button>;
+              })}
+            </div>
+            <p className="scoreboard-footnote">Tap More for the complete day-by-day match ledger.</p>
+            {scoreboardExpanded && <div className="scoreboard-overlay" role="dialog" aria-modal="true" aria-label="Tournament scoreboard details">
+              <div className="scoreboard-drawer">
+                <header className="scoreboard-drawer-head"><div><span className="eyebrow">TOURNAMENT · FULL LEDGER</span><h2>All days & matches</h2><p>{week} · 42 match slots</p></div><button className="score-close" onClick={() => setScoreboardExpanded(false)} aria-label="Close scoreboard">×</button></header>
+                <nav className="score-day-tabs" aria-label="Tournament days">
+                  {Array.from({length: 7}, (_, idx) => <button key={idx + 1} className={day === idx + 1 ? "active" : ""} onClick={() => setDay(idx + 1)}>Day {idx + 1}</button>)}
+                </nav>
+                <div className="score-day-summary">
+                  <div><span>DAY {String(day).padStart(2, "0")}</span><strong>{sharedMatches.filter(m => m.match_day === day && m.placement != null).length}/6 scored</strong></div>
+                  <div><strong>{sharedMatches.filter(m => m.match_day === day).reduce((sum, m) => sum + (m.kills || 0), 0)}</strong><small>Total kills</small></div>
+                  <div><strong>{sharedMatches.filter(m => m.match_day === day).reduce((sum, m) => sum + (m.points || 0), 0)}</strong><small>Total points</small></div>
+                </div>
+                <div className="score-match-list">
+                  {Array.from({length: 6}, (_, idx) => {
+                    const matchNo = idx + 1;
+                    const m = sharedMatches.find(x => x.match_day === day && x.match_number === matchNo);
+                    const state = m?.status || (m?.placement != null ? "Scored" : "Pending");
+                    return <article className="score-match-detail" key={matchNo}>
+                      <div className="score-match-title"><span>MATCH {String(matchNo).padStart(2, "0")}</span><b className={state === "completed" ? "is-complete" : "is-pending"}>{state}</b></div>
+                      <div className="score-match-stats"><div><small>Placement</small><strong>{m?.placement ?? "—"}</strong></div><div><small>Kills</small><strong>{m?.kills ?? 0}</strong></div><div><small>Points</small><strong>{m?.points ?? 0}</strong></div></div>
+                      <p>{m?.placement != null ? "Match result recorded" : "No result saved for this match yet"}</p>
+                    </article>;
+                  })}
+                </div>
+                <footer className="scoreboard-drawer-foot"><span>Showing Day {day} of 7</span><div><button onClick={() => setDay(Math.max(1, day - 1))} disabled={day === 1}>← Previous</button><button onClick={() => setDay(Math.min(7, day + 1))} disabled={day === 7}>Next →</button></div></footer>
+              </div>
+            </div>}
+          </section>}
             <p className="footer-note">Prototype scoring: placement 1–10 = 12,9,8,7,6,5,4,3,2,1 points; 11/12 = 0. Add kills. Not an official tournament scoring preset.</p>
           </>}
           {section==="Training Legacy" && <>
@@ -883,6 +928,7 @@ export default function App() {
           </>}
         </div>
       </section>
+      {notice && <div className="smart-toast-layer"><div className={"smart-toast smart-toast-"+noticeTone} role={noticeTone==="error"?"alert":"status"} aria-live={noticeTone==="error"?"assertive":"polite"}><span className="smart-toast-mark" aria-hidden="true">{noticeTone==="error"?"!":noticeTone==="success"?"✓":"i"}</span><div className="smart-toast-copy"><strong>{noticeTone==="error"?"Action needs attention":noticeTone==="success"?"Action complete":"Squad OS notice"}</strong><p>{notice}</p></div><button className="smart-toast-dismiss" onClick={()=>setNotice("")} aria-label="Dismiss notification">×</button><span className="smart-toast-progress" aria-hidden="true"/></div></div>}
     </main>
   );
 }
