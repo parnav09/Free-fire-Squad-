@@ -1,0 +1,68 @@
+:root {
+  color-scheme: dark;
+
+  /* Brand palette — deep onyx with restrained cyan and violet accents. */
+  --brand-onyx-950: #05060b;
+  --brand-onyx-900: #080b14;
+  --brand-onyx-850: #0b1020;
+  --brand-onyx-800: #10182a;
+  --brand-blue-700: #183451;
+  --brand-cyan-400: #70d8ed;
+  --brand-cyan-300: #a1e9f5;
+  --brand-violet-400: #9b86f4;
+  --brand-violet-300: #b9aaff;
+
+  /* Semantic surfaces and text. */
+  --color-canvas: var(--brand-onyx-950);
+  --color-surface: var(--brand-onyx-900);
+  --color-surface-raised: var(--brand-onyx-850);
+  --color-surface-elevated: var(--brand-onyx-800);
+  --color-border: rgba(164, 183, 220, 0.15);
+  --color-border-strong: rgba(164, 183, 220, 0.26);
+  --color-text-primary: #eef3ff;
+  --color-text-secondary: #b0bdd5;
+  --color-text-muted: #8493ad;
+  --color-accent: var(--brand-cyan-400);
+  --color-accent-secondary: var(--brand-violet-400);
+  --color-success: #79d9b2;
+  --color-warning: #edc779;
+  --color-danger: #ff8999;
+
+  /* Legacy aliases retained so existing screens keep their current styling. */
+  --bg: var(--color-canvas);
+  --panel: var(--color-surface);
+  --panel-raised: var(--color-surface-raised);
+  --line: var(--color-border);
+  --muted: var(--color-text-muted);
+  --cyan: var(--color-accent);
+  --violet: var(--color-accent-secondary);
+
+  /* Interaction and layout contracts. */
+  --tap-min: 44px;
+  --focus-ring: 0 0 0 3px rgba(112, 216, 237, 0.24);
+  --focus-outline: 2px solid var(--brand-cyan-400);
+  --surface-hover: rgba(112, 216, 237, 0.055);
+  --radius-control: 10px;
+  --radius-card: 14px;
+  --radius-panel: 18px;
+  --content-max: 1240px;
+  --sidebar-width: 232px;
+  --topbar-height: 68px;
+
+  /* Motion is intentionally short and restrained. */
+  --motion-fast: 140ms;
+  --motion-standard: 190ms;
+  --motion-slow: 260ms;
+  --ease-standard: cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+html {
+  color-scheme: dark;
+  background: var(--color-canvas);
+  accent-color: var(--color-accent);
+}
+
+::selection {
+  color: #061018;
+  background: var(--brand-cyan-300);
+}
