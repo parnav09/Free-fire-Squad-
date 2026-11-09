@@ -82,3 +82,12 @@ button:disabled{opacity:.45!important;cursor:not-allowed!important}
  .pt-rubric>div{grid-template-columns:minmax(0,1fr)!important}
 }
 @media(min-width:900px){.pt-grid{grid-template-columns:minmax(300px,.78fr) minmax(0,1.22fr)!important}}
+
+.pt-assignment-options{border:1px solid #20334d;border-radius:12px;background:#091321;padding:0 12px}
+.pt-assignment-options summary{min-height:46px;display:flex;align-items:center;cursor:pointer;color:#a9c1e1;font-size:12px;font-weight:750;list-style-position:inside}
+.pt-assignment-options[open]{padding-bottom:12px}
+.pt-assignment-options[open] summary{margin-bottom:10px;border-bottom:1px solid #1c2c43}
+.pt-assignment-options>*:not(summary){margin-top:10px}
+.pt-assignment-options .pt-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.pt-task-notes button{width:100%}
+@media(max-width:640px){.pt-assignment-options .pt-fields{grid-template-columns:minmax(0,1fr)}}
