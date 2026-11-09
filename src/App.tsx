@@ -644,6 +644,7 @@ export default function App() {
     setPlayers(prev => [...prev, { id: "P" + nextSlot, name: newName.trim(), role: newRole, status: "Active" }]);
     setNewName(""); setNotice("Player P" + nextSlot + " added to this device roster.");
   };
+  const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
   const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
   const nav: Section[] = ["Overview", "Tournament", "StratForge", "Assignments", "Players", "Evolution", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
