@@ -1,5 +1,5 @@
 -- Daily Evolution narrative feedback is recipient-only; no reviewer identity is stored.
-update public.daily_scores set notes=null, improvement_target=null, improvement_notes=null, mistake_notes=null;
+update public.daily_scores set notes=null, improvement_target=null;
 alter table public.daily_scores drop constraint if exists daily_scores_improvement_notes_len;
 alter table public.daily_scores drop constraint if exists daily_scores_mistake_notes_len;
 alter table public.daily_scores drop column if exists improvement_notes;
