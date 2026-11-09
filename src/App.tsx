@@ -636,7 +636,6 @@ export default function App() {
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
   const nav: Section[] = ["Overview", "Tournament", "Planning", "Training", "Assignments", "Players", "Evolution", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
   const mainNav: Section[] = ["Overview", "Tournament", "Planning", "Assignments"];
-  const evolutionNav: Section[] = ["Evaluation", "Weekly Review", "Player Trends", "Analytics"];
   const mobileNavLabel: Record<string,string> = {Overview:"Home",Tournament:"Matches",Planning:"Plan",Assignments:"Tasks",Training:"Training",Players:"Players",Evaluation:"Eval", "Weekly Review":"Review","Player Trends":"Trends",Analytics:"Stats",Profile:"Profile",Settings:"Settings","Training Legacy":"Legacy"};
   const navIcon: Record<string,string> = {Overview:"⌂",Tournament:"◷",Planning:"▤",Assignments:"✓",Training:"◈",Players:"♙",Evaluation:"◎","Weekly Review":"↗","Player Trends":"⌁",Analytics:"▥",Evolution:"⌁",Profile:"♙",Settings:"⚙","Training Legacy":"◫"};
   const onboarding=!signedIn||!team;
