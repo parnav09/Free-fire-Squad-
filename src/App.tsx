@@ -3,7 +3,9 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 const PlanningTrainingCenter = lazy(() => import("./components/PlanningTrainingCenter"));
 const PlayerWeeklyInsights = lazy(() => import("./components/PlayerWeeklyInsights"));
-import "./components/PlayerWeeklyInsights.css";\nimport ScrimsSection from "./components/ScrimsSection";\nimport "./components/MatchesSectionTabs.css";
+import "./components/PlayerWeeklyInsights.css";
+import ScrimsSection from "./components/ScrimsSection";
+import "./components/MatchesSectionTabs.css";
 
 
 
@@ -63,7 +65,8 @@ export default function App() {
   const pendingMatchSyncRef = useRef<(() => Promise<void>) | null>(null);
   const pendingMatchScopeRef = useRef("");
   const activeMatchScopeRef = useRef("");
-  const [section, setSection] = useState<Section>("Overview");\n  const [matchesTab, setMatchesTab] = useState<"Scrims"|"Tournament">("Scrims");
+  const [section, setSection] = useState<Section>("Overview");
+  const [matchesTab, setMatchesTab] = useState<"Scrims"|"Tournament">("Scrims");
   const [mobileMore, setMobileMore] = useState(false);
   const [players, setPlayers] = useState<Player[]>(readPlayers);
   const [week, setWeek] = useState(() => localStorage.getItem("squad-os-week") || currentISOWeekKey());
@@ -806,7 +809,8 @@ export default function App() {
             </div>}
           </section>}
             <p className="footer-note">Prototype scoring: placement 1–10 = 12,9,8,7,6,5,4,3,2,1 points; 11/12 = 0. Add kills. Not an official tournament scoring preset.</p>
-          </>}</>}\n{section==="Training Legacy" && <>
+          </>}</>}
+{section==="Training Legacy" && <>
             <div className="section-heading"><div><div className="eyebrow">PRACTICE BLOCK</div><h2>Team drill checklist</h2></div></div>
             <div className="toolbar"><label>Training date <input type="date" value={trainingDate} onChange={e=>setTrainingDate(e.target.value)}/></label></div><div className="drill-list">{["IGL call clarity · short and actionable","Trade spacing · pair stays connected","Rotation timing · move before pressure","Reset discipline · regroup before re-entry","Post-match review · one fix per match"].map((d,i)=><label className="drill-row" key={d}><input type="checkbox" checked={signedIn&&team?!!cloudTraining[d]:!!drillDone[d]} onChange={e=>{if(signedIn&&team)saveCloudTraining(d,e.target.checked);else setDrillDone(p=>({...p,[d]:e.target.checked}));}}/><span><b>0{i+1} / {d}</b><small>Mark only after the team completes and reviews it.</small></span></label>)}</div>
             <label className="notes-label">Session notes<textarea value={signedIn&&team?cloudSessionNotes:(notes.training||"")} onChange={e=>signedIn&&team?setCloudSessionNotes(e.target.value):setNotes(p=>({...p,training:e.target.value}))} placeholder="Calls missed, timing issue, next session target…"/></label>{signedIn&&team&&<button className="primary-button" onClick={saveSessionNotes}>Save session notes</button>}
