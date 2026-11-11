@@ -382,3 +382,22 @@
 .scrims-match .scrims-placement-menu button,
 .scrims-match .scrims-placement-menu button:focus{color:#e8cb8b}
 .scrims-match .scrims-placement-menu button:focus-visible{outline:2px solid #d9b45e;outline-offset:-2px}
+
+/* Normal placement menu retains app's cyan/blue accent; gold reserved for #1 champion. */
+.scrims-match .scrims-placement-trigger{color:#8ce8fa;border-color:#2c5068;background:linear-gradient(135deg,#12364b,#102337);box-shadow:none}
+.scrims-match .scrims-placement-trigger:hover:not(:disabled){color:#b8f5ff;border-color:#4ba7c5;background:linear-gradient(135deg,#17465d,#142c43)}
+.scrims-match .scrims-placement-chevron{color:#8ce8fa}
+.scrims-match .scrims-placement-menu{position:relative;top:auto;left:auto;right:auto;margin-top:7px;max-height:230px;background:#0d1524;border-color:#2c5068;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.scrims-match .scrims-placement-menu button{color:#b9cde5;background:transparent;border-color:transparent}
+.scrims-match .scrims-placement-menu button:hover,.scrims-match .scrims-placement-menu button:focus-visible{background:#15354a;border-color:#2c5068;color:#b8f5ff}
+.scrims-match .scrims-placement-menu button.is-selected{background:linear-gradient(135deg,#12364b,#102337);border-color:#3a829c;color:#8ce8fa;box-shadow:none}
+.scrims-match .scrims-placement-check{color:#8ce8fa}
+.scrims-match:has(.scrims-placement-picker.is-open) .scrims-match label:nth-of-type(2),.scrims-match:has(.scrims-placement-picker.is-open) .scrims-match-points{display:none}
+.scrims-match:has(.scrims-placement-picker.is-open){z-index:5}
+.scrims-match-grid{isolation:auto}
+.scrims-match-top1 .scrims-placement-trigger{color:#ffe6a4;border-color:#b58b43;background:linear-gradient(180deg,#3c2a10,#241806 58%,#140e05)}
+.scrims-match-top1 .scrims-placement-menu{background:linear-gradient(160deg,#30220e,#100b04);border-color:#a27a35}
+.scrims-match-top1 .scrims-placement-menu button{color:#dfc17e;background:rgba(72,51,20,.15);border-color:rgba(142,104,41,.22)}
+.scrims-match-top1 .scrims-placement-menu button:hover,.scrims-match-top1 .scrims-placement-menu button:focus-visible{background:#503716;border-color:#b88d43;color:#ffedbd}
+.scrims-match-top1 .scrims-placement-menu button.is-selected{background:linear-gradient(145deg,#a27a31,#704e19 45%,#3e280b);border-color:#f0ce7c;color:#fff3cb}
+.scrims-match-top1 .scrims-placement-check{color:#fff0bd}
