@@ -420,3 +420,45 @@
 .scrims-match:not(.scrims-match-top1) .scrims-placement-menu button{color:#b9cde5}
 .scrims-match:not(.scrims-match-top1) .scrims-placement-menu button:hover{background:#15354a;border-color:#2c5068;color:#b8f5ff}
 .scrims-match:not(.scrims-match-top1) .scrims-placement-menu button.is-selected{background:#12364b;border-color:#3a829c;color:#8ce8fa}
+
+/* FINAL picker behavior: anchored overlay inside the match card; no layout spill/scrollbar escape. */
+.scrims-match-grid{align-items:stretch;isolation:isolate;overflow:visible}
+.scrims-match{overflow:visible;isolation:isolate}
+.scrims-match:has(.scrims-placement-picker.is-open){z-index:50}
+.scrims-placement-picker{position:relative;min-width:0}
+.scrims-placement-picker.is-open{z-index:100}
+.scrims-match .scrims-placement-menu{
+ position:absolute!important;top:calc(100% + 7px)!important;left:0!important;right:0!important;
+ width:100%;box-sizing:border-box;max-height:min(240px,34vh);overflow-y:auto;overflow-x:hidden;
+ margin:0!important;padding:5px;overscroll-behavior:contain;scrollbar-gutter:stable;
+ border-radius:13px;z-index:120;box-shadow:0 14px 30px rgba(0,0,0,.65);
+}
+.scrims-match .scrims-placement-menu button{width:100%;box-sizing:border-box;min-height:42px;margin:2px 0;border-radius:9px;text-align:left}
+.scrims-match .scrims-placement-menu::-webkit-scrollbar{width:7px}
+.scrims-match .scrims-placement-menu::-webkit-scrollbar-track{background:transparent;border-radius:8px}
+.scrims-match:not(.scrims-match-top1) .scrims-placement-menu::-webkit-scrollbar-thumb{background:#28516a;border-radius:8px}
+.scrims-match-top1 .scrims-placement-menu::-webkit-scrollbar-thumb{background:linear-gradient(#e0bd6b,#8a6224);border-radius:8px}
+.scrims-match .scrims-placement-menu{scrollbar-color:#28516a #0d1524;scrollbar-width:thin}
+.scrims-match-top1 .scrims-placement-menu{scrollbar-color:#b58b43 #1c1307}
+/* While choosing, dim/hide underlying Kills and Points; Placement menu remains crisp and interactive. */
+.scrims-match:has(.scrims-placement-picker.is-open) label:nth-of-type(2),
+.scrims-match:has(.scrims-placement-picker.is-open) .scrims-match-points{visibility:hidden}
+.scrims-match:has(.scrims-placement-picker.is-open)::after{
+ content:"";position:absolute;left:10px;right:10px;top:118px;bottom:12px;
+ border-radius:12px;background:rgba(5,9,16,.35);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+ pointer-events:none;z-index:2
+}
+.scrims-match:has(.scrims-placement-picker.is-open) .scrims-placement-picker{z-index:5}
+/* Champion controls: unmistakable gold value, stronger gold chevron and kills numerals. */
+.scrims-match-top1 .scrims-match-title{color:#d9b45e}
+.scrims-match-top1 label{color:#cdb47b}
+.scrims-match-top1 .scrims-placement-trigger{color:#ffe6a4;border-color:#c99c45;background:linear-gradient(180deg,#493211,#241806 58%,#140e05);box-shadow:inset 0 1px 0 rgba(255,231,173,.2),0 4px 12px rgba(0,0,0,.28)}
+.scrims-match-top1 .scrims-placement-chevron{color:#ffd777;font-size:25px;font-weight:900;text-shadow:0 0 9px rgba(255,202,91,.3)}
+.scrims-match-top1 .scrims-placement-trigger:hover:not(:disabled){border-color:#f0ce7c;color:#fff0bd}
+.scrims-match-top1 input:not([type=checkbox]){color:#f6d78e!important;font-weight:750!important}
+.scrims-match-top1 .scrims-match-points b{color:#ffe4a0}
+.scrims-match-top1 .scrims-placement-menu button.is-selected{background:linear-gradient(145deg,#a27a31,#704e19 45%,#3e280b);border-color:#f0ce7c;color:#fff3cb}
+/* Keep non-champion arrow, scrollbar, selection and Kills entirely in normal cyan palette. */
+.scrims-match:not(.scrims-match-top1) .scrims-placement-chevron{color:#8ce8fa;font-size:21px;font-weight:700;text-shadow:none}
+.scrims-match:not(.scrims-match-top1) .scrims-placement-trigger{color:#8ce8fa}
+.scrims-match:not(.scrims-match-top1) input:not([type=checkbox]){color:#eaf2ff!important;font-weight:500!important}
