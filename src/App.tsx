@@ -66,6 +66,8 @@ export default function App() {
   const pendingMatchScopeRef = useRef("");
   const activeMatchScopeRef = useRef("");
   const [section, setSection] = useState<Section>("Overview");
+  const [drillLanguage,setDrillLanguage]=useState<"en"|"hi-en">(()=>localStorage.getItem("squad-os-drill-language")==="hi-en"?"hi-en":"en");
+  const changeDrillLanguage=(value:"en"|"hi-en")=>{setDrillLanguage(value);localStorage.setItem("squad-os-drill-language",value);};
   const [matchesTab, setMatchesTab] = useState<"Scrims"|"Tournament">("Scrims");
   const [mobileMore, setMobileMore] = useState(false);
   const [players, setPlayers] = useState<Player[]>(readPlayers);
@@ -737,7 +739,7 @@ export default function App() {
           <h1>{section==="Overview" ? <>Control the squad.<br/><span>Track every week.</span></> : <>{section}.<br/><span>Team operations.</span></>}</h1>
           <p className="intro">A focused workspace for tournament results, player development and team performance.</p>
 
-          {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} canAssignTasks={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))}/></Suspense>}
+          {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} canAssignTasks={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))} language={drillLanguage} onLanguageChange={changeDrillLanguage}/></Suspense>}
           {section==="Evolution"&&<><div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · EVOLUTION</div><h2>One place for improvement</h2></div><span className="phase-pill">4 MODULES</span></div><p className="intro">Evaluation, weekly review, player trends and squad analytics stay together. Use the module you need; all records remain team-shared.</p><div className="evolution-hub-grid">{[{title:"Daily Evaluation",desc:"Record communication, coordination, decisions, role execution and map awareness.",to:"Evaluation",icon:"◎"},{title:"Weekly Review",desc:"Review assigned work, roster pulse and improvement focus.",to:"Weekly Review",icon:"↗"},{title:"Player Trends",desc:"Compare recent player scores and track progression.",to:"Player Trends",icon:"⌁"},{title:"Squad Analytics",desc:"Inspect match records and team performance metrics.",to:"Analytics",icon:"▥"}].map(x=><button key={x.to} className="evolution-hub-card" onClick={()=>setSection(x.to as Section)}><span className="evolution-hub-icon">{x.icon}</span><strong>{x.title}</strong><small>{x.desc}</small><span className="evolution-hub-link">Open module →</span></button>)}</div></>}
           {section==="Overview" && <>
             <div className="section-heading"><div><h2>Squad overview</h2></div></div>
@@ -865,6 +867,7 @@ export default function App() {
           </>}
           {section==="Settings" && <>
             <div className="section-heading"><div><h2>Settings</h2></div></div>
+            <section className="connection-panel language-settings-panel"><div><div className="eyebrow">PREFERENCES</div><h3>Drill language</h3><p>Choose the display language for the Drill Library. Your preference is saved on this device.</p></div><div className="pt-language-toggle settings-language-toggle" role="group" aria-label="Drill language"><button type="button" className={drillLanguage==="en"?"active":""} onClick={()=>changeDrillLanguage("en")}>EN</button><button type="button" className={drillLanguage==="hi-en"?"active":""} onClick={()=>changeDrillLanguage("hi-en")}>HI+EN</button></div></section>
             <section className="connection-panel profile-settings-entry">
               <div><div className="eyebrow">ACCOUNT</div><h3>Player profile</h3><p>View and update your IGN, account details, player slot, role and IGL information.</p></div>
               <button className="primary-button" type="button" onClick={()=>setSection("Profile")}>Open Profile <UiIcon name="arrow-right"/></button>
