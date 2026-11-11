@@ -6,3 +6,77 @@
 .scrims-match-top1 .scrims-match-title{color:#e4cc91}
 .scrims-match-top1 .scrims-match-points b{color:#f0dca9}
 .scrims-match-top1:focus-within{border-color:#b5a06b;box-shadow:inset 0 1px 0 rgba(255,230,174,.15),0 0 0 2px rgba(196,171,111,.12)}
+
+
+/* Champion visual system — graphite + emerald; champagne only for trophy details. */
+.scrims-match-top1{
+  border-color:#35685a;
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(77,151,119,.16),transparent 56%),
+    linear-gradient(145deg,#142b29 0%,#102321 42%,#101923 100%);
+  box-shadow:inset 0 1px 0 rgba(180,226,204,.09),0 5px 18px rgba(5,13,12,.2);
+}
+.scrims-match-top1:before{
+  background:linear-gradient(90deg,transparent,#8fc5a7 30%,#d8c49a 70%,transparent);
+  opacity:.62;
+}
+.scrims-match-top1 .scrims-match-title{color:#a8d7bc}
+.scrims-match-top1 .scrims-match-points b{color:#f0f5ef}
+.scrims-match-top1 label{color:#b9cfc4}
+.scrims-match-top1 select,.scrims-match-top1 input:not([type=checkbox]){
+  border-color:#315448;background:#0b1918;color:#f0f7f2;
+}
+.scrims-match-top1:focus-within{border-color:#689b82;box-shadow:inset 0 1px 0 rgba(180,226,204,.12),0 0 0 2px rgba(105,160,130,.13)}
+
+/* Saved history Top 1 card — same family, readable data first. */
+.scrims-record-top1{
+  position:relative;overflow:hidden;
+  border-color:#315d50;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(77,151,119,.15),transparent 54%),
+    linear-gradient(145deg,#142522 0%,#101c20 58%,#111824 100%);
+  box-shadow:inset 0 1px 0 rgba(180,226,204,.07);
+}
+.scrims-record-top1:before{
+  content:"";position:absolute;inset:0 0 auto;height:2px;
+  background:linear-gradient(90deg,transparent,#75ad91 25%,#c9b58b 76%,transparent);
+  opacity:.72;pointer-events:none;
+}
+.scrims-record-top1 .scrims-record-top strong{color:#e8f2eb}
+.scrims-record-top1 .scrims-record-meta{color:#c2d4ca}
+.scrims-record-top1 .scrims-record-bottom{color:#a9d6bd}
+.scrims-record-top1 .scrims-history-rank{color:#e7d3a9;font-weight:800}
+.scrims-record-top1 .scrims-top1{
+  display:inline-flex;align-items:center;gap:6px;
+  border-color:#5b765f;background:rgba(37,66,51,.55);
+  color:#d8c59b;letter-spacing:.07em;
+}
+.scrims-history-trophy{display:inline-grid;place-items:center;color:#d9c49a;font-size:13px;line-height:1}
+.scrims-record-top1:hover{border-color:#527e69;transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(180,226,204,.1),0 8px 22px rgba(4,12,9,.2)}
+.scrims-record-top1:active .scrims-history-trophy{animation:champion-trophy-pop 650ms cubic-bezier(.2,.8,.2,1)}
+.scrims-record-top1:active .scrims-top1{animation:champion-badge-glint 650ms ease-out}
+.scrims-champion{
+  border-color:#315d50;
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(75,145,111,.19),transparent 60%),
+    linear-gradient(120deg,#142522,#111b20 62%,#151b24);
+  color:#d8c59b;
+}
+.scrims-trophy{color:#d9c49a;filter:drop-shadow(0 2px 5px rgba(202,177,126,.16))}
+.scrims-champion p{color:#b8c9bf}
+.scrims-champion>span:last-child{color:#9bc5aa}
+@keyframes champion-trophy-pop{
+  0%{transform:scale(.82) rotate(-8deg);filter:drop-shadow(0 0 0 rgba(218,195,151,0))}
+  38%{transform:scale(1.22) rotate(5deg);filter:drop-shadow(0 0 7px rgba(218,195,151,.38))}
+  72%{transform:scale(1.04) rotate(-2deg)}
+  100%{transform:scale(1) rotate(0);filter:drop-shadow(0 0 0 rgba(218,195,151,0))}
+}
+@keyframes champion-badge-glint{
+  0%{box-shadow:0 0 0 rgba(205,187,145,0)}
+  45%{box-shadow:0 0 12px rgba(205,187,145,.2)}
+  100%{box-shadow:0 0 0 rgba(205,187,145,0)}
+}
+@media(prefers-reduced-motion:reduce){
+  .scrims-record-top1:active .scrims-history-trophy,.scrims-record-top1:active .scrims-top1{animation:none}
+  .scrims-record-top1:hover{transform:none}
+}
