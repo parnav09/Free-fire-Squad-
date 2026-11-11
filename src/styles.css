@@ -978,3 +978,36 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
     width:100%!important;
   }
 }
+
+
+/* Settings · compact color-graded drill-language segmented toggle */
+.settings-language-toggle{
+  position:relative!important;display:inline-flex!important;align-items:center!important;gap:4px!important;
+  padding:4px!important;border:1px solid rgba(87,151,219,.34)!important;border-radius:999px!important;
+  background:linear-gradient(145deg,#080f20 0%,#11152b 55%,#17102d 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 5px 18px rgba(0,0,0,.22)!important;
+  flex:0 0 auto!important;min-height:42px!important;isolation:isolate;
+}
+.settings-language-toggle button{
+  position:relative!important;z-index:1!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  min-width:64px!important;min-height:32px!important;padding:7px 13px!important;border:1px solid transparent!important;
+  border-radius:999px!important;background:transparent!important;color:#9ba9c8!important;
+  font-size:11px!important;font-weight:800!important;letter-spacing:.055em!important;line-height:1!important;
+  cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+  transition:color .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .12s ease!important;
+}
+.settings-language-toggle button.active{
+  color:#f4fbff!important;border-color:rgba(105,217,239,.48)!important;
+  background:linear-gradient(135deg,#12618a 0%,#2855a8 48%,#583b9c 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 9px rgba(39,117,210,.26),0 0 12px rgba(85,142,255,.13)!important;
+  text-shadow:0 1px 4px rgba(0,0,0,.25)!important;
+}
+.settings-language-toggle button:active{transform:scale(.97)!important}
+.settings-language-toggle button:focus-visible{outline:2px solid #83eaff!important;outline-offset:3px!important}
+@media(hover:hover){.settings-language-toggle button:not(.active):hover{color:#e4efff!important;background:rgba(93,132,205,.13)!important}}
+@media(max-width:640px){
+  .language-settings-panel{gap:14px!important;align-items:flex-start!important}
+  .settings-language-toggle{min-height:44px!important;padding:4px!important}
+  .settings-language-toggle button{min-height:34px!important;min-width:68px!important;padding:8px 12px!important}
+}
+@media(prefers-reduced-motion:reduce){.settings-language-toggle button{transition:none!important}}
