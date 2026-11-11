@@ -1169,3 +1169,73 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
 @media(min-width:701px) and (max-width:1050px){
   .combat-nexus-square{aspect-ratio:1.08/1!important}
 }
+
+
+/* Character tile layout correction: one compact, vertical content stack */
+.combat-nexus-character-card{
+  grid-template-columns:minmax(0,1fr) 42px!important;
+  align-items:center!important;
+  min-height:clamp(176px,19vw,218px)!important;
+  padding:clamp(20px,3vw,30px)!important;
+  gap:18px!important;
+}
+.combat-nexus-main-copy{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  gap:9px!important;
+  width:100%!important;
+  min-width:0!important;
+  white-space:normal!important;
+}
+.combat-nexus-main-copy>strong{
+  display:block!important;
+  max-width:100%!important;
+  font-size:clamp(25px,3vw,36px)!important;
+  line-height:1.08!important;
+  letter-spacing:.045em!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+.combat-nexus-main-copy>small{
+  display:block!important;
+  max-width:42ch!important;
+  font-size:clamp(11px,1.1vw,13px)!important;
+  line-height:1.5!important;
+  white-space:normal!important;
+}
+.combat-nexus-count{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:7px 10px!important;
+  width:100%!important;
+  margin-top:3px!important;
+}
+.combat-nexus-count>em{
+  margin-left:0!important;
+  width:auto!important;
+}
+.combat-nexus-arrow{
+  position:static!important;
+  justify-self:end!important;
+  align-self:center!important;
+}
+.combat-nexus-character-word{display:none!important}
+@media(max-width:700px){
+  .combat-nexus-character-card{
+    grid-template-columns:minmax(0,1fr) 36px!important;
+    min-height:170px!important;
+    padding:17px!important;
+    gap:10px!important;
+  }
+  .combat-nexus-main-copy{gap:8px!important}
+  .combat-nexus-main-copy>strong{font-size:clamp(23px,7vw,30px)!important}
+  .combat-nexus-main-copy>small{font-size:11px!important;max-width:34ch!important}
+  .combat-nexus-count{gap:6px 9px!important}
+  .combat-nexus-count>em{width:100%!important}
+}
+@media(min-width:701px){
+  .combat-nexus-main-copy>small{max-width:46ch!important}
+}
