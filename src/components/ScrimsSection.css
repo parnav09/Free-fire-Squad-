@@ -462,3 +462,12 @@
 .scrims-match:not(.scrims-match-top1) .scrims-placement-chevron{color:#8ce8fa;font-size:21px;font-weight:700;text-shadow:none}
 .scrims-match:not(.scrims-match-top1) .scrims-placement-trigger{color:#8ce8fa}
 .scrims-match:not(.scrims-match-top1) input:not([type=checkbox]){color:#eaf2ff!important;font-weight:500!important}
+
+/* Back navigation at the header: responsive, compact, with a generous real hit target. */
+.scrims-back-top{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 13px;margin:0 0 12px;border-radius:10px;border:1px solid #30435e;background:#101b2c;color:#c9d8ee;font:600 13px/1.2 inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.scrims-back-top:hover{border-color:#476786;background:#15253a;color:#e8f2ff}
+.scrims-back-top:focus-visible{outline:2px solid #66d9f3;outline-offset:2px}
+.scrims-back-top:active{background:#1a3048;transform:translateY(1px)}
+.scrims-heading>div{min-width:0}
+@media(max-width:600px){.scrims-back-top{min-height:44px;padding:10px 14px;margin-bottom:10px;font-size:14px}}
+@media(min-width:601px){.scrims-back-top{min-height:38px;padding:8px 12px}}
