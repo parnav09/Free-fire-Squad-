@@ -1239,3 +1239,27 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
 @media(min-width:701px){
   .combat-nexus-main-copy>small{max-width:46ch!important}
 }
+
+
+/* Combat Nexus · unify all tiles in the existing cyan / electric-blue neon theme */
+.combat-nexus-pets,
+.combat-nexus-loadouts{
+  border-color:rgba(92,190,255,.38)!important;
+  background:
+    radial-gradient(circle at 92% 5%,rgba(35,174,255,.22),transparent 48%),
+    linear-gradient(145deg,#12304b 0%,#101f37 58%,#142943 100%)!important;
+}
+.combat-nexus-square-icon,
+.combat-nexus-loadouts .combat-nexus-square-icon{
+  background:linear-gradient(145deg,rgba(91,213,255,.18),rgba(58,133,255,.14))!important;
+  border-color:rgba(113,205,255,.22)!important;
+  color:#a8eaff!important;
+}
+.combat-nexus-square .combat-nexus-kicker,
+.combat-nexus-loadouts .combat-nexus-kicker{color:#8edcff!important}
+.combat-nexus-square-count,
+.combat-nexus-loadouts .combat-nexus-square-count{color:#d4f4ff!important}
+.combat-nexus-square-count i,
+.combat-nexus-loadouts .combat-nexus-square-count i{color:#9dcce8!important}
+.combat-nexus-square-arrow,
+.combat-nexus-loadouts .combat-nexus-square-arrow{color:#a8eaff!important}
