@@ -300,3 +300,63 @@
 .scrims-placement-check{color:#f4d28a;font-weight:900}
 .scrims-match-top1 .scrims-placement-trigger{color:#f0d59a}
 .scrims-match-top1:focus-within{overflow:visible}
+
+
+/* Gold controls v2 — brighter champagne text, deeper gold surfaces, no grey/blue states. */
+.scrims-match label{color:#c8ad75;font-weight:650}
+.scrims-match .scrims-match-title{color:#c6a15b}
+.scrims-match .scrims-placement-trigger{
+  min-height:48px;padding:0 15px;border-radius:10px;
+  border:1px solid #8e6829;
+  background:linear-gradient(180deg,#33240d 0%,#211605 48%,#130e05 100%);
+  color:#f4d58e;font-size:15px;font-weight:800;
+  box-shadow:inset 0 1px 0 rgba(255,232,177,.18),inset 0 -1px 0 rgba(0,0,0,.42),0 4px 12px rgba(0,0,0,.3);
+}
+.scrims-match .scrims-placement-trigger:hover:not(:disabled){
+  border-color:#d0a957;background:linear-gradient(180deg,#493211,#2b1d08 58%,#1a1206);
+  color:#ffe8ae;
+}
+.scrims-match .scrims-placement-trigger:focus-visible{
+  outline:2px solid #e6c477;outline-offset:2px;
+  box-shadow:0 0 0 4px rgba(198,161,91,.2),inset 0 1px 0 rgba(255,232,177,.2);
+}
+.scrims-match .scrims-placement-chevron{color:#f0ce80;font-size:21px}
+.scrims-match .scrims-placement-menu{
+  border:1px solid #a27a35;
+  background:linear-gradient(160deg,#30220e 0%,#1c1307 52%,#100b04 100%);
+  box-shadow:0 16px 34px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,225,157,.14);
+}
+.scrims-match .scrims-placement-menu button{
+  min-height:41px;color:#dfc17e;font-size:14px;font-weight:700;
+  background:linear-gradient(180deg,rgba(72,51,20,.2),rgba(22,15,5,.2));
+  border:1px solid rgba(142,104,41,.22);
+}
+.scrims-match .scrims-placement-menu button:hover,
+.scrims-match .scrims-placement-menu button:focus-visible{
+  background:linear-gradient(180deg,#503716,#33220b);
+  border-color:#b88d43;color:#ffedbd;
+}
+.scrims-match .scrims-placement-menu button.is-selected{
+  background:linear-gradient(145deg,#8d6828 0%,#654719 42%,#3a260b 100%);
+  border:1px solid #e2bd69;color:#fff0c5;font-weight:900;
+  box-shadow:inset 0 1px 0 rgba(255,239,194,.25),inset 0 -2px 0 rgba(0,0,0,.22),0 0 14px rgba(198,161,91,.2);
+}
+.scrims-match .scrims-placement-check{color:#fff0bd}
+.scrims-match input:not([type=checkbox]){
+  min-height:48px;padding:11px 14px;
+  border:1px solid #795a27;background:linear-gradient(180deg,#171107,#0b0905);
+  color:#f2d58f;font-size:16px;font-weight:800;
+  box-shadow:inset 0 1px 0 rgba(255,224,160,.07);
+}
+.scrims-match input:not([type=checkbox]):hover{border-color:#a47b35;background:#1d1508}
+.scrims-match input:not([type=checkbox]):focus-visible{
+  border-color:#e0b85e;outline:none;
+  box-shadow:0 0 0 3px rgba(198,161,91,.2),inset 0 1px 0 rgba(255,224,160,.1);
+  background:#1b1307;
+}
+.scrims-match input:not([type=checkbox])::placeholder{color:#8b7449}
+.scrims-match .scrims-match-points{color:#c2a66e;border-top-color:rgba(198,161,91,.28)}
+.scrims-match .scrims-match-points b{color:#ffe4a0;font-size:16px;text-shadow:0 1px 12px rgba(198,161,91,.2)}
+.scrims-match-top1 .scrims-placement-trigger{border-color:#b58b43;color:#ffe6a4;background:linear-gradient(180deg,#3c2a10,#241806 58%,#140e05)}
+.scrims-match-top1 .scrims-placement-menu button.is-selected{background:linear-gradient(145deg,#a27a31,#704e19 45%,#3e280b);border-color:#f0ce7c;color:#fff3cb}
+.scrims-match-top1 input:not([type=checkbox]){color:#ffe4a0;border-color:#8b682f;background:linear-gradient(180deg,#1b1307,#0d0904)}
