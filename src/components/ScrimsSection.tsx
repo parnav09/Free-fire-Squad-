@@ -15,7 +15,8 @@ export default function ScrimsSection({supabase,teamId,userId,teamMembers=[]}:{s
  const [records,setRecords]=useState<Scrim[]>([]),[teamReviews,setTeamReviews]=useState<TeamReview[]>([]);
  const [loading,setLoading]=useState(true),[notice,setNotice]=useState(""),[view,setView]=useState<"overview"|"form"|"detail"|"team">("overview"),[activeId,setActiveId]=useState("");
  const [date,setDate]=useState(new Date().toISOString().slice(0,10)),[count,setCount]=useState(3),[matches,setMatches]=useState<MatchRow[]>(Array.from({length:3},()=>({placement:12,kills:0}))),[rank,setRank]=useState(""),[teams,setTeams]=useState("");
- const [killDrafts,setKillDrafts]=useState<Record<number,string>>({});\n const [review,setReview]=useState<Review>(emptyReview),[teamTitle,setTeamTitle]=useState(""),[teamDetail,setTeamDetail]=useState(""),[teamSolution,setTeamSolution]=useState(""),[teamCategory,setTeamCategory]=useState<"mistake"|"positive">("mistake"),[teamMatch,setTeamMatch]=useState(""),[saving,setSaving]=useState(false);
+ const [killDrafts,setKillDrafts]=useState<Record<number,string>>({});
+ const [review,setReview]=useState<Review>(emptyReview),[teamTitle,setTeamTitle]=useState(""),[teamDetail,setTeamDetail]=useState(""),[teamSolution,setTeamSolution]=useState(""),[teamCategory,setTeamCategory]=useState<"mistake"|"positive">("mistake"),[teamMatch,setTeamMatch]=useState(""),[saving,setSaving]=useState(false);
 
  const active=records.find(r=>r.id===activeId)||null;
  const canEdit=!!active&&active.owner_id===userId;
