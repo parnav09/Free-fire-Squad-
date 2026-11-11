@@ -874,3 +874,26 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
 @media(min-width:641px){.retention-settings-panel .retention-settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(min-width:1200px){.retention-settings-panel .retention-settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(min-width:1500px){.retention-settings-panel .retention-settings-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+
+/* Players command center redesign · all breakpoints */
+.team-code-value{display:inline-flex;align-items:center;justify-content:center;margin-left:8px;padding:5px 12px;border:1px solid #3b5e9c;border-radius:9px;background:linear-gradient(135deg,#10264a,#111b37);color:#7ce8ff!important;font-size:clamp(16px,1.3vw,21px)!important;font-weight:850;letter-spacing:.16em!important;line-height:1.25;white-space:nowrap;font-variant-numeric:tabular-nums}
+.player-roster-panel{display:block!important;width:100%;min-width:0;box-sizing:border-box;padding:clamp(16px,2vw,26px)!important}
+.team-player-list{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+.team-player-row{display:grid!important;grid-template-columns:58px minmax(0,1fr) auto!important;align-items:center!important;gap:16px!important;min-height:92px!important;padding:18px 20px!important;border:1px solid #243b61!important;border-radius:15px!important;background:linear-gradient(110deg,rgba(17,32,57,.94),rgba(9,15,29,.94))!important;box-sizing:border-box!important}
+.team-player-row .player-id{display:grid;place-items:center;width:48px;height:48px;border:1px solid #345b91;border-radius:13px;background:#0b1b34;color:#72dfff;font-size:15px;font-weight:850}
+.team-player-identity{display:grid;gap:6px;min-width:0}
+.team-player-identity b{font-size:clamp(16px,1.1vw,20px)!important;line-height:1.25!important;color:#f0f5ff!important;font-weight:800!important;letter-spacing:-.015em!important;overflow-wrap:anywhere}
+.team-player-identity small{font-size:13px!important;line-height:1.45!important;color:#9fb6d9!important;overflow-wrap:anywhere}
+.team-player-row>.active-tag{justify-self:end;white-space:nowrap;align-self:center}
+.team-player-row .add-form{display:flex;gap:8px;grid-column:2/-1;width:100%;max-width:460px}
+.team-player-row .add-form select{min-width:0;min-height:44px;flex:1}
+.team-admin-panel{width:100%;min-width:0;box-sizing:border-box}
+.team-admin-panel .admin-setting{width:100%;max-width:none}
+.team-admin-panel select{min-height:48px!important;max-width:none!important;width:100%!important}
+.team-admin-panel .request-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.team-admin-panel .request-controls label{min-width:0}
+.team-admin-panel .request-actions{display:flex;gap:10px;flex-wrap:wrap}
+.team-admin-panel .request-actions button{min-height:46px;min-width:130px;flex:1}
+@media(min-width:900px){.player-roster-panel .team-player-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch}.team-player-row{height:100%;min-height:112px!important}.team-player-row .team-player-identity b{font-size:19px!important}}
+@media(min-width:1500px){.player-roster-panel .team-player-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}.team-player-row{min-height:124px!important;padding:22px 24px!important}}
+@media(max-width:700px){.team-code-value{display:flex;width:max-content;max-width:100%;margin:8px 0 0;letter-spacing:.12em!important}.team-player-row{grid-template-columns:44px minmax(0,1fr)!important;gap:12px!important;min-height:84px!important;padding:14px!important}.team-player-row .player-id{width:40px;height:40px;font-size:13px}.team-player-row>.active-tag{grid-column:2;justify-self:start}.team-player-row .add-form{grid-column:1/-1;max-width:none}.team-admin-panel .request-controls{grid-template-columns:minmax(0,1fr)!important}.team-admin-panel .request-actions button{min-width:0}.player-roster-panel{padding:14px!important}}
