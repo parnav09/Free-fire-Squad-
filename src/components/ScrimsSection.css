@@ -269,7 +269,7 @@
  width:100%;min-height:46px;display:flex;align-items:center;justify-content:space-between;gap:12px;
  padding:0 14px;border:1px solid #8b682f;border-radius:11px;
  background:linear-gradient(145deg,#29200f 0%,#171107 58%,#100d07 100%);
- color:#f0d59a;font:700 14px/1.2 inherit;letter-spacing:.015em;text-align:left;
+ color:#f0d59a;font-family:inherit;font-size:14px;font-weight:700;line-height:1.2;letter-spacing:.015em;text-align:left;
  box-shadow:inset 0 1px 0 rgba(255,226,164,.14),0 3px 10px rgba(0,0,0,.28);
  cursor:pointer;transition:border-color .18s,box-shadow .18s,background .18s;
 }
@@ -286,7 +286,7 @@
 .scrims-placement-menu button{
  display:flex;width:100%;min-height:37px;align-items:center;justify-content:space-between;
  padding:8px 11px;border:1px solid transparent;border-radius:8px;
- background:transparent;color:#c8b58d;font:600 13px/1.2 inherit;text-align:left;cursor:pointer;
+ background:transparent;color:#c8b58d;font-family:inherit;font-size:13px;font-weight:600;line-height:1.2;text-align:left;cursor:pointer;
  transition:background .14s,color .14s,border-color .14s;
 }
 .scrims-placement-menu button:hover,.scrims-placement-menu button:focus-visible{
