@@ -95,11 +95,8 @@ export default function App() {
   const [signedIn, setSignedIn] = useState(false);
   const [sessionUserId, setSessionUserId] = useState("");
 
-  const [newName, setNewName] = useState("");
-  const [newRole, setNewRole] = useState("Substitute");
   const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-drills") || "{}"); } catch { return {}; } });
   const [notes, setNotes] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-notes") || "{}"); } catch { return {}; } });
-  const [query, setQuery] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [teamName, setTeamName] = useState("");
   const [teamCode, setTeamCode] = useState("");
@@ -641,19 +638,11 @@ export default function App() {
   const analyticsMatches = signedIn && team ? sharedMatches.filter(m=>m.placement!==null || m.kills>0) : Object.values(matches);
   const totalMatches = analyticsMatches.length;
   const points = analyticsMatches.reduce((sum, m) => sum + (m.placement === 1 ? 12 : m.placement === 2 ? 9 : m.placement === 3 ? 8 : m.placement === 4 ? 7 : m.placement === 5 ? 6 : m.placement === 6 ? 5 : m.placement === 7 ? 4 : m.placement === 8 ? 3 : m.placement === 9 ? 2 : m.placement === 10 ? 1 : 0) + m.kills, 0);
-  const filteredPlayers = useMemo(() => players.filter(p => (p.name + p.role).toLowerCase().includes(query.toLowerCase())), [players, query]);
   const saveMatch = (slot: string, field: "placement" | "kills", value: number) => {
     const next = { ...(matches[slot] || { placement: 12, kills: 0 }), [field]: value };
     setMatches(prev => ({ ...prev, [slot]: next }));
   };
-  const addPlayer = () => {
-    if (!newName.trim() || players.length >= 10) return;
-    const usedSlots = new Set(players.map(p => Number(p.id.replace(/^P/i, ""))).filter(n => Number.isInteger(n) && n >= 1 && n <= 10));
-    const nextSlot = Array.from({ length: 10 }, (_, i) => i + 1).find(n => !usedSlots.has(n));
-    if (!nextSlot) return setNotice("All ten roster slots are already used.");
-    setPlayers(prev => [...prev, { id: "P" + nextSlot, name: newName.trim(), role: newRole, status: "Active" }]);
-    setNewName(""); setNotice("Player P" + nextSlot + " added to this device roster.");
-  };
+
   const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
   const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
