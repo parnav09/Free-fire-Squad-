@@ -190,3 +190,75 @@
 .scrims-champion p{color:#b8a78a}
 .scrims-champion>span:last-child{color:#c6a15b}
 @media(prefers-reduced-motion:reduce){.scrims-record-top1:hover{transform:none}.scrims-record-top1:active .scrims-history-trophy,.scrims-record-top1:hover .scrims-top1{animation:none}}
+
+
+/* Match editor controls — obsidian/bronze input surfaces, champagne focus. */
+.scrims-match-top1{
+  border-color:#5a421d;
+  background:
+    radial-gradient(ellipse at 92% 0%,rgba(198,161,91,.10),transparent 48%),
+    linear-gradient(145deg,#11100d 0%,#0b0b0c 58%,#080706 100%);
+  box-shadow:inset 0 1px 0 rgba(231,204,145,.075),0 6px 18px rgba(0,0,0,.26);
+}
+.scrims-match-top1:before{
+  background:linear-gradient(90deg,transparent 0%,#6b4b1b 22%,#c6a15b 50%,#8d6828 78%,transparent 100%);
+  opacity:.72;
+}
+.scrims-match-top1 .scrims-match-title{
+  color:#c6a15b;letter-spacing:.16em;
+}
+.scrims-match-top1 label{
+  color:#b8a78a;font-weight:600;
+}
+.scrims-match-top1 select,
+.scrims-match-top1 input:not([type=checkbox]){
+  border:1px solid #493719;
+  border-radius:9px;
+  background:linear-gradient(180deg,#0e0c09 0%,#080706 100%);
+  color:#e8e0d1;
+  min-height:42px;
+  box-shadow:inset 0 1px 0 rgba(231,204,145,.035);
+  transition:border-color 180ms ease,box-shadow 180ms ease,background 180ms ease;
+}
+.scrims-match-top1 select{
+  color:#e7cc91;
+  font-weight:650;
+  color-scheme:dark;
+  cursor:pointer;
+}
+.scrims-match-top1 input:not([type=checkbox]){
+  color:#f0e8d9;
+  font-weight:700;
+  font-variant-numeric:tabular-nums;
+  caret-color:#c6a15b;
+}
+.scrims-match-top1 input::placeholder{color:#71634d}
+.scrims-match-top1 select:hover,
+.scrims-match-top1 input:not([type=checkbox]):hover{
+  border-color:#765522;background:#100e0a;
+}
+.scrims-match-top1 select:focus-visible,
+.scrims-match-top1 input:not([type=checkbox]):focus-visible{
+  outline:none;border-color:#c6a15b;
+  box-shadow:0 0 0 3px rgba(198,161,91,.13),inset 0 1px 0 rgba(231,204,145,.07);
+  background:#100e0a;
+}
+.scrims-match-top1 .scrims-match-points{
+  color:#95866c;font-size:12px;letter-spacing:.02em;
+  border-top:1px solid rgba(141,104,40,.19);padding-top:9px;
+}
+.scrims-match-top1 .scrims-match-points b{
+  color:#e7cc91;font-size:15px;font-weight:800;
+  text-shadow:0 1px 10px rgba(198,161,91,.12);
+}
+.scrims-match-top1:focus-within{
+  border-color:#8d6828;
+  box-shadow:inset 0 1px 0 rgba(231,204,145,.09),0 0 0 2px rgba(198,161,91,.09),0 7px 20px rgba(0,0,0,.25);
+}
+.scrims-match-top1:after{
+  content:"";position:absolute;z-index:0;right:-30px;bottom:-48px;width:110px;height:110px;
+  border:1px solid rgba(198,161,91,.055);border-radius:50%;
+  box-shadow:0 0 0 16px rgba(198,161,91,.018),0 0 0 34px rgba(141,104,40,.012);
+  pointer-events:none;
+}
+.scrims-match-top1>*{position:relative;z-index:1}
