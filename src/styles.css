@@ -863,3 +863,14 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
 @media(min-width:1500px){.retention-settings-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}.retention-settings-grid .admin-setting{min-height:260px!important}.retention-settings-panel .backup-panel-head>div{flex-basis:600px!important}}
 @media(min-width:641px) and (max-width:1050px){.retention-settings-panel{padding:20px!important}.retention-settings-grid{gap:12px!important}.retention-settings-grid .admin-setting{padding:15px!important}.retention-policy-footer .primary-button{min-width:170px!important}}
 @media(max-width:640px){.retention-settings-panel{padding:16px!important;border-radius:17px!important}.retention-settings-panel .backup-panel-head{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important}.retention-settings-panel .backup-panel-head>div{width:100%!important}.retention-settings-panel .backup-panel-head h3{font-size:24px!important}.retention-settings-panel .backup-panel-head p{font-size:13px!important}.retention-settings-panel .backup-lock{justify-self:start!important}.retention-settings-grid{grid-template-columns:minmax(0,1fr)!important;gap:11px!important;margin:18px 0!important}.retention-settings-grid .admin-setting{padding:16px!important;min-height:0!important}.retention-settings-grid .admin-setting select{min-height:48px!important}.retention-policy-footer{grid-template-columns:minmax(0,1fr)!important;gap:12px!important;padding-top:16px!important}.retention-policy-footer>span{font-size:12px!important}.retention-policy-footer .primary-button{width:100%!important;min-width:0!important;min-height:50px!important}.retention-settings-panel .backup-warning{padding:11px!important;font-size:11px!important}}
+
+/* FIX: .connection-panel is a horizontal flex row globally; retention is a stacked section. */
+.retention-settings-panel.connection-panel{display:block!important;flex:1 1 100%!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;align-items:stretch!important;justify-content:initial!important}
+.retention-settings-panel.connection-panel>*{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+.retention-settings-panel .backup-panel-head{width:100%!important}
+.retention-settings-panel .retention-settings-grid{width:100%!important}
+.retention-settings-panel .retention-policy-footer{width:100%!important}
+.retention-settings-panel>.backup-warning{width:100%!important}
+@media(min-width:641px){.retention-settings-panel .retention-settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(min-width:1200px){.retention-settings-panel .retention-settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(min-width:1500px){.retention-settings-panel .retention-settings-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
