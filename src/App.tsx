@@ -820,8 +820,7 @@ export default function App() {
             <section className="connection-panel combat-nexus-panel" aria-labelledby="combat-nexus-title">
               <div className="combat-nexus-heading"><div><div className="eyebrow">SQUAD INTELLIGENCE HUB</div><h3 id="combat-nexus-title">Combat Nexus</h3><p>Characters, companion pets and tactical loadouts — one connected workspace.</p></div><span className="combat-nexus-live">FIELD DATABASE</span></div>
               <button type="button" className="combat-nexus-character-card" onClick={()=>setCombatNexusView("characters")} aria-label="Open character database">
-                <span className="combat-nexus-character-word" aria-hidden="true">CHARACTERS</span>
-                <span className="combat-nexus-main-copy"><span className="combat-nexus-kicker">01 / OPERATIVE DATABASE</span><strong>CHARACTERS</strong><small>Ability profiles · mechanics · cooldowns · interactions</small><span className="combat-nexus-count"><b>67</b><i>ROSTER ENTRIES</i><em>Explore database</em></span></span>
+                <span className="combat-nexus-main-copy"><span className="combat-nexus-kicker">01 / OPERATIVE DATABASE</span><strong>CHARACTERS</strong><small>Ability profiles, mechanics and cooldowns</small><span className="combat-nexus-count"><b>67</b><i>ROSTER ENTRIES</i><em>Explore database</em></span></span>
                 <span className="combat-nexus-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
               </button>
               <div className="combat-nexus-secondary-grid">
