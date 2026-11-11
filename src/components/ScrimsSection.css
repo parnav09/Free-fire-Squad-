@@ -80,3 +80,16 @@
   .scrims-record-top1:active .scrims-history-trophy,.scrims-record-top1:active .scrims-top1{animation:none}
   .scrims-record-top1:hover{transform:none}
 }
+
+.scrims-history-trophy{position:relative}
+.scrims-history-trophy:after{
+  content:"✦";position:absolute;left:50%;top:50%;font-size:7px;color:#ead8ae;
+  opacity:0;pointer-events:none;text-shadow:0 0 4px rgba(234,216,174,.25)
+}
+.scrims-record-top1:active .scrims-history-trophy:after{animation:champion-particle 620ms ease-out}
+@keyframes champion-particle{
+  0%{opacity:0;transform:translate(-50%,-20%) scale(.4)}
+  25%{opacity:.8}
+  100%{opacity:0;transform:translate(95%,-190%) scale(1.15)}
+}
+@media(prefers-reduced-motion:reduce){.scrims-record-top1:active .scrims-history-trophy:after{animation:none}}
