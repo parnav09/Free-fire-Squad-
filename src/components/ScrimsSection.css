@@ -360,3 +360,25 @@
 .scrims-match-top1 .scrims-placement-trigger{border-color:#b58b43;color:#ffe6a4;background:linear-gradient(180deg,#3c2a10,#241806 58%,#140e05)}
 .scrims-match-top1 .scrims-placement-menu button.is-selected{background:linear-gradient(145deg,#a27a31,#704e19 45%,#3e280b);border-color:#f0ce7c;color:#fff3cb}
 .scrims-match-top1 input:not([type=checkbox]){color:#ffe4a0;border-color:#8b682f;background:linear-gradient(180deg,#1b1307,#0d0904)}
+
+/* Dropdown stacking and champion-only picker: prevent menu from covering sibling match cards. */
+.scrims-match-grid{align-items:start;isolation:isolate}
+.scrims-match{position:relative;overflow:visible}
+.scrims-match:has(.scrims-placement-picker.is-open){z-index:80}
+.scrims-match .scrims-placement-picker{z-index:1}
+.scrims-match .scrims-placement-picker.is-open{z-index:100}
+.scrims-match .scrims-placement-menu{z-index:1000;max-height:min(245px,42vh);overscroll-behavior:contain}
+.scrims-match-top1{z-index:2}
+.scrims-match-grid .scrims-match:not(.scrims-match-top1) .scrims-root select,
+.scrims-match-grid .scrims-match:not(.scrims-match-top1) select{
+  color:#e7cc91;background:#100e0a;border-color:#4d3a1b;
+}
+.scrims-match-grid .scrims-match:not(.scrims-match-top1) select:focus{
+  border-color:#9b7738;box-shadow:0 0 0 2px rgba(198,161,91,.12);outline:none;
+}
+.scrims-match-grid .scrims-match:not(.scrims-match-top1) select option{
+  color:#e7cc91;background:#171107;
+}
+.scrims-match .scrims-placement-menu button,
+.scrims-match .scrims-placement-menu button:focus{color:#e8cb8b}
+.scrims-match .scrims-placement-menu button:focus-visible{outline:2px solid #d9b45e;outline-offset:-2px}
