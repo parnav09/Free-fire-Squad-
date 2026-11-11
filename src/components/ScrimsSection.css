@@ -120,3 +120,73 @@
 .scrims-champion p{color:#a8cbd8}
 .scrims-champion>span:last-child{color:#6fc8df}
 @media(prefers-reduced-motion:reduce){.scrims-record-top1:hover{transform:none}}
+
+
+/* SQUAD OS — Obsidian Gold Champion identity */
+.scrims-record-top1{
+  isolation:isolate;position:relative;overflow:hidden;
+  border:1px solid #6b4b1b;
+  background:
+    radial-gradient(ellipse at 88% 0%,rgba(198,161,91,.15) 0%,rgba(141,104,40,.055) 27%,transparent 52%),
+    radial-gradient(ellipse at 4% 100%,rgba(141,104,40,.075) 0%,transparent 46%),
+    linear-gradient(135deg,#050505 0%,#0b0b0c 42%,#15110a 72%,#080706 100%);
+  box-shadow:inset 0 1px 0 rgba(231,204,145,.11),inset 0 0 30px rgba(198,161,91,.035),0 10px 28px rgba(0,0,0,.42);
+  transition:border-color 220ms ease,box-shadow 220ms ease,transform 220ms ease,background 220ms ease;
+}
+.scrims-record-top1:before{
+  content:"";position:absolute;z-index:2;left:12%;right:12%;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,#6b4b1b 15%,#c6a15b 42%,#e7cc91 50%,#8d6828 76%,transparent);
+  opacity:.9;pointer-events:none;
+}
+.scrims-record-top1:after{
+  content:"";position:absolute;z-index:-1;right:-48px;top:-66px;width:190px;height:190px;
+  border:1px solid rgba(198,161,91,.12);border-radius:50%;
+  box-shadow:0 0 0 18px rgba(198,161,91,.025),0 0 0 42px rgba(141,104,40,.018),0 0 0 68px rgba(198,161,91,.012);
+  pointer-events:none;
+}
+.scrims-record-top1 .scrims-record-top strong{color:#e7cc91;letter-spacing:-.02em;text-shadow:0 1px 14px rgba(198,161,91,.12)}
+.scrims-record-top1 .scrims-record-meta{color:#b8a78a}
+.scrims-record-top1 .scrims-record-bottom{color:#95866c}
+.scrims-record-top1 .scrims-history-rank{color:#c6a15b;font-weight:800}
+.scrims-record-top1 .scrims-top1{
+  position:relative;display:inline-flex;align-items:center;gap:6px;
+  border:1px solid #8d6828;border-radius:999px;
+  background:linear-gradient(145deg,rgba(58,41,16,.8),rgba(21,17,10,.94));
+  color:#e7cc91;padding:5px 10px;
+  box-shadow:inset 0 1px 0 rgba(231,204,145,.13),0 3px 10px rgba(0,0,0,.24);
+  letter-spacing:.09em;font-size:10px;font-weight:850;
+}
+.scrims-record-top1 .scrims-history-trophy{
+  display:inline-grid;place-items:center;width:27px;height:27px;border-radius:50%;
+  color:#c6a15b;background:radial-gradient(circle,rgba(198,161,91,.16),rgba(58,41,16,.08) 62%,transparent 70%);
+  filter:drop-shadow(0 2px 4px rgba(198,161,91,.2));
+}
+.scrims-record-top1:hover{
+  transform:translateY(-2px);border-color:#a9823b;
+  background:radial-gradient(ellipse at 88% 0%,rgba(198,161,91,.19) 0%,rgba(141,104,40,.07) 29%,transparent 54%),linear-gradient(135deg,#060606 0%,#0d0c0b 42%,#1a140b 72%,#080706 100%);
+  box-shadow:inset 0 1px 0 rgba(231,204,145,.16),0 13px 30px rgba(0,0,0,.48),0 0 22px rgba(141,104,40,.075);
+}
+.scrims-record-top1:hover .scrims-top1{border-color:#c6a15b;animation:champion-badge-glint 650ms ease-out}
+.scrims-record-top1:active .scrims-history-trophy{animation:champion-trophy-pop 620ms ease-out}
+.scrims-record-top1:active .scrims-history-trophy:after{color:#e7cc91;text-shadow:0 0 7px rgba(231,204,145,.55)}
+.scrims-match-top1{
+  border:1px solid #5a421d;
+  background:radial-gradient(ellipse at 90% 0%,rgba(198,161,91,.12),transparent 52%),linear-gradient(145deg,#15110a 0%,#0b0b0c 52%,#080706 100%);
+  box-shadow:inset 0 1px 0 rgba(231,204,145,.08),0 6px 20px rgba(0,0,0,.28);
+}
+.scrims-match-top1:before{background:linear-gradient(90deg,transparent,#8d6828 25%,#c6a15b 52%,#6b4b1b 78%,transparent);opacity:.8}
+.scrims-match-top1 .scrims-match-title{color:#c6a15b}
+.scrims-match-top1 .scrims-match-points{color:#b8a78a}
+.scrims-match-top1 .scrims-match-points b{color:#e7cc91}
+.scrims-match-top1 label{color:#b8a78a}
+.scrims-match-top1 select,.scrims-match-top1 input:not([type=checkbox]){border-color:#5a421d;background:#080706;color:#e8e0d1}
+.scrims-match-top1:focus-within{border-color:#a9823b;box-shadow:inset 0 1px 0 rgba(231,204,145,.1),0 0 0 2px rgba(198,161,91,.12)}
+.scrims-champion{
+  border:1px solid #6b4b1b;
+  background:radial-gradient(ellipse at 12% 0%,rgba(198,161,91,.14),transparent 58%),radial-gradient(ellipse at 100% 100%,rgba(141,104,40,.07),transparent 48%),linear-gradient(118deg,#0b0b0c 0%,#15110a 55%,#080706 100%);
+  color:#e7cc91;box-shadow:inset 0 1px 0 rgba(231,204,145,.1),0 7px 22px rgba(0,0,0,.24)
+}
+.scrims-trophy{color:#c6a15b;filter:drop-shadow(0 0 7px rgba(198,161,91,.22))}
+.scrims-champion p{color:#b8a78a}
+.scrims-champion>span:last-child{color:#c6a15b}
+@media(prefers-reduced-motion:reduce){.scrims-record-top1:hover{transform:none}.scrims-record-top1:active .scrims-history-trophy,.scrims-record-top1:hover .scrims-top1{animation:none}}
