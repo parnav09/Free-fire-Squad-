@@ -656,8 +656,8 @@ export default function App() {
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
   const nav: Section[] = ["Players", "Tournament", "StratForge", "Assignments", "Evolution", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
   const mainNav: Section[] = ["Players", "Tournament", "StratForge", "Assignments"];
-  const mobileNavLabel: Record<string,string> = {Players:"Team",Tournament:"Matches",StratForge:"Forge",Assignments:"Tasks",Players:"Players",Evaluation:"Eval", "Weekly Review":"Review","Player Trends":"Trends",Analytics:"Stats",Profile:"Profile",Settings:"Settings","Training Legacy":"Legacy"};
-  const navIcon: Record<string,string> = {Players:"♙",Tournament:"◷",StratForge:"◈",Assignments:"✓",Players:"♙",Evaluation:"◎","Weekly Review":"↗","Player Trends":"⌁",Analytics:"▥",Evolution:"⌁",Profile:"♙",Settings:"⚙","Training Legacy":"◫"};
+  const mobileNavLabel: Record<string,string> = {Players:"Players",Tournament:"Matches",StratForge:"Forge",Assignments:"Tasks",Evaluation:"Eval", "Weekly Review":"Review","Player Trends":"Trends",Analytics:"Stats",Profile:"Profile",Settings:"Settings","Training Legacy":"Legacy"};
+  const navIcon: Record<string,string> = {Players:"♙",Tournament:"◷",StratForge:"◈",Assignments:"✓",Evaluation:"◎","Weekly Review":"↗","Player Trends":"⌁",Analytics:"▥",Evolution:"⌁",Profile:"♙",Settings:"⚙","Training Legacy":"◫"};
   const onboarding=!signedIn||!team;
   return (
     <main className="app-shell">
