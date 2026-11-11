@@ -128,6 +128,7 @@ export default function App() {
   const [ownerPowerEnabled,setOwnerPowerEnabled]=useState(true);
   const [rosterEditEnabled,setRosterEditEnabled]=useState(()=>localStorage.getItem("squad-os-roster-edit:"+localStorage.getItem("squad-os-active-team"))==="on");
   const [selectedRosterMember,setSelectedRosterMember]=useState<{id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;user_id:string}|null>(null);
+  const [combatNexusView,setCombatNexusView]=useState<"characters"|"pets"|"loadouts"|null>(null);
   const [customRoleDrafts,setCustomRoleDrafts]=useState<Record<string,string>>({});
   const ownerPowerActive=team?.membership_role==="owner"&&ownerPowerEnabled;
   const [cloudTraining, setCloudTraining] = useState<Record<string, boolean>>({});
@@ -816,6 +817,31 @@ export default function App() {
               </article>)}</div>
               {ownerPowerActive&&!rosterEditEnabled&&<p className="roster-view-note">Roster management is off. Turn it on in Settings only when you need to make a lineup change.</p>}
             </section>
+            <section className="connection-panel combat-nexus-panel" aria-labelledby="combat-nexus-title">
+              <div className="combat-nexus-heading"><div><div className="eyebrow">SQUAD INTELLIGENCE HUB</div><h3 id="combat-nexus-title">Combat Nexus</h3><p>Characters, companion pets and tactical loadouts — one connected workspace.</p></div><span className="combat-nexus-live">FIELD DATABASE</span></div>
+              <button type="button" className="combat-nexus-character-card" onClick={()=>setCombatNexusView("characters")} aria-label="Open character database">
+                <span className="combat-nexus-people" aria-hidden="true">
+                  <svg viewBox="0 0 220 190" role="img" aria-label="Illustration of two generic front-facing human silhouettes, one man and one woman">
+                    <defs><linearGradient id="nexus-man" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#7edcff"/><stop offset="1" stopColor="#4666a9"/></linearGradient><linearGradient id="nexus-woman" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#d6a7ff"/><stop offset="1" stopColor="#7655bd"/></linearGradient></defs>
+                    <ellipse cx="76" cy="42" rx="20" ry="23" fill="url(#nexus-man)"/><path d="M48 72Q76 56 104 72L118 174H34Z" fill="url(#nexus-man)"/><path d="M54 18Q76 -1 98 18L96 31Q76 20 56 31Z" fill="#b7eaff" opacity=".8"/>
+                    <ellipse cx="148" cy="43" rx="19" ry="22" fill="url(#nexus-woman)"/><path d="M122 73Q148 57 174 73L188 174H108Z" fill="url(#nexus-woman)"/><path d="M126 36Q126 5 148 7Q174 8 174 38L181 95L168 82L165 33Q148 23 132 34L128 83L116 96Z" fill="#b88cf1"/>
+                    <path d="M67 94L76 107L85 94M139 94L148 107L157 94" fill="none" stroke="#eaf7ff" strokeWidth="3" opacity=".75"/>
+                  </svg>
+                </span>
+                <span className="combat-nexus-main-copy"><span className="combat-nexus-kicker">01 / OPERATIVE DATABASE</span><strong>CHARACTERS</strong><small>Ability profiles · mechanics · cooldowns · interactions</small><span className="combat-nexus-count"><b>67</b><i>ROSTER ENTRIES</i><em>Explore database ↗</em></span></span>
+                <span className="combat-nexus-arrow">↗</span>
+              </button>
+              <div className="combat-nexus-secondary-grid">
+                <button type="button" className="combat-nexus-square combat-nexus-pets" onClick={()=>setCombatNexusView("pets")} aria-label="Open pet database">
+                  <span className="combat-nexus-square-icon" aria-hidden="true">◈</span><span className="combat-nexus-kicker">02 / COMPANIONS</span><strong>PETS</strong><small>Skills · effects · upgrades</small><span className="combat-nexus-square-count">24 <i>SKILL-LISTED</i></span><span className="combat-nexus-square-arrow">↗</span>
+                </button>
+                <button type="button" className="combat-nexus-square combat-nexus-loadouts" onClick={()=>setCombatNexusView("loadouts")} aria-label="Open tactical loadouts">
+                  <span className="combat-nexus-square-icon" aria-hidden="true">⌘</span><span className="combat-nexus-kicker">03 / COMBAT BUILDS</span><strong>TACTICAL LOADOUTS</strong><small>Character + pet + weapon combinations</small><span className="combat-nexus-square-count">BUILD <i>PLANNER</i></span><span className="combat-nexus-square-arrow">↗</span>
+                </button>
+              </div>
+              <p className="combat-nexus-footnote">Catalogue counts are planning totals. Individual ability records will be added only after current-version verification.</p>
+            </section>
+            {combatNexusView&&<div className="combat-nexus-detail" role="region" aria-live="polite"><div><div className="eyebrow">COMBAT NEXUS / {combatNexusView.toUpperCase()}</div><h4>{combatNexusView==="characters"?"Character database":combatNexusView==="pets"?"Pet database":"Tactical loadout planner"}</h4><p>{combatNexusView==="characters"?"The 67-entry character catalogue is reserved here. Research Part 1 is being held separately; verified profiles will be added in batches, with current ability values and source notes.":combatNexusView==="pets"?"The pet catalogue will contain skill details, level effects, cooldowns, activation conditions and verified character interactions.": "The loadout planner will connect character abilities, pet skills, weapon choices and squad roles. No unverified presets are pre-filled."}</p></div><button type="button" className="secondary-button" onClick={()=>setCombatNexusView(null)}>Close</button></div>}
           </>}
           {section==="Evaluation" && <>
             <div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT</div><h2>Daily evaluation</h2></div></div>
