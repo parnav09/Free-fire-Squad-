@@ -897,3 +897,84 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
 @media(min-width:900px){.player-roster-panel .team-player-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch}.team-player-row{height:100%;min-height:112px!important}.team-player-row .team-player-identity b{font-size:19px!important}}
 @media(min-width:1500px){.player-roster-panel .team-player-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}.team-player-row{min-height:124px!important;padding:22px 24px!important}}
 @media(max-width:700px){.team-code-value{display:flex;width:max-content;max-width:100%;margin:8px 0 0;letter-spacing:.12em!important}.team-player-row{grid-template-columns:44px minmax(0,1fr)!important;gap:12px!important;min-height:84px!important;padding:14px!important}.team-player-row .player-id{width:40px;height:40px;font-size:13px}.team-player-row>.active-tag{grid-column:2;justify-self:start}.team-player-row .add-form{grid-column:1/-1;max-width:none}.team-admin-panel .request-controls{grid-template-columns:minmax(0,1fr)!important}.team-admin-panel .request-actions button{min-width:0}.player-roster-panel{padding:14px!important}}
+
+
+/* Players · local roster notes: prevent inherited flex row from collapsing desktop list */
+.connection-panel.add-player{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+.connection-panel.add-player>div:first-child{
+  display:block!important;
+  width:100%!important;
+  margin-bottom:16px!important;
+}
+.connection-panel.add-player>.search-input{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0 0 14px!important;
+}
+.connection-panel.add-player>.player-list{
+  display:flex!important;
+  flex-direction:column!important;
+  width:100%!important;
+  min-width:0!important;
+  gap:10px!important;
+  margin:0 0 16px!important;
+}
+.connection-panel.add-player>.player-list>.player-row{
+  display:grid!important;
+  grid-template-columns:56px minmax(0,1fr) auto auto!important;
+  align-items:center!important;
+  gap:14px!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:78px!important;
+  box-sizing:border-box!important;
+  padding:14px 16px!important;
+}
+.connection-panel.add-player>.player-list>.player-row>div{
+  min-width:0!important;
+  overflow-wrap:anywhere!important;
+}
+.connection-panel.add-player>.player-list>.player-row .delete-button{
+  min-width:88px!important;
+  min-height:44px!important;
+}
+.connection-panel.add-player>.add-form{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto!important;
+  align-items:stretch!important;
+  gap:10px!important;
+  width:100%!important;
+}
+.connection-panel.add-player>.add-form input,
+.connection-panel.add-player>.add-form select{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+}
+.connection-panel.add-player>.add-form button{
+  min-width:100px!important;
+}
+@media(max-width:700px){
+  .connection-panel.add-player>.player-list>.player-row{
+    grid-template-columns:42px minmax(0,1fr) auto!important;
+    gap:10px!important;
+    padding:12px!important;
+  }
+  .connection-panel.add-player>.player-list>.player-row .delete-button{
+    grid-column:2/-1!important;
+    justify-self:start!important;
+    min-width:88px!important;
+  }
+  .connection-panel.add-player>.add-form{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .connection-panel.add-player>.add-form button{
+    width:100%!important;
+  }
+}
