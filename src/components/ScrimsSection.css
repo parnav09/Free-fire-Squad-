@@ -262,3 +262,41 @@
   pointer-events:none;
 }
 .scrims-match-top1>*{position:relative;z-index:1}
+
+/* Placement picker: fully custom gold menu (avoid Android native blue/green select popup). */
+.scrims-placement-picker{position:relative;width:100%;z-index:5}
+.scrims-placement-trigger{
+ width:100%;min-height:46px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+ padding:0 14px;border:1px solid #8b682f;border-radius:11px;
+ background:linear-gradient(145deg,#29200f 0%,#171107 58%,#100d07 100%);
+ color:#f0d59a;font:700 14px/1.2 inherit;letter-spacing:.015em;text-align:left;
+ box-shadow:inset 0 1px 0 rgba(255,226,164,.14),0 3px 10px rgba(0,0,0,.28);
+ cursor:pointer;transition:border-color .18s,box-shadow .18s,background .18s;
+}
+.scrims-placement-trigger:hover:not(:disabled){border-color:#c6a15b;background:linear-gradient(145deg,#332611,#1c1408)}
+.scrims-placement-trigger:focus-visible{outline:2px solid #e7cc91;outline-offset:2px;box-shadow:0 0 0 4px rgba(198,161,91,.16)}
+.scrims-placement-trigger:disabled{opacity:.65;cursor:not-allowed}
+.scrims-placement-chevron{color:#d5b46e;font-size:19px;line-height:1;transform:translateY(-2px)}
+.scrims-placement-menu{
+ position:absolute;left:0;right:0;top:calc(100% + 7px);max-height:245px;overflow-y:auto;
+ padding:5px;border:1px solid #8b682f;border-radius:12px;
+ background:linear-gradient(160deg,#21190c,#100d07 72%);box-shadow:0 14px 30px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,226,164,.08);
+ z-index:30;scrollbar-color:#8b682f #120e08;scrollbar-width:thin;
+}
+.scrims-placement-menu button{
+ display:flex;width:100%;min-height:37px;align-items:center;justify-content:space-between;
+ padding:8px 11px;border:1px solid transparent;border-radius:8px;
+ background:transparent;color:#c8b58d;font:600 13px/1.2 inherit;text-align:left;cursor:pointer;
+ transition:background .14s,color .14s,border-color .14s;
+}
+.scrims-placement-menu button:hover,.scrims-placement-menu button:focus-visible{
+ outline:none;background:rgba(198,161,91,.13);border-color:rgba(198,161,91,.35);color:#f2d9a5;
+}
+.scrims-placement-menu button.is-selected{
+ background:linear-gradient(135deg,#5a421d,#34240d 65%,#241708);
+ border:1px solid #c6a15b;color:#ffe3a8;font-weight:800;
+ box-shadow:inset 0 1px 0 rgba(255,230,175,.16),0 0 12px rgba(198,161,91,.12);
+}
+.scrims-placement-check{color:#f4d28a;font-weight:900}
+.scrims-match-top1 .scrims-placement-trigger{color:#f0d59a}
+.scrims-match-top1:focus-within{overflow:visible}
