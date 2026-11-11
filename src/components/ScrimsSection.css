@@ -401,3 +401,22 @@
 .scrims-match-top1 .scrims-placement-menu button:hover,.scrims-match-top1 .scrims-placement-menu button:focus-visible{background:#503716;border-color:#b88d43;color:#ffedbd}
 .scrims-match-top1 .scrims-placement-menu button.is-selected{background:linear-gradient(145deg,#a27a31,#704e19 45%,#3e280b);border-color:#f0ce7c;color:#fff3cb}
 .scrims-match-top1 .scrims-placement-check{color:#fff0bd}
+
+/* NORMAL SCRIM CARDS: original cyan/blue Tournament-style template. Gold is champion-only. */
+.scrims-match:not(.scrims-match-top1) .scrims-match-title{color:#65d9f3}
+.scrims-match:not(.scrims-match-top1) label{color:#a9bad4;font-weight:400}
+.scrims-match:not(.scrims-match-top1) .scrims-match-points{color:#91a7c8;border-top-color:transparent}
+.scrims-match:not(.scrims-match-top1) .scrims-match-points b{color:#d9e7ff;text-shadow:none}
+.scrims-match:not(.scrims-match-top1) input:not([type=checkbox]){
+ min-height:unset;padding:10px 11px;border:1px solid #2a3b55;background:#0b1321;color:#eaf2ff;
+ font-size:14px;font-weight:400;box-shadow:none;
+}
+.scrims-match:not(.scrims-match-top1) input:not([type=checkbox]):hover{border-color:#3a506e;background:#0b1321}
+.scrims-match:not(.scrims-match-top1) input:not([type=checkbox]):focus-visible{border-color:#4ba7c5;box-shadow:0 0 0 3px #2b91b21c;background:#0b1321}
+.scrims-match:not(.scrims-match-top1) .scrims-placement-trigger{min-height:46px;color:#8ce8fa;border-color:#2c5068;background:linear-gradient(135deg,#12364b,#102337);font-size:14px;font-weight:700;box-shadow:none}
+.scrims-match:not(.scrims-match-top1) .scrims-placement-menu button.is-selected{background:linear-gradient(135deg,#12364b,#102337);border-color:#3a829c;color:#8ce8fa;box-shadow:none}
+.scrims-match:not(.scrims-match-top1) .scrims-placement-check{color:#8ce8fa}
+.scrims-match:not(.scrims-match-top1) .scrims-placement-menu{background:#0d1524;border-color:#2c5068}
+.scrims-match:not(.scrims-match-top1) .scrims-placement-menu button{color:#b9cde5}
+.scrims-match:not(.scrims-match-top1) .scrims-placement-menu button:hover{background:#15354a;border-color:#2c5068;color:#b8f5ff}
+.scrims-match:not(.scrims-match-top1) .scrims-placement-menu button.is-selected{background:#12364b;border-color:#3a829c;color:#8ce8fa}
