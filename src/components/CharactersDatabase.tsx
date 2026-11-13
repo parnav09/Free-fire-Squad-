@@ -4,7 +4,7 @@ import "./CharactersDatabase.css";
 type Language = "en" | "hi-en";
 type Props = { language: Language; onLanguageChange: (value: Language) => void; onBack: () => void };
 
-const MORSE_IMAGE = "https://cdn-media.sforum.vn/storage/app/media/Bookgrinder2/nhan-vat-free-fire-moi-nhat-2.jpg";
+const MORSE_IMAGE = "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20261/87b0db20d90350d22979b03d8b65a567.png";
 const profileRows = [
   { en: "Stealth duration", hi: "Stealth की अवधि", value: "13 seconds" },
   { en: "Movement speed bonus", hi: "Movement Speed Bonus", value: "20%" },
