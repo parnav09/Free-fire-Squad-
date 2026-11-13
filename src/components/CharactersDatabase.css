@@ -97,3 +97,23 @@
 .character-search-suggestions button>span:last-child{grid-column:2;grid-row:1/3;color:#8bdfff;font-size:17px}
 @media(max-width:640px){.character-database:not(.character-profile-page) .character-search-wrap{top:5px;margin-bottom:12px;border-radius:13px}}
 @media(prefers-reduced-motion:reduce){.character-search-suggestions button{transition:none}}
+
+/* Closer character framing: keep artwork inside its existing image panels */
+.character-result-art img{
+  object-fit:contain;
+  object-position:center 27%;
+  transform:scale(1.09);
+  transform-origin:center 46%;
+}
+.character-profile-art img{
+  object-fit:contain;
+  object-position:center 48%;
+  transform:scale(1.045);
+  transform-origin:center 48%;
+}
+@media(max-width:640px){
+  .character-result-art img{transform:scale(1.08);object-position:center 25%}
+  .character-profile-art img{transform:scale(1.035);object-position:center 48%}
+  .character-result-card:hover .character-result-art img{transform:scale(1.08)}
+}
+
