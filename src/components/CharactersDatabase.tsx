@@ -235,8 +235,7 @@ const profiles: CharacterProfile[] = [
       { label: "Garena — Original Oscar announcement", url: "https://ff.garena.com/en/article/1456" },
     ],
     status: "OB54 cooldown / boost notes checked · 14 Nov 2026",
-  },,
-
+  },
   {
     id: "kassie", name: "Kassie", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/8d87fe1959e300741eda601e800c0f40.png", skill: "Electro Therapy", type: "Active · Healing / Link",
     introEn: "A support-focused character profile. Garena's current English page provides the complete healing values and link conditions.",
