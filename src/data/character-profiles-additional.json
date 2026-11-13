@@ -1,0 +1,429 @@
+{
+  "schema_version": 1,
+  "snapshot_date": "2026-11-14",
+  "characters": [
+    {
+      "id": "alok",
+      "name": "Alok",
+      "image": "",
+      "skill": "Drop the Beat",
+      "type": "Active · Healer / squad support",
+      "introEn": "An active aura ability described by Garena as healing and movement support for Alok and nearby allies.",
+      "introHi": "Active aura ability jo Garena ke mutabik Alok aur nearby allies ko healing aur movement support deti hai.",
+      "currentEn": [
+        "Creates an aura that affects Alok and allies within its area.",
+        "Awakened Party Remix adds music-note interactions to the ability.",
+        "Multiple Drop the Beat auras do not stack."
+      ],
+      "currentHi": [
+        "Aura Alok aur uske area ke andar allies ko affect karti hai.",
+        "Awakened Party Remix ability mein music-note interactions add karta hai.",
+        "Multiple Drop the Beat auras stack nahi hoti."
+      ],
+      "rows": [
+        {
+          "en": "Ability type",
+          "hi": "Ability type",
+          "value": "Active"
+        },
+        {
+          "en": "Base ability",
+          "hi": "Base ability",
+          "value": "Drop the Beat"
+        },
+        {
+          "en": "Awakened variant",
+          "hi": "Awakened variant",
+          "value": "Party Remix"
+        }
+      ],
+      "notesEn": [
+        "OB54 introduced Battle Royale Skill Boost choices for Alok. The exact boost values are not reproduced in this profile.",
+        "OB53 documents an interaction rule for overlapping Alok abilities."
+      ],
+      "notesHi": [
+        "OB54 mein Alok ke liye Battle Royale Skill Boost choices introduce hui. Exact boost values is profile mein reproduce nahi ki gayi hain.",
+        "OB53 mein overlapping Alok abilities ka interaction rule document hua hai."
+      ],
+      "historyEn": [
+        "OB45: latest documented core ability adjustment in the supplied research.",
+        "OB52: official notes record ability bug fixes.",
+        "OB53: official notes document an aura interaction rule.",
+        "OB54: Battle Royale Skill Boost options added.",
+        "OB55: no change."
+      ],
+      "historyHi": [
+        "OB45: supplied research ke mutabik core ability ka latest documented adjustment.",
+        "OB52: official notes mein ability bug fixes record hain.",
+        "OB53: official notes mein aura interaction rule document hai.",
+        "OB54: Battle Royale Skill Boost options add hue.",
+        "OB55: koi change nahi."
+      ],
+      "source": [
+        {
+          "label": "OB54 Patch Notes",
+          "url": "https://ff.garena.com/en/article/1673/"
+        },
+        {
+          "label": "OB53 Patch Notes",
+          "url": "https://ff.garena.com/en/article/1640/"
+        },
+        {
+          "label": "OB52 Patch Notes",
+          "url": "https://ff.garena.com/en/article/1595/"
+        },
+        {
+          "label": "OB45 Patch Notes",
+          "url": "https://ff.garena.com/en/article/1357/"
+        },
+        {
+          "label": "OB55 Patch Notes",
+          "url": "https://ff.garena.com/en/article/1712/"
+        }
+      ],
+      "status": "Patch-note profile · 14 Nov 2026",
+      "badge": "Official patch-note profile",
+      "lastChanged": "OB54 (23 Jun 2026)",
+      "hiddenMechanics": [
+        {
+          "text": "The official OB53 notes document a restriction on receiving another Alok aura while your own is active.",
+          "status": "official"
+        }
+      ],
+      "needsRecheck": [
+        "Confirm the exact OB54 Skill Boost descriptions against the full patch-note page."
+      ],
+      "awakened": {
+        "label": "Awakened",
+        "skill": "Party Remix",
+        "type": "Active · Awakened variant",
+        "introEn": "Awakened version of Drop the Beat with music-note interactions.",
+        "introHi": "Drop the Beat ka awakened version jisme music-note interactions hain.",
+        "currentEn": [
+          "The awakened variant drops music notes while the aura is active.",
+          "Teammates can interact with the notes to receive the ability's support effect."
+        ],
+        "currentHi": [
+          "Aura active hone par awakened variant music notes drop karta hai.",
+          "Teammates notes ke saath interact karke ability ka support effect le sakte hain."
+        ],
+        "rows": [
+          {
+            "en": "Variant",
+            "hi": "Variant",
+            "value": "Awakened · Party Remix"
+          }
+        ],
+        "notesEn": [
+          "The awakened variant is shown separately from the base ability."
+        ],
+        "notesHi": [
+          "Awakened variant ko base ability se alag dikhaya gaya hai."
+        ],
+        "historyEn": [
+          "OB45: Party Remix music-note mechanics documented."
+        ],
+        "historyHi": [
+          "OB45: Party Remix music-note mechanics document hui."
+        ],
+        "source": [
+          {
+            "label": "OB45 Patch Notes",
+            "url": "https://ff.garena.com/en/article/1357/"
+          }
+        ],
+        "status": "Awakened variant · 14 Nov 2026",
+        "badge": "Official patch-note profile",
+        "lastChanged": "OB45 (24 Jun 2024)"
+      }
+    },
+    {
+      "id": "a124",
+      "name": "A124",
+      "image": "",
+      "skill": "Thrill of Battle",
+      "type": "Active · Skill interference",
+      "introEn": "An electromagnetic-wave ability described in Garena patch notes as interfering with opposing character skills.",
+      "introHi": "Electromagnetic-wave ability jise Garena patch notes opposing character skills mein interference ke roop mein describe karte hain.",
+      "currentEn": [
+        "Releases an electromagnetic wave around A124.",
+        "The official notes describe skill interference and interruption of certain interaction countdowns."
+      ],
+      "currentHi": [
+        "A124 ke aas-paas electromagnetic wave release hoti hai.",
+        "Official notes skill interference aur kuch interaction countdowns ke interruption ko describe karte hain."
+      ],
+      "rows": [
+        {
+          "en": "Ability type",
+          "hi": "Ability type",
+          "value": "Active"
+        },
+        {
+          "en": "Official skill name",
+          "hi": "Official skill name",
+          "value": "Thrill of Battle"
+        }
+      ],
+      "notesEn": [
+        "The supplied research contains a cooldown conflict between the late-2023 patch note and Garena's character page. Verify the live in-game description."
+      ],
+      "notesHi": [
+        "Supplied research mein late-2023 patch note aur Garena character page ke cooldown details mein conflict hai. Live in-game description verify karein."
+      ],
+      "historyEn": [
+        "OB33: A124's ability was reworked into an electromagnetic-wave skill.",
+        "Late-2023 official patch notes document a later ability adjustment.",
+        "OB55: no change."
+      ],
+      "historyHi": [
+        "OB33: A124 ki ability electromagnetic-wave skill ke roop mein rework hui.",
+        "Late-2023 official patch notes mein later ability adjustment document hai.",
+        "OB55: koi change nahi."
+      ],
+      "source": [
+        {
+          "label": "Garena — A124 balance and Joseph interaction notes",
+          "url": "https://ff.garena.com/en/article/1266/"
+        },
+        {
+          "label": "Garena — OB33 A124 rework",
+          "url": "https://ff.garena.com/en/article/674/"
+        },
+        {
+          "label": "Garena — A124 character page",
+          "url": "https://ff.garena.com/es/chars/42"
+        }
+      ],
+      "status": "Patch-note profile · 14 Nov 2026",
+      "badge": "Official patch-note profile (one value conflicts)",
+      "lastChanged": "Late 2023 (approx. Oct–Nov 2023)",
+      "hiddenMechanics": [
+        {
+          "text": "Garena's official notes document an immunity interaction involving Joseph.",
+          "status": "official"
+        }
+      ],
+      "needsRecheck": [
+        "Cooldown conflict: patch note and official character page list different values. Verify in game."
+      ]
+    },
+    {
+      "id": "andrew",
+      "name": "Andrew",
+      "image": "",
+      "skill": "Armor Specialist + Wolf Pack",
+      "type": "Passive · Armor support",
+      "introEn": "A passive ability profile covering Andrew's armor-specialist trait and awakened Wolf Pack variant.",
+      "introHi": "Passive ability profile jo Andrew ke Armor Specialist trait aur awakened Wolf Pack variant ko cover karti hai.",
+      "currentEn": [
+        "Armor Specialist concerns vest durability.",
+        "Awakened Wolf Pack adds a nearby-squad armor-support effect."
+      ],
+      "currentHi": [
+        "Armor Specialist vest durability se related hai.",
+        "Awakened Wolf Pack nearby squad ke liye armor-support effect add karta hai."
+      ],
+      "rows": [
+        {
+          "en": "Ability type",
+          "hi": "Ability type",
+          "value": "Passive"
+        },
+        {
+          "en": "Base ability",
+          "hi": "Base ability",
+          "value": "Armor Specialist"
+        },
+        {
+          "en": "Awakened variant",
+          "hi": "Awakened variant",
+          "value": "Wolf Pack"
+        }
+      ],
+      "notesEn": [
+        "OB46 specifies a proximity condition for the Wolf Pack teammate effect.",
+        "The supplied research flags an in-game wording check about whether nearby teammates must also equip Wolf Pack."
+      ],
+      "notesHi": [
+        "OB46 Wolf Pack teammate effect ke liye proximity condition specify karta hai.",
+        "Supplied research mein in-game wording verify karna baaki hai ki nearby teammates ko bhi Wolf Pack equip karna zaroori hai ya nahi."
+      ],
+      "historyEn": [
+        "OB45: Armor Specialist and Wolf Pack adjustments documented.",
+        "OB46: latest documented Wolf Pack adjustment and proximity wording.",
+        "OB55: no change."
+      ],
+      "historyHi": [
+        "OB45: Armor Specialist aur Wolf Pack adjustments document hue.",
+        "OB46: Wolf Pack ka latest documented adjustment aur proximity wording.",
+        "OB55: koi change nahi."
+      ],
+      "source": [
+        {
+          "label": "Garena — OB46 Patch Notes",
+          "url": "https://ff.garena.com/en-pk/article/1391/"
+        },
+        {
+          "label": "Garena — OB45 Patch Notes",
+          "url": "https://ff.garena.com/en-pk/article/1368/"
+        },
+        {
+          "label": "Garena — OB41 Patch Notes",
+          "url": "https://ff.garena.com/en/article/1213/"
+        }
+      ],
+      "status": "Patch-note profile · 14 Nov 2026",
+      "badge": "Official patch-note profile",
+      "lastChanged": "OB46 (Sep 2024)",
+      "hiddenMechanics": [
+        {
+          "text": "Garena's Shield Points explanation states that Shield Points are not affected by armor damage-reduction effects.",
+          "status": "official"
+        }
+      ],
+      "needsRecheck": [
+        "Confirm whether nearby teammates must also carry Wolf Pack for the teammate bonus."
+      ]
+    },
+    {
+      "id": "antonio",
+      "name": "Antonio",
+      "image": "",
+      "skill": "Gangster's Spirit",
+      "type": "Passive · Shield Points",
+      "introEn": "A passive ability that grants additional Shield Points at the start of a match, as described in Garena's official notes.",
+      "introHi": "Passive ability jo match ke start par additional Shield Points deti hai, jaisa Garena ke official notes mein describe hai.",
+      "currentEn": [
+        "Grants additional Shield Points at match start.",
+        "Shield Points are a separate defensive resource and are consumed before HP.",
+        "Garena's Shield Points notes describe limitations on which damage types they protect against."
+      ],
+      "currentHi": [
+        "Match start par additional Shield Points milte hain.",
+        "Shield Points ek separate defensive resource hain aur HP se pehle consume hote hain.",
+        "Garena ke Shield Points notes kuch damage types ke against protection limitations describe karte hain."
+      ],
+      "rows": [
+        {
+          "en": "Ability type",
+          "hi": "Ability type",
+          "value": "Passive"
+        },
+        {
+          "en": "Official skill name",
+          "hi": "Official skill name",
+          "value": "Gangster's Spirit"
+        },
+        {
+          "en": "Resource",
+          "hi": "Resource",
+          "value": "Shield Points"
+        }
+      ],
+      "notesEn": [
+        "The Shield Points system is documented separately from armor damage-reduction effects.",
+        "The official notes describe environmental-damage limitations for Shield Points."
+      ],
+      "notesHi": [
+        "Shield Points system armor damage-reduction effects se alag document kiya gaya hai.",
+        "Official notes Shield Points ke liye environmental-damage limitations describe karte hain."
+      ],
+      "historyEn": [
+        "OB41: Shield Points rework documented.",
+        "OB43: Shield Points adjustment documented.",
+        "OB48: latest documented Antonio adjustment.",
+        "OB55: no change."
+      ],
+      "historyHi": [
+        "OB41: Shield Points rework document hua.",
+        "OB43: Shield Points adjustment document hua.",
+        "OB48: Antonio ka latest documented adjustment.",
+        "OB55: koi change nahi."
+      ],
+      "source": [
+        {
+          "label": "Garena — OB48 Patch Notes",
+          "url": "https://ff.garena.com/en/article/1456/"
+        },
+        {
+          "label": "Garena — Shield Points recovery update",
+          "url": "https://ff.garena.com/en/article/1385/"
+        },
+        {
+          "label": "Garena — OB43 Patch Notes",
+          "url": "https://ff.garena.com/en-pk/article/1317/"
+        },
+        {
+          "label": "Garena — Shield Points rework",
+          "url": "https://ff.garena.com/en/article/1213/"
+        }
+      ],
+      "status": "Patch-note profile · 14 Nov 2026",
+      "badge": "Official patch-note profile",
+      "lastChanged": "OB48 (19 Feb 2025)",
+      "hiddenMechanics": [
+        {
+          "text": "Official Shield Points notes state that Shield Points are not affected by armor damage-reduction effects and do not cover certain environmental damage.",
+          "status": "official"
+        }
+      ],
+      "needsRecheck": [
+        "Older patch release dates in the supplied research are approximate."
+      ]
+    },
+    {
+      "id": "a-patroa",
+      "name": "A-Patroa",
+      "image": "",
+      "skill": "Exclusive skill slot",
+      "type": "Utility · Loadout flexibility",
+      "introEn": "A utility-focused character entry. The supplied research describes no personal combat skill and an exclusive slot for an owned skill.",
+      "introHi": "Utility-focused character entry. Supplied research ke mutabik iski personal combat skill nahi hai aur owned skill ke liye exclusive slot hai.",
+      "currentEn": [
+        "The supplied character description identifies an exclusive skill slot.",
+        "No personal combat skill is listed in the supplied description."
+      ],
+      "currentHi": [
+        "Supplied character description ek exclusive skill slot identify karta hai.",
+        "Supplied description mein personal combat skill listed nahi hai."
+      ],
+      "rows": [
+        {
+          "en": "Ability type",
+          "hi": "Ability type",
+          "value": "None · Utility"
+        },
+        {
+          "en": "Exclusive slot",
+          "hi": "Exclusive slot",
+          "value": "One skill slot"
+        }
+      ],
+      "notesEn": [
+        "No later character-specific balance change was found in the supplied OB45–OB55 review.",
+        "The official Garena character-page link was not found in the supplied research; the ability wording is flagged for verification."
+      ],
+      "notesHi": [
+        "Supplied OB45–OB55 review mein later character-specific balance change nahi mila.",
+        "Supplied research mein official Garena character-page link nahi mila; ability wording verification ke liye flagged hai."
+      ],
+      "historyEn": [
+        "OB34 (May 2022): release reported in a secondary listing.",
+        "No later character-specific balance change found in the supplied notes reviewed."
+      ],
+      "historyHi": [
+        "OB34 (May 2022): secondary listing mein release report hua.",
+        "Reviewed supplied notes mein later character-specific balance change nahi mila."
+      ],
+      "source": [],
+      "status": "Official-description profile · 14 Nov 2026",
+      "badge": "Official-description profile (no balance patches found)",
+      "lastChanged": "No balance change found since release (OB34, May 2022)",
+      "needsRecheck": [
+        "Add an official Garena character-page link when confirmed.",
+        "Verify the exclusive-slot wording against the in-game character description."
+      ]
+    }
+  ]
+}
