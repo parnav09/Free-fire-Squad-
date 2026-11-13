@@ -23,3 +23,26 @@
 @keyframes nexusContentEnter{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:640px){.combat-nexus-route{padding:14px}.combat-nexus-subpage{min-height:calc(100vh - 28px)}.combat-nexus-subpage-hero{border-radius:18px;margin-top:30px}.combat-nexus-subpage-panel{align-items:flex-start}.combat-nexus-panel-mark{display:none}.character-profile-art img{padding:3px}}
 @media(prefers-reduced-motion:reduce){.combat-nexus-route,.combat-nexus-subpage-hero,.combat-nexus-subpage-panel,.character-profile-page .character-profile-identity,.character-profile-page .character-ability-section{animation:none!important}}
+
+/* Five-profile character catalogue */
+.character-profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.character-profile-grid .character-result-card{min-width:0;grid-template-columns:minmax(90px,126px) minmax(0,1fr) 20px;min-height:156px;gap:14px}
+.character-result-monogram,.character-profile-monogram{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;overflow:hidden;border:1px solid rgba(131,190,231,.24);border-radius:14px;background:radial-gradient(ellipse at 50% 35%,rgba(75,174,219,.23),transparent 60%),linear-gradient(145deg,#101b31,#101225)}
+.character-result-monogram span{font-size:clamp(42px,6vw,64px);font-weight:950;line-height:1;color:#c8f1ff;text-shadow:0 0 24px rgba(75,202,245,.25)}
+.character-result-monogram small,.character-profile-monogram small{font-size:9px;font-weight:900;letter-spacing:.16em;color:#8ab5d4}
+.character-profile-monogram{height:clamp(240px,34vw,390px);border-radius:clamp(22px,4vw,34px)}
+.character-profile-monogram span{font-size:clamp(90px,15vw,170px);font-weight:950;line-height:1;color:#c8f1ff;text-shadow:0 0 36px rgba(75,202,245,.3)}
+.monogram-ray{background:radial-gradient(ellipse at 50% 35%,rgba(244,177,77,.24),transparent 60%),linear-gradient(145deg,#282016,#111225)}
+.monogram-morse{background:radial-gradient(ellipse at 50% 35%,rgba(88,164,255,.25),transparent 60%),linear-gradient(145deg,#101e36,#101225)}
+.monogram-nero{background:radial-gradient(ellipse at 50% 35%,rgba(142,129,255,.24),transparent 60%),linear-gradient(145deg,#201a3d,#101225)}
+.monogram-rin{background:radial-gradient(ellipse at 50% 35%,rgba(255,106,155,.22),transparent 60%),linear-gradient(145deg,#321a31,#101225)}
+.monogram-oscar{background:radial-gradient(ellipse at 50% 35%,rgba(65,210,190,.2),transparent 60%),linear-gradient(145deg,#102f34,#101225)}
+.character-profile-page .character-profile-identity{grid-template-columns:minmax(150px,260px) minmax(0,1fr)}
+.character-profile-page .character-profile-monogram{animation:nexusContentEnter .48s .04s both}
+.character-profile-page .character-detail-block{animation:nexusContentEnter .4s both}
+.character-profile-page .character-detail-block ul{padding-left:19px}
+.character-profile-page .character-source-block a{color:#83ddff}
+.character-profile-page .character-source-block li{margin:6px 0}
+.character-profile-page .character-source-block p{margin-top:12px}
+@media(max-width:760px){.character-profile-grid{grid-template-columns:1fr}.character-profile-grid .character-result-card{grid-template-columns:100px minmax(0,1fr) 18px;min-height:136px}.character-result-monogram{min-height:118px}.character-profile-page .character-profile-identity{grid-template-columns:112px minmax(0,1fr)}.character-profile-page .character-profile-monogram{height:164px;border-radius:20px}.character-profile-page .character-profile-monogram span{font-size:66px}}
+@media(max-width:420px){.character-profile-grid .character-result-card{grid-template-columns:82px minmax(0,1fr) 16px;gap:9px;padding:8px}.character-result-monogram{min-height:112px}.character-result-copy p{font-size:10px}.character-profile-page .character-profile-identity{grid-template-columns:92px minmax(0,1fr);gap:11px}.character-profile-page .character-profile-monogram{height:140px}.character-profile-page .character-profile-monogram span{font-size:54px}.character-profile-page .character-profile-heading h2{font-size:24px}}
