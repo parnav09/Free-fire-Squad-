@@ -255,11 +255,11 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
   useEffect(() => {
     const onScroll = () => {
       const cards = Array.from(document.querySelectorAll("[data-character-letter]"));
-      let current = "A";
+      let current = cards.length ? cards[0].getAttribute("data-character-letter") || "A" : "A";
       cards.forEach(card => {
         if (card.getBoundingClientRect().top <= window.innerHeight * 0.34) current = card.getAttribute("data-character-letter") || current;
       });
-      document.querySelectorAll("#character-alphabet-navigation button").forEach(button => { button.classList.toggle("active", button.textContent === current); button.disabled = !cards.some(card => card.getAttribute("data-character-letter") === button.textContent); });
+      document.querySelectorAll("#character-alphabet-navigation button").forEach(button => { button.classList.toggle("active", button.textContent === current); (button as HTMLButtonElement).disabled = !cards.some(card => card.getAttribute("data-character-letter") === button.textContent); });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
