@@ -294,7 +294,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, [matches.length, selectedId]);
+  }, [matches.length, query, selectedId]);
 
   const backLabel = isHindi ? "Characters par wapas" : "Back to Characters";
   const sectionTitle = (en: string, hi: string) => isHindi ? hi : en;
