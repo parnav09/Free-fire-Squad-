@@ -158,3 +158,14 @@
   .character-variant-switch button>b{font-size:16px}
 }
 @media(prefers-reduced-motion:reduce){.character-variant-switch button{transition:none}}
+
+
+/* Added-profile metadata and verification states */
+.character-last-changed{margin:-5px 0 0;color:#91a9c3;font-size:11px;line-height:1.45}
+.character-last-changed b{color:#bfeaff;font-weight:800}
+.character-mechanic-status{display:inline-flex;margin-left:6px;padding:2px 7px;border:1px solid rgba(105,190,235,.25);border-radius:999px;color:#9bdfff;font-size:9px;letter-spacing:.06em;text-transform:uppercase}
+.character-verify-block{border-color:rgba(224,177,96,.25);background:linear-gradient(135deg,rgba(49,36,20,.36),rgba(9,17,32,.72))}
+.character-verify-block h3{color:#f0d4a1}
+.character-result-monogram{width:100%;height:100%;min-height:100%;border:0;border-radius:0}
+.character-profile-art .character-profile-monogram{width:100%;height:100%;min-height:100%;border:0;border-radius:inherit}
+@media(max-width:640px){.character-profile-art .character-profile-monogram{height:100%;min-height:100%}}
