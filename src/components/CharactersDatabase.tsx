@@ -493,6 +493,260 @@ const profiles: CharacterProfile[] = [
       { label: "Garena — Suzy introduction / character notes", url: "https://ff.garena.com/en/article/1213/" }
     ],
     status: "Current official profile + introduction notes cross-checked · 14 Nov 2026"
+  },,
+  {
+    id: "a-patroa", name: "A-Patroa", image: "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/f5a466acec3ed5bd7cdd149e26288ad1.png", skill: "No separate survival ability listed", type: "Character · Music Shop Boss",
+    introEn: "A confident music-shop owner whose shop also serves as a safe haven for people in her neighborhood.",
+    introHi: "A-Patroa ek confident music-shop owner hai. Uski shop neighborhood ke logon ke liye safe haven ka kaam bhi karti hai.",
+    currentEn: [
+      "Garena lists A-Patroa as the Music Shop Boss.",
+      "Her official biography describes her music shop as a safe place where people can come for help.",
+      "Her story highlights music as a way to help people experience life in new and different ways.",
+      "Garena lists no separate Special Survival Ability for this character."
+    ],
+    currentHi: [
+      "Garena A-Patroa ko Music Shop Boss ke roop mein list karta hai.",
+      "Official biography ke mutabik uski music shop ek safe place bhi hai jahan log help ke liye aa sakte hain.",
+      "Uski story mein music ko logon ko life naye aur alag tareeke se experience karane ka zariya bataya gaya hai.",
+      "Garena is character ke liye alag Special Survival Ability list nahi karta."
+    ],
+    rows: [
+      { en: "Character title", hi: "Character title", value: "Music Shop Boss" },
+      { en: "Gender", hi: "Gender", value: "Female" },
+      { en: "Age", hi: "Age", value: "28" },
+      { en: "Birthday", hi: "Birthday", value: "30 March" },
+      { en: "Special Survival Ability", hi: "Special Survival Ability", value: "Not listed" },
+      { en: "Exclusive character slot", hi: "Exclusive character slot", value: "Garena says it can equip any owned skill" }
+    ],
+    notesEn: [
+      "The official page explains that the exclusive skill slot can be equipped with any owned skill.",
+      "Garena says the remaining slots are automatically unlocked when this character is obtained.",
+      "The page does not list a separate named survival ability for A-Patroa.",
+      "No cooldown, duration, range or numeric ability values are listed for a personal ability."
+    ],
+    notesHi: [
+      "Official page ke mutabik exclusive skill slot mein koi bhi owned skill equip ki ja sakti hai.",
+      "Garena kehta hai ki character obtain karne par remaining slots automatically unlock ho jaate hain.",
+      "Page A-Patroa ke liye alag named survival ability list nahi karta.",
+      "Personal ability ke liye cooldown, duration, range ya numeric values listed nahi hain."
+    ],
+    historyEn: [
+      "The current official character page remains the primary reference for A-Patroa's identity and exclusive-slot information.",
+      "No separate ability balance change or numeric patch history was confirmed in the official sources checked for this profile."
+    ],
+    historyHi: [
+      "A-Patroa ki identity aur exclusive-slot information ke liye current official character page primary reference hai.",
+      "Is profile ke liye checked official sources mein alag ability balance change ya numeric patch history confirm nahi hui."
+    ],
+    source: [
+      { label: "Garena — A-Patroa character profile", url: "https://ff.garena.com/en/chars/552" }
+    ],
+    status: "Official biography + slot details checked · 14 Nov 2026"
+  },
+  {
+    id: "a124", name: "A124", image: "https://dl.dir.freefiremobile.com/common/web_event/officialwebsite/character/A124/A124_mobile_bg.jpg", skill: "Thrill of Battle", type: "Character · Android",
+    introEn: "A robot created with modern technology, presented in Garena's biography as having two distinct modes.",
+    introHi: "A124 modern technology se banaya gaya robot hai. Garena ki biography mein uske do alag modes ka zikr hai.",
+    currentEn: [
+      "Garena identifies A124 as a robot created with modern technology.",
+      "Her official biography describes two modes: a battle mode and an 18-year-old girl mode.",
+      "The current English character profile names her Special Survival Ability as Thrill of Battle and summarizes it as converting part of EP into HP.",
+      "The current English profile does not publish a numeric conversion amount or cooldown."
+    ],
+    currentHi: [
+      "Garena A124 ko modern technology se banaya gaya robot batata hai.",
+      "Official biography mein do modes ka zikr hai: battle mode aur 18-year-old girl mode.",
+      "Current English character profile uski Special Survival Ability ka naam Thrill of Battle batata hai aur ise EP ke ek hissa ko HP mein convert karne ke roop mein summarize karta hai.",
+      "Current English profile numeric conversion amount ya cooldown publish nahi karta."
+    ],
+    rows: [
+      { en: "Character type", hi: "Character type", value: "Robot" },
+      { en: "Gender", hi: "Gender", value: "Female" },
+      { en: "Age shown by Garena", hi: "Age shown by Garena", value: "18" },
+      { en: "Birthday", hi: "Birthday", value: "1 January" },
+      { en: "Special Survival Ability", hi: "Special Survival Ability", value: "Thrill of Battle" },
+      { en: "Official ability summary", hi: "Official ability summary", value: "Converts part of EP into HP" },
+      { en: "Current numeric values", hi: "Current numeric values", value: "Not listed on current English profile" }
+    ],
+    notesEn: [
+      "Garena's current English profile gives only a high-level ability summary; exact numeric values are not inferred.",
+      "A localized Garena page currently displays a different short description and a 10-second cooldown. Because the language versions do not align, that value is not treated as a confirmed global current value.",
+      "The biography's two-mode description is retained separately from the ability summary.",
+      "Combat-specific effect details are intentionally not reproduced in this catalogue."
+    ],
+    notesHi: [
+      "Garena ka current English profile ability ka sirf high-level summary deta hai; exact numeric values guess nahi ki gayi hain.",
+      "Garena ka ek localized page alag short description aur 10-second cooldown dikhata hai. Language versions match nahi karte, isliye us value ko confirmed global current value nahi maana gaya.",
+      "Biography ke two-mode description ko ability summary se alag rakha gaya hai.",
+      "Combat-specific effect details is catalogue mein reproduce nahi kiye gaye hain."
+    ],
+    historyEn: [
+      "Garena's official historical patch notes document earlier versions and adjustments to Thrill of Battle.",
+      "The current English character page is used for the present profile summary; older numeric patch values are not presented as current values."
+    ],
+    historyHi: [
+      "Garena ke official historical patch notes mein Thrill of Battle ke earlier versions aur adjustments documented hain.",
+      "Present profile summary ke liye current English character page use kiya gaya hai; purani numeric patch values ko current values ke roop mein show nahi kiya gaya."
+    ],
+    source: [
+      { label: "Garena — A124 character profile", url: "https://ff.garena.com/en/chars/437" },
+      { label: "Garena — A124 localized character page", url: "https://ff.garena.com/en/chars/258" },
+      { label: "Garena — official character balance notes", url: "https://ff.garena.com/en/article/428" }
+    ],
+    status: "Current profile + localized-source discrepancy flagged · 14 Nov 2026"
+  },
+  {
+    id: "alok", name: "Alok", image: "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/c62e709e3ad8387f5484bb12e1cc81a9.png", skill: "Drop the Beat · Party Remix", type: "Character · World-famous DJ",
+    introEn: "A world-famous DJ whose official biography connects his name with light and describes music as central to his identity.",
+    introHi: "Alok ek world-famous DJ hai. Official biography uske naam ko light se jodti hai aur music ko uski identity ka central hissa batati hai.",
+    currentEn: [
+      "Garena describes Alok as a world-famous DJ.",
+      "His name means light, according to the official biography.",
+      "The official character profile lists Drop the Beat and the awakened Party Remix identity.",
+      "Garena's current profile lists his age as 28 and birthday as 26 August."
+    ],
+    currentHi: [
+      "Garena Alok ko world-famous DJ batata hai.",
+      "Official biography ke mutabik uske naam ka meaning light hai.",
+      "Official character profile mein Drop the Beat aur awakened Party Remix identity listed hai.",
+      "Garena ke current profile mein age 28 aur birthday 26 August diya gaya hai."
+    ],
+    rows: [
+      { en: "Character identity", hi: "Character identity", value: "World-famous DJ" },
+      { en: "Gender", hi: "Gender", value: "Male" },
+      { en: "Age", hi: "Age", value: "28" },
+      { en: "Birthday", hi: "Birthday", value: "26 August" },
+      { en: "Original ability name", hi: "Original ability name", value: "Drop the Beat" },
+      { en: "Awakening", hi: "Awakening", value: "Party Remix" }
+    ],
+    notesEn: [
+      "The current official profile is localized in Thai in the retrieved page snapshot; the identity and biography fields are still readable.",
+      "Garena's OB54 notes separately document two optional Alok Skill Boost names: Speed Remix and Heal Remix.",
+      "Those Skill Boost options are patch-specific additions and are not merged into the base ability name.",
+      "No additional numeric values are inferred beyond details explicitly stated in the cited official sources."
+    ],
+    notesHi: [
+      "Retrieved current official profile snapshot Thai language mein localized hai; identity aur biography fields readable hain.",
+      "Garena ke OB54 notes Alok ke do optional Skill Boost names alag se document karte hain: Speed Remix aur Heal Remix.",
+      "Yeh Skill Boost options patch-specific additions hain; inhe base ability name ke saath merge nahi kiya gaya.",
+      "Cited official sources mein explicitly stated details ke alawa koi numeric values infer nahi ki gayi hain."
+    ],
+    historyEn: [
+      "Garena's official OB54 patch notes documented the return of Alok's Skill Boost options, Speed Remix and Heal Remix.",
+      "The current character profile continues to list Alok's ability identity and biography. The base ability and temporary Skill Boost options are recorded separately."
+    ],
+    historyHi: [
+      "Garena ke official OB54 patch notes mein Alok ke Skill Boost options Speed Remix aur Heal Remix ki return documented hai.",
+      "Current character profile Alok ki ability identity aur biography list karta hai. Base ability aur temporary Skill Boost options ko alag record kiya gaya hai."
+    ],
+    source: [
+      { label: "Garena — Alok current character profile", url: "https://ff.garena.com/en/chars/165" },
+      { label: "Garena — Alok character profile", url: "https://ff.garena.com/en/chars/423" },
+      { label: "Garena — OB54 Patch Notes", url: "https://ff.garena.com/en/article/1673" },
+      { label: "Garena — Alok official skill adjustment notes", url: "https://ff.garena.com/en/article/1357" }
+    ],
+    status: "Current profile + OB54 Skill Boost history checked · 14 Nov 2026"
+  },
+  {
+    id: "andrew", name: "Andrew", image: "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/564762d9a1137afaf2c9abb0ea8862b7.png", skill: "Armor Specialist · Wolf Pack", type: "Character · Former LLPD Sergeant",
+    introEn: "A former LLPD sergeant and Kelly's stepfather, whose official biography focuses on his continuing family connection.",
+    introHi: "Andrew former LLPD sergeant hai aur Kelly ka stepfather hai. Official biography uske family connection ko highlight karti hai.",
+    currentEn: [
+      "Garena's biography identifies Andrew as a former sergeant in the LLPD.",
+      "Kelly is described as his daughter, and the biography says he continued to stay involved in her life after his divorce.",
+      "The current official profile lists Wolf Pack as his Special Survival Ability.",
+      "The official profile also records Armor Specialist as Andrew's earlier ability identity."
+    ],
+    currentHi: [
+      "Garena ki biography Andrew ko LLPD ka former sergeant batati hai.",
+      "Kelly ko uski daughter bataya gaya hai; biography ke mutabik divorce ke baad bhi woh uski life mein involved raha.",
+      "Current official profile Wolf Pack ko uski Special Survival Ability list karta hai.",
+      "Official profile Armor Specialist ko Andrew ki earlier ability identity ke roop mein bhi record karta hai."
+    ],
+    rows: [
+      { en: "Former role", hi: "Former role", value: "LLPD Sergeant" },
+      { en: "Gender", hi: "Gender", value: "Male" },
+      { en: "Age", hi: "Age", value: "42" },
+      { en: "Birthday", hi: "Birthday", value: "25 December" },
+      { en: "Current listed ability", hi: "Current listed ability", value: "Wolf Pack" },
+      { en: "Earlier ability identity", hi: "Earlier ability identity", value: "Armor Specialist" }
+    ],
+    notesEn: [
+      "The official biography confirms Andrew's family connection with Kelly.",
+      "Garena's current character page lists Wolf Pack and its current short description.",
+      "Earlier patch notes document changes to Andrew's ability naming and balance over time; older values are not presented as current.",
+      "Combat-specific numerical effects are intentionally not reproduced in this catalogue."
+    ],
+    notesHi: [
+      "Official biography Andrew ka Kelly ke saath family connection confirm karti hai.",
+      "Garena ka current character page Wolf Pack aur uska current short description list karta hai.",
+      "Earlier patch notes Andrew ki ability naming aur balance mein samay ke saath hue changes document karte hain; purani values ko current nahi bataya gaya.",
+      "Combat-specific numerical effects is catalogue mein reproduce nahi kiye gaye hain."
+    ],
+    historyEn: [
+      "Garena's official OB49 notes documented a rework to Andrew's defensive ability values.",
+      "The current character page now lists Wolf Pack with its current short description; historical patch values are kept separate from the present profile."
+    ],
+    historyHi: [
+      "Garena ke official OB49 notes mein Andrew ki defensive ability values ka rework documented hai.",
+      "Current character page ab Wolf Pack aur uska current short description list karta hai; historical patch values ko present profile se alag rakha gaya hai."
+    ],
+    source: [
+      { label: "Garena — Andrew character profile", url: "https://ff.garena.com/en/chars/2" },
+      { label: "Garena — OB49 Patch Notes", url: "https://ff.garena.com/en/article/1213/" }
+    ],
+    status: "Current profile + official rework history checked · 14 Nov 2026"
+  },
+  {
+    id: "antonio", name: "Antonio", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202210/21e93989021e669ef2a89773f4cc7e1e.png", skill: "Gangster's Spirit", type: "Character · Gangster",
+    introEn: "A character whose official biography describes an orphaned childhood, later leadership, and strong loyalty to his loved ones.",
+    introHi: "Antonio ki official biography orphaned childhood, baad ki leadership aur apne loved ones ke prati strong loyalty describe karti hai.",
+    currentEn: [
+      "Garena identifies Antonio as a well-known gangster character.",
+      "His official biography says he was orphaned while growing up and later started his own group.",
+      "The story emphasizes his repeated efforts to protect the people he cares about.",
+      "Garena lists Gangster's Spirit as his Special Survival Ability and describes it as receiving extra HP when a round starts."
+    ],
+    currentHi: [
+      "Garena Antonio ko well-known gangster character ke roop mein identify karta hai.",
+      "Official biography ke mutabik woh bachpan mein orphan hua aur baad mein usne apna group banaya.",
+      "Story un logon ki protection par focus karti hai jinki use parwah hai.",
+      "Garena Gangster's Spirit ko uski Special Survival Ability list karta hai aur round start hone par extra HP milne ke roop mein describe karta hai."
+    ],
+    rows: [
+      { en: "Character identity", hi: "Character identity", value: "Gangster" },
+      { en: "Gender", hi: "Gender", value: "Male" },
+      { en: "Age", hi: "Age", value: "30" },
+      { en: "Birthday", hi: "Birthday", value: "1 January" },
+      { en: "Special Survival Ability", hi: "Special Survival Ability", value: "Gangster's Spirit" },
+      { en: "Official ability summary", hi: "Official ability summary", value: "Extra HP at round start" }
+    ],
+    notesEn: [
+      "The current official character page provides the short ability summary but does not list a numeric HP amount or cooldown.",
+      "Garena's OB49 notes document a historical change from extra HP to Shield Points; the current page's wording and the historical patch note are kept separate rather than silently merged.",
+      "The biography's family-protection theme is retained without expanding its violent backstory.",
+      "No unverified numeric ability values are added."
+    ],
+    notesHi: [
+      "Current official character page short ability summary deta hai, lekin numeric HP amount ya cooldown list nahi karta.",
+      "Garena ke OB49 notes extra HP se Shield Points mein historical change document karte hain; current page ki wording aur historical patch note ko silently merge karne ke bajay alag rakha gaya hai.",
+      "Biography ka family-protection theme rakha gaya hai, violent backstory ko expand nahi kiya gaya.",
+      "Koi unverified numeric ability values add nahi ki gayi hain."
+    ],
+    historyEn: [
+      "Garena's OB49 patch notes documented a historical rework of Gangster's Spirit, changing the extra-HP wording to Shield Points.",
+      "The current official character page again uses the short description 'Receive extra HP when the round starts.' This source difference is explicitly flagged."
+    ],
+    historyHi: [
+      "Garena ke OB49 patch notes mein Gangster's Spirit ka historical rework documented hai, jismein extra-HP wording ko Shield Points mein badla gaya tha.",
+      "Current official character page phir se 'round start par extra HP' wali short description use karta hai. Is source difference ko clearly flag kiya gaya hai."
+    ],
+    source: [
+      { label: "Garena — Antonio character profile", url: "https://ff.garena.com/en/chars/426" },
+      { label: "Garena — OB49 Patch Notes", url: "https://ff.garena.com/en/article/1213/" },
+      { label: "Garena — Antonio official character story", url: "https://dl.dir.freefiremobile.com/common/web_event/chars/en/17.html" }
+    ],
+    status: "Current profile + OB49 discrepancy flagged · 14 Nov 2026"
   },
 ];
 
@@ -632,7 +886,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         <button type="button" className={language === "hi-en" ? "active" : ""} onClick={() => onLanguageChange("hi-en")}>HI+EN</button>
       </div>
     </div>
-    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "10 verified character profiles — Phase 1 + Phase 2, current values, Ability Effects, additional notes aur patch history ke saath." : "Ten researched character profiles across two phases, with current values, Ability Effects, additional notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 10 researched</small></span></div></header>
+    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 3</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "15 researched character profiles — Phase 1, Phase 2 + Phase 3, identity, verified profile data, additional notes aur patch history ke saath." : "Fifteen researched character profiles across three phases, with verified profile data, additional notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
     <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((profile, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={profile.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(profile)}><span className="character-suggestion-name">{profile.name}</span><span className="character-suggestion-meta">{profile.skill} · {profile.type.split(" · ")[0]}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
     {matches.length ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className="character-result-card" key={profile.id} onClick={() => setSelectedId(profile.id)}>
