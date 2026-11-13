@@ -241,7 +241,6 @@ const profiles: CharacterProfile[] = [
 export default function CharactersDatabase({ language, onLanguageChange, onBack }: Props) {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [activeLetter, setActiveLetter] = useState("A");
   const isHindi = language === "hi-en";
   const selected = profiles.find(profile => profile.id === selectedId);
   const matches = useMemo(() => {
@@ -260,7 +259,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
       cards.forEach(card => {
         if (card.getBoundingClientRect().top <= window.innerHeight * 0.34) current = card.getAttribute("data-character-letter") || current;
       });
-      setActiveLetter(current);
+      document.querySelectorAll("#character-alphabet-navigation button").forEach(button => button.classList.toggle("active", button.textContent === current));
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
