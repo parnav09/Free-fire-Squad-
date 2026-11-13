@@ -493,7 +493,7 @@ const profiles: CharacterProfile[] = [
       { label: "Garena — Suzy introduction / character notes", url: "https://ff.garena.com/en/article/1213/" }
     ],
     status: "Current official profile + introduction notes cross-checked · 14 Nov 2026"
-  },,
+  },
   {
     id: "a-patroa", name: "A-Patroa", image: "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/f5a466acec3ed5bd7cdd149e26288ad1.png", skill: "No separate survival ability listed", type: "Character · Music Shop Boss",
     introEn: "A confident music-shop owner whose shop also serves as a safe haven for people in her neighborhood.",
