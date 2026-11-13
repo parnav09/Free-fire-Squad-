@@ -818,7 +818,7 @@ export default function App() {
               </article>)}</div>
               {ownerPowerActive&&!rosterEditEnabled&&<p className="roster-view-note">Roster management is off. Turn it on in Settings only when you need to make a lineup change.</p>}
             </section>
-            <section className="connection-panel combat-nexus-panel" aria-labelledby="combat-nexus-title">
+{combatNexusView==="characters"?<CharactersDatabase language={drillLanguage} onLanguageChange={changeDrillLanguage} onBack={()=>setCombatNexusView(null)}/>:<>{<section className="connection-panel combat-nexus-panel" aria-labelledby="combat-nexus-title">
               <div className="combat-nexus-heading"><div><div className="eyebrow">SQUAD INTELLIGENCE HUB</div><h3 id="combat-nexus-title">Combat Nexus</h3><p>Characters, companion pets and tactical loadouts — one connected workspace.</p></div><span className="combat-nexus-live">FIELD DATABASE</span></div>
               <button type="button" className="combat-nexus-character-card" onClick={()=>setCombatNexusView("characters")} aria-label="Open character database">
                 <span className="combat-nexus-main-copy"><span className="combat-nexus-kicker">01 / OPERATIVE DATABASE</span><strong>CHARACTERS</strong><small>Ability profiles, mechanics and cooldowns</small><span className="combat-nexus-count"><b>67</b><i>ROSTER ENTRIES</i><em>Explore database</em></span></span>
@@ -833,8 +833,7 @@ export default function App() {
                 </button>
               </div>
               <p className="combat-nexus-footnote">Catalogue counts are planning totals. Individual ability records will be added only after current-version verification.</p>
-            </section>
-            {combatNexusView==="characters"?<CharactersDatabase language={drillLanguage} onLanguageChange={changeDrillLanguage} onBack={()=>setCombatNexusView(null)}/>:combatNexusView&&<div className="combat-nexus-detail" role="region" aria-live="polite"><div><div className="eyebrow">COMBAT NEXUS / {combatNexusView.toUpperCase()}</div><h4>{combatNexusView==="pets"?"Pet database":"Loadout"}</h4><p>{combatNexusView==="pets"?"The pet catalogue will contain skill details, level effects, cooldowns, activation conditions and verified character interactions.":"Loadout workspace reserved for verified character, pet and weapon combinations. No unverified presets are pre-filled."}</p></div><button type="button" className="secondary-button" onClick={()=>setCombatNexusView(null)}>Close</button></div>}
+            </section>}{combatNexusView&&<div className="combat-nexus-detail" role="region" aria-live="polite"><div><div className="eyebrow">COMBAT NEXUS / {combatNexusView.toUpperCase()}</div><h4>{combatNexusView==="pets"?"Pet database":"Loadout"}</h4><p>{combatNexusView==="pets"?"The pet catalogue will contain skill details, level effects, cooldowns, activation conditions and verified character interactions.":"Loadout workspace reserved for verified character, pet and weapon combinations. No unverified presets are pre-filled."}</p></div><button type="button" className="secondary-button" onClick={()=>setCombatNexusView(null)}>Close</button></div>}</>}
           </>}
           {section==="Evaluation" && <>
             <div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT</div><h2>Daily evaluation</h2></div></div>
