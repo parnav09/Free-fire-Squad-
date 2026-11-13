@@ -61,3 +61,8 @@
 @keyframes alphabetRailIn{from{opacity:0;transform:translate(8px,-50%)}to{opacity:1;transform:translate(0,-50%)}}
 @media(max-width:640px){.character-alphabet-rail{right:5px;width:31px;max-height:68vh;padding:5px 2px;border-radius:15px;gap:1px}.character-alphabet-rail button{width:25px;min-height:21px;font-size:9px}.character-profile-grid .character-result-card{scroll-margin-top:76px}}
 @media(prefers-reduced-motion:reduce){.character-alphabet-rail.is-open{animation:none}.character-alphabet-rail button,.character-load-more{transition:none}}
+
+.character-alphabet-rail button.active{min-height:27px;background:linear-gradient(135deg,#1b668e,#293e80);color:#effcff;font-size:14px;font-weight:950;transform:scale(1.08);box-shadow:0 0 16px rgba(70,190,235,.28)}
+.character-alphabet-rail button:disabled{opacity:.24;cursor:default}
+.character-alphabet-rail button:disabled:hover{background:transparent;color:#819bb9}
+@media(max-width:640px){.character-alphabet-rail button.active{min-height:24px;font-size:12px}}
