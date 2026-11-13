@@ -21,6 +21,22 @@ type CharacterProfile = {
   historyHi: string[];
   source: { label: string; url: string }[];
   status: string;
+  awakened?: {
+    label: string;
+    skill: string;
+    type: string;
+    introEn: string;
+    introHi: string;
+    currentEn: string[];
+    currentHi: string[];
+    rows: DetailRow[];
+    notesEn: string[];
+    notesHi: string[];
+    historyEn: string[];
+    historyHi: string[];
+    source: { label: string; url: string }[];
+    status: string;
+  };
 };
 
 const profiles: CharacterProfile[] = [
@@ -512,9 +528,6 @@ const profiles: CharacterProfile[] = [
     ],
     rows: [
       { en: "Character title", hi: "Character title", value: "Music Shop Boss" },
-      { en: "Gender", hi: "Gender", value: "Female" },
-      { en: "Age", hi: "Age", value: "28" },
-      { en: "Birthday", hi: "Birthday", value: "30 March" },
       { en: "Special Survival Ability", hi: "Special Survival Ability", value: "Not listed" },
       { en: "Exclusive character slot", hi: "Exclusive character slot", value: "Garena says it can equip any owned skill" }
     ],
@@ -561,9 +574,6 @@ const profiles: CharacterProfile[] = [
     ],
     rows: [
       { en: "Character type", hi: "Character type", value: "Robot" },
-      { en: "Gender", hi: "Gender", value: "Female" },
-      { en: "Age shown by Garena", hi: "Age shown by Garena", value: "18" },
-      { en: "Birthday", hi: "Birthday", value: "1 January" },
       { en: "Special Survival Ability", hi: "Special Survival Ability", value: "Thrill of Battle" },
       { en: "Official ability summary", hi: "Official ability summary", value: "Converts part of EP into HP" },
       { en: "Current numeric values", hi: "Current numeric values", value: "Not listed on current English profile" }
@@ -613,9 +623,6 @@ const profiles: CharacterProfile[] = [
     ],
     rows: [
       { en: "Character identity", hi: "Character identity", value: "World-famous DJ" },
-      { en: "Gender", hi: "Gender", value: "Male" },
-      { en: "Age", hi: "Age", value: "28" },
-      { en: "Birthday", hi: "Birthday", value: "26 August" },
       { en: "Original ability name", hi: "Original ability name", value: "Drop the Beat" },
       { en: "Awakening", hi: "Awakening", value: "Party Remix" }
     ],
@@ -645,7 +652,48 @@ const profiles: CharacterProfile[] = [
       { label: "Garena — OB54 Patch Notes", url: "https://ff.garena.com/en/article/1673" },
       { label: "Garena — Alok official skill adjustment notes", url: "https://ff.garena.com/en/article/1357" }
     ],
-    status: "Current profile + OB54 Skill Boost history checked · 14 Nov 2026"
+    status: "Original ability profile · official source snapshot checked · 14 Nov 2026",
+    awakened: {
+      label: "Awakened Alok",
+      skill: "Party Remix",
+      type: "Awakened · Ability variant",
+      introEn: "Awakened Alok is shown as a variant inside the same character profile, keeping the original Alok entry and its history together.",
+      introHi: "Awakened Alok ko isi character profile ke andar variant ke roop mein dikhaya gaya hai, taaki original Alok aur uski history ek jagah rahe.",
+      currentEn: [
+        "Awakened ability name: Party Remix.",
+        "This is Alok's awakened variant; it is not a separate character entry.",
+        "Only details confirmed by the official source snapshot are displayed. Unverified numeric values are not inferred."
+      ],
+      currentHi: [
+        "Awakened ability ka naam: Party Remix.",
+        "Yeh Alok ka awakened variant hai; alag character entry nahi.",
+        "Sirf official source snapshot se confirm details dikhayi gayi hain. Unverified numeric values guess nahi ki gayi hain."
+      ],
+      rows: [
+        { en: "Variant", hi: "Variant", value: "Awakened Alok" },
+        { en: "Ability name", hi: "Ability name", value: "Party Remix" },
+        { en: "Profile relationship", hi: "Profile relationship", value: "Alok · Awakened variant" }
+      ],
+      notesEn: [
+        "The original Drop the Beat and awakened Party Remix identities are kept separate.",
+        "OB54 Skill Boost options are patch-specific records and are not presented as the awakened ability itself."
+      ],
+      notesHi: [
+        "Original Drop the Beat aur awakened Party Remix identities ko alag rakha gaya hai.",
+        "OB54 Skill Boost options patch-specific records hain; unhe awakened ability ke roop mein present nahi kiya gaya."
+      ],
+      historyEn: [
+        "The official awakened profile identifies Party Remix. The original ability and awakened variant remain grouped under one Alok profile."
+      ],
+      historyHi: [
+        "Official awakened profile Party Remix identify karta hai. Original ability aur awakened variant ek hi Alok profile ke andar grouped hain."
+      ],
+      source: [
+        { label: "Garena — Alok awakened character profile", url: "https://ff.garena.com/en/chars/423" },
+        { label: "Garena — Alok current character profile", url: "https://ff.garena.com/en/chars/165" }
+      ],
+      status: "Awakened profile identity checked · 14 Nov 2026"
+    }
   },
   {
     id: "andrew", name: "Andrew", image: "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/564762d9a1137afaf2c9abb0ea8862b7.png", skill: "Armor Specialist · Wolf Pack", type: "Character · Former LLPD Sergeant",
@@ -665,9 +713,6 @@ const profiles: CharacterProfile[] = [
     ],
     rows: [
       { en: "Former role", hi: "Former role", value: "LLPD Sergeant" },
-      { en: "Gender", hi: "Gender", value: "Male" },
-      { en: "Age", hi: "Age", value: "42" },
-      { en: "Birthday", hi: "Birthday", value: "25 December" },
       { en: "Current listed ability", hi: "Current listed ability", value: "Wolf Pack" },
       { en: "Earlier ability identity", hi: "Earlier ability identity", value: "Armor Specialist" }
     ],
@@ -715,9 +760,6 @@ const profiles: CharacterProfile[] = [
     ],
     rows: [
       { en: "Character identity", hi: "Character identity", value: "Gangster" },
-      { en: "Gender", hi: "Gender", value: "Male" },
-      { en: "Age", hi: "Age", value: "30" },
-      { en: "Birthday", hi: "Birthday", value: "1 January" },
       { en: "Special Survival Ability", hi: "Special Survival Ability", value: "Gangster's Spirit" },
       { en: "Official ability summary", hi: "Official ability summary", value: "Extra HP at round start" }
     ],
@@ -788,12 +830,16 @@ const profileMatchesSearch = (profile: CharacterProfile, query: string) => {
 export default function CharactersDatabase({ language, onLanguageChange, onBack }: Props) {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [activeAlokVariant, setActiveAlokVariant] = useState<"original" | "awakened">("original");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(4);
   const [batchSize, setBatchSize] = useState(4);
   const isHindi = language === "hi-en";
   const selected = profiles.find(profile => profile.id === selectedId);
+  const shownProfile = selected?.id === "alok" && activeAlokVariant === "awakened" && selected.awakened
+    ? { ...selected, ...selected.awakened }
+    : selected;
   const matches = useMemo(() => profiles
     .filter(profile => profileMatchesSearch(profile, query))
     .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" })), [query]);
@@ -805,6 +851,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
   };
   const returnToList = () => {
     setSelectedId(null);
+    setActiveAlokVariant("original");
     setQuery("");
     setShowSuggestions(false);
     setActiveSuggestionIndex(0);
@@ -830,7 +877,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
   const sectionTitle = (en: string, hi: string) => isHindi ? hi : en;
   const list = (items: string[]) => <ul>{items.map((item, index) => <li key={index}>{item}</li>)}</ul>;
 
-  if (selected) return <main className="character-database character-profile-page">
+  if (shownProfile) return <main className="character-database character-profile-page">
     <div className="character-db-toolbar">
       <button type="button" className="character-back-button" onClick={returnToList}><span aria-hidden="true">←</span> {backLabel}</button>
       <div className="character-language-control" role="group" aria-label="Character page language">
@@ -840,38 +887,46 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     </div>
     <article className="character-profile">
       <header className="character-profile-identity">
-        <div className="character-profile-art"><img src={selected.image} alt={selected.name} /></div>
+        <div className="character-profile-art"><img src={shownProfile.image} alt={shownProfile.name} /></div>
         <div className="character-profile-heading">
-          <h2>{selected.name}</h2>
+          <h2>{shownProfile.name}</h2>
           <span className="character-confirmed">{isHindi ? "Official-source profile" : "Official-source profile"}</span>
-          <p className="character-skill-name"><b>{isHindi ? "Ability:" : "Ability:"}</b> {selected.skill}</p>
-          <p className="character-profile-summary">{isHindi ? selected.introHi : selected.introEn}</p>
+          <p className="character-skill-name"><b>{isHindi ? "Ability:" : "Ability:"}</b> {shownProfile.skill}</p>
+          <p className="character-profile-summary">{isHindi ? shownProfile.introHi : shownProfile.introEn}</p>
         </div>
       </header>
 
+      {selected.id === "alok" && <div className="character-variant-switch" role="group" aria-label="Alok ability variant">
+        <button type="button" className={activeAlokVariant === "original" ? "active" : ""} aria-pressed={activeAlokVariant === "original"} onClick={() => setActiveAlokVariant("original")}>
+          <span>ORIGINAL</span><b>Alok</b><small>Drop the Beat</small>
+        </button>
+        <button type="button" className={activeAlokVariant === "awakened" ? "active" : ""} aria-pressed={activeAlokVariant === "awakened"} onClick={() => setActiveAlokVariant("awakened")}>
+          <span>AWAKENED</span><b>Alok</b><small>Party Remix</small>
+        </button>
+      </div>}
       <section className="character-ability-section">
         <div className="character-section-eyebrow">SQUAD OS / COMBAT NEXUS</div>
-        <h1>{selected.name} — {sectionTitle("Ability Profile", "Ability Profile")}</h1>
-        <p className="character-ability-intro">{selected.status}</p>
-        <div className="character-values-table" role="table" aria-label={selected.name + " ability values"}>
+        <h1>{shownProfile.name} — {sectionTitle("Ability Profile", "Ability Profile")}</h1>
+        <p className="character-ability-intro">{shownProfile.status}</p>
+        <div className="character-values-table" role="table" aria-label={shownProfile.name + " ability values"}>
           <div className="character-values-row character-values-head" role="row"><span role="columnheader">{sectionTitle("Ability / Factor", "Ability / Factor")}</span><span role="columnheader">{sectionTitle("Current value", "Current value")}</span></div>
-          {selected.rows.map(row => <div className="character-values-row" role="row" key={row.en}><span role="cell">{isHindi ? row.hi : row.en}</span><strong role="cell">{row.value}</strong></div>)}
+          {shownProfile.rows.map(row => <div className="character-values-row" role="row" key={row.en}><span role="cell">{isHindi ? row.hi : row.en}</span><strong role="cell">{row.value}</strong></div>)}
         </div>
         <section className="character-detail-block">
           <h3>{sectionTitle("Ability Effects", "Ability Effects")}</h3>
-          {list(isHindi ? selected.currentHi : selected.currentEn)}
+          {list(isHindi ? shownProfile.currentHi : shownProfile.currentEn)}
         </section>
         <section className="character-detail-block">
           <h3>{sectionTitle("Additional Mechanics & Notes", "Additional Mechanics & Notes")}</h3>
-          {list(isHindi ? selected.notesHi : selected.notesEn)}
+          {list(isHindi ? shownProfile.notesHi : shownProfile.notesEn)}
         </section>
         <section className="character-detail-block">
           <h3>{sectionTitle("Patch History", "Patch History")}</h3>
-          {list(isHindi ? selected.historyHi : selected.historyEn)}
+          {list(isHindi ? shownProfile.historyHi : shownProfile.historyEn)}
         </section>
         <section className="character-detail-block character-source-block">
           <h3>{sectionTitle("Official Sources", "Official Sources")}</h3>
-          <ul>{selected.source.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.label} ↗</a></li>)}</ul>
+          <ul>{shownProfile.source.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.label} ↗</a></li>)}</ul>
           <p>{sectionTitle("Values are a researched snapshot, not live game data. In-game values can change with later updates.", "Yeh values researched snapshot hain, live game data nahi. Aage ke updates mein in-game values badal sakti hain.")}</p>
         </section>
       </section>
