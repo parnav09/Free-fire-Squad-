@@ -3,27 +3,269 @@ import "./CharactersDatabase.css";
 
 type Language = "en" | "hi-en";
 type Props = { language: Language; onLanguageChange: (value: Language) => void; onBack: () => void };
+type DetailRow = { en: string; hi: string; value: string };
+type CharacterProfile = {
+  id: string;
+  name: string;
+  skill: string;
+  type: string;
+  introEn: string;
+  introHi: string;
+  currentEn: string[];
+  currentHi: string[];
+  rows: DetailRow[];
+  notesEn: string[];
+  notesHi: string[];
+  historyEn: string[];
+  historyHi: string[];
+  source: { label: string; url: string }[];
+  status: string;
+};
 
-const MORSE_IMAGE = "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20261/87b0db20d90350d22979b03d8b65a567.png";
-const profileRows = [
-  { en: "Stealth duration", hi: "Stealth की अवधि", value: "13 seconds" },
-  { en: "Movement speed bonus", hi: "Movement Speed Bonus", value: "20%" },
-  { en: "Temporary shield", hi: "Temporary Shield", value: "25 points" },
-  { en: "Cooldown", hi: "Cooldown", value: "45 seconds" },
-  { en: "Aim-assist trigger range", hi: "Aim-assist trigger range", value: "12 metres" },
-  { en: "Exit delay", hi: "Stealth से बाहर आने का delay", value: "0.5 seconds" },
+const profiles: CharacterProfile[] = [
+  {
+    id: "ray", name: "Ray", skill: "Bond of Eclipse", type: "Active · Tag / Link",
+    introEn: "A survival ability profile based on Garena's current official character page.",
+    introHi: "यह profile Garena के current official character page पर आधारित है।",
+    currentEn: [
+      "Projects forward in a 30m fan-shaped area and tags the first undowned enemy hit for 10 seconds.",
+      "Creates a link visible within 40m only to the skill user and the tagged target.",
+      "If the tagged target reaches 30 HP or below, the ability's listed instant knockdown condition is met.",
+      "A tagged target being knocked down or eliminated resets the skill and restores 10 HP per second for 3 seconds.",
+    ],
+    currentHi: [
+      "30m के fan-shaped area में आगे effect भेजता है और hit हुए पहले undowned enemy को 10 seconds के लिए tag करता है।",
+      "Link 40m के भीतर केवल skill user और tagged target को दिखाई देता है।",
+      "Tagged target का HP 30 या उससे कम होने पर listed instant knockdown condition पूरी होती है।",
+      "Tagged target के knockdown या eliminate होने पर skill reset होती है और 3 seconds तक 10 HP per second restore होता है।",
+    ],
+    rows: [
+      { en: "Forward area", hi: "Forward area", value: "30m · Fan-shaped" },
+      { en: "Tag duration", hi: "Tag duration", value: "10 seconds" },
+      { en: "Link visibility", hi: "Link visibility", value: "40m" },
+      { en: "Threshold condition", hi: "Threshold condition", value: "30 HP or below" },
+      { en: "HP recovery", hi: "HP recovery", value: "10 HP/s for 3s" },
+      { en: "Cooldown", hi: "Cooldown", value: "45 seconds" },
+    ],
+    notesEn: [
+      "The link visibility is limited to the skill user and the tagged target.",
+      "The reset and HP recovery are conditional on the tagged target being knocked down or eliminated.",
+      "The current official profile lists a 30 HP threshold; an older OB53 announcement listed 40 HP. The current profile is used for the present-day value.",
+    ],
+    notesHi: [
+      "Link केवल skill user और tagged target को दिखाई देता है।",
+      "Skill reset और HP recovery तभी listed हैं जब tagged target knockdown या eliminate हो।",
+      "Current official profile में 30 HP threshold है; पुराने OB53 announcement में 40 HP था। Current value के लिए latest profile लिया गया है।",
+    ],
+    historyEn: ["OB53 introduction announcement listed the threshold as 40 HP or below. The current official character profile now lists 30 HP or below."],
+    historyHi: ["OB53 के introduction announcement में threshold 40 HP या कम था। Current official character profile अब 30 HP या कम दिखाता है।"],
+    source: [
+      { label: "Garena — Ray character profile", url: "https://ff.garena.com/en/chars/794" },
+      { label: "Garena — OB53 Patch Notes", url: "https://ff.garena.com/en/article/1640/" },
+    ],
+    status: "Current profile checked · 14 Nov 2026",
+  },
+  {
+    id: "morse", name: "Morse", skill: "Stealth Bytes", type: "Active · Stealth",
+    introEn: "A stealth-focused ability. Current OB55 adjustments supersede older OB52 values.",
+    introHi: "यह stealth-focused ability है। Current OB55 adjustments पुराने OB52 values से newer हैं।",
+    currentEn: [
+      "Enters Stealth: enemies beyond 12m have difficulty seeing Morse, and enemy detection does not detect him.",
+      "Grants a 20% movement-speed bonus and 25 temporary Shield Points.",
+      "Maximum Stealth duration is 13 seconds.",
+      "Morse cannot fire while Stealth is active; exiting Stealth has a 0.5-second delay.",
+      "Aim assist can trigger when enemies are within 12m.",
+    ],
+    currentHi: [
+      "Stealth में जाने पर 12m से दूर enemies के लिए Morse को देखना मुश्किल होता है और enemy detection उसे detect नहीं करता।",
+      "20% movement-speed bonus और 25 temporary Shield Points मिलते हैं।",
+      "Maximum Stealth duration 13 seconds है।",
+      "Stealth active होने पर Morse fire नहीं कर सकता; Stealth से बाहर आने में 0.5-second delay है।",
+      "12m के अंदर enemies होने पर aim assist trigger हो सकता है।",
+    ],
+    rows: [
+      { en: "Maximum Stealth duration", hi: "Maximum Stealth duration", value: "13 seconds" },
+      { en: "Movement-speed bonus", hi: "Movement-speed bonus", value: "20%" },
+      { en: "Temporary Shield Points", hi: "Temporary Shield Points", value: "25" },
+      { en: "Aim-assist trigger range", hi: "Aim-assist trigger range", value: "12m" },
+      { en: "Exit delay", hi: "Exit delay", value: "0.5 seconds" },
+      { en: "Cooldown", hi: "Cooldown", value: "45 seconds" },
+    ],
+    notesEn: [
+      "Firing is disabled during Stealth.",
+      "The 12m aim-assist trigger range is a counterplay change, not the same as the visibility description.",
+      "OB55 changed aim-assist trigger range from 4m to 12m and maximum Stealth duration from 15s to 13s.",
+    ],
+    notesHi: [
+      "Stealth के दौरान firing disabled रहती है।",
+      "12m aim-assist trigger range, visibility description से अलग mechanic है।",
+      "OB55 में aim-assist trigger range 4m से 12m और maximum Stealth duration 15s से 13s की गई।",
+    ],
+    historyEn: ["OB52 launch values included 15s duration, 4m aim-assist trigger range, and 1s exit delay. OB55 changed duration to 13s and aim-assist range to 12m. The current official profile also lists 25 temporary Shield Points and a 0.5s exit delay."],
+    historyHi: ["OB52 launch values में 15s duration, 4m aim-assist trigger range और 1s exit delay थे। OB55 ने duration 13s और aim-assist range 12m किया। Current official profile में 25 temporary Shield Points और 0.5s exit delay भी listed हैं।"],
+    source: [
+      { label: "Garena — Morse character profile", url: "https://ff.garena.com/en/chars/785" },
+      { label: "Garena — OB55 Patch Notes", url: "https://ff.garena.com/en/article/1712/" },
+      { label: "Garena — OB52 Patch Notes", url: "https://dl.dir.freefiremobile.com/common/web_event/articles/en/1595.html" },
+    ],
+    status: "OB55 values reconciled · 14 Nov 2026",
+  },
+  {
+    id: "nero", name: "Nero", skill: "Cryo Mind", type: "Active · Plushie / Area",
+    introEn: "The current official character profile and older patch notes contain conflicting plushie and damage values; the conflict is explicitly flagged below.",
+    introHi: "Current official character profile और पुराने patch notes में plushie तथा damage values अलग हैं; नीचे इस अंतर को साफ़ दिखाया गया है।",
+    currentEn: [
+      "The current official profile describes a plushie with 1 HP, lasting 12 seconds and able to travel up to 50m (100m in BR).",
+      "It tracks the nearest enemy in sight within 8m and creates an 8m-radius area.",
+      "Inside the area, neither the user nor enemies can place Gloo Walls; the profile lists 6 HP/s loss for enemies.",
+      "The area disappears if the plushie is destroyed; the destroyer is marked for 5 seconds.",
+    ],
+    currentHi: [
+      "Current official profile के अनुसार plushie के 1 HP हैं, यह 12 seconds तक रहता है और 50m (BR में 100m) तक जा सकता है।",
+      "यह 8m के भीतर sight में मौजूद nearest enemy को track करता है और 8m-radius area बनाता है।",
+      "Area के अंदर user और enemies दोनों Gloo Walls place नहीं कर सकते; profile enemies के लिए 6 HP/s loss बताता है।",
+      "Plushie destroy होने पर area खत्म हो जाता है; destroy करने वाला 5 seconds के लिए mark होता है।",
+    ],
+    rows: [
+      { en: "Plushie HP (current profile)", hi: "Plushie HP (current profile)", value: "1 HP" },
+      { en: "Plushie duration", hi: "Plushie duration", value: "12 seconds" },
+      { en: "Travel distance", hi: "Travel distance", value: "50m · 100m in BR" },
+      { en: "Tracking range", hi: "Tracking range", value: "8m · line of sight" },
+      { en: "Area radius", hi: "Area radius", value: "8m" },
+      { en: "Enemy HP effect (current profile)", hi: "Enemy HP effect (current profile)", value: "6 HP/s" },
+      { en: "Destroyer mark", hi: "Destroyer mark", value: "5 seconds" },
+      { en: "Cooldown", hi: "Cooldown", value: "45 seconds" },
+    ],
+    notesEn: [
+      "The current official character profile says 1 HP for the plushie and 6 HP/s for the area effect.",
+      "OB53 patch notes previously described a 150-HP plushie and reduced the area effect from 16 to 14 HP/s.",
+      "OB55 notes mention a bug fix for the plushie getting stuck, but do not provide replacement HP or damage values.",
+      "Because these official sources conflict, treat 1 HP and 6 HP/s as the current profile snapshot, not a fully reconciled patch-history conclusion. Verify in-game before relying on exact values.",
+    ],
+    notesHi: [
+      "Current official character profile plushie के लिए 1 HP और area effect के लिए 6 HP/s बताता है।",
+      "OB53 patch notes में पहले plushie 150-HP का बताया गया था और area effect 16 से 14 HP/s किया गया था।",
+      "OB55 notes में plushie के जमीन में अटकने का bug fix है, लेकिन नए HP या damage values नहीं दिए गए।",
+      "Official sources में conflict है; इसलिए 1 HP और 6 HP/s को current profile snapshot मानें, पूरी तरह reconciled patch-history conclusion नहीं। Exact values के लिए in-game verification जरूरी है।",
+    ],
+    historyEn: ["OB53 documented a 150-HP plushie and a reduction from 16 to 14 HP/s. The current official character profile now displays 1 HP and 6 HP/s. OB55 only records a stuck-plushie bug fix. This remains a source discrepancy."],
+    historyHi: ["OB53 में 150-HP plushie और 16 से 14 HP/s reduction दर्ज था। Current official character profile अब 1 HP और 6 HP/s दिखाता है। OB55 में केवल stuck-plushie bug fix दर्ज है। यह source discrepancy अभी बनी हुई है।"],
+    source: [
+      { label: "Garena — Nero character profile", url: "https://ff.garena.com/en/chars/775" },
+      { label: "Garena — OB53 Patch Notes", url: "https://ff.garena.com/en/article/1640/" },
+      { label: "Garena — OB55 Patch Notes", url: "https://ff.garena.com/en/article/1712/" },
+    ],
+    status: "Source discrepancy flagged · 14 Nov 2026",
+  },
+  {
+    id: "rin", name: "Rin", skill: "Gale of Kunai", type: "Passive · Stored charges",
+    introEn: "A passive ability profile based on Garena's character page and the later OB55 balance note.",
+    introHi: "यह passive ability profile Garena character page और बाद के OB55 balance note पर आधारित है।",
+    currentEn: [
+      "Summons one kunai nearby every 8 seconds, up to a maximum of 3 stored kunai.",
+      "The kunai can target an enemy or Gloo Wall that the user hits.",
+      "The official profile lists up to 12 damage, with damage increasing with distance.",
+      "OB55 increased launch speed and mid-to-short-range damage; maximum long-range damage remained unchanged.",
+    ],
+    currentHi: [
+      "हर 8 seconds में nearby एक kunai summon होता है; maximum 3 kunai store हो सकते हैं।",
+      "Kunai उस enemy या Gloo Wall को target कर सकता है जिसे user hit करता है।",
+      "Official profile maximum 12 damage बताता है; distance बढ़ने पर damage बढ़ता है।",
+      "OB55 में launch speed और mid-to-short-range damage बढ़ाया गया; maximum long-range damage unchanged रहा।",
+    ],
+    rows: [
+      { en: "Summon interval", hi: "Summon interval", value: "8 seconds" },
+      { en: "Maximum stored kunai", hi: "Maximum stored kunai", value: "3" },
+      { en: "Listed maximum damage", hi: "Listed maximum damage", value: "Up to 12" },
+      { en: "Damage scaling", hi: "Damage scaling", value: "Increases with distance" },
+      { en: "Cooldown", hi: "Cooldown", value: "Not listed on official profile" },
+    ],
+    notesEn: [
+      "The official profile describes a stored-quantity mechanic rather than a conventional active-skill cooldown.",
+      "OB55 notes say kunai launch speed and mid-to-short-range damage increased; long-range maximum damage was unchanged.",
+      "No separate cooldown value is published on the official character profile.",
+    ],
+    notesHi: [
+      "Official profile इसे conventional active-skill cooldown के बजाय stored-quantity mechanic के रूप में बताता है।",
+      "OB55 notes के अनुसार kunai launch speed और mid-to-short-range damage बढ़ा; long-range maximum damage unchanged रहा।",
+      "Official character profile पर अलग cooldown value publish नहीं की गई है।",
+    ],
+    historyEn: ["OB50 introduced Gale of Kunai with one kunai every 8s, up to 3, and up to 12 damage. OB55 increased launch speed and mid-to-short-range damage while keeping maximum long-range damage unchanged."],
+    historyHi: ["OB50 में Gale of Kunai आया: हर 8s में एक kunai, maximum 3 और up to 12 damage। OB55 में launch speed तथा mid-to-short-range damage बढ़ा, जबकि maximum long-range damage unchanged रहा।"],
+    source: [
+      { label: "Garena — Rin character profile", url: "https://ff.garena.com/en/chars/767" },
+      { label: "Garena — OB50 Patch Notes", url: "https://ff.garena.com/en/article/1511/" },
+      { label: "Garena — OB55 Patch Notes", url: "https://ff.garena.com/en/article/1712/" },
+    ],
+    status: "OB55 balance note checked · 14 Nov 2026",
+  },
+  {
+    id: "oscar", name: "Oscar", skill: "Valiant Dash", type: "Active · Dash",
+    introEn: "The base ability, cooldown adjustment and BR Skill Boost options are documented separately.",
+    introHi: "Base ability, cooldown adjustment और BR Skill Boost options को अलग-अलग document किया गया है।",
+    currentEn: [
+      "Dashes in the selected direction and detonates the first 3 Gloo Walls encountered, dealing 25 damage to each listed wall.",
+      "Enemies encountered are listed as taking 25 damage and being knocked back.",
+      "Current official profile cooldown is 60 seconds.",
+      "In BR, OB54 documented two optional Skill Boosts: Phantom Dash increases dash range; Sustained Dash extends duration to 8 seconds, with speed initially reduced and then increasing.",
+    ],
+    currentHi: [
+      "Selected direction में dash करता है और रास्ते में आने वाली पहली 3 Gloo Walls को detonate करता है; listed wall damage 25 है।",
+      "Encounter होने वाले enemies को 25 damage और knockback listed है।",
+      "Current official profile cooldown 60 seconds है।",
+      "BR में OB54 ने दो optional Skill Boosts दर्ज किए: Phantom Dash dash range बढ़ाता है; Sustained Dash duration 8 seconds करता है, जिसमें speed पहले कम और फिर बढ़ती है।",
+    ],
+    rows: [
+      { en: "Gloo Walls affected", hi: "Gloo Walls affected", value: "First 3 in path" },
+      { en: "Listed wall damage", hi: "Listed wall damage", value: "25" },
+      { en: "Listed enemy effect", hi: "Listed enemy effect", value: "25 damage + knockback" },
+      { en: "Base cooldown", hi: "Base cooldown", value: "60 seconds" },
+      { en: "Sustained Dash boost duration", hi: "Sustained Dash boost duration", value: "8 seconds" },
+    ],
+    notesEn: [
+      "Phantom Dash increases dash range; the patch note does not specify a numeric increase.",
+      "Sustained Dash lasts 8s and begins at a lower dash speed that increases over time.",
+      "The two Skill Boost options are BR progression choices; the patch notes state only one boost option can be selected.",
+      "OB54 increased the base cooldown from 45s to 60s.",
+    ],
+    notesHi: [
+      "Phantom Dash dash range बढ़ाता है; patch note numeric increase नहीं बताता।",
+      "Sustained Dash 8s तक रहता है और शुरुआत में कम dash speed होती है जो समय के साथ बढ़ती है।",
+      "दोनों Skill Boost options BR progression choices हैं; patch notes के अनुसार केवल एक option select किया जा सकता है।",
+      "OB54 में base cooldown 45s से 60s किया गया।",
+    ],
+    historyEn: ["Oscar's base profile lists 60s cooldown. OB54 increased it from 45s to 60s and introduced Phantom Dash and Sustained Dash as BR Skill Boost options."],
+    historyHi: ["Oscar के base profile में 60s cooldown है। OB54 ने इसे 45s से 60s किया और BR Skill Boost options के रूप में Phantom Dash तथा Sustained Dash जोड़े।"],
+    source: [
+      { label: "Garena — Oscar character profile", url: "https://ff.garena.com/en/chars/769" },
+      { label: "Garena — OB54 Patch Notes", url: "https://ff.garena.com/en/article/1673" },
+      { label: "Garena — Original Oscar announcement", url: "https://ff.garena.com/en/article/1456" },
+    ],
+    status: "OB54 cooldown / boost notes checked · 14 Nov 2026",
+  },
 ];
 
 export default function CharactersDatabase({ language, onLanguageChange, onBack }: Props) {
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState(false);
-  const [showMoreInfo, setShowMoreInfo] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const isHindi = language === "hi-en";
-  const matches = useMemo(() => ["Morse"].filter(name => name.toLowerCase().includes(query.trim().toLowerCase()) || "stealth bytes".includes(query.trim().toLowerCase())), [query]);
+  const selected = profiles.find(profile => profile.id === selectedId);
+  const matches = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return profiles;
+    return profiles.filter(profile =>
+      [profile.name, profile.skill, profile.type, ...profile.currentEn, ...profile.notesEn]
+        .join(" ").toLowerCase().includes(normalized)
+    );
+  }, [query]);
+
+  const backLabel = isHindi ? "Characters पर वापस" : "Back to Characters";
+  const sectionTitle = (en: string, hi: string) => isHindi ? hi : en;
+  const list = (items: string[]) => <ul>{items.map((item, index) => <li key={index}>{item}</li>)}</ul>;
 
   if (selected) return <main className="character-database character-profile-page">
     <div className="character-db-toolbar">
-      <button type="button" className="character-back-button" onClick={() => setSelected(false)}><span aria-hidden="true">←</span> {isHindi ? "Characters पर वापस" : "Back to Characters"}</button>
+      <button type="button" className="character-back-button" onClick={() => setSelectedId(null)}><span aria-hidden="true">←</span> {backLabel}</button>
       <div className="character-language-control" role="group" aria-label="Character page language">
         <button type="button" className={language === "en" ? "active" : ""} onClick={() => onLanguageChange("en")}>EN</button>
         <button type="button" className={language === "hi-en" ? "active" : ""} onClick={() => onLanguageChange("hi-en")}>HI+EN</button>
@@ -31,46 +273,39 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     </div>
     <article className="character-profile">
       <header className="character-profile-identity">
-        <div className="character-profile-art"><img src={MORSE_IMAGE} alt="Morse character artwork" /></div>
+        <div className={"character-profile-monogram monogram-" + selected.id}><span>{selected.name.slice(0, 1)}</span><small>{selected.name.toUpperCase()}</small></div>
         <div className="character-profile-heading">
-          <h2>Morse</h2>
-          <span className="character-confirmed">{isHindi ? "Confirmed character · पुष्टि की गई" : "Confirmed character"}</span>
-          <p className="character-skill-name"><b>Active skill:</b> Stealth Bytes</p>
-          <p className="character-profile-summary">{isHindi ? "A stealth-focused character introduced in OB52. / OB52 में पेश किया गया stealth-focused character." : "New stealth-focused character, introduced in OB52."}</p>
+          <h2>{selected.name}</h2>
+          <span className="character-confirmed">{isHindi ? "Official-source profile" : "Official-source profile"}</span>
+          <p className="character-skill-name"><b>{isHindi ? "Ability:" : "Ability:"}</b> {selected.skill}</p>
+          <p className="character-profile-summary">{isHindi ? selected.introHi : selected.introEn}</p>
         </div>
       </header>
 
       <section className="character-ability-section">
-        <div className="character-section-eyebrow">{isHindi ? "CHARACTER ABILITY PROFILE" : "CHARACTER ABILITY PROFILE"}</div>
-        <h1>{isHindi ? "Morse की Current OB55 Ability" : "Morse — Current OB55 Ability"}</h1>
-        <p className="character-ability-intro">{isHindi ? "Garena के official OB55 character profile के अनुसार:" : "According to Garena's official OB55 character profile:"}</p>
-        <div className="character-values-table" role="table" aria-label="Morse current ability values">
-          <div className="character-values-row character-values-head" role="row"><span role="columnheader">{isHindi ? "Ability / Factor" : "Ability"}</span><span role="columnheader">{isHindi ? "Current value" : "Current value"}</span></div>
-          {profileRows.map(row => <div className="character-values-row" role="row" key={row.en}><span role="cell">{isHindi ? row.hi : row.en}</span><strong role="cell">{row.value}</strong></div>)}
+        <div className="character-section-eyebrow">SQUAD OS / COMBAT NEXUS</div>
+        <h1>{selected.name} — {sectionTitle("Ability Profile", "Ability Profile")}</h1>
+        <p className="character-ability-intro">{selected.status}</p>
+        <div className="character-values-table" role="table" aria-label={selected.name + " ability values"}>
+          <div className="character-values-row character-values-head" role="row"><span role="columnheader">{sectionTitle("Ability / Factor", "Ability / Factor")}</span><span role="columnheader">{sectionTitle("Current value", "Current value")}</span></div>
+          {selected.rows.map(row => <div className="character-values-row" role="row" key={row.en}><span role="cell">{isHindi ? row.hi : row.en}</span><strong role="cell">{row.value}</strong></div>)}
         </div>
         <section className="character-detail-block">
-          <h3>{isHindi ? "Ability Effects / Skill का प्रभाव" : "Ability Effects"}</h3>
-          <ul>
-            <li>{isHindi ? "Enters Stealth mode; enemies beyond 12m को देखना मुश्किल होता है और enemies detect नहीं कर सकते।" : "Enters Stealth mode; enemies beyond 12m have difficulty seeing Morse, and enemies cannot detect him."}</li>
-            <li>{isHindi ? "20% Movement Speed bonus और 25 temporary Shield Points मिलते हैं।" : "Grants a 20% Movement Speed bonus and 25 temporary Shield Points."}</li>
-            <li>{isHindi ? "Stealth के दौरान Morse fire नहीं कर सकता।" : "Morse cannot fire while Stealth is active."}</li>
-            <li>{isHindi ? "12m के भीतर enemy होने पर aim assist trigger होता है।" : "Aim assist is triggered when enemies are within 12m."}</li>
-            <li>{isHindi ? "Stealth से बाहर आने में 0.5s का delay होता है।" : "Exiting Stealth has a 0.5s delay."}</li>
-          </ul>
+          <h3>{sectionTitle("Ability Effects", "Ability Effects / Skill का प्रभाव")}</h3>
+          {list(isHindi ? selected.currentHi : selected.currentEn)}
         </section>
         <section className="character-detail-block">
-          <h3>{isHindi ? "Official profile details / अतिरिक्त जानकारी" : "Official profile details"}</h3>
-          <div className="character-meta-grid">
-            <div><span>{isHindi ? "Skill type" : "Skill type"}</span><b>Active · Stealth</b></div>
-            <div><span>{isHindi ? "Cooldown" : "Cooldown"}</span><b>45 seconds</b></div>
-            <div><span>{isHindi ? "Character age" : "Age"}</span><b>21</b></div>
-            <div><span>{isHindi ? "Birthday" : "Birthday"}</span><b>11 November</b></div>
-          </div>
+          <h3>{sectionTitle("Additional Mechanics & Notes", "Additional Mechanics & Notes / अतिरिक्त जानकारी")}</h3>
+          {list(isHindi ? selected.notesHi : selected.notesEn)}
+        </section>
+        <section className="character-detail-block">
+          <h3>{sectionTitle("Patch History", "Patch History / Update इतिहास")}</h3>
+          {list(isHindi ? selected.historyHi : selected.historyEn)}
         </section>
         <section className="character-detail-block character-source-block">
-          <h3>{isHindi ? "Source & verification" : "Source & verification"}</h3>
-          <p>{isHindi ? "Ability values Garena के current official character profile से ली गई हैं।" : "Ability values are taken from Garena's current official character profile."}</p>
-          <a href="https://ff.garena.com/en/chars/785" target="_blank" rel="noreferrer">Garena Official — Morse Character Profile ↗</a>
+          <h3>{sectionTitle("Official Sources", "Official Sources / आधिकारिक स्रोत")}</h3>
+          <ul>{selected.source.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.label} ↗</a></li>)}</ul>
+          <p>{sectionTitle("Values are a researched snapshot, not live game data. In-game values can change with later updates.", "ये values researched snapshot हैं, live game data नहीं। आगे के updates में in-game values बदल सकती हैं।")}</p>
         </section>
       </section>
     </article>
@@ -84,15 +319,14 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         <button type="button" className={language === "hi-en" ? "active" : ""} onClick={() => onLanguageChange("hi-en")}>HI+EN</button>
       </div>
     </div>
-    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 TEST</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "Search verified character profiles and open the full ability breakdown." : "Search character profiles and open the complete ability breakdown."}</p></div><div className="character-db-count"><b>1</b><span>{isHindi ? "PROFILE READY" : "PROFILE READY"}<small> / 67 planned</small></span></div></header>
-    <label className="character-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder={isHindi ? "Search character name or skill…" : "Search character name or skill…"} aria-label="Search characters"/>{query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search">×</button>}</label>
-    <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "verified result" : "verified result"}{matches.length === 1 ? "" : "s"}</span></div><span className="character-sort-label">A–Z</span></div>
-    {matches.length ? <button type="button" className="character-result-card" onClick={() => setSelected(true)}>
-      <div className="character-result-art"><img src={MORSE_IMAGE} alt="Morse character artwork"/><span>01</span></div>
-      <div className="character-result-copy"><span className="character-result-status">VERIFIED PROFILE</span><h2>Morse</h2><b>Stealth Bytes · Active</b><p>{isHindi ? "Stealth mode, speed boost, temporary shield और ability की पूरी जानकारी।" : "Stealth mode, speed boost, temporary shield and complete ability details."}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
+    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 TEST</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "पाँच verified character profiles — current values, Ability Effects, additional notes और patch history के साथ।" : "Five researched character profiles with current values, Ability Effects, additional notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 5 researched</small></span></div></header>
+    <label className="character-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder={isHindi ? "Search character या ability…" : "Search character or ability…"} aria-label="Search characters"/>{query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search">×</button>}</label>
+    <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z</span></div>
+    {matches.length ? <div className="character-profile-grid">{matches.map((profile, index) => <button type="button" className="character-result-card" key={profile.id} onClick={() => setSelectedId(profile.id)}>
+      <div className={"character-result-monogram monogram-" + profile.id}><span>{profile.name.slice(0, 1)}</span><small>{profile.name.toUpperCase()}</small></div>
+      <div className="character-result-copy"><span className="character-result-status">OFFICIAL-SOURCE PROFILE</span><h2>{profile.name}</h2><b>{profile.skill} · {profile.type.split(" · ")[0]}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
       <span className="character-result-chevron" aria-hidden="true">↗</span>
-    </button> : <div className="character-empty-state"><b>{isHindi ? "No matching character" : "No matching character"}</b><span>{isHindi ? "Try another name or skill." : "Try another name or skill."}</span></div>}
-    <div className="character-load-more-wrap"><button type="button" className="character-load-more" onClick={() => setShowMoreInfo(value => !value)}>{isHindi ? "More characters" : "More characters"} <span>↗</span></button><p>{isHindi ? "अभी testing build में सिर्फ Morse का verified profile जोड़ा गया है। बाकी profiles verification के बाद इसी catalogue में आएँगे।" : "Only Morse is included in this test build. More profiles will appear here after verification."}</p></div>
-    {showMoreInfo && <p className="character-more-note">Phase 1 test catalogue: 1 verified profile loaded.</p>}
+    </button>)}</div> : <div className="character-empty-state"><b>{isHindi ? "No matching character" : "No matching character"}</b><span>{isHindi ? "दूसरा नाम या ability search करें।" : "Try another name or ability."}</span></div>}
+    <div className="character-load-more-wrap"><p>{isHindi ? "Values official Garena character pages और patch notes से cross-check की गई हैं। Nero के लिए source discrepancy स्पष्ट रूप से flag की गई है।" : "Values are cross-checked against official Garena character pages and patch notes. The Nero source discrepancy is explicitly flagged."}</p></div>
   </main>;
 }
