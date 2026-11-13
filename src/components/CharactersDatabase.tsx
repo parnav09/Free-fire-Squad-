@@ -518,7 +518,7 @@ const baseProfiles: CharacterProfile[] = [
   },
 
 ];
-const profiles: CharacterProfile[] = [...baseProfiles, ...(additionalProfiles as CharacterProfile[])];
+const profiles: CharacterProfile[] = [...baseProfiles, ...((additionalProfiles as { characters: CharacterProfile[] }).characters)];
 
 const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
