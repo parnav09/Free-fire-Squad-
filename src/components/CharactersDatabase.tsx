@@ -278,6 +278,8 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(4);
+  const [batchSize, setBatchSize] = useState(4);
   const isHindi = language === "hi-en";
   const selected = profiles.find(profile => profile.id === selectedId);
   const matches = useMemo(() => profiles
@@ -289,20 +291,28 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     setShowSuggestions(false);
     setActiveSuggestionIndex(0);
   };
+  const returnToList = () => {
+    setSelectedId(null);
+    setQuery("");
+    setShowSuggestions(false);
+    setActiveSuggestionIndex(0);
+    setVisibleCount(batchSize);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  };
 
   useEffect(() => {
-    const onScroll = () => {
-      const cards = Array.from(document.querySelectorAll("[data-character-letter]"));
-      let current = cards.length ? cards[0].getAttribute("data-character-letter") || "A" : "A";
-      cards.forEach(card => {
-        if (card.getBoundingClientRect().top <= window.innerHeight * 0.34) current = card.getAttribute("data-character-letter") || current;
-      });
-      document.querySelectorAll("#character-alphabet-navigation button").forEach(button => { button.classList.toggle("active", button.textContent === current); (button as HTMLButtonElement).disabled = !cards.some(card => card.getAttribute("data-character-letter") === button.textContent); });
+    const updateBatchSize = () => {
+      const width = window.innerWidth;
+      const nextBatch = width <= 640 ? 4 : width <= 1024 ? 6 : 8;
+      setBatchSize(nextBatch);
+      setVisibleCount(current => current < nextBatch ? nextBatch : current);
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [matches.length, query, selectedId]);
+    updateBatchSize();
+    window.addEventListener("resize", updateBatchSize, { passive: true });
+    return () => window.removeEventListener("resize", updateBatchSize);
+  }, []);
+
+
 
   const backLabel = isHindi ? "Characters par wapas" : "Back to Characters";
   const sectionTitle = (en: string, hi: string) => isHindi ? hi : en;
@@ -310,7 +320,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
 
   if (selected) return <main className="character-database character-profile-page">
     <div className="character-db-toolbar">
-      <button type="button" className="character-back-button" onClick={() => setSelectedId(null)}><span aria-hidden="true">←</span> {backLabel}</button>
+      <button type="button" className="character-back-button" onClick={returnToList}><span aria-hidden="true">←</span> {backLabel}</button>
       <div className="character-language-control" role="group" aria-label="Character page language">
         <button type="button" className={language === "en" ? "active" : ""} onClick={() => onLanguageChange("en")}>EN</button>
         <button type="button" className={language === "hi-en" ? "active" : ""} onClick={() => onLanguageChange("hi-en")}>HI+EN</button>
@@ -367,11 +377,11 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 TEST</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "5 verified character profiles — current values, Ability Effects, additional notes aur patch history ke saath." : "Five researched character profiles with current values, Ability Effects, additional notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 5 researched</small></span></div></header>
     <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((profile, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={profile.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(profile)}><span className="character-suggestion-name">{profile.name}</span><span className="character-suggestion-meta">{profile.skill} · {profile.type.split(" · ")[0]}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
-    {matches.length ? <div className="character-profile-grid">{matches.map(profile => <button type="button" className="character-result-card" data-character-letter={profile.name[0].toUpperCase()} key={profile.id} onClick={() => setSelectedId(profile.id)}>
+    {matches.length ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className="character-result-card" key={profile.id} onClick={() => setSelectedId(profile.id)}>
       <div className="character-result-art"><img src={profile.image} alt={profile.name} loading="lazy" decoding="async" fetchPriority="low" /></div>
       <div className="character-result-copy"><span className="character-result-status">OFFICIAL-SOURCE PROFILE</span><h2>{profile.name}</h2><b>{profile.skill} · {profile.type.split(" · ")[0]}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
       <span className="character-result-chevron" aria-hidden="true">↗</span>
     </button>)}</div> : <div className="character-empty-state"><b>{isHindi ? "No matching character" : "No matching character"}</b><span>{isHindi ? "Koi doosra character name ya ability search karein." : "Try another name or ability."}</span></div>}
-    <div className="character-load-more-wrap"><button type="button" className="character-load-more" aria-label="Toggle alphabet navigation" onClick={() => document.getElementById("character-alphabet-navigation")?.classList.toggle("is-open")}>More <span aria-hidden="true">＋</span></button><nav id="character-alphabet-navigation" className="character-alphabet-rail" aria-label="Alphabet navigation">{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(letter => <button type="button" key={letter} onClick={() => document.querySelector('[data-character-letter="' + letter + '"]')?.scrollIntoView({ behavior: "smooth", block: "start" })}>{letter}</button>)}</nav><p>{isHindi ? "Values official Garena character pages aur patch notes se cross-check ki gayi hain. Nero ke liye source discrepancy clearly flag ki gayi hai." : "Values are cross-checked against official Garena character pages and patch notes. The Nero source discrepancy is explicitly flagged."}</p></div>
+    <div className="character-load-more-wrap">{!query.trim() && visibleCount < matches.length && <button type="button" className="character-load-more" onClick={() => setVisibleCount(count => Math.min(count + batchSize, matches.length))}>More <span aria-hidden="true">↓</span></button>}<p>{isHindi ? "Values official Garena character pages aur patch notes se cross-check ki gayi hain. Nero ke liye source discrepancy clearly flag ki gayi hai." : "Values are cross-checked against official Garena character pages and patch notes. The Nero source discrepancy is explicitly flagged."}</p></div>
   </main>;
 }
