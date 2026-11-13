@@ -21,6 +21,10 @@ type CharacterProfile = {
   historyHi: string[];
   source: { label: string; url: string }[];
   status: string;
+  badge?: string;
+  lastChanged?: string;
+  hiddenMechanics?: { text: string; status: "official" | "tested" }[];
+  needsRecheck?: string[];
   awakened?: {
     label: string;
     skill: string;
@@ -39,7 +43,9 @@ type CharacterProfile = {
   };
 };
 
-const profiles: CharacterProfile[] = [
+import additionalProfiles from "../data/character-profiles-additional.json";
+
+const baseProfiles: CharacterProfile[] = [
   {
     id: "ray", name: "Ray", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20264/1a2c81cd893f6ea43a527cb3b7b2f897.png", skill: "Bond of Eclipse", type: "Active · Tag / Link",
     introEn: "A survival ability profile based on Garena's current official character page.",
@@ -512,6 +518,7 @@ const profiles: CharacterProfile[] = [
   },
 
 ];
+const profiles: CharacterProfile[] = [...baseProfiles, ...(additionalProfiles as CharacterProfile[])];
 
 const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
@@ -608,10 +615,11 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     </div>
     <article className="character-profile">
       <header className="character-profile-identity">
-        <div className="character-profile-art"><img src={shownProfile.image} alt={shownProfile.name} /></div>
+        <div className="character-profile-art">{shownProfile.image ? <img src={shownProfile.image} alt={shownProfile.name} /> : <div className={`character-profile-monogram monogram-${shownProfile.id.replace(/[^a-z0-9-]/g, "")}`} aria-label={shownProfile.name}><span>{shownProfile.name.split(/[- ]/).map(part => part[0]).join("").slice(0,2).toUpperCase()}</span><small>CHARACTER PROFILE</small></div>}</div>
         <div className="character-profile-heading">
           <h2>{shownProfile.name}</h2>
-          <span className="character-confirmed">{isHindi ? "Official-source profile" : "Official-source profile"}</span>
+          <span className="character-confirmed">{shownProfile.badge || "Official-source profile"}</span>
+          {shownProfile.lastChanged && <p className="character-last-changed">{isHindi ? "Last changed in" : "Last changed in"} <b>{shownProfile.lastChanged}</b></p>}
           <p className="character-skill-name"><b>{isHindi ? "Ability:" : "Ability:"}</b> {shownProfile.skill}</p>
           <p className="character-profile-summary">{isHindi ? shownProfile.introHi : shownProfile.introEn}</p>
         </div>
@@ -641,6 +649,14 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
           <h3>{sectionTitle("Additional Mechanics & Notes", "Additional Mechanics & Notes")}</h3>
           {list(isHindi ? shownProfile.notesHi : shownProfile.notesEn)}
         </section>
+        {shownProfile.hiddenMechanics?.length ? <section className="character-detail-block">
+          <h3>{sectionTitle("Hidden Mechanics", "Hidden Mechanics")}</h3>
+          <ul>{shownProfile.hiddenMechanics.map((item, index) => <li key={index}>{item.text} <b className="character-mechanic-status">{item.status}</b></li>)}</ul>
+        </section> : null}
+        {shownProfile.needsRecheck?.length ? <section className="character-detail-block character-verify-block">
+          <h3>{sectionTitle("To verify in game", "To verify in game")}</h3>
+          {list(shownProfile.needsRecheck)}
+        </section> : null}
         <section className="character-detail-block">
           <h3>{sectionTitle("Patch History", "Patch History")}</h3>
           {list(isHindi ? shownProfile.historyHi : shownProfile.historyEn)}
@@ -662,12 +678,12 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         <button type="button" className={language === "hi-en" ? "active" : ""} onClick={() => onLanguageChange("hi-en")}>HI+EN</button>
       </div>
     </div>
-    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "10 researched character profiles — Phase 1 + Phase 2, verified profile data, additional notes aur patch history ke saath." : "Ten researched character profiles across Phases 1 and 2, with verified profile data, additional notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
+    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "15 researched character profiles — Phase 1 + Phase 2 + added profiles, source notes aur patch history ke saath." : "Fifteen character profiles with shared profile layout, source notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
     <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((profile, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={profile.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(profile)}><span className="character-suggestion-name">{profile.name}</span><span className="character-suggestion-meta">{profile.skill} · {profile.type.split(" · ")[0]}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
     {matches.length ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className="character-result-card" key={profile.id} onClick={() => setSelectedId(profile.id)}>
       <div className="character-result-art"><img src={profile.image} alt={profile.name} loading="lazy" decoding="async" fetchPriority="low" /></div>
-      <div className="character-result-copy"><span className="character-result-status">OFFICIAL-SOURCE PROFILE</span><h2>{profile.name}</h2><b>{profile.skill} · {profile.type.split(" · ")[0]}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
+      <div className="character-result-copy"><span className="character-result-status">{profile.badge || "OFFICIAL-SOURCE PROFILE"}</span><h2>{profile.name}</h2><b>{profile.skill} · {profile.type.split(" · ")[0]}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
       <span className="character-result-chevron" aria-hidden="true">↗</span>
     </button>)}</div> : <div className="character-empty-state"><b>{isHindi ? "No matching character" : "No matching character"}</b><span>{isHindi ? "Koi doosra character name ya ability search karein." : "Try another name or ability."}</span></div>}
     <div className="character-load-more-wrap">{!query.trim() && visibleCount < matches.length && <button type="button" className="character-load-more" onClick={() => setVisibleCount(count => Math.min(count + batchSize, matches.length))}>More <span aria-hidden="true">↓</span></button>}<p>{isHindi ? "Values official Garena character pages aur patch notes se cross-check ki gayi hain. Jahan current English page aur localized details differ karte hain, source limitation clearly flag ki gayi hai." : "Values are cross-checked against official Garena character pages and patch notes. Source limitations and conflicting values are explicitly flagged."}</p></div>
