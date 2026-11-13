@@ -252,7 +252,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     );
   }, [query]);
 
-  const backLabel = isHindi ? "Characters पर वापस" : "Back to Characters";
+  const backLabel = isHindi ? "Characters par wapas" : "Back to Characters";
   const sectionTitle = (en: string, hi: string) => isHindi ? hi : en;
   const list = (items: string[]) => <ul>{items.map((item, index) => <li key={index}>{item}</li>)}</ul>;
 
@@ -313,7 +313,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
       </div>
     </div>
     <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 TEST</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "5 verified character profiles — current values, Ability Effects, additional notes aur patch history ke saath." : "Five researched character profiles with current values, Ability Effects, additional notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 5 researched</small></span></div></header>
-    <label className="character-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder={isHindi ? "Search character या ability…" : "Search character or ability…"} aria-label="Search characters"/>{query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search">×</button>}</label>
+    <label className="character-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters"/>{query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search">×</button>}</label>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z</span></div>
     {matches.length ? <div className="character-profile-grid">{matches.map(profile => <button type="button" className="character-result-card" key={profile.id} onClick={() => setSelectedId(profile.id)}>
       <div className="character-result-art"><img src={profile.image} alt={profile.name} loading="lazy" /><span>{profile.name.toUpperCase()}</span></div>
