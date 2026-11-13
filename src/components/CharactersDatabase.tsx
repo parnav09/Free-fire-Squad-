@@ -259,7 +259,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
       cards.forEach(card => {
         if (card.getBoundingClientRect().top <= window.innerHeight * 0.34) current = card.getAttribute("data-character-letter") || current;
       });
-      document.querySelectorAll("#character-alphabet-navigation button").forEach(button => button.classList.toggle("active", button.textContent === current));
+      document.querySelectorAll("#character-alphabet-navigation button").forEach(button => { button.classList.toggle("active", button.textContent === current); button.disabled = !cards.some(card => card.getAttribute("data-character-letter") === button.textContent); });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
