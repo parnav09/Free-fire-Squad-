@@ -11,52 +11,84 @@
       "introEn": "An active aura ability described by Garena as healing and movement support for Alok and nearby allies.",
       "introHi": "Active aura ability jo Garena ke mutabik Alok aur nearby allies ko healing aur movement support deti hai.",
       "currentEn": [
-        "Creates an aura that affects Alok and allies within its area.",
-        "Awakened Party Remix adds music-note interactions to the ability.",
-        "Multiple Drop the Beat auras do not stack."
+        "Creates a 5m aura that raises movement speed by 15% and restores 5 HP/s for 10 seconds.",
+        "Effects from several Drop the Beat auras do not stack.",
+        "Awakened Party Remix drops music notes 2m behind the user every 2 seconds while the aura is active; each note lasts 5 seconds. Teammates who pick up a note receive 15% movement speed and 5 HP/s for 10 seconds."
       ],
       "currentHi": [
-        "Aura Alok aur uske area ke andar allies ko affect karti hai.",
-        "Awakened Party Remix ability mein music-note interactions add karta hai.",
-        "Multiple Drop the Beat auras stack nahi hoti."
+        "5m aura movement speed 15% badhati hai aur 10 seconds tak 5 HP/s restore karti hai.",
+        "Multiple Drop the Beat auras ke effects stack nahi hote.",
+        "Awakened Party Remix aura active hone par har 2 seconds mein user ke 2m peeche music notes drop karta hai; har note 5 seconds rehta hai. Note pick karne wale teammate ko 10 seconds ke liye 15% movement speed aur 5 HP/s milta hai."
       ],
       "rows": [
         {
-          "en": "Ability type",
-          "hi": "Ability type",
-          "value": "Active"
+          "en": "Cooldown",
+          "hi": "Cooldown",
+          "value": "45 seconds"
         },
         {
-          "en": "Base ability",
-          "hi": "Base ability",
-          "value": "Drop the Beat"
+          "en": "Aura radius",
+          "hi": "Aura radius",
+          "value": "5m"
         },
         {
-          "en": "Awakened variant",
-          "hi": "Awakened variant",
-          "value": "Party Remix"
+          "en": "Movement-speed bonus",
+          "hi": "Movement-speed bonus",
+          "value": "15%"
+        },
+        {
+          "en": "HP recovery",
+          "hi": "HP recovery",
+          "value": "5 HP/s"
+        },
+        {
+          "en": "Duration",
+          "hi": "Duration",
+          "value": "10 seconds"
+        },
+        {
+          "en": "Party Remix note interval / lifetime",
+          "hi": "Party Remix note interval / lifetime",
+          "value": "Every 2s / 5s"
+        },
+        {
+          "en": "Music-note pickup effect",
+          "hi": "Music-note pickup effect",
+          "value": "+15% speed and 5 HP/s for 10s"
+        },
+        {
+          "en": "BR Skill Boost — Speed Remix",
+          "hi": "BR Skill Boost — Speed Remix",
+          "value": "10m aura range; 16% teammate speed boost"
+        },
+        {
+          "en": "BR Skill Boost — Heal Remix",
+          "hi": "BR Skill Boost — Heal Remix",
+          "value": "20 HP/s while active"
         }
       ],
       "notesEn": [
-        "OB54 introduced Battle Royale Skill Boost choices for Alok. The exact boost values are not reproduced in this profile.",
-        "OB53 documents an interaction rule for overlapping Alok abilities."
+        "OB54 Skill Boost choices are Battle Royale-only; only one boost can be selected.",
+        "OB53 documents that Alok cannot benefit from a teammate's aura while his own skill is active."
       ],
       "notesHi": [
-        "OB54 mein Alok ke liye Battle Royale Skill Boost choices introduce hui. Exact boost values is profile mein reproduce nahi ki gayi hain.",
-        "OB53 mein overlapping Alok abilities ka interaction rule document hua hai."
+        "OB54 Skill Boost choices sirf Battle Royale mode ke liye hain; ek hi boost select hota hai.",
+        "OB53 ke mutabik Alok apni skill active hone par teammate ke aura ka benefit nahi le sakta."
       ],
       "historyEn": [
-        "OB45: latest documented core ability adjustment in the supplied research.",
-        "OB52: official notes record ability bug fixes.",
-        "OB53: official notes document an aura interaction rule.",
-        "OB54: Battle Royale Skill Boost options added.",
+        "OB39: HP recovery was reduced from 5 to 3 HP/s and cooldown changed from 50s to 45s.",
+        "OB45 (24 Jun 2024): HP recovery returned to 5 HP/s; movement speed 15%, duration 10s and cooldown 45s; Party Remix note effects documented.",
+        "OB52: ability-range visual mismatch and speed-application bugs fixed.",
+        "OB53: own-skill aura interaction rule documented.",
+        "OB54 (23 Jun 2026): BR Skill Boost options added.",
         "OB55: no change."
       ],
       "historyHi": [
-        "OB45: supplied research ke mutabik core ability ka latest documented adjustment.",
-        "OB52: official notes mein ability bug fixes record hain.",
-        "OB53: official notes mein aura interaction rule document hai.",
-        "OB54: Battle Royale Skill Boost options add hue.",
+        "OB39: HP recovery 5 se 3 HP/s hui aur cooldown 50s se 45s hua.",
+        "OB45 (24 Jun 2024): HP recovery 5 HP/s hui; movement speed 15%, duration 10s aur cooldown 45s; Party Remix note effects document hue.",
+        "OB52: ability-range visual mismatch aur speed-application bugs fix hue.",
+        "OB53: own-skill aura interaction rule document hua.",
+        "OB54 (23 Jun 2026): BR Skill Boost options add hue.",
         "OB55: koi change nahi."
       ],
       "source": [
@@ -100,18 +132,28 @@
         "introEn": "Awakened version of Drop the Beat with music-note interactions.",
         "introHi": "Drop the Beat ka awakened version jisme music-note interactions hain.",
         "currentEn": [
-          "The awakened variant drops music notes while the aura is active.",
-          "Teammates can interact with the notes to receive the ability's support effect."
+          "While the aura is active, music notes drop 2m behind the skill user every 2 seconds.",
+          "Each note lasts 5 seconds; teammates who pick one up receive +15% movement speed and 5 HP/s for 10 seconds."
         ],
         "currentHi": [
-          "Aura active hone par awakened variant music notes drop karta hai.",
-          "Teammates notes ke saath interact karke ability ka support effect le sakte hain."
+          "Aura active hone par har 2 seconds mein skill user ke 2m peeche music notes drop hote hain.",
+          "Har note 5 seconds rehta hai; pick karne wale teammate ko 10 seconds ke liye +15% movement speed aur 5 HP/s milta hai."
         ],
         "rows": [
           {
-            "en": "Variant",
-            "hi": "Variant",
-            "value": "Awakened · Party Remix"
+            "en": "Note drop interval",
+            "hi": "Note drop interval",
+            "value": "Every 2 seconds"
+          },
+          {
+            "en": "Note lifetime",
+            "hi": "Note lifetime",
+            "value": "5 seconds"
+          },
+          {
+            "en": "Pickup effect",
+            "hi": "Pickup effect",
+            "value": "+15% movement speed and 5 HP/s for 10 seconds"
           }
         ],
         "notesEn": [
@@ -146,39 +188,55 @@
       "introEn": "An electromagnetic-wave ability described in Garena patch notes as interfering with opposing character skills.",
       "introHi": "Electromagnetic-wave ability jise Garena patch notes opposing character skills mein interference ke roop mein describe karte hain.",
       "currentEn": [
-        "Releases an electromagnetic wave around A124.",
-        "The official notes describe skill interference and interruption of certain interaction countdowns."
+        "Unleashes an 8m electromagnetic wave around A124.",
+        "Enemies within the wave cannot activate their skills; the effect also interrupts certain interaction countdowns such as reviving.",
+        "The supplied late-2023 patch-note record lists 25 damage and a 20-second effect duration."
       ],
       "currentHi": [
-        "A124 ke aas-paas electromagnetic wave release hoti hai.",
-        "Official notes skill interference aur kuch interaction countdowns ke interruption ko describe karte hain."
+        "A124 ke around 8m electromagnetic wave release hoti hai.",
+        "Wave ke andar enemies apni skills activate nahi kar sakte; yeh revive jaise kuch interaction countdowns ko bhi interrupt karti hai.",
+        "Supplied late-2023 patch-note record 25 damage aur 20-second effect duration list karta hai."
       ],
       "rows": [
         {
-          "en": "Ability type",
-          "hi": "Ability type",
-          "value": "Active"
+          "en": "Wave size",
+          "hi": "Wave size",
+          "value": "8m"
         },
         {
-          "en": "Official skill name",
-          "hi": "Official skill name",
-          "value": "Thrill of Battle"
+          "en": "Damage",
+          "hi": "Damage",
+          "value": "25 DMG"
+        },
+        {
+          "en": "Duration",
+          "hi": "Duration",
+          "value": "20 seconds"
+        },
+        {
+          "en": "Cooldown",
+          "hi": "Cooldown",
+          "value": "50 seconds (patch note; official character page lists 75s)"
         }
       ],
       "notesEn": [
-        "The supplied research contains a cooldown conflict between the late-2023 patch note and Garena's character page. Verify the live in-game description."
+        "Cooldown conflict: the late-2023 patch note lists 50s, while Garena's character page lists 75s. Keep the conflict visible and verify in game.",
+        "The supplied official notes describe Joseph as immune to A124's nano interference.",
+        "A124's skill can be cancelled while aiming, according to the supplied patch-note record."
       ],
       "notesHi": [
-        "Supplied research mein late-2023 patch note aur Garena character page ke cooldown details mein conflict hai. Live in-game description verify karein."
+        "Cooldown conflict: late-2023 patch note 50s list karta hai, jabki Garena character page 75s list karta hai. Conflict visible rakhein aur game mein verify karein.",
+        "Supplied official notes Joseph ko A124 nano interference se immune batate hain.",
+        "Supplied patch-note record ke mutabik A124 ki skill aiming ke dauran cancel ho sakti hai."
       ],
       "historyEn": [
-        "OB33: A124's ability was reworked into an electromagnetic-wave skill.",
-        "Late-2023 official patch notes document a later ability adjustment.",
+        "OB33 (23 Mar 2022): reworked into an 8m wave that disables skills; the patch described level-based duration and cooldown ranges.",
+        "Late 2023 (approx. Oct–Nov): official patch-note record lists 25 damage, 20s duration and a 50s cooldown; cooldown conflicts with the current character page.",
         "OB55: no change."
       ],
       "historyHi": [
-        "OB33: A124 ki ability electromagnetic-wave skill ke roop mein rework hui.",
-        "Late-2023 official patch notes mein later ability adjustment document hai.",
+        "OB33 (23 Mar 2022): 8m wave skill-disable rework hua; patch mein level-based duration aur cooldown ranges diye gaye.",
+        "Late 2023 (approx. Oct–Nov): official patch-note record 25 damage, 20s duration aur 50s cooldown list karta hai; cooldown current character page se conflict karta hai.",
         "OB55: koi change nahi."
       ],
       "source": [
@@ -217,46 +275,52 @@
       "introEn": "A passive ability profile covering Andrew's armor-specialist trait and awakened Wolf Pack variant.",
       "introHi": "Passive ability profile jo Andrew ke Armor Specialist trait aur awakened Wolf Pack variant ko cover karti hai.",
       "currentEn": [
-        "Armor Specialist concerns vest durability.",
-        "Awakened Wolf Pack adds a nearby-squad armor-support effect."
+        "Armor Specialist reduces vest durability loss by 40%.",
+        "Awakened Wolf Pack adds 4% armor damage reduction, plus 1% per teammate within 15m."
       ],
       "currentHi": [
-        "Armor Specialist vest durability se related hai.",
-        "Awakened Wolf Pack nearby squad ke liye armor-support effect add karta hai."
+        "Armor Specialist vest durability loss ko 40% reduce karta hai.",
+        "Awakened Wolf Pack 4% armor damage reduction add karta hai, plus 15m ke andar har teammate par 1%."
       ],
       "rows": [
         {
-          "en": "Ability type",
-          "hi": "Ability type",
-          "value": "Passive"
+          "en": "Armor Specialist — vest durability loss",
+          "hi": "Armor Specialist — vest durability loss",
+          "value": "−40%"
         },
         {
-          "en": "Base ability",
-          "hi": "Base ability",
-          "value": "Armor Specialist"
+          "en": "Wolf Pack — armor damage reduction",
+          "hi": "Wolf Pack — armor damage reduction",
+          "value": "+4%"
         },
         {
-          "en": "Awakened variant",
-          "hi": "Awakened variant",
-          "value": "Wolf Pack"
+          "en": "Wolf Pack — teammate bonus",
+          "hi": "Wolf Pack — teammate bonus",
+          "value": "+1% per teammate within 15m"
         }
       ],
       "notesEn": [
-        "OB46 specifies a proximity condition for the Wolf Pack teammate effect.",
-        "The supplied research flags an in-game wording check about whether nearby teammates must also equip Wolf Pack."
+        "OB46 changed the teammate bonus to a 15m proximity condition.",
+        "The supplied research flags an in-game wording check about whether nearby teammates must also equip Wolf Pack.",
+        "Shield Points are not reduced by armor damage-reduction effects."
       ],
       "notesHi": [
-        "OB46 Wolf Pack teammate effect ke liye proximity condition specify karta hai.",
-        "Supplied research mein in-game wording verify karna baaki hai ki nearby teammates ko bhi Wolf Pack equip karna zaroori hai ya nahi."
+        "OB46 ne teammate bonus ke liye 15m proximity condition set ki.",
+        "Supplied research mein verify karna baaki hai ki nearby teammates ko bhi Wolf Pack equip karna zaroori hai ya nahi.",
+        "Shield Points par armor damage-reduction effects apply nahi hote."
       ],
       "historyEn": [
-        "OB45: Armor Specialist and Wolf Pack adjustments documented.",
-        "OB46: latest documented Wolf Pack adjustment and proximity wording.",
+        "Approx. Jun 2023: Armor Specialist increased from 20% to 25%.",
+        "OB41: Wolf Pack armor damage reduction changed from 20% to 15%, with teammate bonus adjusted.",
+        "OB45 (24 Jun 2024): Armor Specialist increased from 25% to 40%; Wolf Pack values adjusted.",
+        "OB46 (Sep 2024): Wolf Pack changed to +4%, plus +1% per teammate within 15m.",
         "OB55: no change."
       ],
       "historyHi": [
-        "OB45: Armor Specialist aur Wolf Pack adjustments document hue.",
-        "OB46: Wolf Pack ka latest documented adjustment aur proximity wording.",
+        "Approx. Jun 2023: Armor Specialist 20% se 25% hua.",
+        "OB41: Wolf Pack armor damage reduction 20% se 15% hua aur teammate bonus adjust hua.",
+        "OB45 (24 Jun 2024): Armor Specialist 25% se 40% hua; Wolf Pack values adjust hui.",
+        "OB46 (Sep 2024): Wolf Pack +4% aur 15m ke andar har teammate par +1% hua.",
         "OB55: koi change nahi."
       ],
       "source": [
@@ -295,50 +359,52 @@
       "introEn": "A passive ability that grants additional Shield Points at the start of a match, as described in Garena's official notes.",
       "introHi": "Passive ability jo match ke start par additional Shield Points deti hai, jaisa Garena ke official notes mein describe hai.",
       "currentEn": [
-        "Grants additional Shield Points at match start.",
-        "Shield Points are a separate defensive resource and are consumed before HP.",
-        "Garena's Shield Points notes describe limitations on which damage types they protect against."
+        "Starts the match with 20 extra Shield Points.",
+        "Shield Points recover after surviving combat; the supplied patch record lists a recovery speed of 5 SP/s.",
+        "Shield Points are deducted before HP and are not reduced by armor damage-reduction buffs."
       ],
       "currentHi": [
-        "Match start par additional Shield Points milte hain.",
-        "Shield Points ek separate defensive resource hain aur HP se pehle consume hote hain.",
-        "Garena ke Shield Points notes kuch damage types ke against protection limitations describe karte hain."
+        "Match 20 extra Shield Points ke saath start hota hai.",
+        "Combat survive karne ke baad Shield Points recover hote hain; supplied patch record recovery speed 5 SP/s list karta hai.",
+        "Shield Points HP se pehle deduct hote hain aur armor damage-reduction buffs se reduce nahi hote."
       ],
       "rows": [
         {
-          "en": "Ability type",
-          "hi": "Ability type",
-          "value": "Passive"
+          "en": "Starting Shield Points",
+          "hi": "Starting Shield Points",
+          "value": "20 extra Shield Points"
         },
         {
-          "en": "Official skill name",
-          "hi": "Official skill name",
-          "value": "Gangster's Spirit"
+          "en": "Shield Points recovery",
+          "hi": "Shield Points recovery",
+          "value": "After surviving combat"
         },
         {
-          "en": "Resource",
-          "hi": "Resource",
-          "value": "Shield Points"
+          "en": "Recovery speed",
+          "hi": "Recovery speed",
+          "value": "5 SP/s"
         }
       ],
       "notesEn": [
-        "The Shield Points system is documented separately from armor damage-reduction effects.",
-        "The official notes describe environmental-damage limitations for Shield Points."
+        "Shield Points do not protect against Danger Zone, fall damage or constant bleeding damage.",
+        "The 5 SP/s recovery-speed change is recorded in the supplied research as a 2024 patch affecting Shield Points."
       ],
       "notesHi": [
-        "Shield Points system armor damage-reduction effects se alag document kiya gaya hai.",
-        "Official notes Shield Points ke liye environmental-damage limitations describe karte hain."
+        "Shield Points Danger Zone, fall damage ya constant bleeding damage se protect nahi karte.",
+        "5 SP/s recovery-speed change supplied research mein 2024 Shield Points patch ke roop mein record hai."
       ],
       "historyEn": [
-        "OB41: Shield Points rework documented.",
-        "OB43: Shield Points adjustment documented.",
-        "OB48: latest documented Antonio adjustment.",
+        "OB41 (approx. Aug 2023): reworked from extra HP to Shield Points; regeneration begins after a period without damage.",
+        "OB43 (24 Jan 2024): starting Shield Points adjusted from 40 to 30.",
+        "Approx. Aug–Sep 2024: Shield Points recovery speed changed from 10 to 5 SP/s.",
+        "OB48 (19 Feb 2025): starting Shield Points changed from 30 to 20.",
         "OB55: no change."
       ],
       "historyHi": [
-        "OB41: Shield Points rework document hua.",
-        "OB43: Shield Points adjustment document hua.",
-        "OB48: Antonio ka latest documented adjustment.",
+        "OB41 (approx. Aug 2023): extra HP se Shield Points mein rework hua; damage na hone ke baad regeneration start hoti hai.",
+        "OB43 (24 Jan 2024): starting Shield Points 40 se 30 hue.",
+        "Approx. Aug–Sep 2024: Shield Points recovery speed 10 se 5 SP/s hui.",
+        "OB48 (19 Feb 2025): starting Shield Points 30 se 20 hue.",
         "OB55: koi change nahi."
       ],
       "source": [
