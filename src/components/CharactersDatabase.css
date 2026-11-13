@@ -130,3 +130,31 @@
 @media(prefers-reduced-motion:reduce){
   .character-profile-art img{transition:none}
 }
+
+
+/* Alok original / awakened ability selector */
+.character-variant-switch{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+  margin:0 0 22px;padding:7px;border:1px solid rgba(104,190,231,.2);
+  border-radius:18px;background:linear-gradient(135deg,rgba(12,25,44,.92),rgba(12,15,34,.9));
+}
+.character-variant-switch button{
+  display:grid;gap:5px;min-width:0;padding:13px 15px;border:1px solid transparent;
+  border-radius:12px;background:rgba(255,255,255,.025);color:#a9bbd0;
+  text-align:left;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease;
+}
+.character-variant-switch button.active{
+  border-color:rgba(103,214,255,.55);
+  background:radial-gradient(ellipse at 90% 0%,rgba(37,167,213,.2),transparent 65%),linear-gradient(135deg,rgba(23,66,91,.7),rgba(19,29,54,.92));
+  color:#f1faff;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 20px rgba(50,172,220,.1);
+}
+.character-variant-switch button>span{font-size:9px;font-weight:900;letter-spacing:.15em;color:#7fa5c5}
+.character-variant-switch button>b{font-size:19px;line-height:1.1}
+.character-variant-switch button>small{font-size:11px;color:#9ab4cc}
+.character-variant-switch button:focus-visible{outline:2px solid #80e2ff;outline-offset:2px}
+@media(max-width:640px){
+  .character-variant-switch{gap:7px;padding:6px;margin-bottom:17px}
+  .character-variant-switch button{padding:11px 10px}
+  .character-variant-switch button>b{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){.character-variant-switch button{transition:none}}
