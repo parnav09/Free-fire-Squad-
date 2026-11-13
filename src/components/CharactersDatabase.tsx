@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./CharactersDatabase.css";
 
 type Language = "en" | "hi-en";
@@ -241,6 +241,7 @@ const profiles: CharacterProfile[] = [
 export default function CharactersDatabase({ language, onLanguageChange, onBack }: Props) {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [activeLetter, setActiveLetter] = useState("A");
   const isHindi = language === "hi-en";
   const selected = profiles.find(profile => profile.id === selectedId);
   const matches = useMemo(() => {
@@ -251,6 +252,20 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         .join(" ").toLowerCase().includes(normalized)
     ).sort((a, b) => a.name.localeCompare(b.name));
   }, [query]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const cards = Array.from(document.querySelectorAll("[data-character-letter]"));
+      let current = "A";
+      cards.forEach(card => {
+        if (card.getBoundingClientRect().top <= window.innerHeight * 0.34) current = card.getAttribute("data-character-letter") || current;
+      });
+      setActiveLetter(current);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [matches.length, selectedId]);
 
   const backLabel = isHindi ? "Characters par wapas" : "Back to Characters";
   const sectionTitle = (en: string, hi: string) => isHindi ? hi : en;
