@@ -43,8 +43,6 @@ type CharacterProfile = {
   };
 };
 
-import additionalProfiles from "../data/character-profiles-additional.json";
-
 const baseProfiles: CharacterProfile[] = [
   {
     id: "ray", name: "Ray", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20264/1a2c81cd893f6ea43a527cb3b7b2f897.png", skill: "Bond of Eclipse", type: "Active · Tag / Link",
@@ -518,7 +516,7 @@ const baseProfiles: CharacterProfile[] = [
   },
 
 ];
-const profiles: CharacterProfile[] = [...baseProfiles, ...((additionalProfiles as { characters: CharacterProfile[] }).characters)];
+const profiles: CharacterProfile[] = baseProfiles;
 
 const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
