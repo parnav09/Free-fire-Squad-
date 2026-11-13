@@ -6,6 +6,7 @@ type Props = { language: Language; onLanguageChange: (value: Language) => void; 
 type DetailRow = { en: string; hi: string; value: string };
 type CharacterProfile = {
   id: string;
+  image: string;
   name: string;
   skill: string;
   type: string;
@@ -24,7 +25,7 @@ type CharacterProfile = {
 
 const profiles: CharacterProfile[] = [
   {
-    id: "ray", name: "Ray", skill: "Bond of Eclipse", type: "Active · Tag / Link",
+    id: "ray", name: "Ray", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20264/1a2c81cd893f6ea43a527cb3b7b2f897.png", skill: "Bond of Eclipse", type: "Active · Tag / Link",
     introEn: "A survival ability profile based on Garena's current official character page.",
     introHi: "यह profile Garena के current official character page पर आधारित है।",
     currentEn: [
@@ -66,7 +67,7 @@ const profiles: CharacterProfile[] = [
     status: "Current profile checked · 14 Nov 2026",
   },
   {
-    id: "morse", name: "Morse", skill: "Stealth Bytes", type: "Active · Stealth",
+    id: "morse", name: "Morse", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20261/87b0db20d90350d22979b03d8b65a567.png", skill: "Stealth Bytes", type: "Active · Stealth",
     introEn: "A stealth-focused ability. Current OB55 adjustments supersede older OB52 values.",
     introHi: "यह stealth-focused ability है। Current OB55 adjustments पुराने OB52 values से newer हैं।",
     currentEn: [
@@ -111,7 +112,7 @@ const profiles: CharacterProfile[] = [
     status: "OB55 values reconciled · 14 Nov 2026",
   },
   {
-    id: "nero", name: "Nero", skill: "Cryo Mind", type: "Active · Plushie / Area",
+    id: "nero", name: "Nero", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202510/5d937a0ac5fe4e67c97fb8fb8e43455e.png", skill: "Cryo Mind", type: "Active · Plushie / Area",
     introEn: "The current official character profile and older patch notes contain conflicting plushie and damage values; the conflict is explicitly flagged below.",
     introHi: "Current official character profile और पुराने patch notes में plushie तथा damage values अलग हैं; नीचे इस अंतर को साफ़ दिखाया गया है।",
     currentEn: [
@@ -158,7 +159,7 @@ const profiles: CharacterProfile[] = [
     status: "Source discrepancy flagged · 14 Nov 2026",
   },
   {
-    id: "rin", name: "Rin", skill: "Gale of Kunai", type: "Passive · Stored charges",
+    id: "rin", name: "Rin", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20257/9aa96a782fab8633cbb57f9229e7a5e6.png", skill: "Gale of Kunai", type: "Passive · Stored charges",
     introEn: "A passive character ability listed by Garena. Weapon-specific mechanics are intentionally not detailed in this profile.",
     introHi: "Garena द्वारा listed passive character ability। इस profile में weapon-specific mechanics शामिल नहीं किए गए हैं।",
     currentEn: [
@@ -192,7 +193,7 @@ const profiles: CharacterProfile[] = [
     status: "OB55 balance note checked · 14 Nov 2026",
   },
   {
-    id: "oscar", name: "Oscar", skill: "Valiant Dash", type: "Active · Dash",
+    id: "oscar", name: "Oscar", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20252/d5d04e40eb00900e96a28828decdaff0.png", skill: "Valiant Dash", type: "Active · Dash",
     introEn: "The base ability, cooldown adjustment and BR Skill Boost options are documented separately.",
     introHi: "Base ability, cooldown adjustment और BR Skill Boost options को अलग-अलग document किया गया है।",
     currentEn: [
@@ -265,7 +266,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     </div>
     <article className="character-profile">
       <header className="character-profile-identity">
-        <div className={"character-profile-monogram monogram-" + selected.id}><span>{selected.name.slice(0, 1)}</span><small>{selected.name.toUpperCase()}</small></div>
+        <div className="character-profile-art"><img src={selected.image} alt={selected.name} /></div>
         <div className="character-profile-heading">
           <h2>{selected.name}</h2>
           <span className="character-confirmed">{isHindi ? "Official-source profile" : "Official-source profile"}</span>
@@ -315,7 +316,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     <label className="character-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder={isHindi ? "Search character या ability…" : "Search character or ability…"} aria-label="Search characters"/>{query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search">×</button>}</label>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z</span></div>
     {matches.length ? <div className="character-profile-grid">{matches.map(profile => <button type="button" className="character-result-card" key={profile.id} onClick={() => setSelectedId(profile.id)}>
-      <div className={"character-result-monogram monogram-" + profile.id}><span>{profile.name.slice(0, 1)}</span><small>{profile.name.toUpperCase()}</small></div>
+      <div className="character-result-art"><img src={profile.image} alt={profile.name} loading="lazy" /><span>{profile.name.toUpperCase()}</span></div>
       <div className="character-result-copy"><span className="character-result-status">OFFICIAL-SOURCE PROFILE</span><h2>{profile.name}</h2><b>{profile.skill} · {profile.type.split(" · ")[0]}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
       <span className="character-result-chevron" aria-hidden="true">↗</span>
     </button>)}</div> : <div className="character-empty-state"><b>{isHindi ? "No matching character" : "No matching character"}</b><span>{isHindi ? "दूसरा नाम या ability search करें।" : "Try another name or ability."}</span></div>}
