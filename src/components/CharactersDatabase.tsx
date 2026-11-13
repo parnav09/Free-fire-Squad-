@@ -238,19 +238,49 @@ const profiles: CharacterProfile[] = [
   },
 ];
 
+const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+const editDistanceWithin = (a: string, b: string, limit: number) => {
+  if (Math.abs(a.length - b.length) > limit) return false;
+  let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= a.length; i++) {
+    const current = [i];
+    let rowMin = i;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      current[j] = Math.min(current[j - 1] + 1, previous[j] + 1, previous[j - 1] + cost);
+      rowMin = Math.min(rowMin, current[j]);
+    }
+    if (rowMin > limit) return false;
+    previous = current;
+  }
+  return previous[b.length] <= limit;
+};
+
+const profileMatchesSearch = (profile: CharacterProfile, query: string) => {
+  const haystack = normalizeSearchText([
+    profile.name, profile.skill, profile.type, profile.introEn, profile.introHi,
+    ...profile.currentEn, ...profile.currentHi, ...profile.notesEn, ...profile.notesHi,
+    ...profile.historyEn, ...profile.historyHi, ...profile.rows.flatMap(row => [row.en, row.hi, row.value]),
+  ].join(" "));
+  const terms = normalizeSearchText(query).split(" ").filter(Boolean);
+  if (!terms.length) return true;
+  const words = haystack.split(" ");
+  return terms.every(term => {
+    if (haystack.includes(term)) return true;
+    const maxDistance = term.length >= 9 ? 2 : term.length >= 5 ? 1 : 0;
+    return maxDistance > 0 && words.some(word => editDistanceWithin(term, word, maxDistance));
+  });
+};
+
 export default function CharactersDatabase({ language, onLanguageChange, onBack }: Props) {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const isHindi = language === "hi-en";
   const selected = profiles.find(profile => profile.id === selectedId);
-  const matches = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    if (!normalized) return [...profiles].sort((a, b) => a.name.localeCompare(b.name));
-    return profiles.filter(profile =>
-      [profile.name, profile.skill, profile.type, ...profile.currentEn, ...profile.notesEn]
-        .join(" ").toLowerCase().includes(normalized)
-    ).sort((a, b) => a.name.localeCompare(b.name));
-  }, [query]);
+  const matches = useMemo(() => profiles
+    .filter(profile => profileMatchesSearch(profile, query))
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" })), [query]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -327,10 +357,10 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
       </div>
     </div>
     <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 TEST</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "5 verified character profiles — current values, Ability Effects, additional notes aur patch history ke saath." : "Five researched character profiles with current values, Ability Effects, additional notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 5 researched</small></span></div></header>
-    <label className="character-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters"/>{query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search">×</button>}</label>
+    <label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search">×</button>}</label>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
     {matches.length ? <div className="character-profile-grid">{matches.map(profile => <button type="button" className="character-result-card" data-character-letter={profile.name[0].toUpperCase()} key={profile.id} onClick={() => setSelectedId(profile.id)}>
-      <div className="character-result-art"><img src={profile.image} alt={profile.name} loading="lazy" /><span>{profile.name.toUpperCase()}</span></div>
+      <div className="character-result-art"><img src={profile.image} alt={profile.name} loading="lazy" decoding="async" fetchPriority="low" /><span>{profile.name.toUpperCase()}</span></div>
       <div className="character-result-copy"><span className="character-result-status">OFFICIAL-SOURCE PROFILE</span><h2>{profile.name}</h2><b>{profile.skill} · {profile.type.split(" · ")[0]}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
       <span className="character-result-chevron" aria-hidden="true">↗</span>
     </button>)}</div> : <div className="character-empty-state"><b>{isHindi ? "No matching character" : "No matching character"}</b><span>{isHindi ? "Koi doosra character name ya ability search karein." : "Try another name or ability."}</span></div>}
