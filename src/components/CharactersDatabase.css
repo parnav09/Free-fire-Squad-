@@ -117,3 +117,16 @@
   .character-result-card:hover .character-result-art img{transform:scale(1.08)}
 }
 
+
+
+/* Match the global artwork lighting treatment on full character profiles */
+.character-profile-art img{
+  filter:brightness(1.24) contrast(1.08) saturate(1.12);
+  transition:filter .25s ease,transform .3s ease;
+}
+.character-profile-page .character-profile-art:hover img{
+  filter:brightness(1.30) contrast(1.10) saturate(1.15);
+}
+@media(prefers-reduced-motion:reduce){
+  .character-profile-art img{transition:none}
+}
