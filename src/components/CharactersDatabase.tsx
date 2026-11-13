@@ -896,7 +896,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         </div>
       </header>
 
-      {selected.id === "alok" && <div className="character-variant-switch" role="group" aria-label="Alok ability variant">
+      {shownProfile.id === "alok" && <div className="character-variant-switch" role="group" aria-label="Alok ability variant">
         <button type="button" className={activeAlokVariant === "original" ? "active" : ""} aria-pressed={activeAlokVariant === "original"} onClick={() => setActiveAlokVariant("original")}>
           <span>ORIGINAL</span><b>Alok</b><small>Drop the Beat</small>
         </button>
