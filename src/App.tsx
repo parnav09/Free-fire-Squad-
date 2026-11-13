@@ -653,6 +653,38 @@ export default function App() {
   const mobileNavLabel: Record<string,string> = {Players:"Players",Tournament:"Matches",StratForge:"Forge",Assignments:"Tasks",Evaluation:"Eval", "Weekly Review":"Review","Player Trends":"Trends",Analytics:"Stats",Profile:"Profile",Settings:"Settings","Training Legacy":"Legacy"};
   const navIcon: Record<string,string> = {Players:"♙",Tournament:"◷",StratForge:"◈",Assignments:"✓",Evaluation:"◎","Weekly Review":"↗","Player Trends":"⌁",Analytics:"▥",Evolution:"⌁",Profile:"♙",Settings:"⚙","Training Legacy":"◫"};
   const onboarding=!signedIn||!team;
+  if (combatNexusView && !onboarding) {
+    const isCharacters = combatNexusView === "characters";
+    const pageTitle = combatNexusView === "pets" ? "Pet Database" : "Loadout";
+    return (
+      <main className="combat-nexus-route">
+        <div className="combat-nexus-route-shell">
+          {isCharacters ? (
+            <CharactersDatabase language={drillLanguage} onLanguageChange={changeDrillLanguage} onBack={() => setCombatNexusView(null)} />
+          ) : (
+            <section className="combat-nexus-subpage">
+              <header className="combat-nexus-subpage-top">
+                <button type="button" className="character-back-button" onClick={() => setCombatNexusView(null)}><span aria-hidden="true">←</span> Back to Combat Nexus</button>
+                <span className="character-db-eyebrow">SQUAD OS / COMBAT NEXUS</span>
+              </header>
+              <div className="combat-nexus-subpage-hero">
+                <span className="combat-nexus-subpage-icon" aria-hidden="true">{combatNexusView === "pets" ? "◈" : "⌘"}</span>
+                <div className="character-db-eyebrow">{combatNexusView === "pets" ? "02 / COMPANIONS DATABASE" : "03 / COMBAT BUILDS"}</div>
+                <h1>{pageTitle}</h1>
+                <p>{combatNexusView === "pets" ? "Pet profiles, skill effects, cooldowns, level details and verified interactions." : "A dedicated workspace for organizing and reviewing saved team configurations."}</p>
+                <div className="combat-nexus-subpage-status"><i /> {combatNexusView === "pets" ? "DATABASE WORKSPACE" : "LOADOUT WORKSPACE"} <span>·</span> NEXT BUILD</div>
+              </div>
+              <div className="combat-nexus-subpage-panel">
+                <div><span className="character-db-eyebrow">WORKSPACE STATUS</span><h2>{combatNexusView === "pets" ? "Pet profiles are being prepared" : "Loadout workspace is being prepared"}</h2><p>{combatNexusView === "pets" ? "This is now a separate full-page destination. Verified pet records will appear here with the same detailed profile layout used for Characters." : "This is now a separate full-page destination. The dedicated layout will keep saved builds, team combinations and their notes organized here."}</p></div>
+                <span className="combat-nexus-panel-mark">{combatNexusView === "pets" ? "PET" : "LOADOUT"}</span>
+              </div>
+            </section>
+          )}
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="app-shell">
       <aside className="sidebar">
