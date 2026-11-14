@@ -222,3 +222,7 @@
 @media(prefers-reduced-motion:reduce){
   .character-result-card--cutout .character-result-art img{transition:none}
 }
+
+
+/* Profile metadata order: official badge, reconciliation subtitle, then last-changed patch. */
+.character-profile-subtitle{margin:7px 0 0;color:#9fc5df;font-size:11px;font-weight:800;letter-spacing:.035em;line-height:1.45}
