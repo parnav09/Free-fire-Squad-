@@ -31,7 +31,6 @@ type CharacterProfile = {
     label: string;
     name?: string;
     lastChanged?: string;
-    status?: string;
     badge?: string;
     skill: string;
     type: string;
