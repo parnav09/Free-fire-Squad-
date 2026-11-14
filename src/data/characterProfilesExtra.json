@@ -1,0 +1,497 @@
+[
+  {
+    "id": "alok",
+    "name": "Alok",
+    "image": "",
+    "skill": "Drop the Beat (+ Awakened Party Remix)",
+    "type": "Active · Support",
+    "badge": "Official patch-note profile",
+    "lastChanged": "OB54 (23 Jun 2026) · core numbers OB45 (24 Jun 2024)",
+    "introEn": "Support aura boosts movement and restores HP.",
+    "introHi": "Support aura movement speed badhata hai aur HP restore karta hai.",
+    "currentEn": [
+      "Aura gives +15% speed and 5 HP/s for 10s; auras do not stack."
+    ],
+    "currentHi": [
+      "Aura 10s tak +15% speed aur 5 HP/s deta hai; auras stack nahi hote."
+    ],
+    "rows": [
+      {
+        "en": "Aura radius",
+        "hi": "Aura radius",
+        "value": "5m"
+      },
+      {
+        "en": "Movement-speed bonus",
+        "hi": "Movement-speed bonus",
+        "value": "+15%"
+      },
+      {
+        "en": "HP recovery",
+        "hi": "HP recovery",
+        "value": "5 HP/s"
+      },
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "10 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "45 seconds"
+      },
+      {
+        "en": "Party Remix drop",
+        "hi": "Party Remix drop",
+        "value": "2m behind user every 2s; lasts 5s"
+      },
+      {
+        "en": "Teammate pickup",
+        "hi": "Teammate pickup",
+        "value": "+15% speed, 5 HP/s for 10s"
+      },
+      {
+        "en": "BR Skill Boost — Speed Remix",
+        "hi": "BR Skill Boost — Speed Remix",
+        "value": "10m aura; teammates +16% speed"
+      },
+      {
+        "en": "BR Skill Boost — Heal Remix",
+        "hi": "BR Skill Boost — Heal Remix",
+        "value": "20 HP/s while skill active"
+      }
+    ],
+    "notesEn": [
+      "OB53: while Alok's own skill is active, teammates' Alok auras give no benefit.",
+      "OB54 Skill Boosts are Battle Royale only."
+    ],
+    "notesHi": [
+      "OB53: Alok ki own skill active ho to teammates ke Alok aura ka benefit nahi.",
+      "OB54 Skill Boosts sirf Battle Royale mein."
+    ],
+    "historyEn": [
+      "OB39: HP 5→3; cooldown 50s→45s.",
+      "OB45: HP 3→5, speed 15%, duration 10s.",
+      "OB52: range/speed bug fixes.",
+      "OB53: aura restriction.",
+      "OB54: Skill Boosts.",
+      "OB55: no change."
+    ],
+    "historyHi": [
+      "OB39: HP 5→3; cooldown 50s→45s.",
+      "OB45: HP 3→5, speed 15%, duration 10s.",
+      "OB52: range/speed bug fixes.",
+      "OB53: aura restriction.",
+      "OB54: Skill Boosts.",
+      "OB55: koi change nahi."
+    ],
+    "source": [
+      {
+        "label": "Garena — OB54",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "Garena — OB53",
+        "url": "https://ff.garena.com/en/article/1640/"
+      },
+      {
+        "label": "Garena — OB52",
+        "url": "https://ff.garena.com/en/article/1595/"
+      },
+      {
+        "label": "Garena — OB45",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "Garena — OB55",
+        "url": "https://ff.garena.com/en/article/1712/"
+      }
+    ],
+    "status": "Official patch-note values · max skill level",
+    "hiddenMechanics": [
+      {
+        "text": "Alok's own active skill blocks ally Alok aura benefit (OB53).",
+        "status": "official"
+      }
+    ],
+    "needsRecheck": [
+      "Verify exact OB54 Skill Boost wording."
+    ],
+    "awakened": {
+      "label": "AWAKENED",
+      "skill": "Party Remix",
+      "type": "Active · Support",
+      "introEn": "Awakened Party Remix.",
+      "introHi": "Awakened Party Remix.",
+      "currentEn": [
+        "Drops 2m behind user every 2s; lasts 5s. Teammate pickup gives +15% speed and 5 HP/s for 10s."
+      ],
+      "currentHi": [
+        "User ke 2m peeche har 2s drop; 5s duration. Teammate pickup +15% speed aur 10s 5 HP/s deta hai."
+      ],
+      "rows": [
+        {
+          "en": "Drop position",
+          "hi": "Drop position",
+          "value": "2m behind user"
+        },
+        {
+          "en": "Drop interval",
+          "hi": "Drop interval",
+          "value": "Every 2 seconds"
+        },
+        {
+          "en": "Duration",
+          "hi": "Duration",
+          "value": "5 seconds"
+        },
+        {
+          "en": "Pickup effect",
+          "hi": "Pickup effect",
+          "value": "+15% speed and 5 HP/s for 10s"
+        }
+      ],
+      "notesEn": [
+        "Awakened pickup effect is teammate-facing."
+      ],
+      "notesHi": [
+        "Awakened pickup effect teammate ko milta hai."
+      ],
+      "historyEn": [
+        "Awakening / Skill Boost update: OB54."
+      ],
+      "historyHi": [
+        "Awakening / Skill Boost update: OB54."
+      ],
+      "source": [
+        {
+          "label": "Garena — OB54",
+          "url": "https://ff.garena.com/en/article/1673/"
+        }
+      ],
+      "status": "OB54 · verify exact Skill Boost wording"
+    }
+  },
+  {
+    "id": "a124",
+    "name": "A124",
+    "image": "",
+    "skill": "Thrill of Battle",
+    "type": "Active · Skill blocker",
+    "badge": "Official patch-note profile (one value conflicts)",
+    "lastChanged": "Late-2023 patch (approx.)",
+    "introEn": "Interference wave blocks enemy skills and interrupts interactions.",
+    "introHi": "Interference wave enemy skills block aur interactions interrupt karti hai.",
+    "currentEn": [
+      "8m wave blocks enemy skill activation, deals 25 DMG, and interrupts interaction countdowns."
+    ],
+    "currentHi": [
+      "8m wave enemy skill activation block, 25 DMG, aur interaction countdown interrupt karti hai."
+    ],
+    "rows": [
+      {
+        "en": "Wave size",
+        "hi": "Wave size",
+        "value": "8m"
+      },
+      {
+        "en": "Hit value",
+        "hi": "Hit value",
+        "value": "25 DMG"
+      },
+      {
+        "en": "Enemy skills",
+        "hi": "Enemy skills",
+        "value": "Disabled"
+      },
+      {
+        "en": "Enemy interactions",
+        "hi": "Enemy interactions",
+        "value": "Countdown interrupted"
+      },
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "20 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "50 seconds (patch note)"
+      }
+    ],
+    "notesEn": [
+      "Can cancel while aiming.",
+      "Joseph is immune."
+    ],
+    "notesHi": [
+      "Aim karte waqt cancel ho sakti hai.",
+      "Joseph immune hai."
+    ],
+    "historyEn": [
+      "OB27 old EP-to-HP version buffed (obsolete).",
+      "OB33 rework: 8m wave, 20–30s, cooldown 100→50s.",
+      "Late 2023: 25 DMG added; duration 30→20s; cooldown 75→50s.",
+      "OB55 no change."
+    ],
+    "historyHi": [
+      "OB27 old EP-to-HP version buffed (obsolete).",
+      "OB33 rework: 8m wave, 20–30s, cooldown 100→50s.",
+      "Late 2023: 25 DMG; duration 30→20s; cooldown 75→50s.",
+      "OB55 no change."
+    ],
+    "source": [
+      {
+        "label": "Garena patch note",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "Garena OB33",
+        "url": "https://ff.garena.com/en/article/674/"
+      },
+      {
+        "label": "Garena A124 page (ES)",
+        "url": "https://ff.garena.com/es/chars/42"
+      }
+    ],
+    "status": "Patch-note snapshot · max skill level",
+    "hiddenMechanics": [
+      {
+        "text": "Joseph is immune to A124 interference.",
+        "status": "official"
+      }
+    ],
+    "needsRecheck": [
+      "Patch note cooldown is 50s but character page lists 75s."
+    ]
+  },
+  {
+    "id": "andrew",
+    "name": "Andrew",
+    "image": "",
+    "skill": "Armor Specialist + Wolf Pack",
+    "type": "Passive · Armor protection",
+    "badge": "Official patch-note profile",
+    "lastChanged": "OB46 (Sep 2024) · Armor Specialist OB45",
+    "introEn": "Armor durability and squad armor damage protection.",
+    "introHi": "Armor durability aur squad armor damage protection.",
+    "currentEn": [
+      "Armor Specialist: armor durability loss -40%. Wolf Pack: +4% armor damage reduction and +1% per teammate within 15m."
+    ],
+    "currentHi": [
+      "Armor Specialist: durability loss -40%. Wolf Pack: +4% armor damage reduction aur 15m mein per teammate +1%."
+    ],
+    "rows": [
+      {
+        "en": "Armor durability loss",
+        "hi": "Armor durability loss",
+        "value": "-40%"
+      },
+      {
+        "en": "Wolf Pack armor damage reduction",
+        "hi": "Wolf Pack armor damage reduction",
+        "value": "+4%"
+      },
+      {
+        "en": "Teammate bonus",
+        "hi": "Teammate bonus",
+        "value": "+1% per teammate within 15m"
+      },
+      {
+        "en": "Full squad (3 nearby)",
+        "hi": "Full squad (3 nearby)",
+        "value": "4% + 3% = 7% (calculated)"
+      }
+    ],
+    "notesEn": [
+      "Wolf Pack does not apply to Shield Points."
+    ],
+    "notesHi": [
+      "Wolf Pack Shield Points par apply nahi hota."
+    ],
+    "historyEn": [
+      "~Jun 2023: Armor Specialist 20→25%.",
+      "OB41 Wolf Pack 20→15%; per teammate 10→5%.",
+      "OB45 Armor Specialist 25→40%; Wolf Pack 15→5%; +5% per teammate.",
+      "OB46 Wolf Pack 4%; +1% per teammate within 15m.",
+      "OB55 no change."
+    ],
+    "historyHi": [
+      "~Jun 2023: Armor Specialist 20→25%.",
+      "OB41 Wolf Pack 20→15%; per teammate 10→5%.",
+      "OB45 Armor Specialist 25→40%; Wolf Pack 15→5%; +5% per teammate.",
+      "OB46 Wolf Pack 4%; 15m mein per teammate +1%.",
+      "OB55 no change."
+    ],
+    "source": [
+      {
+        "label": "Garena OB46",
+        "url": "https://ff.garena.com/en-pk/article/1391/"
+      },
+      {
+        "label": "Garena OB45",
+        "url": "https://ff.garena.com/en/article/1368/"
+      },
+      {
+        "label": "Garena OB41",
+        "url": "https://ff.garena.com/en/article/1213/"
+      }
+    ],
+    "status": "Official patch-note values · max skill level",
+    "hiddenMechanics": [
+      {
+        "text": "Shield Points ignore armor DR buffs; Wolf Pack does not reduce hits on Antonio's shield.",
+        "status": "official"
+      }
+    ],
+    "needsRecheck": [
+      "Verify whether teammates must also carry Wolf Pack for +1%."
+    ]
+  },
+  {
+    "id": "antonio",
+    "name": "Antonio",
+    "image": "",
+    "skill": "Gangster's Spirit",
+    "type": "Passive · Early survival",
+    "badge": "Official patch-note profile",
+    "lastChanged": "OB48 (19 Feb 2025)",
+    "introEn": "Starting Shield Points support early survival.",
+    "introHi": "Starting Shield Points early survival mein help karte hain.",
+    "currentEn": [
+      "Shield Points are removed before HP."
+    ],
+    "currentHi": [
+      "Shield Points HP se pehle remove hote hain."
+    ],
+    "rows": [
+      {
+        "en": "Starting Shield Points",
+        "hi": "Starting Shield Points",
+        "value": "20 (was 30)"
+      },
+      {
+        "en": "Shield recovery",
+        "hi": "Shield recovery",
+        "value": "After surviving combat"
+      },
+      {
+        "en": "Recovery speed",
+        "hi": "Recovery speed",
+        "value": "5 SP/s (was 10 SP/s)"
+      },
+      {
+        "en": "Armor damage reduction on SP",
+        "hi": "Armor damage reduction on SP",
+        "value": "0%"
+      }
+    ],
+    "notesEn": [
+      "Shield Points are removed before HP."
+    ],
+    "notesHi": [
+      "Shield Points HP se pehle remove hote hain."
+    ],
+    "historyEn": [
+      "OB41 rework: 40 HP→40 SP; regen after 4s.",
+      "OB43: 40→30.",
+      "~Aug–Sep 2024: recovery speed 10→5 SP/s.",
+      "OB48: 30→20 SP.",
+      "OB55 no change."
+    ],
+    "historyHi": [
+      "OB41 rework: 40 HP→40 SP; 4s baad regen.",
+      "OB43: 40→30.",
+      "~Aug–Sep 2024: recovery 10→5 SP/s.",
+      "OB48: 30→20 SP.",
+      "OB55 no change."
+    ],
+    "source": [
+      {
+        "label": "Garena OB48",
+        "url": "https://ff.garena.com/en/article/1456/"
+      },
+      {
+        "label": "Garena patch note",
+        "url": "https://ff.garena.com/en/article/1385/"
+      },
+      {
+        "label": "Garena OB41",
+        "url": "https://ff.garena.com/en/article/1213/"
+      },
+      {
+        "label": "Garena OB43",
+        "url": "https://ff.garena.com/en-pk/article/1317/"
+      }
+    ],
+    "status": "Official patch-note values · max skill level",
+    "hiddenMechanics": [
+      {
+        "text": "Shield Points ignore armor DR buffs; no protection against Danger Zone, fall, or bleeding damage.",
+        "status": "official"
+      }
+    ],
+    "needsRecheck": [
+      "Older patch dates are approximate."
+    ]
+  },
+  {
+    "id": "a-patroa",
+    "name": "A-Patroa",
+    "image": "",
+    "skill": "Exclusive skill slot",
+    "type": "Utility · No combat skill",
+    "badge": "Official-description profile",
+    "lastChanged": "No balance changes found since OB34 release (May 2022)",
+    "introEn": "Utility character with an exclusive extra skill slot; no personal combat skill.",
+    "introHi": "Utility character: exclusive extra skill slot; personal combat skill nahi.",
+    "currentEn": [
+      "Adds one extra skill slot that can hold any skill owned on the account."
+    ],
+    "currentHi": [
+      "Ek extra slot add hota hai jisme account ka koi owned skill rakh sakte hain."
+    ],
+    "rows": [
+      {
+        "en": "Personal combat skill",
+        "hi": "Personal combat skill",
+        "value": "None"
+      },
+      {
+        "en": "Extra slot",
+        "hi": "Extra slot",
+        "value": "1 exclusive slot · any owned skill"
+      },
+      {
+        "en": "Other slots",
+        "hi": "Other slots",
+        "value": "Unlock automatically"
+      },
+      {
+        "en": "Release",
+        "hi": "Release",
+        "value": "OB34 (May 2022)"
+      }
+    ],
+    "notesEn": [
+      "No combat ability values; effect is an additional skill slot."
+    ],
+    "notesHi": [
+      "Combat values nahi; effect additional skill slot hai."
+    ],
+    "historyEn": [
+      "OB34 released.",
+      "No later balance changes found."
+    ],
+    "historyHi": [
+      "OB34 release.",
+      "Baad ke balance changes nahi mile."
+    ],
+    "source": [],
+    "status": "Official-description profile · no balance patches found",
+    "needsRecheck": [
+      "Verify official character page; wording currently comes from fan portal quoting Garena."
+    ]
+  }
+]
