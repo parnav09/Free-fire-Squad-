@@ -226,3 +226,8 @@
 
 /* Profile metadata order: official badge, reconciliation subtitle, then last-changed patch. */
 .character-profile-subtitle{margin:7px 0 0;color:#9fc5df;font-size:11px;font-weight:800;letter-spacing:.035em;line-height:1.45}
+
+/* Paloma artwork fallback: intentional branded monogram until a safe portrait asset is supplied. */
+.monogram-paloma{background:radial-gradient(ellipse at 50% 34%,rgba(245,105,157,.28),transparent 61%),linear-gradient(145deg,#35172f,#111225);border-color:rgba(245,143,187,.38)}
+.monogram-paloma span{color:#ffe0ed;text-shadow:0 0 28px rgba(245,105,157,.34)}
+.monogram-paloma small{color:#f0a9c8}
