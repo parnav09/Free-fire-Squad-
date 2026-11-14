@@ -661,8 +661,6 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
 
 
       <section className="character-ability-section">
-        <div className="character-section-eyebrow">SQUAD OS / COMBAT NEXUS</div>
-        <h1>{shownProfile.name} — {sectionTitle("Ability Profile", "Ability Profile")}</h1>
         <div className="character-values-table" role="table" aria-label={shownProfile.name + " ability values"}>
           <div className="character-values-row character-values-head" role="row"><span role="columnheader">{sectionTitle("Ability / Factor", "Ability / Factor")}</span><span role="columnheader">{sectionTitle("Current value", "Current value")}</span></div>
           {shownProfile.rows.map(row => <div className="character-values-row" role="row" key={row.en}><span role="cell">{isHindi ? row.hi : row.en}</span><strong role="cell">{row.value}</strong></div>)}
@@ -689,8 +687,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         </section>
         <section className="character-detail-block character-source-block">
           <h3>{sectionTitle("Official Sources", "Official Sources")}</h3>
-          <ul>{shownProfile.source.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.label} ↗</a></li>)}</ul>
-          
+          <ul>{shownProfile.source.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.label}</a></li>)}</ul>
         </section>
       </section>
     </article>
