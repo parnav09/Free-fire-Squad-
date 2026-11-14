@@ -1272,15 +1272,6 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
       </div>
     </div>
     <article className="character-profile">
-      {(selected?.id === "alok" || selected?.id === "andrew") && <div className="character-variant-switch" role="group" aria-label={selected.name + " ability variant"}>
-        <button type="button" className={activeCharacterVariant === "original" ? "active" : ""} aria-pressed={activeCharacterVariant === "original"} onClick={() => setActiveCharacterVariant("original")}>
-          <b>{selected.name}</b>
-        </button>
-        <button type="button" className={activeCharacterVariant === "awakened" ? "active" : ""} aria-pressed={activeCharacterVariant === "awakened"} onClick={() => setActiveCharacterVariant("awakened")}>
-          <b>Awakened {selected.name}</b>
-        </button>
-      </div>}
-
       <header className="character-profile-identity">
         <div className={`character-profile-art ${shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
         <div className="character-profile-heading">
