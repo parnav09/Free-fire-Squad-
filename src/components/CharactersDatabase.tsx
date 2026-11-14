@@ -652,14 +652,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         </div>
       </header>
 
-      {(selected?.id === "alok" || selected?.id === "andrew") && <div className="character-variant-switch" role="group" aria-label={selected.name + " ability variant"}>
-        <button type="button" className={activeCharacterVariant === "original" ? "active" : ""} aria-pressed={activeCharacterVariant === "original"} onClick={() => setActiveCharacterVariant("original")}>
-          <b>{selected.name}</b>
-        </button>
-        <button type="button" className={activeCharacterVariant === "awakened" ? "active" : ""} aria-pressed={activeCharacterVariant === "awakened"} onClick={() => setActiveCharacterVariant("awakened")}>
-          <b>Awakened {selected.name}</b>
-        </button>
-      </div>}
+
       <section className="character-ability-section">
         <div className="character-section-eyebrow">SQUAD OS / COMBAT NEXUS</div>
         <h1>{shownProfile.name} — {sectionTitle("Ability Profile", "Ability Profile")}</h1>
@@ -690,7 +683,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         <section className="character-detail-block character-source-block">
           <h3>{sectionTitle("Official Sources", "Official Sources")}</h3>
           <ul>{shownProfile.source.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.label} ↗</a></li>)}</ul>
-          <p>{sectionTitle("Values are a researched snapshot, not live game data. In-game values can change with later updates.", "Yeh values researched snapshot hain, live game data nahi. Aage ke updates mein in-game values badal sakti hain.")}</p>
+          
         </section>
       </section>
     </article>
