@@ -106,6 +106,10 @@
       {
         "label": "Garena — OB55",
         "url": "https://ff.garena.com/en/article/1712/"
+      },
+      {
+        "label": "Garena — Alok character page",
+        "url": "https://ff.garena.com/en/chars/146/"
       }
     ],
     "status": "Official patch-note values · max skill level",
@@ -253,6 +257,10 @@
       {
         "label": "Garena A124 page (ES)",
         "url": "https://ff.garena.com/es/chars/42"
+      },
+      {
+        "label": "Garena — A124 character page",
+        "url": "https://ff.garena.com/en/chars/6"
       }
     ],
     "status": "Patch-note snapshot · max skill level",
@@ -336,6 +344,10 @@
       {
         "label": "Garena OB41",
         "url": "https://ff.garena.com/en/article/1213/"
+      },
+      {
+        "label": "Garena — Andrew character page",
+        "url": "https://ff.garena.com/en/chars/2"
       }
     ],
     "status": "Official patch-note values · max skill level",
@@ -423,6 +435,10 @@
       {
         "label": "Garena OB43",
         "url": "https://ff.garena.com/en-pk/article/1317/"
+      },
+      {
+        "label": "Garena — Antonio character page",
+        "url": "https://ff.garena.com/en/chars/17"
       }
     ],
     "status": "Official patch-note values · max skill level",
@@ -488,7 +504,12 @@
       "OB34 release.",
       "Baad ke balance changes nahi mile."
     ],
-    "source": [],
+    "source": [
+      {
+        "label": "Garena — A-Patroa character page",
+        "url": "https://ff.garena.com/en/chars/601"
+      }
+    ],
     "status": "Official-description profile · no balance patches found",
     "needsRecheck": [
       "Verify official character page; wording currently comes from fan portal quoting Garena."
