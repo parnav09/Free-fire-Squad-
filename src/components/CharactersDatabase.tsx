@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import extraProfiles from "../data/characterProfilesExtra.json";
 import "./CharactersDatabase.css";
 
 type Language = "en" | "hi-en";
@@ -516,7 +517,7 @@ const baseProfiles: CharacterProfile[] = [
   },
 
 ];
-const profiles: CharacterProfile[] = baseProfiles;
+const profiles: CharacterProfile[] = [...baseProfiles, ...(extraProfiles as CharacterProfile[])];
 
 const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
