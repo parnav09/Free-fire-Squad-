@@ -581,5 +581,393 @@
         "url": "https://ff.garena.com/en/chars/12/"
       }
     ]
+  },
+  {
+    "id": "laura",
+    "name": "Laura",
+    "image": "",
+    "skill": "Sharp Shooter",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "lastChanged": "OB50 (30 Jul 2025)",
+    "introEn": "Passive that increases accuracy while Laura is scoped in.",
+    "introHi": "Passive that increases accuracy while Laura is scoped in.",
+    "rows": [
+      {
+        "en": "Condition",
+        "hi": "Condition",
+        "value": "While scoped in"
+      },
+      {
+        "en": "Accuracy bonus",
+        "hi": "Accuracy bonus",
+        "value": "+60%"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "Accuracy increases by 60% while scoped in."
+    ],
+    "currentHi": [
+      "Accuracy increases by 60% while scoped in."
+    ],
+    "notesEn": [
+      "Built to help long-range shooters land shots."
+    ],
+    "notesHi": [
+      "Built to help long-range shooters land shots."
+    ],
+    "historyEn": [
+      "OB28 (Jun 2021): Accuracy bonus raised, maximum 30% to 35%.",
+      "OB36 (Sep 2022): Maximum 35% to 50%.",
+      "OB50 (30 Jul 2025): 50% to 60%."
+    ],
+    "historyHi": [
+      "OB28 (Jun 2021): Accuracy bonus raised, maximum 30% to 35%.",
+      "OB36 (Sep 2022): Maximum 35% to 50%.",
+      "OB50 (30 Jul 2025): 50% to 60%."
+    ],
+    "source": [
+      {
+        "label": "OB50",
+        "url": "https://ff.garena.com/en/article/1511/"
+      },
+      {
+        "label": "OB36",
+        "url": "https://ff.garena.com/en/article/871/"
+      },
+      {
+        "label": "OB28",
+        "url": "https://ff.garena.com/en/article/459/"
+      },
+      {
+        "label": "Laura character page",
+        "url": "https://ff.garena.com/en/chars/438"
+      }
+    ]
+  },
+  {
+    "id": "rafael",
+    "name": "Rafael",
+    "image": "",
+    "skill": "Dead Silent",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "lastChanged": "OB40 (Jun 2023)",
+    "introEn": "Passive that silences sniper and marksman fire and speeds up bleeding on knocked-down enemies.",
+    "introHi": "Passive that silences sniper and marksman fire and speeds up bleeding on knocked-down enemies.",
+    "rows": [
+      {
+        "en": "Weapons",
+        "hi": "Weapons",
+        "value": "Sniper Rifles and Marksman Rifles"
+      },
+      {
+        "en": "Firing sound",
+        "hi": "Firing sound",
+        "value": "Silenced"
+      },
+      {
+        "en": "Knocked-down enemy bleed speed",
+        "hi": "Knocked-down enemy bleed speed",
+        "value": "+85%"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "With Sniper Rifles and Marksman Rifles, firing sound is silenced and enemies knocked down by Rafael bleed 85% faster."
+    ],
+    "currentHi": [
+      "With Sniper Rifles and Marksman Rifles, firing sound is silenced and enemies knocked down by Rafael bleed 85% faster."
+    ],
+    "notesEn": [
+      "Works while using Sniper Rifles or Marksman Rifles."
+    ],
+    "notesHi": [
+      "Works while using Sniper Rifles or Marksman Rifles."
+    ],
+    "historyEn": [
+      "OB27 (Apr 2021): Became a passive skill that silences sniper and marksman fire.",
+      "OB33 (23 Mar 2022): Limited to Sniper and Marksman Rifles; bleed speed bonus raised, maximum 45% to 90%.",
+      "OB39 (Mar 2023): Skill description corrected to match the actual effect.",
+      "OB40 (Jun 2023): 90% to 85%."
+    ],
+    "historyHi": [
+      "OB27 (Apr 2021): Became a passive skill that silences sniper and marksman fire.",
+      "OB33 (23 Mar 2022): Limited to Sniper and Marksman Rifles; bleed speed bonus raised, maximum 45% to 90%.",
+      "OB39 (Mar 2023): Skill description corrected to match the actual effect.",
+      "OB40 (Jun 2023): 90% to 85%."
+    ],
+    "source": [
+      {
+        "label": "OB40",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "OB33",
+        "url": "https://ff.garena.com/en/article/674/"
+      },
+      {
+        "label": "OB27",
+        "url": "https://ff.garena.com/en/article/428/"
+      },
+      {
+        "label": "Rafael character page",
+        "url": "https://ff.garena.com/en/chars/14"
+      }
+    ]
+  },
+  {
+    "id": "jota",
+    "name": "Jota",
+    "image": "",
+    "skill": "Sustained Raids",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "lastChanged": "OB53 (2 Apr 2026)",
+    "introEn": "Passive that restores HP when Jota hits and knocks down enemies.",
+    "introHi": "Passive that restores HP when Jota hits and knocks down enemies.",
+    "rows": [
+      {
+        "en": "Gun hit",
+        "hi": "Gun hit",
+        "value": "Restores some HP"
+      },
+      {
+        "en": "Knockdown (any type)",
+        "hi": "Knockdown (any type)",
+        "value": "Restores 20% HP"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "Hitting an enemy with guns restores some HP. Knocking down an enemy in any way restores 20% HP."
+    ],
+    "currentHi": [
+      "Hitting an enemy with guns restores some HP. Knocking down an enemy in any way restores 20% HP."
+    ],
+    "notesEn": [
+      "Garena does not publish the HP restored per gun hit.",
+      "Before OB53, only knockdowns scored with guns triggered the recovery."
+    ],
+    "notesHi": [
+      "Garena does not publish the HP restored per gun hit.",
+      "Before OB53, only knockdowns scored with guns triggered the recovery."
+    ],
+    "historyEn": [
+      "Before OB29: SMG or Shotgun kills restored HP, 5-second cooldown.",
+      "OB29 (Aug 2021): Reworked so gun hits restore HP and knockdowns restore up to 20% max HP.",
+      "OB53 (2 Apr 2026): Any type of knockdown now triggers the recovery."
+    ],
+    "historyHi": [
+      "Before OB29: SMG or Shotgun kills restored HP, 5-second cooldown.",
+      "OB29 (Aug 2021): Reworked so gun hits restore HP and knockdowns restore up to 20% max HP.",
+      "OB53 (2 Apr 2026): Any type of knockdown now triggers the recovery."
+    ],
+    "source": [
+      {
+        "label": "OB53",
+        "url": "https://ff.garena.com/en/article/1640/"
+      },
+      {
+        "label": "OB29",
+        "url": "https://ff.garena.com/id/article/496/"
+      },
+      {
+        "label": "Jota character page",
+        "url": "https://ff.garena.com/en/chars/178"
+      }
+    ]
+  },
+  {
+    "id": "clu",
+    "name": "Clu",
+    "image": "",
+    "skill": "Tracing Steps",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "lastChanged": "OB45 (24 Jun 2024)",
+    "introEn": "Active scan that reveals enemy positions and shares them with the squad.",
+    "introHi": "Active scan that reveals enemy positions and shares them with the squad.",
+    "rows": [
+      {
+        "en": "Scan range",
+        "hi": "Scan range",
+        "value": "80m"
+      },
+      {
+        "en": "Detects",
+        "hi": "Detects",
+        "value": "Enemies not prone or crouching"
+      },
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "10 seconds"
+      },
+      {
+        "en": "Position sharing",
+        "hi": "Position sharing",
+        "value": "Shared with teammates"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "45 seconds"
+      }
+    ],
+    "currentEn": [
+      "Locates enemies within 80m who are not prone or crouching for 10 seconds. Enemy positions are shared with teammates."
+    ],
+    "currentHi": [
+      "Locates enemies within 80m who are not prone or crouching for 10 seconds. Enemy positions are shared with teammates."
+    ],
+    "notesEn": [
+      "Prone or crouching enemies are not revealed.",
+      "Scanned enemies get a notification on their minimap and screen."
+    ],
+    "notesHi": [
+      "Prone or crouching enemies are not revealed.",
+      "Scanned enemies get a notification on their minimap and screen."
+    ],
+    "historyEn": [
+      "OB34 (25 May 2022): Duration 5-7.5s to 5-10s, cooldown 75-60s to 75-50s by level.",
+      "OB37 (Nov 2022): Maximum scan range 75m to 65m.",
+      "OB40 (Jun 2023): Cooldown 50s to 45s; scanned enemies now get a notification.",
+      "OB45 (24 Jun 2024): Scan range 65m to 80m."
+    ],
+    "historyHi": [
+      "OB34 (25 May 2022): Duration 5-7.5s to 5-10s, cooldown 75-60s to 75-50s by level.",
+      "OB37 (Nov 2022): Maximum scan range 75m to 65m.",
+      "OB40 (Jun 2023): Cooldown 50s to 45s; scanned enemies now get a notification.",
+      "OB45 (24 Jun 2024): Scan range 65m to 80m."
+    ],
+    "source": [
+      {
+        "label": "OB45",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "OB40",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "OB37",
+        "url": "https://ff.garena.com/en/article/906/"
+      },
+      {
+        "label": "OB34",
+        "url": "https://ff.garena.com/en/article/735/"
+      },
+      {
+        "label": "Clu character page",
+        "url": "https://ff.garena.com/en/chars/209"
+      }
+    ]
+  },
+  {
+    "id": "wolfrahh",
+    "name": "Wolfrahh",
+    "image": "",
+    "skill": "Limelight",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "lastChanged": "OB48 (19 Feb 2025)",
+    "introEn": "Passive that grows with every elimination: tougher against headshots and stronger headshots.",
+    "introHi": "Passive that grows with every elimination: tougher against headshots and stronger headshots.",
+    "rows": [
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Every elimination adds 1 spectator"
+      },
+      {
+        "en": "Spectators",
+        "hi": "Spectators",
+        "value": "Never decrease"
+      },
+      {
+        "en": "Headshot damage taken",
+        "hi": "Headshot damage taken",
+        "value": "-4% per spectator"
+      },
+      {
+        "en": "Maximum headshot reduction",
+        "hi": "Maximum headshot reduction",
+        "value": "-12%"
+      },
+      {
+        "en": "Headshot damage dealt",
+        "hi": "Headshot damage dealt",
+        "value": "+10% per spectator"
+      },
+      {
+        "en": "Maximum headshot bonus",
+        "hi": "Maximum headshot bonus",
+        "value": "+30%"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "Every elimination adds one spectator, and spectators never decrease. Each spectator reduces headshot damage taken by 4% and increases headshot damage dealt by 10%."
+    ],
+    "currentHi": [
+      "Every elimination adds one spectator, and spectators never decrease. Each spectator reduces headshot damage taken by 4% and increases headshot damage dealt by 10%."
+    ],
+    "notesEn": [
+      "Maximum effect is reached at 3 spectators."
+    ],
+    "notesHi": [
+      "Maximum effect is reached at 3 spectators."
+    ],
+    "historyEn": [
+      "OB22 (May 2020): Introduced.",
+      "OB34 (25 May 2022): Spectators required reduced from 6 to 3; limb damage bonus replaced with headshot damage bonus.",
+      "OB48 (19 Feb 2025): Headshot damage taken reduction 7% to 4% per spectator, maximum 21% to 12%."
+    ],
+    "historyHi": [
+      "OB22 (May 2020): Introduced.",
+      "OB34 (25 May 2022): Spectators required reduced from 6 to 3; limb damage bonus replaced with headshot damage bonus.",
+      "OB48 (19 Feb 2025): Headshot damage taken reduction 7% to 4% per spectator, maximum 21% to 12%."
+    ],
+    "source": [
+      {
+        "label": "OB48",
+        "url": "https://ff.garena.com/en/article/1456/"
+      },
+      {
+        "label": "OB34",
+        "url": "https://ff.garena.com/en/article/735/"
+      },
+      {
+        "label": "OB22",
+        "url": "https://ff.garena.com/en-pk/article/380/"
+      },
+      {
+        "label": "Wolfrahh character page",
+        "url": "https://ff.garena.com/en/chars/210"
+      }
+    ]
   }
 ]
