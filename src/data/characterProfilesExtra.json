@@ -3,17 +3,17 @@
     "id": "alok",
     "name": "Alok",
     "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/c62e709e3ad8387f5484bb12e1cc81a9.png",
-    "skill": "Drop the Beat (Active)",
+    "skill": "Drop the Beat",
     "type": "Active",
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
-    "introEn": "Active aura that heals Alok and nearby allies and boosts their movement speed.",
-    "introHi": "Active aura that heals Alok and nearby allies and boosts their movement speed.",
+    "introEn": "Active aura that heals Alok and nearby allies, boosts their movement speed and drops music notes.",
+    "introHi": "Active aura that heals Alok and nearby allies, boosts their movement speed and drops music notes.",
     "currentEn": [
-      "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
+      "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
     ],
     "currentHi": [
-      "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
+      "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
     ],
     "rows": [
       {
@@ -42,30 +42,49 @@
         "value": "50 HP"
       },
       {
+        "en": "Music note drop",
+        "hi": "Music note drop",
+        "value": "Every 2 seconds, 2m behind Alok"
+      },
+      {
+        "en": "Music note lifetime",
+        "hi": "Music note lifetime",
+        "value": "5 seconds"
+      },
+      {
+        "en": "Note pickup bonus",
+        "hi": "Note pickup bonus",
+        "value": "15% speed and 5 HP/s for 10 seconds"
+      },
+      {
         "en": "Cooldown",
         "hi": "Cooldown",
         "value": "45 seconds"
       }
     ],
     "notesEn": [
-      "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
+      "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54). Since OB47 the awakened skill replaces the original for all players; both appearances remain available."
     ],
     "notesHi": [
-      "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
+      "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54). Since OB47 the awakened skill replaces the original for all players; both appearances remain available."
     ],
     "historyEn": [
       "OB39 (Mar 2023): HP recovery 5 to 3 HP/s, cooldown 50s to 45s.",
-      "OB45 (24 Jun 2024): HP recovery 3 to 5 HP/s, movement speed 15%, duration 10s, cooldown 45s.",
+      "OB40 (Jun 2023): Awakened Alok introduced.",
+      "OB45 (24 Jun 2024): HP recovery 3 to 5 HP/s, movement speed 15%, duration 10s; music-note pickup healing 3 to 5 HP/s.",
+      "OB47 (2 Dec 2024): Awakened skill replaced the original for all players.",
       "OB52 (9 Jan 2026): Fixed skill range not matching the visual range, and speed boost sometimes failing to apply.",
       "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
-      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts added: Speed Remix (10m aura, teammates +16% speed) and Heal Remix (20 HP/s while active). Global movement-speed cap added."
+      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: Speed Remix (10m aura, teammates +16% speed) and Heal Remix (20 HP/s while active). Global movement-speed cap added."
     ],
     "historyHi": [
       "OB39 (Mar 2023): HP recovery 5 to 3 HP/s, cooldown 50s to 45s.",
-      "OB45 (24 Jun 2024): HP recovery 3 to 5 HP/s, movement speed 15%, duration 10s, cooldown 45s.",
+      "OB40 (Jun 2023): Awakened Alok introduced.",
+      "OB45 (24 Jun 2024): HP recovery 3 to 5 HP/s, movement speed 15%, duration 10s; music-note pickup healing 3 to 5 HP/s.",
+      "OB47 (2 Dec 2024): Awakened skill replaced the original for all players.",
       "OB52 (9 Jan 2026): Fixed skill range not matching the visual range, and speed boost sometimes failing to apply.",
       "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
-      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts added: Speed Remix (10m aura, teammates +16% speed) and Heal Remix (20 HP/s while active). Global movement-speed cap added."
+      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: Speed Remix (10m aura, teammates +16% speed) and Heal Remix (20 HP/s while active). Global movement-speed cap added."
     ],
     "source": [
       {
@@ -81,104 +100,15 @@
         "url": "https://ff.garena.com/en/article/1595/"
       },
       {
+        "label": "Garena – OB47",
+        "url": "https://ff.garena.com/en/article/1424/"
+      },
+      {
         "label": "Garena – OB45",
         "url": "https://ff.garena.com/en/article/1357/"
       }
     ],
     "status": "OB55 values reconciled · 14 Nov 2026",
-    "awakened": {
-      "label": "Awakened Alok",
-      "skill": "Party Remix (Awakened Drop the Beat)",
-      "type": "Active",
-      "introEn": "Awakened Drop the Beat that also drops music notes for teammates to pick up.",
-      "introHi": "Awakened Drop the Beat that also drops music notes for teammates to pick up.",
-      "currentEn": [
-        "All Drop the Beat effects apply. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds."
-      ],
-      "currentHi": [
-        "All Drop the Beat effects apply. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds."
-      ],
-      "rows": [
-        {
-          "en": "Aura radius",
-          "hi": "Aura radius",
-          "value": "5m"
-        },
-        {
-          "en": "Movement-speed bonus",
-          "hi": "Movement-speed bonus",
-          "value": "15%"
-        },
-        {
-          "en": "HP recovery",
-          "hi": "HP recovery",
-          "value": "5 HP/s"
-        },
-        {
-          "en": "Duration",
-          "hi": "Duration",
-          "value": "10 seconds"
-        },
-        {
-          "en": "Cooldown",
-          "hi": "Cooldown",
-          "value": "45 seconds"
-        },
-        {
-          "en": "Music note drop",
-          "hi": "Music note drop",
-          "value": "Every 2 seconds, 2m behind Alok"
-        },
-        {
-          "en": "Music note lifetime",
-          "hi": "Music note lifetime",
-          "value": "5 seconds"
-        },
-        {
-          "en": "Note pickup bonus",
-          "hi": "Note pickup bonus",
-          "value": "15% speed and 5 HP/s for 10 seconds"
-        }
-      ],
-      "notesEn": [
-        "Same two notes as Alok (OB53 aura restriction, OB54 movement-speed cap)."
-      ],
-      "notesHi": [
-        "Same two notes as Alok (OB53 aura restriction, OB54 movement-speed cap)."
-      ],
-      "historyEn": [
-        "OB40 (Jun 2023): Awakened Alok introduced.",
-        "OB45 (24 Jun 2024): Music-note pickup healing 3 to 5 HP/s; aura values as Alok.",
-        "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
-        "OB54 (23 Jun 2026): Global movement-speed cap added."
-      ],
-      "historyHi": [
-        "OB40 (Jun 2023): Awakened Alok introduced.",
-        "OB45 (24 Jun 2024): Music-note pickup healing 3 to 5 HP/s; aura values as Alok.",
-        "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
-        "OB54 (23 Jun 2026): Global movement-speed cap added."
-      ],
-      "source": [
-        {
-          "label": "Garena – OB54",
-          "url": "https://ff.garena.com/en/article/1673/"
-        },
-        {
-          "label": "Garena – OB53",
-          "url": "https://ff.garena.com/en/article/1640/"
-        },
-        {
-          "label": "Garena – OB52",
-          "url": "https://ff.garena.com/en/article/1595/"
-        },
-        {
-          "label": "Garena – OB45",
-          "url": "https://ff.garena.com/en/article/1357/"
-        }
-      ],
-      "name": "Awakened Alok",
-      "lastChanged": "OB54 (23 Jun 2026)"
-    },
     "artworkMode": "cutout"
   },
   {
@@ -260,17 +190,17 @@
     "id": "andrew",
     "name": "Andrew",
     "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/564762d9a1137afaf2c9abb0ea8862b7.png",
-    "skill": "Armor Specialist (Passive)",
+    "skill": "Wolf Pack",
     "type": "Passive",
     "badge": "Official-source profile",
-    "lastChanged": "OB45 (24 Jun 2024)",
-    "introEn": "Passive that slows armor durability loss.",
-    "introHi": "Passive that slows armor durability loss.",
+    "lastChanged": "OB46 (Sep 2024)",
+    "introEn": "Passive that slows armor durability loss and adds armor damage reduction, boosted by nearby teammates.",
+    "introHi": "Passive that slows armor durability loss and adds armor damage reduction, boosted by nearby teammates.",
     "currentEn": [
-      "Armor loses durability 40% slower."
+      "Armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
     ],
     "currentHi": [
-      "Armor loses durability 40% slower."
+      "Armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
     ],
     "rows": [
       {
@@ -279,29 +209,62 @@
         "value": "-40%"
       },
       {
+        "en": "Armor damage reduction",
+        "hi": "Armor damage reduction",
+        "value": "+4%"
+      },
+      {
+        "en": "Teammate bonus",
+        "hi": "Teammate bonus",
+        "value": "+1% per teammate within 15m"
+      },
+      {
+        "en": "Full squad bonus",
+        "hi": "Full squad bonus",
+        "value": "+7% total (4% + 3%)"
+      },
+      {
         "en": "Cooldown",
         "hi": "Cooldown",
         "value": "No cooldown"
       }
     ],
     "notesEn": [
-      "Also applies to Awakened Andrew."
+      "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack. Since OB47 the awakened skill replaces the original for all players."
     ],
     "notesHi": [
-      "Also applies to Awakened Andrew."
+      "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack. Since OB47 the awakened skill replaces the original for all players."
     ],
     "historyEn": [
       "OB40 (Jun 2023): Armor durability loss reduction 20% to 25%.",
-      "OB45 (24 Jun 2024): 25% to 40%."
+      "OB41 (Aug 2023): Armor damage reduction 20% to 15%, teammate bonus 10% to 5%.",
+      "OB45 (24 Jun 2024): Armor durability loss reduction 25% to 40%; armor damage reduction 15% to 5%, +5% per teammate carrying the skill.",
+      "OB46 (Sep 2024): Now +4%, +1% per teammate within 15m.",
+      "OB47 (2 Dec 2024): Awakened skill replaced the original for all players."
     ],
     "historyHi": [
       "OB40 (Jun 2023): Armor durability loss reduction 20% to 25%.",
-      "OB45 (24 Jun 2024): 25% to 40%."
+      "OB41 (Aug 2023): Armor damage reduction 20% to 15%, teammate bonus 10% to 5%.",
+      "OB45 (24 Jun 2024): Armor durability loss reduction 25% to 40%; armor damage reduction 15% to 5%, +5% per teammate carrying the skill.",
+      "OB46 (Sep 2024): Now +4%, +1% per teammate within 15m.",
+      "OB47 (2 Dec 2024): Awakened skill replaced the original for all players."
     ],
     "source": [
       {
+        "label": "Garena – OB47",
+        "url": "https://ff.garena.com/en/article/1424/"
+      },
+      {
+        "label": "Garena – OB46",
+        "url": "https://ff.garena.com/en-pk/article/1391/"
+      },
+      {
         "label": "Garena – OB45",
         "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "Garena – OB41",
+        "url": "https://ff.garena.com/en/article/1213/"
       },
       {
         "label": "Garena – OB40",
@@ -309,79 +272,7 @@
       }
     ],
     "status": "OB55 values reconciled · 14 Nov 2026",
-    "artworkMode": "cutout",
-    "awakened": {
-      "label": "Awakened Andrew",
-      "skill": "Wolf Pack (Awakened, Passive)",
-      "type": "Passive",
-      "introEn": "Awakened passive that adds armor damage reduction, boosted by nearby teammates.",
-      "introHi": "Awakened passive that adds armor damage reduction, boosted by nearby teammates.",
-      "currentEn": [
-        "Armor Specialist applies: armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
-      ],
-      "currentHi": [
-        "Armor Specialist applies: armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
-      ],
-      "rows": [
-        {
-          "en": "Armor durability loss",
-          "hi": "Armor durability loss",
-          "value": "-40% (Armor Specialist)"
-        },
-        {
-          "en": "Armor damage reduction",
-          "hi": "Armor damage reduction",
-          "value": "+4%"
-        },
-        {
-          "en": "Teammate bonus",
-          "hi": "Teammate bonus",
-          "value": "+1% per teammate within 15m"
-        },
-        {
-          "en": "Full squad bonus",
-          "hi": "Full squad bonus",
-          "value": "+7% total (4% + 3%)"
-        },
-        {
-          "en": "Cooldown",
-          "hi": "Cooldown",
-          "value": "No cooldown"
-        }
-      ],
-      "notesEn": [
-        "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack."
-      ],
-      "notesHi": [
-        "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack."
-      ],
-      "historyEn": [
-        "OB41 (Aug 2023): Armor damage reduction 20% to 15%, teammate bonus 10% to 5%.",
-        "OB45 (24 Jun 2024): 15% to 5%, +5% per teammate carrying the skill.",
-        "OB46 (Sep 2024): Now 4%, +1% per teammate within 15m."
-      ],
-      "historyHi": [
-        "OB41 (Aug 2023): Armor damage reduction 20% to 15%, teammate bonus 10% to 5%.",
-        "OB45 (24 Jun 2024): 15% to 5%, +5% per teammate carrying the skill.",
-        "OB46 (Sep 2024): Now 4%, +1% per teammate within 15m."
-      ],
-      "source": [
-        {
-          "label": "Garena – OB46",
-          "url": "https://ff.garena.com/en-pk/article/1391/"
-        },
-        {
-          "label": "Garena – OB45",
-          "url": "https://ff.garena.com/en/article/1357/"
-        },
-        {
-          "label": "Garena – OB41",
-          "url": "https://ff.garena.com/en/article/1213/"
-        }
-      ],
-      "name": "Awakened Andrew",
-      "lastChanged": "OB46 (Sep 2024)"
-    }
+    "artworkMode": "cutout"
   },
   {
     "id": "antonio",
@@ -967,6 +858,364 @@
       {
         "label": "Wolfrahh character page",
         "url": "https://ff.garena.com/en/chars/210"
+      }
+    ]
+  },
+  {
+    "id": "jai",
+    "name": "Jai",
+    "image": "",
+    "skill": "Raging Reload",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB42 (Oct 2023)",
+    "introEn": "Passive that refills Jai's magazine after a knockdown or an active skill.",
+    "introHi": "Passive that refills Jai's magazine after a knockdown or an active skill.",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "rows": [
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Knocking down an enemy or using an active skill"
+      },
+      {
+        "en": "Magazine refill",
+        "hi": "Magazine refill",
+        "value": "100% of max capacity"
+      },
+      {
+        "en": "Weapons",
+        "hi": "Weapons",
+        "value": "Assault Rifles, Pistols, SMGs, Shotguns, Sniper Rifles"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "After knocking down an enemy or using an active skill, the gun's magazine reloads automatically to 100% of its maximum capacity."
+    ],
+    "currentHi": [
+      "After knocking down an enemy or using an active skill, the gun's magazine reloads automatically to 100% of its maximum capacity."
+    ],
+    "notesEn": [
+      "Works with Assault Rifles, Pistols, SMGs, Shotguns and Sniper Rifles. The active-skill trigger leaves Jai with a loaded weapon right after using a skill."
+    ],
+    "notesHi": [
+      "Works with Assault Rifles, Pistols, SMGs, Shotguns and Sniper Rifles. The active-skill trigger leaves Jai with a loaded weapon right after using a skill."
+    ],
+    "historyEn": [
+      "Sep 2020 (Booyah Day): Reload capacity maximum 25% to 45%; Shotguns added.",
+      "OB42 (Oct 2023): Reworked. Magazine now refills after a knockdown or an active skill, to 100% for all weapon types including Sniper Rifles."
+    ],
+    "historyHi": [
+      "Sep 2020 (Booyah Day): Reload capacity maximum 25% to 45%; Shotguns added.",
+      "OB42 (Oct 2023): Reworked. Magazine now refills after a knockdown or an active skill, to 100% for all weapon types including Sniper Rifles."
+    ],
+    "source": [
+      {
+        "label": "OB42",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "Booyah Day patch",
+        "url": "https://ff.garena.com/en/article/322/"
+      }
+    ]
+  },
+  {
+    "id": "alvaro",
+    "name": "Alvaro",
+    "image": "",
+    "skill": "Split Blitz",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB47 (2 Dec 2024)",
+    "introEn": "Passive that boosts explosive damage and range, and splits each grenade into mini grenades after it explodes.",
+    "introHi": "Passive that boosts explosive damage and range, and splits each grenade into mini grenades after it explodes.",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "rows": [
+      {
+        "en": "Explosive weapon damage",
+        "hi": "Explosive weapon damage",
+        "value": "+20%"
+      },
+      {
+        "en": "Explosive damage range",
+        "hi": "Explosive damage range",
+        "value": "+10%"
+      },
+      {
+        "en": "Mini grenades",
+        "hi": "Mini grenades",
+        "value": "3 per grenade, after the explosion"
+      },
+      {
+        "en": "Mini grenade damage",
+        "hi": "Mini grenade damage",
+        "value": "20% of the original grenade"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "Explosive weapon damage increases by 20% and range increases by 10%. Each grenade splits into 3 mini grenades after exploding, dealing 20% of the original grenade's damage."
+    ],
+    "currentHi": [
+      "Explosive weapon damage increases by 20% and range increases by 10%. Each grenade splits into 3 mini grenades after exploding, dealing 20% of the original grenade's damage."
+    ],
+    "notesEn": [
+      "Grenades split only after exploding, so grenade cooking is no longer disrupted (OB47). Since OB47 this skill replaces Art of Demolition for all players."
+    ],
+    "notesHi": [
+      "Grenades split only after exploding, so grenade cooking is no longer disrupted (OB47). Since OB47 this skill replaces Art of Demolition for all players."
+    ],
+    "historyEn": [
+      "OB29 (Aug 2021): Art of Demolition damage bonus raised, maximum 16% to 20%.",
+      "OB39 (Mar 2023): Awakened Alvaro \"Rageblast\" introduced with Split Blitz: +20% damage, +10% range, grenades split into 3 extra grenades 1 second before detonating at 30% damage.",
+      "OB47 (2 Dec 2024): Split Blitz replaced Art of Demolition for all players; grenades now split after exploding, mini grenades deal 20%."
+    ],
+    "historyHi": [
+      "OB29 (Aug 2021): Art of Demolition damage bonus raised, maximum 16% to 20%.",
+      "OB39 (Mar 2023): Awakened Alvaro \"Rageblast\" introduced with Split Blitz: +20% damage, +10% range, grenades split into 3 extra grenades 1 second before detonating at 30% damage.",
+      "OB47 (2 Dec 2024): Split Blitz replaced Art of Demolition for all players; grenades now split after exploding, mini grenades deal 20%."
+    ],
+    "source": [
+      {
+        "label": "OB47",
+        "url": "https://ff.garena.com/en/article/1424/"
+      },
+      {
+        "label": "OB39",
+        "url": "https://ff.garena.com/en/article/1120/"
+      },
+      {
+        "label": "OB29",
+        "url": "https://ff.garena.com/en/article/485/"
+      },
+      {
+        "label": "Alvaro character page",
+        "url": "https://ff.garena.com/en-pk/chars/424"
+      }
+    ]
+  },
+  {
+    "id": "miguel",
+    "name": "Miguel",
+    "image": "",
+    "skill": "Crazy Slayer",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB36 (Sep 2022)",
+    "introEn": "Passive that restores EP for every enemy Miguel knocks down.",
+    "introHi": "Passive that restores EP for every enemy Miguel knocks down.",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "rows": [
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Knocking down an enemy"
+      },
+      {
+        "en": "EP gained",
+        "hi": "EP gained",
+        "value": "200 EP per knockdown"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "Gains 200 EP for each knockdown."
+    ],
+    "currentHi": [
+      "Gains 200 EP for each knockdown."
+    ],
+    "notesEn": [
+      "Triggers on knockdowns, not eliminations. Can be paired with other recovery skills."
+    ],
+    "notesHi": [
+      "Triggers on knockdowns, not eliminations. Can be paired with other recovery skills."
+    ],
+    "historyEn": [
+      "OB35 (Aug 2022): Crazy Slayer now triggers on knockdowns instead of eliminations, 30-80 EP by level.",
+      "OB36 (Sep 2022): EP per knockdown 30-80 to 100-200."
+    ],
+    "historyHi": [
+      "OB35 (Aug 2022): Crazy Slayer now triggers on knockdowns instead of eliminations, 30-80 EP by level.",
+      "OB36 (Sep 2022): EP per knockdown 30-80 to 100-200."
+    ],
+    "source": [
+      {
+        "label": "OB36",
+        "url": "https://ff.garena.com/en/article/871/"
+      },
+      {
+        "label": "OB35",
+        "url": "https://ff.garena.com/en/article/811/"
+      }
+    ]
+  },
+  {
+    "id": "nikita",
+    "name": "Nikita",
+    "image": "",
+    "skill": "Firearms Expert",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB54 (23 Jun 2026)",
+    "introEn": "Passive that speeds up reloads and reduces enemy healing on every hit.",
+    "introHi": "Passive that speeds up reloads and reduces enemy healing on every hit.",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "rows": [
+      {
+        "en": "Reload speed",
+        "hi": "Reload speed",
+        "value": "+20%"
+      },
+      {
+        "en": "Healing reduction on hit target",
+        "hi": "Healing reduction on hit target",
+        "value": "50%"
+      },
+      {
+        "en": "Healing reduction duration",
+        "hi": "Healing reduction duration",
+        "value": "6 seconds"
+      },
+      {
+        "en": "Maximum healing reduction",
+        "hi": "Maximum healing reduction",
+        "value": "50%"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "Reload speed increases by 20%. Every time Nikita hits an enemy, that target gets a 50% healing reduction for 6 seconds (maximum 50%)."
+    ],
+    "currentHi": [
+      "Reload speed increases by 20%. Every time Nikita hits an enemy, that target gets a 50% healing reduction for 6 seconds (maximum 50%)."
+    ],
+    "notesEn": [
+      "Built to counter high-healing characters such as Ford and Kassie. Hits do not stack the reduction beyond the 50% maximum. A visual indicator now shows when you apply Healing Reduction on an enemy (OB54)."
+    ],
+    "notesHi": [
+      "Built to counter high-healing characters such as Ford and Kassie. Hits do not stack the reduction beyond the 50% maximum. A visual indicator now shows when you apply Healing Reduction on an enemy (OB54)."
+    ],
+    "historyEn": [
+      "OB37 (Nov 2022): Reload speed 14-24% to a flat 20%.",
+      "OB42 (Oct 2023): Reworked: reload speed +20%, 30% healing reduction for 10s.",
+      "OB48 (19 Feb 2025): Healing reduction 30% to 50%, duration 10s to 6s; reload speed 30%.",
+      "OB54 (23 Jun 2026): Reload speed 30% to 20%."
+    ],
+    "historyHi": [
+      "OB37 (Nov 2022): Reload speed 14-24% to a flat 20%.",
+      "OB42 (Oct 2023): Reworked: reload speed +20%, 30% healing reduction for 10s.",
+      "OB48 (19 Feb 2025): Healing reduction 30% to 50%, duration 10s to 6s; reload speed 30%.",
+      "OB54 (23 Jun 2026): Reload speed 30% to 20%."
+    ],
+    "source": [
+      {
+        "label": "OB54",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "OB48",
+        "url": "https://ff.garena.com/en/article/1456/"
+      },
+      {
+        "label": "OB42",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "OB37",
+        "url": "https://ff.garena.com/en/article/906/"
+      },
+      {
+        "label": "Nikita character page",
+        "url": "https://ff.garena.com/en/chars/16"
+      }
+    ]
+  },
+  {
+    "id": "kapella",
+    "name": "Kapella",
+    "image": "",
+    "skill": "Remedy Rounds",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB45 (24 Jun 2024)",
+    "introEn": "Passive that lets any weapon heal teammates and boosts Heal Pistol healing.",
+    "introHi": "Passive that lets any weapon heal teammates and boosts Heal Pistol healing.",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "rows": [
+      {
+        "en": "Healing with ammo",
+        "hi": "Healing with ammo",
+        "value": "20% of damage dealt, to teammates"
+      },
+      {
+        "en": "Heal Pistol bonus",
+        "hi": "Heal Pistol bonus",
+        "value": "+20% healing effect"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "Shooting teammates with any weapon heals them for 20% of the damage dealt. Heal Pistols have a 20% higher healing effect."
+    ],
+    "currentHi": [
+      "Shooting teammates with any weapon heals them for 20% of the damage dealt. Heal Pistols have a 20% higher healing effect."
+    ],
+    "notesEn": [
+      "Pairs with the Heal Pistol-Y, which helps up downed teammates by shooting them (OB49)."
+    ],
+    "notesHi": [
+      "Pairs with the Heal Pistol-Y, which helps up downed teammates by shooting them (OB49)."
+    ],
+    "historyEn": [
+      "OB21 (Apr 2020): Introduced with Healing Song.",
+      "OB40 (Jun 2023): Healing Song reworked: 80 HP shield and 10% speed boost on help-up, downed teammates bleed 35% slower.",
+      "OB44 (Apr 2024): Help-up speed boost 10% to 80%.",
+      "OB45 (24 Jun 2024): Reworked into Remedy Rounds."
+    ],
+    "historyHi": [
+      "OB21 (Apr 2020): Introduced with Healing Song.",
+      "OB40 (Jun 2023): Healing Song reworked: 80 HP shield and 10% speed boost on help-up, downed teammates bleed 35% slower.",
+      "OB44 (Apr 2024): Help-up speed boost 10% to 80%.",
+      "OB45 (24 Jun 2024): Reworked into Remedy Rounds."
+    ],
+    "source": [
+      {
+        "label": "OB45",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "OB44",
+        "url": "https://ff.garena.com/en/article/1332/"
+      },
+      {
+        "label": "OB40",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "OB21",
+        "url": "https://ff.garena.com/en/article/223/"
       }
     ]
   }
