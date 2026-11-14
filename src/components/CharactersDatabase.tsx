@@ -29,6 +29,9 @@ type CharacterProfile = {
   needsRecheck?: string[];
   awakened?: {
     label: string;
+    name?: string;
+    lastChanged?: string;
+    badge?: string;
     skill: string;
     type: string;
     introEn: string;
@@ -578,14 +581,15 @@ const profileMatchesSearch = (profile: CharacterProfile, query: string) => {
 export default function CharactersDatabase({ language, onLanguageChange, onBack }: Props) {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [activeAlokVariant, setActiveAlokVariant] = useState<"original" | "awakened">("original");
+  const [activeCharacterVariant, setActiveCharacterVariant] = useState<"original" | "awakened">("original");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(4);
   const [batchSize, setBatchSize] = useState(4);
   const isHindi = language === "hi-en";
   const selected = profiles.find(profile => profile.id === selectedId);
-  const shownProfile = selected?.id === "alok" && activeAlokVariant === "awakened" && selected.awakened
+  const hasAwakenedVariant = selected?.id === "alok" || selected?.id === "andrew";
+  const shownProfile = hasAwakenedVariant && activeCharacterVariant === "awakened" && selected?.awakened
     ? { ...selected, ...selected.awakened }
     : selected;
   const matches = useMemo(() => profiles
@@ -599,7 +603,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
   };
   const returnToList = () => {
     setSelectedId(null);
-    setActiveAlokVariant("original");
+    setActiveCharacterVariant("original");
     setQuery("");
     setShowSuggestions(false);
     setActiveSuggestionIndex(0);
@@ -634,29 +638,31 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
       </div>
     </div>
     <article className="character-profile">
+      {(selected?.id === "alok" || selected?.id === "andrew") && <div className="character-variant-switch" role="group" aria-label={selected.name + " ability variant"}>
+        <button type="button" className={activeCharacterVariant === "original" ? "active" : ""} aria-pressed={activeCharacterVariant === "original"} onClick={() => setActiveCharacterVariant("original")}>
+          <b>{selected.name}</b>
+        </button>
+        <button type="button" className={activeCharacterVariant === "awakened" ? "active" : ""} aria-pressed={activeCharacterVariant === "awakened"} onClick={() => setActiveCharacterVariant("awakened")}>
+          <b>Awakened {selected.name}</b>
+        </button>
+      </div>}
+
       <header className="character-profile-identity">
         <div className={`character-profile-art ${shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
         <div className="character-profile-heading">
           <h2>{shownProfile.name}</h2>
           <span className="character-confirmed">{shownProfile.badge || "Official-source profile"}</span>
-          {shownProfile.lastChanged && <p className="character-last-changed">{isHindi ? "Last changed in" : "Last changed in"} <b>{shownProfile.lastChanged}</b></p>}
+          <p className="character-profile-subtitle">{shownProfile.status}</p>
+          {shownProfile.lastChanged && <p className="character-last-changed">Last changed in <b>{shownProfile.lastChanged}</b></p>}
           <p className="character-skill-name"><b>{isHindi ? "Ability:" : "Ability:"}</b> {shownProfile.skill}</p>
           <p className="character-profile-summary">{isHindi ? shownProfile.introHi : shownProfile.introEn}</p>
         </div>
       </header>
 
-      {shownProfile.id === "alok" && <div className="character-variant-switch" role="group" aria-label="Alok ability variant">
-        <button type="button" className={activeAlokVariant === "original" ? "active" : ""} aria-pressed={activeAlokVariant === "original"} onClick={() => setActiveAlokVariant("original")}>
-          <span>ORIGINAL</span><b>Alok</b><small>Drop the Beat</small>
-        </button>
-        <button type="button" className={activeAlokVariant === "awakened" ? "active" : ""} aria-pressed={activeAlokVariant === "awakened"} onClick={() => setActiveAlokVariant("awakened")}>
-          <span>AWAKENED</span><b>Alok</b><small>Party Remix</small>
-        </button>
-      </div>}
+
       <section className="character-ability-section">
         <div className="character-section-eyebrow">SQUAD OS / COMBAT NEXUS</div>
         <h1>{shownProfile.name} — {sectionTitle("Ability Profile", "Ability Profile")}</h1>
-        <p className="character-ability-intro">{shownProfile.status}</p>
         <div className="character-values-table" role="table" aria-label={shownProfile.name + " ability values"}>
           <div className="character-values-row character-values-head" role="row"><span role="columnheader">{sectionTitle("Ability / Factor", "Ability / Factor")}</span><span role="columnheader">{sectionTitle("Current value", "Current value")}</span></div>
           {shownProfile.rows.map(row => <div className="character-values-row" role="row" key={row.en}><span role="cell">{isHindi ? row.hi : row.en}</span><strong role="cell">{row.value}</strong></div>)}
@@ -684,7 +690,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         <section className="character-detail-block character-source-block">
           <h3>{sectionTitle("Official Sources", "Official Sources")}</h3>
           <ul>{shownProfile.source.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.label} ↗</a></li>)}</ul>
-          <p>{sectionTitle("Values are a researched snapshot, not live game data. In-game values can change with later updates.", "Yeh values researched snapshot hain, live game data nahi. Aage ke updates mein in-game values badal sakti hain.")}</p>
+          
         </section>
       </section>
     </article>
@@ -698,7 +704,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         <button type="button" className={language === "hi-en" ? "active" : ""} onClick={() => onLanguageChange("hi-en")}>HI+EN</button>
       </div>
     </div>
-    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "20 researched character profiles — Phase 1 + Phase 2 + 5 added profiles, source notes aur patch history ke saath." : "Twenty character profiles with shared profile layout, source notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
+    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "20 researched character profiles — Phase 1 + Phase 2 + 5 added profiles, source notes aur patch history ke saath." : "Character profiles with shared profile layout, source notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
     <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((profile, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={profile.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(profile)}><span className="character-suggestion-name">{profile.name}</span><span className="character-suggestion-meta">{profile.skill} · {profile.type.split(" · ")[0]}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
     {matches.length ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className={`character-result-card ${profile.artworkMode === "cutout" ? "character-result-card--cutout" : profile.artworkMode === "contained" ? "character-result-card--contained" : ""}`} key={profile.id} onClick={() => setSelectedId(profile.id)}>
