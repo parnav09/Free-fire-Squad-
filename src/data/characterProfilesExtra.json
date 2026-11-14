@@ -2,7 +2,7 @@
   {
     "id": "alok",
     "name": "Alok",
-    "image": "https://freefiremobile-a.akamaihd.net/common/officialwebsite/character/list_img/Alok.jpg",
+    "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/c62e709e3ad8387f5484bb12e1cc81a9.png",
     "skill": "Drop the Beat (+ Awakened Party Remix)",
     "type": "Active · Support",
     "badge": "Official patch-note profile",
@@ -133,12 +133,13 @@
       "historyHi": [
         "Awakening / Skill Boost update: OB54."
       ]
-    }
+    },
+    "artworkMode": "cutout"
   },
   {
     "id": "a124",
     "name": "A124",
-    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/A124.jpg",
+    "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/ab1469c59a10c4669482e1ab625357dd.png",
     "skill": "Thrill of Battle",
     "type": "Active · Skill blocker",
     "badge": "Official patch-note profile (one value conflicts)",
@@ -230,12 +231,13 @@
     ],
     "needsRecheck": [
       "Patch note mein Cooldown 50s hai, lekin character page par 75s listed hai—match mein verify karna."
-    ]
+    ],
+    "artworkMode": "cutout"
   },
   {
     "id": "andrew",
     "name": "Andrew",
-    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Andrew.jpg",
+    "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/564762d9a1137afaf2c9abb0ea8862b7.png",
     "skill": "Armor Specialist + Wolf Pack",
     "type": "Passive · Armor protection",
     "badge": "Official patch-note profile",
@@ -317,7 +319,8 @@
     ],
     "needsRecheck": [
       "Verify karna hai ki +1% bonus ke liye teammates ko bhi Wolf Pack equip karna zaroori hai ya nahi."
-    ]
+    ],
+    "artworkMode": "cutout"
   },
   {
     "id": "antonio",
@@ -408,12 +411,13 @@
     ],
     "needsRecheck": [
       "Purane patch ki dates approximate hain; exact dates verify karni hain."
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "a-patroa",
     "name": "A-Patroa",
-    "image": "https://freefiremobile-a.akamaihd.net/common/officialwebsite/character/list_img/A-Patroa.jpg",
+    "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/f5a466acec3ed5bd7cdd149e26288ad1.png",
     "skill": "Exclusive skill slot",
     "type": "Utility · No combat skill",
     "badge": "Official-description profile",
@@ -471,6 +475,7 @@
     "status": "Official-description profile · no balance patches found",
     "needsRecheck": [
       "Official character page aur exact description verify karni hai; abhi wording fan portal ke Garena quote par based hai."
-    ]
+    ],
+    "artworkMode": "cutout"
   }
 ]
