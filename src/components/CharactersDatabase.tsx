@@ -531,7 +531,7 @@ function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
     ? `character-result-monogram monogram-${profile.id.replace(/[^a-z0-9-]/g, "")}`
     : `character-profile-monogram monogram-${profile.id.replace(/[^a-z0-9-]/g, "")}`} aria-label={profile.name}>
     <span>{profile.name.split(/[- ]/).map(part => part[0]).join("").slice(0,2).toUpperCase()}</span>
-    <small>{variant === "card" ? "PROFILE" : "CHARACTER PROFILE"}</small>
+    <small>{profile.id === "paloma" ? "PALOMA" : variant === "card" ? "PROFILE" : "CHARACTER PROFILE"}</small>
   </div>;
   if (!profile.image || failed) return monogram;
   return <img
