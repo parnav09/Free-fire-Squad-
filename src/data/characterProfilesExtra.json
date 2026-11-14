@@ -3,17 +3,17 @@
     "id": "alok",
     "name": "Alok",
     "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/c62e709e3ad8387f5484bb12e1cc81a9.png",
-    "skill": "Drop the Beat (+ Awakened Party Remix)",
-    "type": "Active · Support",
-    "badge": "Official patch-note profile",
-    "lastChanged": "OB54 (23 Jun 2026) · core numbers OB45 (24 Jun 2024)",
-    "introEn": "Support aura boosts movement and restores HP.",
-    "introHi": "Alok ki Aura teammates ko speed boost aur HP recovery deti hai.",
+    "skill": "Drop the Beat (Active)",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB54 (23 Jun 2026)",
+    "introEn": "Active aura that heals Alok and nearby allies and boosts their movement speed.",
+    "introHi": "Active aura that heals Alok and nearby allies and boosts their movement speed.",
     "currentEn": [
-      "Aura gives +15% speed and 5 HP/s for 10s; auras do not stack."
+      "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
     ],
     "currentHi": [
-      "Aura 10 seconds tak +15% movement speed aur 5 HP/s HP recovery deti hai. Aura effects stack nahi hote."
+      "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
     ],
     "rows": [
       {
@@ -24,7 +24,7 @@
       {
         "en": "Movement-speed bonus",
         "hi": "Movement-speed bonus",
-        "value": "+15%"
+        "value": "15%"
       },
       {
         "en": "HP recovery",
@@ -37,101 +37,144 @@
         "value": "10 seconds"
       },
       {
+        "en": "Total HP recovery",
+        "hi": "Total HP recovery",
+        "value": "50 HP"
+      },
+      {
         "en": "Cooldown",
         "hi": "Cooldown",
         "value": "45 seconds"
-      },
-      {
-        "en": "Party Remix drop",
-        "hi": "Party Remix drop",
-        "value": "2m behind user every 2s; lasts 5s"
-      },
-      {
-        "en": "Teammate pickup",
-        "hi": "Teammate pickup",
-        "value": "+15% speed, 5 HP/s for 10s"
-      },
-      {
-        "en": "BR Skill Boost — Speed Remix",
-        "hi": "BR Skill Boost — Speed Remix",
-        "value": "10m aura; teammates +16% speed"
-      },
-      {
-        "en": "BR Skill Boost — Heal Remix",
-        "hi": "BR Skill Boost — Heal Remix",
-        "value": "20 HP/s while skill active"
       }
     ],
     "notesEn": [
-      "OB53: while Alok's own skill is active, teammates' Alok auras give no benefit.",
-      "OB54 Skill Boosts are Battle Royale only."
+      "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
     ],
     "notesHi": [
-      "OB53: Alok ki apni skill active ho, toh teammate Alok ki Aura ka benefit nahi milta.",
-      "OB54 ke Skill Boosts sirf Battle Royale mode mein kaam karte hain."
+      "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
     ],
     "historyEn": [
-      "OB39: HP 5→3; cooldown 50s→45s.",
-      "OB45: HP 3→5, speed 15%, duration 10s.",
-      "OB52: range/speed bug fixes.",
-      "OB53: aura restriction.",
-      "OB54: Skill Boosts.",
-      "OB55: no change."
+      "OB39 (Mar 2023): HP recovery 5 to 3 HP/s, cooldown 50s to 45s.",
+      "OB45 (24 Jun 2024): HP recovery 3 to 5 HP/s, movement speed 15%, duration 10s, cooldown 45s.",
+      "OB52 (9 Jan 2026): Fixed skill range not matching the visual range, and speed boost sometimes failing to apply.",
+      "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
+      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts added: Speed Remix (10m aura, teammates +16% speed) and Heal Remix (20 HP/s while active). Global movement-speed cap added."
     ],
     "historyHi": [
-      "OB39: HP recovery 5 se 3 hui; Cooldown 50s se 45s hua.",
-      "OB45: HP recovery 3 se 5, movement speed +15%, duration 10s.",
-      "OB52: Range aur speed boost ke bugs fix hue.",
-      "OB53: Alok Aura restriction add hui.",
-      "OB54: Skill Boosts aaye.",
-      "OB55: Koi change nahi."
+      "OB39 (Mar 2023): HP recovery 5 to 3 HP/s, cooldown 50s to 45s.",
+      "OB45 (24 Jun 2024): HP recovery 3 to 5 HP/s, movement speed 15%, duration 10s, cooldown 45s.",
+      "OB52 (9 Jan 2026): Fixed skill range not matching the visual range, and speed boost sometimes failing to apply.",
+      "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
+      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts added: Speed Remix (10m aura, teammates +16% speed) and Heal Remix (20 HP/s while active). Global movement-speed cap added."
     ],
     "source": [
       {
-        "label": "Garena — OB54",
+        "label": "Garena – OB54",
         "url": "https://ff.garena.com/en/article/1673/"
       },
       {
-        "label": "Garena — OB53",
+        "label": "Garena – OB53",
         "url": "https://ff.garena.com/en/article/1640/"
       },
       {
-        "label": "Garena — OB52",
+        "label": "Garena – OB52",
         "url": "https://ff.garena.com/en/article/1595/"
       },
       {
-        "label": "Garena — OB45",
+        "label": "Garena – OB45",
         "url": "https://ff.garena.com/en/article/1357/"
-      },
-      {
-        "label": "Garena — OB55",
-        "url": "https://ff.garena.com/en/article/1712/"
-      },
-      {
-        "label": "Garena — Alok character page",
-        "url": "https://ff.garena.com/en/chars/146/"
       }
     ],
-    "status": "Official patch-note values · max skill level",
-    "hiddenMechanics": [
-      {
-        "text": "Alok's own active skill blocks ally Alok aura benefit (OB53).",
-        "status": "official"
-      }
-    ],
-    "needsRecheck": [
-      "OB54 Skill Boosts ki exact wording verify karni hai."
-    ],
+    "status": "OB55 values reconciled · 14 Nov 2026",
     "awakened": {
-      "introHi": "Awakened Party Remix mein Alok ke drop ko teammates pick kar sakte hain.",
+      "label": "Awakened Alok",
+      "skill": "Party Remix (Awakened Drop the Beat)",
+      "type": "Active",
+      "introEn": "Awakened Drop the Beat that also drops music notes for teammates to pick up.",
+      "introHi": "Awakened Drop the Beat that also drops music notes for teammates to pick up.",
+      "currentEn": [
+        "All Drop the Beat effects apply. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds."
+      ],
       "currentHi": [
-        "Drop user ke 2m peeche har 2 seconds mein hota hai aur 5 seconds tak rehta hai. Teammate pick kare toh +15% speed aur 10 seconds tak 5 HP/s milta hai."
+        "All Drop the Beat effects apply. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds."
+      ],
+      "rows": [
+        {
+          "en": "Aura radius",
+          "hi": "Aura radius",
+          "value": "5m"
+        },
+        {
+          "en": "Movement-speed bonus",
+          "hi": "Movement-speed bonus",
+          "value": "15%"
+        },
+        {
+          "en": "HP recovery",
+          "hi": "HP recovery",
+          "value": "5 HP/s"
+        },
+        {
+          "en": "Duration",
+          "hi": "Duration",
+          "value": "10 seconds"
+        },
+        {
+          "en": "Cooldown",
+          "hi": "Cooldown",
+          "value": "45 seconds"
+        },
+        {
+          "en": "Music note drop",
+          "hi": "Music note drop",
+          "value": "Every 2 seconds, 2m behind Alok"
+        },
+        {
+          "en": "Music note lifetime",
+          "hi": "Music note lifetime",
+          "value": "5 seconds"
+        },
+        {
+          "en": "Note pickup bonus",
+          "hi": "Note pickup bonus",
+          "value": "15% speed and 5 HP/s for 10 seconds"
+        }
+      ],
+      "notesEn": [
+        "Same two notes as Alok (OB53 aura restriction, OB54 movement-speed cap)."
       ],
       "notesHi": [
-        "Pickup ka effect teammate ko milta hai."
+        "Same two notes as Alok (OB53 aura restriction, OB54 movement-speed cap)."
+      ],
+      "historyEn": [
+        "OB40 (Jun 2023): Awakened Alok introduced.",
+        "OB45 (24 Jun 2024): Music-note pickup healing 3 to 5 HP/s; aura values as Alok.",
+        "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
+        "OB54 (23 Jun 2026): Global movement-speed cap added."
       ],
       "historyHi": [
-        "Awakening / Skill Boost update: OB54."
+        "OB40 (Jun 2023): Awakened Alok introduced.",
+        "OB45 (24 Jun 2024): Music-note pickup healing 3 to 5 HP/s; aura values as Alok.",
+        "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
+        "OB54 (23 Jun 2026): Global movement-speed cap added."
+      ],
+      "source": [
+        {
+          "label": "Garena – OB54",
+          "url": "https://ff.garena.com/en/article/1673/"
+        },
+        {
+          "label": "Garena – OB53",
+          "url": "https://ff.garena.com/en/article/1640/"
+        },
+        {
+          "label": "Garena – OB52",
+          "url": "https://ff.garena.com/en/article/1595/"
+        },
+        {
+          "label": "Garena – OB45",
+          "url": "https://ff.garena.com/en/article/1357/"
+        }
       ]
     },
     "artworkMode": "cutout"
@@ -140,17 +183,17 @@
     "id": "a124",
     "name": "A124",
     "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/ab1469c59a10c4669482e1ab625357dd.png",
-    "skill": "Thrill of Battle",
-    "type": "Active · Skill blocker",
-    "badge": "Official patch-note profile (one value conflicts)",
-    "lastChanged": "Late-2023 patch (approx.)",
-    "introEn": "Interference wave blocks enemy skills and interrupts interactions.",
-    "introHi": "A124 ki wave enemy skills block karti hai aur revive ya interaction ka countdown interrupt kar deti hai.",
+    "skill": "Thrill of Battle (Active)",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB42 (Oct 2023)",
+    "introEn": "Electromagnetic wave that blocks enemy skills, deals damage and interrupts interactions.",
+    "introHi": "Electromagnetic wave that blocks enemy skills, deals damage and interrupts interactions.",
     "currentEn": [
-      "8m wave blocks enemy skill activation, deals 25 DMG, and interrupts interaction countdowns."
+      "Unleashes an 8m electromagnetic wave. Enemies inside cannot activate skills, take 25 DMG, and have their interaction countdowns (such as reviving) interrupted."
     ],
     "currentHi": [
-      "8m ki wave enemy skill activate nahi hone deti, 25 DMG deti hai aur interaction countdown interrupt karti hai."
+      "Unleashes an 8m electromagnetic wave. Enemies inside cannot activate skills, take 25 DMG, and have their interaction countdowns (such as reviving) interrupted."
     ],
     "rows": [
       {
@@ -159,14 +202,14 @@
         "value": "8m"
       },
       {
-        "en": "Hit value",
-        "hi": "Hit value",
+        "en": "Damage",
+        "hi": "Damage",
         "value": "25 DMG"
       },
       {
         "en": "Enemy skills",
         "hi": "Enemy skills",
-        "value": "Disabled"
+        "value": "Activation disabled"
       },
       {
         "en": "Enemy interactions",
@@ -181,74 +224,51 @@
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "50 seconds (patch note)"
+        "value": "75 seconds"
       }
     ],
     "notesEn": [
-      "Can cancel while aiming.",
-      "Joseph is immune."
+      "Skill can be cancelled while aiming. Joseph is immune to A124's interference."
     ],
     "notesHi": [
-      "Aim karte waqt skill cancel kar sakte ho.",
-      "Joseph par A124 ki interference ka effect nahi hota."
+      "Skill can be cancelled while aiming. Joseph is immune to A124's interference."
     ],
     "historyEn": [
-      "OB27 old EP-to-HP version buffed (obsolete).",
-      "OB33 rework: 8m wave, 20–30s, cooldown 100→50s.",
-      "Late 2023: 25 DMG added; duration 30→20s; cooldown 75→50s.",
-      "OB55 no change."
+      "OB33 (23 Mar 2022): Reworked into an 8m wave that disables enemy skills.",
+      "OB42 (Oct 2023): Added 25 DMG, duration 30s to 20s, cooldown 75s to 50s, cancel while aiming."
     ],
     "historyHi": [
-      "OB27: Purani EP-to-HP ability ka buff (ye version ab game mein nahi hai).",
-      "OB33: Ability rework hui—8m wave, 20–30s duration aur Cooldown 100s se 50s.",
-      "Late 2023: 25 DMG add hua; duration 30s se 20s aur Cooldown 75s se 50s hua.",
-      "OB55: Koi change nahi."
+      "OB33 (23 Mar 2022): Reworked into an 8m wave that disables enemy skills.",
+      "OB42 (Oct 2023): Added 25 DMG, duration 30s to 20s, cooldown 75s to 50s, cancel while aiming."
     ],
     "source": [
       {
-        "label": "Garena patch note",
+        "label": "Garena – OB42",
         "url": "https://ff.garena.com/en/article/1266/"
       },
       {
-        "label": "Garena OB33",
+        "label": "Garena – OB33",
         "url": "https://ff.garena.com/en/article/674/"
-      },
-      {
-        "label": "Garena A124 page (ES)",
-        "url": "https://ff.garena.com/es/chars/42"
-      },
-      {
-        "label": "Garena — A124 character page",
-        "url": "https://ff.garena.com/en/chars/6"
       }
     ],
-    "status": "Patch-note snapshot · max skill level",
-    "hiddenMechanics": [
-      {
-        "text": "Joseph A124 ki interference se immune hai.",
-        "status": "official"
-      }
-    ],
-    "needsRecheck": [
-      "Patch note mein Cooldown 50s hai, lekin character page par 75s listed hai—match mein verify karna."
-    ],
+    "status": "OB55 values reconciled · 14 Nov 2026",
     "artworkMode": "cutout"
   },
   {
     "id": "andrew",
     "name": "Andrew",
     "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/564762d9a1137afaf2c9abb0ea8862b7.png",
-    "skill": "Armor Specialist + Wolf Pack",
-    "type": "Passive · Armor protection",
-    "badge": "Official patch-note profile",
-    "lastChanged": "OB46 (Sep 2024) · Armor Specialist OB45",
-    "introEn": "Armor durability and squad armor damage protection.",
-    "introHi": "Andrew armor ki durability loss kam karta hai aur nearby squad ko armor damage reduction deta hai.",
+    "skill": "Armor Specialist (Passive)",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB45 (24 Jun 2024)",
+    "introEn": "Passive that slows armor durability loss.",
+    "introHi": "Passive that slows armor durability loss.",
     "currentEn": [
-      "Armor Specialist: armor durability loss -40%. Wolf Pack: +4% armor damage reduction and +1% per teammate within 15m."
+      "Armor loses durability 40% slower."
     ],
     "currentHi": [
-      "Armor Specialist se armor durability loss 40% kam hota hai. Wolf Pack +4% armor damage reduction deta hai aur 15m ke andar har teammate par +1% bonus milta hai."
+      "Armor loses durability 40% slower."
     ],
     "rows": [
       {
@@ -257,92 +277,129 @@
         "value": "-40%"
       },
       {
-        "en": "Wolf Pack armor damage reduction",
-        "hi": "Wolf Pack armor damage reduction",
-        "value": "+4%"
-      },
-      {
-        "en": "Teammate bonus",
-        "hi": "Teammate bonus",
-        "value": "+1% per teammate within 15m"
-      },
-      {
-        "en": "Full squad (3 nearby)",
-        "hi": "Full squad (3 nearby)",
-        "value": "4% + 3% = 7% (calculated)"
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
       }
     ],
     "notesEn": [
-      "Wolf Pack does not apply to Shield Points."
+      "Also applies to Awakened Andrew."
     ],
     "notesHi": [
-      "Wolf Pack ka effect Shield Points par apply nahi hota."
+      "Also applies to Awakened Andrew."
     ],
     "historyEn": [
-      "~Jun 2023: Armor Specialist 20→25%.",
-      "OB41 Wolf Pack 20→15%; per teammate 10→5%.",
-      "OB45 Armor Specialist 25→40%; Wolf Pack 15→5%; +5% per teammate.",
-      "OB46 Wolf Pack 4%; +1% per teammate within 15m.",
-      "OB55 no change."
+      "OB40 (Jun 2023): Armor durability loss reduction 20% to 25%.",
+      "OB45 (24 Jun 2024): 25% to 40%."
     ],
     "historyHi": [
-      "~Jun 2023: Armor Specialist 20% se 25% hua.",
-      "OB41: Wolf Pack 20% se 15%; per teammate bonus 10% se 5% hua.",
-      "OB45: Armor Specialist 25% se 40%; Wolf Pack 15% se 5%; teammate bonus +5% hua.",
-      "OB46: Wolf Pack 4% aur 15m ke andar per teammate +1% hua.",
-      "OB55: Koi change nahi."
+      "OB40 (Jun 2023): Armor durability loss reduction 20% to 25%.",
+      "OB45 (24 Jun 2024): 25% to 40%."
     ],
     "source": [
       {
-        "label": "Garena OB46",
-        "url": "https://ff.garena.com/en-pk/article/1391/"
+        "label": "Garena – OB45",
+        "url": "https://ff.garena.com/en/article/1357/"
       },
       {
-        "label": "Garena OB45",
-        "url": "https://ff.garena.com/en/article/1368/"
-      },
-      {
-        "label": "Garena OB41",
-        "url": "https://ff.garena.com/en/article/1213/"
-      },
-      {
-        "label": "Garena — Andrew character page",
-        "url": "https://ff.garena.com/en/chars/2"
+        "label": "Garena – OB40",
+        "url": "https://ff.garena.com/en/article/1170/"
       }
     ],
-    "status": "Official patch-note values · max skill level",
-    "hiddenMechanics": [
-      {
-        "text": "Shield Points armor damage reduction buffs ignore karte hain, isliye Wolf Pack Antonio ke Shield Points par damage kam nahi karta.",
-        "status": "official"
-      }
-    ],
-    "needsRecheck": [
-      "Verify karna hai ki +1% bonus ke liye teammates ko bhi Wolf Pack equip karna zaroori hai ya nahi."
-    ],
-    "artworkMode": "cutout"
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "artworkMode": "cutout",
+    "awakened": {
+      "label": "Awakened Andrew",
+      "skill": "Wolf Pack (Awakened, Passive)",
+      "type": "Passive",
+      "introEn": "Awakened passive that adds armor damage reduction, boosted by nearby teammates.",
+      "introHi": "Awakened passive that adds armor damage reduction, boosted by nearby teammates.",
+      "currentEn": [
+        "Armor Specialist applies: armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
+      ],
+      "currentHi": [
+        "Armor Specialist applies: armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
+      ],
+      "rows": [
+        {
+          "en": "Armor durability loss",
+          "hi": "Armor durability loss",
+          "value": "-40% (Armor Specialist)"
+        },
+        {
+          "en": "Armor damage reduction",
+          "hi": "Armor damage reduction",
+          "value": "+4%"
+        },
+        {
+          "en": "Teammate bonus",
+          "hi": "Teammate bonus",
+          "value": "+1% per teammate within 15m"
+        },
+        {
+          "en": "Full squad bonus",
+          "hi": "Full squad bonus",
+          "value": "+7% total (4% + 3%)"
+        },
+        {
+          "en": "Cooldown",
+          "hi": "Cooldown",
+          "value": "No cooldown"
+        }
+      ],
+      "notesEn": [
+        "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack."
+      ],
+      "notesHi": [
+        "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack."
+      ],
+      "historyEn": [
+        "OB41 (Aug 2023): Armor damage reduction 20% to 15%, teammate bonus 10% to 5%.",
+        "OB45 (24 Jun 2024): 15% to 5%, +5% per teammate carrying the skill.",
+        "OB46 (Sep 2024): Now 4%, +1% per teammate within 15m."
+      ],
+      "historyHi": [
+        "OB41 (Aug 2023): Armor damage reduction 20% to 15%, teammate bonus 10% to 5%.",
+        "OB45 (24 Jun 2024): 15% to 5%, +5% per teammate carrying the skill.",
+        "OB46 (Sep 2024): Now 4%, +1% per teammate within 15m."
+      ],
+      "source": [
+        {
+          "label": "Garena – OB46",
+          "url": "https://ff.garena.com/en-pk/article/1391/"
+        },
+        {
+          "label": "Garena – OB45",
+          "url": "https://ff.garena.com/en/article/1357/"
+        },
+        {
+          "label": "Garena – OB41",
+          "url": "https://ff.garena.com/en/article/1213/"
+        }
+      ]
+    }
   },
   {
     "id": "antonio",
     "name": "Antonio",
     "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Antonio.jpg",
-    "skill": "Gangster's Spirit",
-    "type": "Passive · Early survival",
-    "badge": "Official patch-note profile",
+    "skill": "Gangster's Spirit (Passive)",
+    "type": "Passive",
+    "badge": "Official-source profile",
     "lastChanged": "OB48 (19 Feb 2025)",
-    "introEn": "Starting Shield Points support early survival.",
-    "introHi": "Antonio match start par Shield Points deta hai, jo early fight mein extra protection dete hain.",
+    "introEn": "Passive that starts the match with extra Shield Points that recover after combat.",
+    "introHi": "Passive that starts the match with extra Shield Points that recover after combat.",
     "currentEn": [
-      "Shield Points are removed before HP."
+      "Starts the match with 20 extra Shield Points. Shield Points recover after surviving combat."
     ],
     "currentHi": [
-      "Shield Points, HP se pehle cut hote hain."
+      "Starts the match with 20 extra Shield Points. Shield Points recover after surviving combat."
     ],
     "rows": [
       {
         "en": "Starting Shield Points",
         "hi": "Starting Shield Points",
-        "value": "20 (was 30)"
+        "value": "20"
       },
       {
         "en": "Shield recovery",
@@ -352,66 +409,56 @@
       {
         "en": "Recovery speed",
         "hi": "Recovery speed",
-        "value": "5 SP/s (was 10 SP/s)"
+        "value": "5 SP/s"
       },
       {
-        "en": "Armor damage reduction on SP",
-        "hi": "Armor damage reduction on SP",
-        "value": "0%"
+        "en": "Armor damage reduction on Shield Points",
+        "hi": "Armor damage reduction on Shield Points",
+        "value": "None"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
       }
     ],
     "notesEn": [
-      "Shield Points are removed before HP."
+      "Shield Points are removed before HP. Shield Points ignore armor damage-reduction buffs. Shield Points do not protect against Danger Zone, fall or bleeding damage."
     ],
     "notesHi": [
-      "Shield Points pehle consume hote hain; uske baad HP damage hota hai."
+      "Shield Points are removed before HP. Shield Points ignore armor damage-reduction buffs. Shield Points do not protect against Danger Zone, fall or bleeding damage."
     ],
     "historyEn": [
-      "OB41 rework: 40 HP→40 SP; regen after 4s.",
-      "OB43: 40→30.",
-      "~Aug–Sep 2024: recovery speed 10→5 SP/s.",
-      "OB48: 30→20 SP.",
-      "OB55 no change."
+      "OB41 (Aug 2023): 40 extra HP converted to 40 Shield Points.",
+      "OB43 (Jan 2024): 40 to 30.",
+      "2024: recovery speed 10 to 5 SP/s.",
+      "OB48 (19 Feb 2025): 30 to 20."
     ],
     "historyHi": [
-      "OB41 rework: 40 HP ki jagah 40 Shield Points mile; 4s baad regen hota tha.",
-      "OB43: 40 se 30 Shield Points hue.",
-      "~Aug–Sep 2024: recovery speed 10 se 5 SP/s hui.",
-      "OB48: 30 se 20 Shield Points hue.",
-      "OB55: Koi change nahi."
+      "OB41 (Aug 2023): 40 extra HP converted to 40 Shield Points.",
+      "OB43 (Jan 2024): 40 to 30.",
+      "2024: recovery speed 10 to 5 SP/s.",
+      "OB48 (19 Feb 2025): 30 to 20."
     ],
     "source": [
       {
-        "label": "Garena OB48",
+        "label": "Garena – OB48",
         "url": "https://ff.garena.com/en/article/1456/"
       },
       {
-        "label": "Garena patch note",
+        "label": "Garena – Recovery speed patch",
         "url": "https://ff.garena.com/en/article/1385/"
       },
       {
-        "label": "Garena OB41",
-        "url": "https://ff.garena.com/en/article/1213/"
-      },
-      {
-        "label": "Garena OB43",
+        "label": "Garena – OB43",
         "url": "https://ff.garena.com/en-pk/article/1317/"
       },
       {
-        "label": "Garena — Antonio character page",
-        "url": "https://ff.garena.com/en/chars/17"
+        "label": "Garena – OB41",
+        "url": "https://ff.garena.com/en/article/1213/"
       }
     ],
-    "status": "Official patch-note values · max skill level",
-    "hiddenMechanics": [
-      {
-        "text": "Shield Points armor damage reduction buffs ko ignore karte hain. Danger Zone, fall ya bleeding damage se protection nahi milti.",
-        "status": "official"
-      }
-    ],
-    "needsRecheck": [
-      "Purane patch ki dates approximate hain; exact dates verify karni hain."
-    ],
+    "status": "OB55 values reconciled · 14 Nov 2026",
     "artworkMode": "contained"
   },
   {
@@ -419,16 +466,16 @@
     "name": "A-Patroa",
     "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/f5a466acec3ed5bd7cdd149e26288ad1.png",
     "skill": "Exclusive skill slot",
-    "type": "Utility · No combat skill",
-    "badge": "Official-description profile",
-    "lastChanged": "No balance changes found since OB34 release (May 2022)",
+    "type": "Utility",
+    "badge": "Official-source profile",
+    "lastChanged": "No balance changes since release (OB34, May 2022)",
     "introEn": "Utility character with an exclusive extra skill slot; no personal combat skill.",
-    "introHi": "A-Patroa ek extra exclusive skill slot deti hai. Iski apni combat skill nahi hai.",
+    "introHi": "Utility character with an exclusive extra skill slot; no personal combat skill.",
     "currentEn": [
       "Adds one extra skill slot that can hold any skill owned on the account."
     ],
     "currentHi": [
-      "Account par jo skill owned hai, usmein se koi bhi extra slot mein equip kar sakte ho."
+      "Adds one extra skill slot that can hold any skill owned on the account."
     ],
     "rows": [
       {
@@ -439,7 +486,7 @@
       {
         "en": "Extra slot",
         "hi": "Extra slot",
-        "value": "1 exclusive slot · any owned skill"
+        "value": "1 exclusive slot, any owned skill"
       },
       {
         "en": "Other slots",
@@ -453,29 +500,86 @@
       }
     ],
     "notesEn": [
-      "No combat ability values; effect is an additional skill slot."
+      "No personal combat skill."
     ],
     "notesHi": [
-      "Is character ka combat ability effect nahi hai; main benefit extra skill slot hai."
+      "No personal combat skill."
     ],
     "historyEn": [
-      "OB34 released.",
-      "No later balance changes found."
+      "OB34 (May 2022): Released."
     ],
     "historyHi": [
-      "OB34: Character release hua.",
-      "Iske baad koi balance change nahi mila."
+      "OB34 (May 2022): Released."
     ],
     "source": [
       {
-        "label": "Garena — A-Patroa character page",
-        "url": "https://ff.garena.com/en/chars/601"
+        "label": "Garena – A-Patroa character page",
+        "url": "https://ff.garena.com/en/chars/552"
       }
     ],
-    "status": "Official-description profile · no balance patches found",
-    "needsRecheck": [
-      "Official character page aur exact description verify karni hai; abhi wording fan portal ke Garena quote par based hai."
-    ],
+    "status": "OB55 values reconciled · 14 Nov 2026",
     "artworkMode": "cutout"
+  },
+  {
+    "id": "paloma",
+    "name": "Paloma",
+    "image": "",
+    "skill": "Shatterburst (Passive)",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "lastChanged": "OB49 (21 May 2025)",
+    "introEn": "Passive that boosts weapon accuracy after she destroys a Gloo Wall.",
+    "introHi": "Passive that boosts weapon accuracy after she destroys a Gloo Wall.",
+    "currentEn": [
+      "Destroying a Gloo Wall increases weapon accuracy for 10 seconds."
+    ],
+    "currentHi": [
+      "Destroying a Gloo Wall increases weapon accuracy for 10 seconds."
+    ],
+    "rows": [
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Destroying a Gloo Wall"
+      },
+      {
+        "en": "Effect",
+        "hi": "Effect",
+        "value": "Weapon accuracy increases"
+      },
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "10 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "Garena does not publish the accuracy bonus value. Designed to break enemy cover and finish players hiding behind Gloo Walls."
+    ],
+    "notesHi": [
+      "Garena does not publish the accuracy bonus value. Designed to break enemy cover and finish players hiding behind Gloo Walls."
+    ],
+    "historyEn": [
+      "OB49 (21 May 2025): Reworked. Her extra-ammo skill was replaced by Shatterburst."
+    ],
+    "historyHi": [
+      "OB49 (21 May 2025): Reworked. Her extra-ammo skill was replaced by Shatterburst."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB49 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1473/"
+      },
+      {
+        "label": "Garena – Paloma character page",
+        "url": "https://ff.garena.com/en/chars/12/"
+      }
+    ]
   }
 ]
