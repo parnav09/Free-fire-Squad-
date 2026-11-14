@@ -8,6 +8,7 @@ type DetailRow = { en: string; hi: string; value: string };
 type CharacterProfile = {
   id: string;
   image: string;
+  artworkMode?: "cutout" | "contained";
   name: string;
   skill: string;
   type: string;
@@ -519,6 +520,26 @@ const baseProfiles: CharacterProfile[] = [
 ];
 const profiles: CharacterProfile[] = [...baseProfiles, ...(extraProfiles as CharacterProfile[])];
 
+type CharacterArtworkProps = { profile: CharacterProfile; variant: "card" | "profile" };
+function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [profile.id, profile.image]);
+  const monogram = <div className={variant === "card"
+    ? `character-result-monogram monogram-${profile.id.replace(/[^a-z0-9-]/g, "")}`
+    : `character-profile-monogram monogram-${profile.id.replace(/[^a-z0-9-]/g, "")}`} aria-label={profile.name}>
+    <span>{profile.name.split(/[- ]/).map(part => part[0]).join("").slice(0,2).toUpperCase()}</span>
+    <small>{variant === "card" ? "PROFILE" : "CHARACTER PROFILE"}</small>
+  </div>;
+  if (!profile.image || failed) return monogram;
+  return <img
+    src={profile.image}
+    alt={profile.name}
+    loading={variant === "card" ? "lazy" : "eager"}
+    decoding="async"
+    onError={() => setFailed(true)}
+  />;
+}
+
 const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
 const editDistanceWithin = (a: string, b: string, limit: number) => {
@@ -614,7 +635,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     </div>
     <article className="character-profile">
       <header className="character-profile-identity">
-        <div className="character-profile-art">{shownProfile.image ? <img src={shownProfile.image} alt={shownProfile.name} /> : <div className={`character-profile-monogram monogram-${shownProfile.id.replace(/[^a-z0-9-]/g, "")}`} aria-label={shownProfile.name}><span>{shownProfile.name.split(/[- ]/).map(part => part[0]).join("").slice(0,2).toUpperCase()}</span><small>CHARACTER PROFILE</small></div>}</div>
+        <div className={`character-profile-art ${shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
         <div className="character-profile-heading">
           <h2>{shownProfile.name}</h2>
           <span className="character-confirmed">{shownProfile.badge || "Official-source profile"}</span>
@@ -680,8 +701,8 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "20 researched character profiles — Phase 1 + Phase 2 + 5 added profiles, source notes aur patch history ke saath." : "Twenty character profiles with shared profile layout, source notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
     <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((profile, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={profile.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(profile)}><span className="character-suggestion-name">{profile.name}</span><span className="character-suggestion-meta">{profile.skill} · {profile.type.split(" · ")[0]}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
-    {matches.length ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className="character-result-card" key={profile.id} onClick={() => setSelectedId(profile.id)}>
-      <div className="character-result-art">{profile.image ? <img src={profile.image} alt={profile.name} loading="lazy" decoding="async" fetchPriority="low" /> : <div className={`character-result-monogram monogram-${profile.id.replace(/[^a-z0-9-]/g, "")}`} aria-label={profile.name}><span>{profile.name.split(/[- ]/).map(part => part[0]).join("").slice(0,2).toUpperCase()}</span><small>PROFILE</small></div>}</div>
+    {matches.length ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className={`character-result-card ${profile.artworkMode === "cutout" ? "character-result-card--cutout" : profile.artworkMode === "contained" ? "character-result-card--contained" : ""}`} key={profile.id} onClick={() => setSelectedId(profile.id)}>
+      <div className="character-result-art"><CharacterArtwork profile={profile} variant="card" /></div>
       <div className="character-result-copy"><span className="character-result-status">{profile.badge || "OFFICIAL-SOURCE PROFILE"}</span><h2>{profile.name}</h2><b>{profile.skill} · {profile.type.split(" · ")[0]}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
       <span className="character-result-chevron" aria-hidden="true">↗</span>
     </button>)}</div> : <div className="character-empty-state"><b>{isHindi ? "No matching character" : "No matching character"}</b><span>{isHindi ? "Koi doosra character name ya ability search karein." : "Try another name or ability."}</span></div>}
