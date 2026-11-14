@@ -8,22 +8,22 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Active aura that heals Alok and nearby allies, boosts their movement speed and drops music notes.",
-    "introHi": "Active aura that heals Alok and nearby allies, boosts their movement speed and drops music notes.",
+    "introHi": "Alok ka active aura, jo Alok aur paas ke teammates ko heal karta hai, movement speed badhata hai aur music notes drop karta hai.",
     "currentEn": [
       "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
     ],
     "currentHi": [
-      "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
+      "5m ka aura banta hai, jo movement speed 15% badhata hai aur 10 seconds tak 5 HP/s restore karta hai. Aura active hone par har 2 seconds mein Alok ke 2m peeche ek music note drop hota hai, jo 5 seconds rehta hai. Note pick karne wale teammate ko 10 seconds ke liye 15% movement speed aur 5 HP/s milta hai. Drop the Beat ke multiple auras stack nahi hote."
     ],
     "rows": [
       {
         "en": "Aura radius",
-        "hi": "Aura radius",
+        "hi": "Aura ka radius",
         "value": "5m"
       },
       {
         "en": "Movement-speed bonus",
-        "hi": "Movement-speed bonus",
+        "hi": "Movement speed bonus",
         "value": "15%"
       },
       {
@@ -48,12 +48,12 @@
       },
       {
         "en": "Music note lifetime",
-        "hi": "Music note lifetime",
+        "hi": "Music note kitni der rehta hai",
         "value": "5 seconds"
       },
       {
         "en": "Note pickup bonus",
-        "hi": "Note pickup bonus",
+        "hi": "Note pick karne ka bonus",
         "value": "15% speed and 5 HP/s for 10 seconds"
       },
       {
@@ -66,7 +66,7 @@
       "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54). Since OB47 the awakened skill replaces the original for all players; both appearances remain available."
     ],
     "notesHi": [
-      "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54). Since OB47 the awakened skill replaces the original for all players; both appearances remain available."
+      "Alok ka apna skill active ho, toh teammates ke Alok aura se use koi benefit nahi milta (OB53). Movement speed ki global limit hai; skills, items aur events ke bonuses is limit se upar nahi ja sakte (OB54). OB47 se awakened skill sab players ke liye original skill ki jagah aa gaya; dono appearances available hain."
     ],
     "historyEn": [
       "OB39 (Mar 2023): HP recovery 5 to 3 HP/s, cooldown 50s to 45s.",
@@ -78,13 +78,13 @@
       "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: Speed Remix (10m aura, teammates +16% speed) and Heal Remix (20 HP/s while active). Global movement-speed cap added."
     ],
     "historyHi": [
-      "OB39 (Mar 2023): HP recovery 5 to 3 HP/s, cooldown 50s to 45s.",
-      "OB40 (Jun 2023): Awakened Alok introduced.",
-      "OB45 (24 Jun 2024): HP recovery 3 to 5 HP/s, movement speed 15%, duration 10s; music-note pickup healing 3 to 5 HP/s.",
-      "OB47 (2 Dec 2024): Awakened skill replaced the original for all players.",
-      "OB52 (9 Jan 2026): Fixed skill range not matching the visual range, and speed boost sometimes failing to apply.",
-      "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
-      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: Speed Remix (10m aura, teammates +16% speed) and Heal Remix (20 HP/s while active). Global movement-speed cap added."
+      "OB39 (Mar 2023): HP recovery 5 se 3 HP/s; cooldown 50s se 45s hua.",
+      "OB40 (Jun 2023): Awakened Alok introduce hua.",
+      "OB45 (24 Jun 2024): HP recovery 3 se 5 HP/s, movement speed 15%, duration 10s; music-note pickup healing 3 se 5 HP/s hui.",
+      "OB47 (2 Dec 2024): Awakened skill sab players ke liye original ki jagah aaya.",
+      "OB52 (9 Jan 2026): Skill range aur visual range match na hone, aur speed boost kabhi apply na hone ka issue fix hua.",
+      "OB53 (2 Apr 2026): Apna skill active hone par Alok users ko teammates ke Alok aura se benefit nahi milta.",
+      "OB54 (23 Jun 2026): 9th Anniversary Skill Boosts—Speed Remix (10m aura, teammates ko +16% speed) aur Heal Remix (active rehte 20 HP/s). Global movement-speed cap add hua."
     ],
     "source": [
       {
@@ -120,17 +120,17 @@
     "badge": "Official-source profile",
     "lastChanged": "OB42 (Oct 2023)",
     "introEn": "Electromagnetic wave that blocks enemy skills, deals damage and interrupts interactions.",
-    "introHi": "Electromagnetic wave that blocks enemy skills, deals damage and interrupts interactions.",
+    "introHi": "A124 ki electromagnetic wave enemy skills block karti hai, damage deti hai aur interactions ko interrupt karti hai.",
     "currentEn": [
       "Unleashes an 8m electromagnetic wave. Enemies inside cannot activate skills, take 25 DMG, and have their interaction countdowns (such as reviving) interrupted."
     ],
     "currentHi": [
-      "Unleashes an 8m electromagnetic wave. Enemies inside cannot activate skills, take 25 DMG, and have their interaction countdowns (such as reviving) interrupted."
+      "A124 ek electromagnetic wave release karta hai, jo enemy skills ko disable karti hai, damage deti hai aur interactions rok deti hai."
     ],
     "rows": [
       {
         "en": "Wave size",
-        "hi": "Wave size",
+        "hi": "Wave ka size",
         "value": "8m"
       },
       {
@@ -163,15 +163,15 @@
       "Skill can be cancelled while aiming. Joseph is immune to A124's interference."
     ],
     "notesHi": [
-      "Skill can be cancelled while aiming. Joseph is immune to A124's interference."
+      "Aim karte waqt skill cancel ki ja sakti hai. Joseph A124 ke interference se immune hai."
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Reworked into an 8m wave that disables enemy skills.",
       "OB42 (Oct 2023): Added 25 DMG, duration 30s to 20s, cooldown 75s to 50s, cancel while aiming."
     ],
     "historyHi": [
-      "OB33 (23 Mar 2022): Reworked into an 8m wave that disables enemy skills.",
-      "OB42 (Oct 2023): Added 25 DMG, duration 30s to 20s, cooldown 75s to 50s, cancel while aiming."
+      "OB33 (23 Mar 2022): 8m wave mein rework hui, jo enemy skills disable karti hai.",
+      "OB42 (Oct 2023): 25 DMG add hua; duration 30s se 20s aur cooldown 75s se 50s hua; aim karte waqt cancel karna add hua."
     ],
     "source": [
       {
@@ -195,12 +195,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB46 (Sep 2024)",
     "introEn": "Passive that slows armor durability loss and adds armor damage reduction, boosted by nearby teammates.",
-    "introHi": "Passive that slows armor durability loss and adds armor damage reduction, boosted by nearby teammates.",
+    "introHi": "Passive skill jo armor ki durability loss slow karta hai aur armor damage reduction deta hai; paas ke teammates se bonus badhta hai.",
     "currentEn": [
       "Armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
     ],
     "currentHi": [
-      "Armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
+      "Armor ki durability 40% dheere khatam hoti hai. Wolf Pack 4% armor damage reduction deta hai, aur 15m ke andar har teammate par 1% extra milta hai."
     ],
     "rows": [
       {
@@ -233,7 +233,7 @@
       "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack. Since OB47 the awakened skill replaces the original for all players."
     ],
     "notesHi": [
-      "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack. Since OB47 the awakened skill replaces the original for all players."
+      "Shield Points armor damage-reduction buffs ko ignore karte hain, isliye Wolf Pack Shield Points se hone wale damage ko kam nahi karta. OB46 notes mein clear nahi hai ki teammates ke paas bhi Wolf Pack hona zaroori hai ya nahi. OB47 se awakened skill sab players ke liye original ki jagah aa gaya."
     ],
     "historyEn": [
       "OB40 (Jun 2023): Armor durability loss reduction 20% to 25%.",
@@ -243,11 +243,11 @@
       "OB47 (2 Dec 2024): Awakened skill replaced the original for all players."
     ],
     "historyHi": [
-      "OB40 (Jun 2023): Armor durability loss reduction 20% to 25%.",
-      "OB41 (Aug 2023): Armor damage reduction 20% to 15%, teammate bonus 10% to 5%.",
-      "OB45 (24 Jun 2024): Armor durability loss reduction 25% to 40%; armor damage reduction 15% to 5%, +5% per teammate carrying the skill.",
-      "OB46 (Sep 2024): Now +4%, +1% per teammate within 15m.",
-      "OB47 (2 Dec 2024): Awakened skill replaced the original for all players."
+      "OB40 (Jun 2023): Armor durability loss reduction 20% se 25% hua.",
+      "OB41 (Aug 2023): Armor damage reduction 20% se 15%, teammate bonus 10% se 5% hua.",
+      "OB45 (24 Jun 2024): Armor durability loss reduction 25% se 40%; armor damage reduction 15% se 5%, aur skill carry karne wale har teammate par +5%.",
+      "OB46 (Sep 2024): Ab +4%, aur 15m ke andar har teammate par +1%.",
+      "OB47 (2 Dec 2024): Awakened skill sab players ke liye original ki jagah aaya."
     ],
     "source": [
       {
@@ -283,12 +283,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB48 (19 Feb 2025)",
     "introEn": "Passive that starts the match with extra Shield Points that recover after combat.",
-    "introHi": "Passive that starts the match with extra Shield Points that recover after combat.",
+    "introHi": "Passive skill jo match start par extra Shield Points deta hai; combat ke baad ye recover hote hain.",
     "currentEn": [
       "Starts the match with 20 extra Shield Points. Shield Points recover after surviving combat."
     ],
     "currentHi": [
-      "Starts the match with 20 extra Shield Points. Shield Points recover after surviving combat."
+      "Antonio match ki shuruaat extra Shield Points ke saath karta hai, jo combat ke baad recover hote hain."
     ],
     "rows": [
       {
@@ -308,7 +308,7 @@
       },
       {
         "en": "Armor damage reduction on Shield Points",
-        "hi": "Armor damage reduction on Shield Points",
+        "hi": "Shield Points par armor damage reduction",
         "value": "None"
       },
       {
@@ -321,7 +321,7 @@
       "Shield Points are removed before HP. Shield Points ignore armor damage-reduction buffs. Shield Points do not protect against Danger Zone, fall or bleeding damage."
     ],
     "notesHi": [
-      "Shield Points are removed before HP. Shield Points ignore armor damage-reduction buffs. Shield Points do not protect against Danger Zone, fall or bleeding damage."
+      "HP se pehle Shield Points consume hote hain. Shield Points armor damage-reduction buffs ko ignore karte hain. Danger Zone, fall ya bleeding damage se Shield Points protection nahi dete."
     ],
     "historyEn": [
       "OB41 (Aug 2023): 40 extra HP converted to 40 Shield Points.",
@@ -330,10 +330,10 @@
       "OB48 (19 Feb 2025): 30 to 20."
     ],
     "historyHi": [
-      "OB41 (Aug 2023): 40 extra HP converted to 40 Shield Points.",
-      "OB43 (Jan 2024): 40 to 30.",
-      "2024: recovery speed 10 to 5 SP/s.",
-      "OB48 (19 Feb 2025): 30 to 20."
+      "OB41 (Aug 2023): 40 extra HP ko 40 Shield Points mein convert kiya gaya.",
+      "OB43 (Jan 2024): 40 se 30 hue.",
+      "2024: Recovery speed 10 se 5 SP/s hui.",
+      "OB48 (19 Feb 2025): 30 se 20 hue."
     ],
     "source": [
       {
@@ -365,12 +365,12 @@
     "badge": "Official-source profile",
     "lastChanged": "No balance changes since release (OB34, May 2022)",
     "introEn": "Utility character with an exclusive extra skill slot; no personal combat skill.",
-    "introHi": "Utility character with an exclusive extra skill slot; no personal combat skill.",
+    "introHi": "Utility character jiske paas ek extra exclusive skill slot hai; iska apna combat skill nahi hai.",
     "currentEn": [
       "Adds one extra skill slot that can hold any skill owned on the account."
     ],
     "currentHi": [
-      "Adds one extra skill slot that can hold any skill owned on the account."
+      "A-Patroa ek extra exclusive skill slot deta hai; iska personal combat skill nahi hai."
     ],
     "rows": [
       {
@@ -400,7 +400,7 @@
       "OB34 (May 2022): Released."
     ],
     "historyHi": [
-      "OB34 (May 2022): Released."
+      "OB34 (May 2022): Release hua."
     ],
     "source": [
       {
@@ -421,12 +421,12 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB49 (21 May 2025)",
     "introEn": "Passive that boosts weapon accuracy after she destroys a Gloo Wall.",
-    "introHi": "Passive that boosts weapon accuracy after she destroys a Gloo Wall.",
+    "introHi": "Passive skill jo Gloo Wall destroy karne ke baad weapon accuracy badhata hai.",
     "currentEn": [
       "Destroying a Gloo Wall increases weapon accuracy for 10 seconds."
     ],
     "currentHi": [
-      "Destroying a Gloo Wall increases weapon accuracy for 10 seconds."
+      "Paloma Gloo Wall destroy karne ke baad weapon accuracy boost karti hai."
     ],
     "rows": [
       {
@@ -454,13 +454,13 @@
       "Garena does not publish the accuracy bonus value. Designed to break enemy cover and finish players hiding behind Gloo Walls."
     ],
     "notesHi": [
-      "Garena does not publish the accuracy bonus value. Designed to break enemy cover and finish players hiding behind Gloo Walls."
+      "Garena accuracy bonus ki exact value publish nahi karta. Ye enemy cover todne aur Gloo Wall ke peeche chhupe players ko finish karne ke liye useful hai."
     ],
     "historyEn": [
       "OB49 (21 May 2025): Reworked. Her extra-ammo skill was replaced by Shatterburst."
     ],
     "historyHi": [
-      "OB49 (21 May 2025): Reworked. Her extra-ammo skill was replaced by Shatterburst."
+      "OB49 (21 May 2025): Rework hua; extra-ammo skill ki jagah Shatterburst aaya."
     ],
     "source": [
       {
@@ -483,7 +483,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB50 (30 Jul 2025)",
     "introEn": "Passive that increases accuracy while Laura is scoped in.",
-    "introHi": "Passive that increases accuracy while Laura is scoped in.",
+    "introHi": "Passive skill jo scope mein rehkar aim karne par Laura ki accuracy badhata hai.",
     "rows": [
       {
         "en": "Condition",
@@ -505,13 +505,13 @@
       "Accuracy increases by 60% while scoped in."
     ],
     "currentHi": [
-      "Accuracy increases by 60% while scoped in."
+      "Laura scope mein ho toh uski accuracy increase hoti hai."
     ],
     "notesEn": [
       "Built to help long-range shooters land shots."
     ],
     "notesHi": [
-      "Built to help long-range shooters land shots."
+      "Long-range players ko shots connect karne mein help karta hai."
     ],
     "historyEn": [
       "OB28 (Jun 2021): Accuracy bonus raised, maximum 30% to 35%.",
@@ -519,9 +519,9 @@
       "OB50 (30 Jul 2025): 50% to 60%."
     ],
     "historyHi": [
-      "OB28 (Jun 2021): Accuracy bonus raised, maximum 30% to 35%.",
-      "OB36 (Sep 2022): Maximum 35% to 50%.",
-      "OB50 (30 Jul 2025): 50% to 60%."
+      "OB28 (Jun 2021): Accuracy bonus ka maximum 30% se 35% hua.",
+      "OB36 (Sep 2022): Maximum 35% se 50% hua.",
+      "OB50 (30 Jul 2025): Maximum 50% se 60% hua."
     ],
     "source": [
       {
@@ -552,7 +552,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB40 (Jun 2023)",
     "introEn": "Passive that silences sniper and marksman fire and speeds up bleeding on knocked-down enemies.",
-    "introHi": "Passive that silences sniper and marksman fire and speeds up bleeding on knocked-down enemies.",
+    "introHi": "Passive skill jo sniper aur marksman fire ko silent karta hai, aur knocked-down enemies ki bleed speed badhata hai.",
     "rows": [
       {
         "en": "Weapons",
@@ -566,7 +566,7 @@
       },
       {
         "en": "Knocked-down enemy bleed speed",
-        "hi": "Knocked-down enemy bleed speed",
+        "hi": "Knocked enemy ki bleed speed",
         "value": "+85%"
       },
       {
@@ -579,13 +579,13 @@
       "With Sniper Rifles and Marksman Rifles, firing sound is silenced and enemies knocked down by Rafael bleed 85% faster."
     ],
     "currentHi": [
-      "With Sniper Rifles and Marksman Rifles, firing sound is silenced and enemies knocked down by Rafael bleed 85% faster."
+      "Sniper aur Marksman Rifles se fire karte waqt sound silent rehta hai, aur knocked-down enemies ki bleed speed fast hoti hai."
     ],
     "notesEn": [
       "Works while using Sniper Rifles or Marksman Rifles."
     ],
     "notesHi": [
-      "Works while using Sniper Rifles or Marksman Rifles."
+      "Sniper Rifles ya Marksman Rifles use karte waqt kaam karta hai."
     ],
     "historyEn": [
       "OB27 (Apr 2021): Became a passive skill that silences sniper and marksman fire.",
@@ -594,10 +594,10 @@
       "OB40 (Jun 2023): 90% to 85%."
     ],
     "historyHi": [
-      "OB27 (Apr 2021): Became a passive skill that silences sniper and marksman fire.",
-      "OB33 (23 Mar 2022): Limited to Sniper and Marksman Rifles; bleed speed bonus raised, maximum 45% to 90%.",
-      "OB39 (Mar 2023): Skill description corrected to match the actual effect.",
-      "OB40 (Jun 2023): 90% to 85%."
+      "OB27 (Apr 2021): Passive skill bana, sniper aur marksman fire silent hua.",
+      "OB33 (23 Mar 2022): Sniper aur Marksman Rifles tak limit hua; bleed speed bonus maximum 45% se 90% hua.",
+      "OB39 (Mar 2023): Skill description ko actual effect ke hisaab se correct kiya gaya.",
+      "OB40 (Jun 2023): 90% se 85% hua."
     ],
     "source": [
       {
@@ -628,7 +628,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB53 (2 Apr 2026)",
     "introEn": "Passive that restores HP when Jota hits and knocks down enemies.",
-    "introHi": "Passive that restores HP when Jota hits and knocks down enemies.",
+    "introHi": "Passive skill jo Jota ke hit karne aur enemy ko knock karne par HP restore karta hai.",
     "rows": [
       {
         "en": "Gun hit",
@@ -637,7 +637,7 @@
       },
       {
         "en": "Knockdown (any type)",
-        "hi": "Knockdown (any type)",
+        "hi": "Knockdown (kisi bhi type ka)",
         "value": "Restores 20% HP"
       },
       {
@@ -650,15 +650,14 @@
       "Hitting an enemy with guns restores some HP. Knocking down an enemy in any way restores 20% HP."
     ],
     "currentHi": [
-      "Hitting an enemy with guns restores some HP. Knocking down an enemy in any way restores 20% HP."
+      "Jota hit karne aur enemy ko knockdown karne par HP restore karta hai."
     ],
     "notesEn": [
       "Garena does not publish the HP restored per gun hit.",
       "Before OB53, only knockdowns scored with guns triggered the recovery."
     ],
     "notesHi": [
-      "Garena does not publish the HP restored per gun hit.",
-      "Before OB53, only knockdowns scored with guns triggered the recovery."
+      "Garena har gun hit par restore hone wali HP ki exact value publish nahi karta. OB53 se pehle sirf gun se kiye knockdown par recovery trigger hoti thi."
     ],
     "historyEn": [
       "Before OB29: SMG or Shotgun kills restored HP, 5-second cooldown.",
@@ -666,9 +665,9 @@
       "OB53 (2 Apr 2026): Any type of knockdown now triggers the recovery."
     ],
     "historyHi": [
-      "Before OB29: SMG or Shotgun kills restored HP, 5-second cooldown.",
-      "OB29 (Aug 2021): Reworked so gun hits restore HP and knockdowns restore up to 20% max HP.",
-      "OB53 (2 Apr 2026): Any type of knockdown now triggers the recovery."
+      "OB29 se pehle: SMG ya Shotgun kills par HP restore hota tha, 5-second cooldown ke saath.",
+      "OB29 (Aug 2021): Rework hua—gun hits par HP restore, knockdown par max HP ka 20% tak restore.",
+      "OB53 (2 Apr 2026): Ab kisi bhi type ka knockdown recovery trigger karta hai."
     ],
     "source": [
       {
@@ -695,7 +694,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB45 (24 Jun 2024)",
     "introEn": "Active scan that reveals enemy positions and shares them with the squad.",
-    "introHi": "Active scan that reveals enemy positions and shares them with the squad.",
+    "introHi": "Active scan jo enemy ki location reveal karta hai aur squad ke saath share karta hai.",
     "rows": [
       {
         "en": "Scan range",
@@ -704,7 +703,7 @@
       },
       {
         "en": "Detects",
-        "hi": "Detects",
+        "hi": "Kya detect karta hai",
         "value": "Enemies not prone or crouching"
       },
       {
@@ -714,7 +713,7 @@
       },
       {
         "en": "Position sharing",
-        "hi": "Position sharing",
+        "hi": "Location sharing",
         "value": "Shared with teammates"
       },
       {
@@ -727,15 +726,14 @@
       "Locates enemies within 80m who are not prone or crouching for 10 seconds. Enemy positions are shared with teammates."
     ],
     "currentHi": [
-      "Locates enemies within 80m who are not prone or crouching for 10 seconds. Enemy positions are shared with teammates."
+      "Clu scan se enemy positions reveal hoti hain aur squad ke saath share hoti hain."
     ],
     "notesEn": [
       "Prone or crouching enemies are not revealed.",
       "Scanned enemies get a notification on their minimap and screen."
     ],
     "notesHi": [
-      "Prone or crouching enemies are not revealed.",
-      "Scanned enemies get a notification on their minimap and screen."
+      "Prone ya crouch kar rahe enemies reveal nahi hote. Scan hone par enemy ke minimap aur screen par notification aata hai."
     ],
     "historyEn": [
       "OB34 (25 May 2022): Duration 5-7.5s to 5-10s, cooldown 75-60s to 75-50s by level.",
@@ -744,10 +742,10 @@
       "OB45 (24 Jun 2024): Scan range 65m to 80m."
     ],
     "historyHi": [
-      "OB34 (25 May 2022): Duration 5-7.5s to 5-10s, cooldown 75-60s to 75-50s by level.",
-      "OB37 (Nov 2022): Maximum scan range 75m to 65m.",
-      "OB40 (Jun 2023): Cooldown 50s to 45s; scanned enemies now get a notification.",
-      "OB45 (24 Jun 2024): Scan range 65m to 80m."
+      "OB34 (25 May 2022): Duration 5–7.5s se 5–10s; cooldown 75–60s se level ke hisaab se 75–50s hua.",
+      "OB37 (Nov 2022): Maximum scan range 75m se 65m hui.",
+      "OB40 (Jun 2023): Cooldown 50s se 45s hua; scanned enemies ko notification milne laga.",
+      "OB45 (24 Jun 2024): Scan range 65m se 80m hui."
     ],
     "source": [
       {
@@ -782,7 +780,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB48 (19 Feb 2025)",
     "introEn": "Passive that grows with every elimination: tougher against headshots and stronger headshots.",
-    "introHi": "Passive that grows with every elimination: tougher against headshots and stronger headshots.",
+    "introHi": "Passive skill jo har elimination ke saath stronger hota hai: headshots se protection badhti hai aur headshot damage bhi boost hota hai.",
     "rows": [
       {
         "en": "Trigger",
@@ -824,13 +822,13 @@
       "Every elimination adds one spectator, and spectators never decrease. Each spectator reduces headshot damage taken by 4% and increases headshot damage dealt by 10%."
     ],
     "currentHi": [
-      "Every elimination adds one spectator, and spectators never decrease. Each spectator reduces headshot damage taken by 4% and increases headshot damage dealt by 10%."
+      "Har elimination ke saath Wolfrahh ka effect badhta hai—headshot damage kam leta hai aur headshot damage zyada deta hai."
     ],
     "notesEn": [
       "Maximum effect is reached at 3 spectators."
     ],
     "notesHi": [
-      "Maximum effect is reached at 3 spectators."
+      "Maximum effect 3 spectators par milta hai."
     ],
     "historyEn": [
       "OB22 (May 2020): Introduced.",
@@ -838,9 +836,9 @@
       "OB48 (19 Feb 2025): Headshot damage taken reduction 7% to 4% per spectator, maximum 21% to 12%."
     ],
     "historyHi": [
-      "OB22 (May 2020): Introduced.",
-      "OB34 (25 May 2022): Spectators required reduced from 6 to 3; limb damage bonus replaced with headshot damage bonus.",
-      "OB48 (19 Feb 2025): Headshot damage taken reduction 7% to 4% per spectator, maximum 21% to 12%."
+      "OB22 (May 2020): Introduced hua.",
+      "OB34 (25 May 2022): Required spectators 6 se 3 hue; limb damage bonus ki jagah headshot damage bonus aaya.",
+      "OB48 (19 Feb 2025): Headshot damage taken reduction har spectator par 7% se 4%, maximum 21% se 12% hui."
     ],
     "source": [
       {
@@ -870,7 +868,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB42 (Oct 2023)",
     "introEn": "Passive that refills Jai's magazine after a knockdown or an active skill.",
-    "introHi": "Passive that refills Jai's magazine after a knockdown or an active skill.",
+    "introHi": "Passive skill jo knockdown ya active skill use karne ke baad Jai ki magazine refill karta hai.",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
@@ -898,21 +896,21 @@
       "After knocking down an enemy or using an active skill, the gun's magazine reloads automatically to 100% of its maximum capacity."
     ],
     "currentHi": [
-      "After knocking down an enemy or using an active skill, the gun's magazine reloads automatically to 100% of its maximum capacity."
+      "Enemy ko knockdown karne ya active skill use karne ke baad gun ki magazine automatically maximum capacity ke 100% tak refill ho jaati hai."
     ],
     "notesEn": [
       "Works with Assault Rifles, Pistols, SMGs, Shotguns and Sniper Rifles. The active-skill trigger leaves Jai with a loaded weapon right after using a skill."
     ],
     "notesHi": [
-      "Works with Assault Rifles, Pistols, SMGs, Shotguns and Sniper Rifles. The active-skill trigger leaves Jai with a loaded weapon right after using a skill."
+      "Assault Rifles, Pistols, SMGs, Shotguns aur Sniper Rifles par kaam karta hai. Active skill use karne ke turant baad Jai ke paas loaded weapon hota hai."
     ],
     "historyEn": [
       "Sep 2020 (Booyah Day): Reload capacity maximum 25% to 45%; Shotguns added.",
       "OB42 (Oct 2023): Reworked. Magazine now refills after a knockdown or an active skill, to 100% for all weapon types including Sniper Rifles."
     ],
     "historyHi": [
-      "Sep 2020 (Booyah Day): Reload capacity maximum 25% to 45%; Shotguns added.",
-      "OB42 (Oct 2023): Reworked. Magazine now refills after a knockdown or an active skill, to 100% for all weapon types including Sniper Rifles."
+      "Sep 2020 (Booyah Day): Reload capacity maximum 25% se 45% hui; Shotguns add hue.",
+      "OB42 (Oct 2023): Rework hua. Ab knockdown ya active skill ke baad magazine 100% refill hoti hai, Sniper Rifles samet sab weapon types par."
     ],
     "source": [
       {
@@ -934,7 +932,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB47 (2 Dec 2024)",
     "introEn": "Passive that boosts explosive damage and range, and splits each grenade into mini grenades after it explodes.",
-    "introHi": "Passive that boosts explosive damage and range, and splits each grenade into mini grenades after it explodes.",
+    "introHi": "Passive skill jo explosive damage aur range badhata hai, aur grenade explode hone ke baad use mini grenades mein split karta hai.",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
@@ -967,13 +965,13 @@
       "Explosive weapon damage increases by 20% and range increases by 10%. Each grenade splits into 3 mini grenades after exploding, dealing 20% of the original grenade's damage."
     ],
     "currentHi": [
-      "Explosive weapon damage increases by 20% and range increases by 10%. Each grenade splits into 3 mini grenades after exploding, dealing 20% of the original grenade's damage."
+      "Explosive weapon damage 20% aur range 10% badhti hai. Har grenade explode hone ke baad 3 mini grenades mein split hota hai, jo original grenade ke damage ka 20% deal karte hain."
     ],
     "notesEn": [
       "Grenades split only after exploding, so grenade cooking is no longer disrupted (OB47). Since OB47 this skill replaces Art of Demolition for all players."
     ],
     "notesHi": [
-      "Grenades split only after exploding, so grenade cooking is no longer disrupted (OB47). Since OB47 this skill replaces Art of Demolition for all players."
+      "Grenade explode hone ke baad hi split hota hai, isliye grenade cook karna ab interrupt nahi hota (OB47). OB47 se ye skill sab players ke liye Art of Demolition ki jagah aa gaya."
     ],
     "historyEn": [
       "OB29 (Aug 2021): Art of Demolition damage bonus raised, maximum 16% to 20%.",
@@ -981,9 +979,9 @@
       "OB47 (2 Dec 2024): Split Blitz replaced Art of Demolition for all players; grenades now split after exploding, mini grenades deal 20%."
     ],
     "historyHi": [
-      "OB29 (Aug 2021): Art of Demolition damage bonus raised, maximum 16% to 20%.",
-      "OB39 (Mar 2023): Awakened Alvaro \"Rageblast\" introduced with Split Blitz: +20% damage, +10% range, grenades split into 3 extra grenades 1 second before detonating at 30% damage.",
-      "OB47 (2 Dec 2024): Split Blitz replaced Art of Demolition for all players; grenades now split after exploding, mini grenades deal 20%."
+      "OB29 (Aug 2021): Art of Demolition damage bonus maximum 16% se 20% hua.",
+      "OB39 (Mar 2023): Awakened Alvaro “Rageblast” ke saath Split Blitz aaya: +20% damage, +10% range; grenade detonate hone se 1 second pehle 3 extra grenades mein split hota tha, 30% damage ke saath.",
+      "OB47 (2 Dec 2024): Split Blitz sab players ke liye Art of Demolition ki jagah aaya; grenade ab explode hone ke baad split hota hai aur mini grenades 20% damage karte hain."
     ],
     "source": [
       {
@@ -1013,7 +1011,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB36 (Sep 2022)",
     "introEn": "Passive that restores EP for every enemy Miguel knocks down.",
-    "introHi": "Passive that restores EP for every enemy Miguel knocks down.",
+    "introHi": "Passive skill jo Miguel ke har enemy knockdown par EP restore karta hai.",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
@@ -1036,21 +1034,21 @@
       "Gains 200 EP for each knockdown."
     ],
     "currentHi": [
-      "Gains 200 EP for each knockdown."
+      "Miguel har knockdown par 200 EP gain karta hai."
     ],
     "notesEn": [
       "Triggers on knockdowns, not eliminations. Can be paired with other recovery skills."
     ],
     "notesHi": [
-      "Triggers on knockdowns, not eliminations. Can be paired with other recovery skills."
+      "Knockdown par trigger hota hai, elimination par nahi. Dusri recovery skills ke saath pair kar sakte ho."
     ],
     "historyEn": [
       "OB35 (Aug 2022): Crazy Slayer now triggers on knockdowns instead of eliminations, 30-80 EP by level.",
       "OB36 (Sep 2022): EP per knockdown 30-80 to 100-200."
     ],
     "historyHi": [
-      "OB35 (Aug 2022): Crazy Slayer now triggers on knockdowns instead of eliminations, 30-80 EP by level.",
-      "OB36 (Sep 2022): EP per knockdown 30-80 to 100-200."
+      "OB35 (Aug 2022): Crazy Slayer elimination ki jagah knockdown par trigger hone laga, level ke hisaab se 30–80 EP.",
+      "OB36 (Sep 2022): Har knockdown par EP 30–80 se 100–200 hua."
     ],
     "source": [
       {
@@ -1072,7 +1070,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Passive that speeds up reloads and reduces enemy healing on every hit.",
-    "introHi": "Passive that speeds up reloads and reduces enemy healing on every hit.",
+    "introHi": "Passive skill jo reload speed badhata hai aur har hit par enemy ki healing reduce karta hai.",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
@@ -1082,7 +1080,7 @@
       },
       {
         "en": "Healing reduction on hit target",
-        "hi": "Healing reduction on hit target",
+        "hi": "Hit target ki healing reduction",
         "value": "50%"
       },
       {
@@ -1105,13 +1103,13 @@
       "Reload speed increases by 20%. Every time Nikita hits an enemy, that target gets a 50% healing reduction for 6 seconds (maximum 50%)."
     ],
     "currentHi": [
-      "Reload speed increases by 20%. Every time Nikita hits an enemy, that target gets a 50% healing reduction for 6 seconds (maximum 50%)."
+      "Reload speed 20% badhti hai. Nikita jab bhi enemy ko hit karti hai, target ki healing 6 seconds ke liye 50% reduce ho jaati hai (maximum 50%)."
     ],
     "notesEn": [
       "Built to counter high-healing characters such as Ford and Kassie. Hits do not stack the reduction beyond the 50% maximum. A visual indicator now shows when you apply Healing Reduction on an enemy (OB54)."
     ],
     "notesHi": [
-      "Built to counter high-healing characters such as Ford and Kassie. Hits do not stack the reduction beyond the 50% maximum. A visual indicator now shows when you apply Healing Reduction on an enemy (OB54)."
+      "Ford aur Kassie jaise high-healing characters ko counter karne ke liye useful hai. Hits se reduction 50% maximum se upar stack nahi hoti. OB54 mein enemy par Healing Reduction apply hone ka visual indicator add hua."
     ],
     "historyEn": [
       "OB37 (Nov 2022): Reload speed 14-24% to a flat 20%.",
@@ -1120,10 +1118,10 @@
       "OB54 (23 Jun 2026): Reload speed 30% to 20%."
     ],
     "historyHi": [
-      "OB37 (Nov 2022): Reload speed 14-24% to a flat 20%.",
-      "OB42 (Oct 2023): Reworked: reload speed +20%, 30% healing reduction for 10s.",
-      "OB48 (19 Feb 2025): Healing reduction 30% to 50%, duration 10s to 6s; reload speed 30%.",
-      "OB54 (23 Jun 2026): Reload speed 30% to 20%."
+      "OB37 (Nov 2022): Reload speed 14–24% se fixed 20% hui.",
+      "OB42 (Oct 2023): Rework—reload speed +20%, 10s ke liye 30% healing reduction.",
+      "OB48 (19 Feb 2025): Healing reduction 30% se 50%, duration 10s se 6s; reload speed 30% hui.",
+      "OB54 (23 Jun 2026): Reload speed 30% se 20% hui."
     ],
     "source": [
       {
@@ -1157,12 +1155,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB45 (24 Jun 2024)",
     "introEn": "Passive that lets any weapon heal teammates and boosts Heal Pistol healing.",
-    "introHi": "Passive that lets any weapon heal teammates and boosts Heal Pistol healing.",
+    "introHi": "Passive skill jisse kisi bhi weapon se teammates ko heal kar sakte hain aur Heal Pistol ki healing bhi badhti hai.",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
         "en": "Healing with ammo",
-        "hi": "Healing with ammo",
+        "hi": "Ammo se healing",
         "value": "20% of damage dealt, to teammates"
       },
       {
@@ -1180,13 +1178,13 @@
       "Shooting teammates with any weapon heals them for 20% of the damage dealt. Heal Pistols have a 20% higher healing effect."
     ],
     "currentHi": [
-      "Shooting teammates with any weapon heals them for 20% of the damage dealt. Heal Pistols have a 20% higher healing effect."
+      "Kisi bhi weapon se teammate ko shoot karne par dealt damage ka 20% heal hota hai. Heal Pistol ki healing effect 20% zyada hoti hai."
     ],
     "notesEn": [
       "Pairs with the Heal Pistol-Y, which helps up downed teammates by shooting them (OB49)."
     ],
     "notesHi": [
-      "Pairs with the Heal Pistol-Y, which helps up downed teammates by shooting them (OB49)."
+      "Heal Pistol-Y ke saath useful hai; OB49 mein ye downed teammates ko shoot karke help-up karta hai."
     ],
     "historyEn": [
       "OB21 (Apr 2020): Introduced with Healing Song.",
@@ -1195,10 +1193,10 @@
       "OB45 (24 Jun 2024): Reworked into Remedy Rounds."
     ],
     "historyHi": [
-      "OB21 (Apr 2020): Introduced with Healing Song.",
-      "OB40 (Jun 2023): Healing Song reworked: 80 HP shield and 10% speed boost on help-up, downed teammates bleed 35% slower.",
-      "OB44 (Apr 2024): Help-up speed boost 10% to 80%.",
-      "OB45 (24 Jun 2024): Reworked into Remedy Rounds."
+      "OB21 (Apr 2020): Healing Song ke saath introduce hui.",
+      "OB40 (Jun 2023): Healing Song rework—help-up par 80 HP shield aur 10% speed boost; downed teammates 35% dheere bleed karte hain.",
+      "OB44 (Apr 2024): Help-up speed boost 10% se 80% hui.",
+      "OB45 (24 Jun 2024): Remedy Rounds mein rework hui."
     ],
     "source": [
       {
