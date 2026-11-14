@@ -2,7 +2,7 @@
   {
     "id": "alok",
     "name": "Alok",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/officialwebsite/character/list_img/Alok.jpg",
     "skill": "Drop the Beat (+ Awakened Party Remix)",
     "type": "Active · Support",
     "badge": "Official patch-note profile",
@@ -138,7 +138,7 @@
   {
     "id": "a124",
     "name": "A124",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/A124.jpg",
     "skill": "Thrill of Battle",
     "type": "Active · Skill blocker",
     "badge": "Official patch-note profile (one value conflicts)",
@@ -235,7 +235,7 @@
   {
     "id": "andrew",
     "name": "Andrew",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Andrew.jpg",
     "skill": "Armor Specialist + Wolf Pack",
     "type": "Passive · Armor protection",
     "badge": "Official patch-note profile",
@@ -322,7 +322,7 @@
   {
     "id": "antonio",
     "name": "Antonio",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Antonio.jpg",
     "skill": "Gangster's Spirit",
     "type": "Passive · Early survival",
     "badge": "Official patch-note profile",
@@ -413,7 +413,7 @@
   {
     "id": "a-patroa",
     "name": "A-Patroa",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/officialwebsite/character/list_img/A-Patroa.jpg",
     "skill": "Exclusive skill slot",
     "type": "Utility · No combat skill",
     "badge": "Official-description profile",
