@@ -8,12 +8,12 @@
     "badge": "Official patch-note profile",
     "lastChanged": "OB54 (23 Jun 2026) · core numbers OB45 (24 Jun 2024)",
     "introEn": "Support aura boosts movement and restores HP.",
-    "introHi": "Support aura movement speed badhata hai aur HP restore karta hai.",
+    "introHi": "Alok ki Aura teammates ko speed boost aur HP recovery deti hai.",
     "currentEn": [
       "Aura gives +15% speed and 5 HP/s for 10s; auras do not stack."
     ],
     "currentHi": [
-      "Aura 10s tak +15% speed aur 5 HP/s deta hai; auras stack nahi hote."
+      "Aura 10 seconds tak +15% movement speed aur 5 HP/s HP recovery deti hai. Aura effects stack nahi hote."
     ],
     "rows": [
       {
@@ -67,8 +67,8 @@
       "OB54 Skill Boosts are Battle Royale only."
     ],
     "notesHi": [
-      "OB53: Alok ki own skill active ho to teammates ke Alok aura ka benefit nahi.",
-      "OB54 Skill Boosts sirf Battle Royale mein."
+      "OB53: Alok ki apni skill active ho, toh teammate Alok ki Aura ka benefit nahi milta.",
+      "OB54 ke Skill Boosts sirf Battle Royale mode mein kaam karte hain."
     ],
     "historyEn": [
       "OB39: HP 5→3; cooldown 50s→45s.",
@@ -79,12 +79,12 @@
       "OB55: no change."
     ],
     "historyHi": [
-      "OB39: HP 5→3; cooldown 50s→45s.",
-      "OB45: HP 3→5, speed 15%, duration 10s.",
-      "OB52: range/speed bug fixes.",
-      "OB53: aura restriction.",
-      "OB54: Skill Boosts.",
-      "OB55: koi change nahi."
+      "OB39: HP recovery 5 se 3 hui; Cooldown 50s se 45s hua.",
+      "OB45: HP recovery 3 se 5, movement speed +15%, duration 10s.",
+      "OB52: Range aur speed boost ke bugs fix hue.",
+      "OB53: Alok Aura restriction add hui.",
+      "OB54: Skill Boosts aaye.",
+      "OB55: Koi change nahi."
     ],
     "source": [
       {
@@ -120,61 +120,19 @@
       }
     ],
     "needsRecheck": [
-      "Verify exact OB54 Skill Boost wording."
+      "OB54 Skill Boosts ki exact wording verify karni hai."
     ],
     "awakened": {
-      "label": "AWAKENED",
-      "skill": "Party Remix",
-      "type": "Active · Support",
-      "introEn": "Awakened Party Remix.",
-      "introHi": "Awakened Party Remix.",
-      "currentEn": [
-        "Drops 2m behind user every 2s; lasts 5s. Teammate pickup gives +15% speed and 5 HP/s for 10s."
-      ],
+      "introHi": "Awakened Party Remix mein Alok ke drop ko teammates pick kar sakte hain.",
       "currentHi": [
-        "User ke 2m peeche har 2s drop; 5s duration. Teammate pickup +15% speed aur 10s 5 HP/s deta hai."
-      ],
-      "rows": [
-        {
-          "en": "Drop position",
-          "hi": "Drop position",
-          "value": "2m behind user"
-        },
-        {
-          "en": "Drop interval",
-          "hi": "Drop interval",
-          "value": "Every 2 seconds"
-        },
-        {
-          "en": "Duration",
-          "hi": "Duration",
-          "value": "5 seconds"
-        },
-        {
-          "en": "Pickup effect",
-          "hi": "Pickup effect",
-          "value": "+15% speed and 5 HP/s for 10s"
-        }
-      ],
-      "notesEn": [
-        "Awakened pickup effect is teammate-facing."
+        "Drop user ke 2m peeche har 2 seconds mein hota hai aur 5 seconds tak rehta hai. Teammate pick kare toh +15% speed aur 10 seconds tak 5 HP/s milta hai."
       ],
       "notesHi": [
-        "Awakened pickup effect teammate ko milta hai."
-      ],
-      "historyEn": [
-        "Awakening / Skill Boost update: OB54."
+        "Pickup ka effect teammate ko milta hai."
       ],
       "historyHi": [
         "Awakening / Skill Boost update: OB54."
-      ],
-      "source": [
-        {
-          "label": "Garena — OB54",
-          "url": "https://ff.garena.com/en/article/1673/"
-        }
-      ],
-      "status": "OB54 · verify exact Skill Boost wording"
+      ]
     }
   },
   {
@@ -186,12 +144,12 @@
     "badge": "Official patch-note profile (one value conflicts)",
     "lastChanged": "Late-2023 patch (approx.)",
     "introEn": "Interference wave blocks enemy skills and interrupts interactions.",
-    "introHi": "Interference wave enemy skills block aur interactions interrupt karti hai.",
+    "introHi": "A124 ki wave enemy skills block karti hai aur revive ya interaction ka countdown interrupt kar deti hai.",
     "currentEn": [
       "8m wave blocks enemy skill activation, deals 25 DMG, and interrupts interaction countdowns."
     ],
     "currentHi": [
-      "8m wave enemy skill activation block, 25 DMG, aur interaction countdown interrupt karti hai."
+      "8m ki wave enemy skill activate nahi hone deti, 25 DMG deti hai aur interaction countdown interrupt karti hai."
     ],
     "rows": [
       {
@@ -230,8 +188,8 @@
       "Joseph is immune."
     ],
     "notesHi": [
-      "Aim karte waqt cancel ho sakti hai.",
-      "Joseph immune hai."
+      "Aim karte waqt skill cancel kar sakte ho.",
+      "Joseph par A124 ki interference ka effect nahi hota."
     ],
     "historyEn": [
       "OB27 old EP-to-HP version buffed (obsolete).",
@@ -240,10 +198,10 @@
       "OB55 no change."
     ],
     "historyHi": [
-      "OB27 old EP-to-HP version buffed (obsolete).",
-      "OB33 rework: 8m wave, 20–30s, cooldown 100→50s.",
-      "Late 2023: 25 DMG; duration 30→20s; cooldown 75→50s.",
-      "OB55 no change."
+      "OB27: Purani EP-to-HP ability ka buff (ye version ab game mein nahi hai).",
+      "OB33: Ability rework hui—8m wave, 20–30s duration aur Cooldown 100s se 50s.",
+      "Late 2023: 25 DMG add hua; duration 30s se 20s aur Cooldown 75s se 50s hua.",
+      "OB55: Koi change nahi."
     ],
     "source": [
       {
@@ -266,12 +224,12 @@
     "status": "Patch-note snapshot · max skill level",
     "hiddenMechanics": [
       {
-        "text": "Joseph is immune to A124 interference.",
+        "text": "Joseph A124 ki interference se immune hai.",
         "status": "official"
       }
     ],
     "needsRecheck": [
-      "Patch note cooldown is 50s but character page lists 75s."
+      "Patch note mein Cooldown 50s hai, lekin character page par 75s listed hai—match mein verify karna."
     ]
   },
   {
@@ -283,12 +241,12 @@
     "badge": "Official patch-note profile",
     "lastChanged": "OB46 (Sep 2024) · Armor Specialist OB45",
     "introEn": "Armor durability and squad armor damage protection.",
-    "introHi": "Armor durability aur squad armor damage protection.",
+    "introHi": "Andrew armor ki durability loss kam karta hai aur nearby squad ko armor damage reduction deta hai.",
     "currentEn": [
       "Armor Specialist: armor durability loss -40%. Wolf Pack: +4% armor damage reduction and +1% per teammate within 15m."
     ],
     "currentHi": [
-      "Armor Specialist: durability loss -40%. Wolf Pack: +4% armor damage reduction aur 15m mein per teammate +1%."
+      "Armor Specialist se armor durability loss 40% kam hota hai. Wolf Pack +4% armor damage reduction deta hai aur 15m ke andar har teammate par +1% bonus milta hai."
     ],
     "rows": [
       {
@@ -316,7 +274,7 @@
       "Wolf Pack does not apply to Shield Points."
     ],
     "notesHi": [
-      "Wolf Pack Shield Points par apply nahi hota."
+      "Wolf Pack ka effect Shield Points par apply nahi hota."
     ],
     "historyEn": [
       "~Jun 2023: Armor Specialist 20→25%.",
@@ -326,11 +284,11 @@
       "OB55 no change."
     ],
     "historyHi": [
-      "~Jun 2023: Armor Specialist 20→25%.",
-      "OB41 Wolf Pack 20→15%; per teammate 10→5%.",
-      "OB45 Armor Specialist 25→40%; Wolf Pack 15→5%; +5% per teammate.",
-      "OB46 Wolf Pack 4%; 15m mein per teammate +1%.",
-      "OB55 no change."
+      "~Jun 2023: Armor Specialist 20% se 25% hua.",
+      "OB41: Wolf Pack 20% se 15%; per teammate bonus 10% se 5% hua.",
+      "OB45: Armor Specialist 25% se 40%; Wolf Pack 15% se 5%; teammate bonus +5% hua.",
+      "OB46: Wolf Pack 4% aur 15m ke andar per teammate +1% hua.",
+      "OB55: Koi change nahi."
     ],
     "source": [
       {
@@ -353,12 +311,12 @@
     "status": "Official patch-note values · max skill level",
     "hiddenMechanics": [
       {
-        "text": "Shield Points ignore armor DR buffs; Wolf Pack does not reduce hits on Antonio's shield.",
+        "text": "Shield Points armor damage reduction buffs ignore karte hain, isliye Wolf Pack Antonio ke Shield Points par damage kam nahi karta.",
         "status": "official"
       }
     ],
     "needsRecheck": [
-      "Verify whether teammates must also carry Wolf Pack for +1%."
+      "Verify karna hai ki +1% bonus ke liye teammates ko bhi Wolf Pack equip karna zaroori hai ya nahi."
     ]
   },
   {
@@ -370,12 +328,12 @@
     "badge": "Official patch-note profile",
     "lastChanged": "OB48 (19 Feb 2025)",
     "introEn": "Starting Shield Points support early survival.",
-    "introHi": "Starting Shield Points early survival mein help karte hain.",
+    "introHi": "Antonio match start par Shield Points deta hai, jo early fight mein extra protection dete hain.",
     "currentEn": [
       "Shield Points are removed before HP."
     ],
     "currentHi": [
-      "Shield Points HP se pehle remove hote hain."
+      "Shield Points, HP se pehle cut hote hain."
     ],
     "rows": [
       {
@@ -403,7 +361,7 @@
       "Shield Points are removed before HP."
     ],
     "notesHi": [
-      "Shield Points HP se pehle remove hote hain."
+      "Shield Points pehle consume hote hain; uske baad HP damage hota hai."
     ],
     "historyEn": [
       "OB41 rework: 40 HP→40 SP; regen after 4s.",
@@ -413,11 +371,11 @@
       "OB55 no change."
     ],
     "historyHi": [
-      "OB41 rework: 40 HP→40 SP; 4s baad regen.",
-      "OB43: 40→30.",
-      "~Aug–Sep 2024: recovery 10→5 SP/s.",
-      "OB48: 30→20 SP.",
-      "OB55 no change."
+      "OB41 rework: 40 HP ki jagah 40 Shield Points mile; 4s baad regen hota tha.",
+      "OB43: 40 se 30 Shield Points hue.",
+      "~Aug–Sep 2024: recovery speed 10 se 5 SP/s hui.",
+      "OB48: 30 se 20 Shield Points hue.",
+      "OB55: Koi change nahi."
     ],
     "source": [
       {
@@ -444,12 +402,12 @@
     "status": "Official patch-note values · max skill level",
     "hiddenMechanics": [
       {
-        "text": "Shield Points ignore armor DR buffs; no protection against Danger Zone, fall, or bleeding damage.",
+        "text": "Shield Points armor damage reduction buffs ko ignore karte hain. Danger Zone, fall ya bleeding damage se protection nahi milti.",
         "status": "official"
       }
     ],
     "needsRecheck": [
-      "Older patch dates are approximate."
+      "Purane patch ki dates approximate hain; exact dates verify karni hain."
     ]
   },
   {
@@ -461,12 +419,12 @@
     "badge": "Official-description profile",
     "lastChanged": "No balance changes found since OB34 release (May 2022)",
     "introEn": "Utility character with an exclusive extra skill slot; no personal combat skill.",
-    "introHi": "Utility character: exclusive extra skill slot; personal combat skill nahi.",
+    "introHi": "A-Patroa ek extra exclusive skill slot deti hai. Iski apni combat skill nahi hai.",
     "currentEn": [
       "Adds one extra skill slot that can hold any skill owned on the account."
     ],
     "currentHi": [
-      "Ek extra slot add hota hai jisme account ka koi owned skill rakh sakte hain."
+      "Account par jo skill owned hai, usmein se koi bhi extra slot mein equip kar sakte ho."
     ],
     "rows": [
       {
@@ -494,15 +452,15 @@
       "No combat ability values; effect is an additional skill slot."
     ],
     "notesHi": [
-      "Combat values nahi; effect additional skill slot hai."
+      "Is character ka combat ability effect nahi hai; main benefit extra skill slot hai."
     ],
     "historyEn": [
       "OB34 released.",
       "No later balance changes found."
     ],
     "historyHi": [
-      "OB34 release.",
-      "Baad ke balance changes nahi mile."
+      "OB34: Character release hua.",
+      "Iske baad koi balance change nahi mila."
     ],
     "source": [
       {
@@ -512,7 +470,7 @@
     ],
     "status": "Official-description profile · no balance patches found",
     "needsRecheck": [
-      "Verify official character page; wording currently comes from fan portal quoting Garena."
+      "Official character page aur exact description verify karni hai; abhi wording fan portal ke Garena quote par based hai."
     ]
   }
 ]
