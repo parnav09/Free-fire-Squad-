@@ -543,7 +543,9 @@ function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
   />;
 }
 
-const cardAbilityLabel = (profile: CharacterProfile) => `${profile.skill.replace(/\\s*\\((?:Active|Passive)\\)$/i, "")} · ${profile.type.split(" · ")[0]}`;\n\nconst normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const cardAbilityLabel = (profile: CharacterProfile) => `${profile.skill.replace(/\s*\((?:Active|Passive)\)$/i, "")} · ${profile.type.split(" · ")[0]}`;
+
+const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
 const editDistanceWithin = (a: string, b: string, limit: number) => {
   if (Math.abs(a.length - b.length) > limit) return false;
