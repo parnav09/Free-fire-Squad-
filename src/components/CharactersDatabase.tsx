@@ -1279,7 +1279,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
           <span className="character-confirmed">{shownProfile.badge || "Official-source profile"}</span>
           <p className="character-profile-subtitle">{shownProfile.status}</p>
           {shownProfile.lastChanged && <p className="character-last-changed">Last changed in <b>{shownProfile.lastChanged}</b></p>}
-          <p className="character-skill-name"><b>Ability:</b> {shownProfile.skill} · {shownProfile.type.split(" · ")[0]}</p>
+          <p className="character-skill-name"><b>Ability:</b> {shownProfile.skill.replace(/\s*\((?:Active|Passive)\)$/i, "")} · {shownProfile.type.split(" · ")[0]}</p>
           <p className="character-profile-summary">{isHindi ? shownProfile.introHi : shownProfile.introEn}</p>
         </div>
       </header>
