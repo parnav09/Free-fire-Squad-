@@ -2489,7 +2489,7 @@
   {
     "id": "nairi",
     "name": "Nairi",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/e21eb41a3705ff817156dd5758157274.png",
     "skill": "Ice Iron",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -2561,6 +2561,10 @@
     ],
     "source": [
       {
+        "label": "Garena — Official Nairi full-body character artwork",
+        "url": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/e21eb41a3705ff817156dd5758157274.png"
+      },
+      {
         "label": "Garena — Nairi character profile",
         "url": "https://ff.garena.com/en/chars/536"
       },
@@ -2589,12 +2593,41 @@
         "url": "https://ff.garena.com/en/article/871/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "contained",
+    "tacticalEn": [
+      "For a planned hold or rotation, deploy the Gloo Wall at the cover point your squad intends to use so its short restoration window begins while the team stabilizes.",
+      "Keep teammates within 5m during the brief HP-recovery window; call the regroup before spreading into separate angles.",
+      "Treat Ice Iron as a short support window, not sustained healing. Time the wall deployment around the squad's move rather than relying on repeated walls to stack recovery."
+    ],
+    "tacticalHi": [
+      "Planned hold ya rotation se pehle Gloo Wall us cover point par deploy karo jahan squad ko stabilize hona hai, taaki restoration window sahi time par start ho.",
+      "Brief HP-recovery window mein teammates ko 5m ke andar rakho; alag angles lene se pehle regroup call do.",
+      "Ice Iron ko short support window samjho, continuous healing nahi. Wall deployment ko squad movement ke saath time karo; multiple walls se healing stack nahi hoti."
+    ],
+    "strengthsEn": [
+      "Adds a short durability-restoration window to deployed Gloo Walls, helping the squad maintain temporary cover.",
+      "Provides nearby teammates with a small HP-recovery window when they stay within 5m."
+    ],
+    "strengthsHi": [
+      "Deployed Gloo Wall ko short durability-restoration window milti hai, jisse squad temporary cover ko hold kar sakti hai.",
+      "5m ke andar rehne wale teammates ko limited HP-recovery window milti hai."
+    ],
+    "limitationsEn": [
+      "The post-deployment effect window is only 1.5 seconds, so timing matters.",
+      "The teammate-healing effect does not stack from deploying multiple Gloo Walls.",
+      "Garena does not publish a current per-wall maximum HP recovery total for each teammate."
+    ],
+    "limitationsHi": [
+      "Deployment ke baad effect window sirf 1.5 seconds ki hai, isliye timing important hai.",
+      "Multiple Gloo Walls deploy karne se teammate-healing effect stack nahi hota.",
+      "Har teammate ke liye per-wall current maximum HP recovery total Garena publish nahi karta."
+    ]
   },
   {
     "id": "otho",
     "name": "Otho",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20229/d0ea6553e85abbf0a8b718e29900b7f5.png",
     "skill": "Memory Mist",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -2660,6 +2693,10 @@
     ],
     "source": [
       {
+        "label": "Garena — Official Otho full-body character artwork",
+        "url": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20229/d0ea6553e85abbf0a8b718e29900b7f5.png"
+      },
+      {
         "label": "Garena — Otho character profile",
         "url": "https://ff.garena.com/en/chars/520"
       },
@@ -2676,12 +2713,43 @@
         "url": "https://ff.garena.com/en/article/674/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "contained",
+    "tacticalEn": [
+      "After a knockdown, use the 20m mark around the downed opponent to call the nearby enemy positions before the squad commits to a follow-up.",
+      "The 3-second slow creates a brief timing advantage: coordinate a reposition, safer angle change or reset while the marked group is slowed.",
+      "If Otho is knocked down by a nearby enemy, immediately communicate the trigger so teammates know the attacker and nearby group have been marked and slowed."
+    ],
+    "tacticalHi": [
+      "Knockdown ke baad downed opponent ke around 20m mark ka use karke nearby enemy positions call karo, phir squad follow-up decide kare.",
+      "3-second slow ek short timing advantage deta hai: marked group slow ho tab reposition, safer angle change ya reset coordinate karo.",
+      "Agar nearby enemy Otho ko knockdown karta hai, trigger turant communicate karo taaki teammates ko pata rahe attacker aur uski nearby group mark aur slow hui hai."
+    ],
+    "strengthsEn": [
+      "A knockdown can reveal the downed enemy's nearby teammates, giving the squad information for its next decision.",
+      "The 25% movement-speed reduction can briefly disrupt an enemy group's reposition.",
+      "The self-knockdown trigger can also mark and slow the nearby attacker and their teammates."
+    ],
+    "strengthsHi": [
+      "Knockdown ke baad downed enemy ke nearby teammates reveal hote hain, jisse squad next move decide kar sakti hai.",
+      "25% movement-speed reduction enemy group ki reposition ko briefly disrupt kar sakti hai.",
+      "Otho khud knockdown ho toh nearby attacker aur uske teammates bhi mark aur slow hote hain."
+    ],
+    "limitationsEn": [
+      "The main trigger requires Otho to knock down an enemy; it is not a continuous scan.",
+      "The published 20m range is measured from the knocked-down enemy. Garena does not publish a separate numeric range for the self-knockdown trigger.",
+      "The mark-and-slow effect lasts only 3 seconds, and Garena does not publish a maximum mark count."
+    ],
+    "limitationsHi": [
+      "Main trigger ke liye Otho ka enemy ko knockdown karna zaroori hai; yeh continuous scan nahi hai.",
+      "Published 20m range knocked-down enemy se measure hoti hai. Self-knockdown trigger ki separate numeric range Garena publish nahi karta.",
+      "Mark-and-slow effect sirf 3 seconds rehta hai aur maximum mark count Garena publish nahi karta."
+    ]
   },
   {
     "id": "leon",
     "name": "Leon",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20229/b79f47950001fb7f7130a6b3752b3446.png",
     "skill": "Buzzer Beater",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -2739,6 +2807,10 @@
     ],
     "source": [
       {
+        "label": "Garena — Official Leon full-body character artwork",
+        "url": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20229/b79f47950001fb7f7130a6b3752b3446.png"
+      },
+      {
         "label": "Garena — Leon character profile",
         "url": "https://ff.garena.com/en/chars/504"
       },
@@ -2747,12 +2819,41 @@
         "url": "https://ff.garena.com/en/article/968/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "contained",
+    "tacticalEn": [
+      "After an engagement ends, create space behind cover and let Buzzer Beater's recovery tick before taking another contested position.",
+      "Use the recovery window to regroup with teammates and prepare the next rotation instead of treating the passive as an emergency instant heal.",
+      "Call out when you are disengaging so the squad can avoid leaving Leon isolated while the recovery is taking effect."
+    ],
+    "tacticalHi": [
+      "Engagement khatam hone ke baad cover ke peeche space banao aur next contested position lene se pehle Buzzer Beater ki recovery ko tick hone do.",
+      "Recovery window ko teammates ke saath regroup aur next rotation prepare karne mein use karo; ise instant emergency heal mat samjho.",
+      "Disengage karte waqt squad ko call do, taaki recovery ke dauran Leon isolated na rahe."
+    ],
+    "strengthsEn": [
+      "Provides up to 60 HP of recovery after surviving combat without requiring a manual activation.",
+      "The 15-second recovery window can support a reset between engagements."
+    ],
+    "strengthsHi": [
+      "Combat survive karne ke baad bina manual activation ke total 60 HP recovery milti hai.",
+      "15-second recovery window engagements ke beech reset karne mein support deti hai."
+    ],
+    "limitationsEn": [
+      "Recovery is gradual at 4 HP/s, not an instant HP burst.",
+      "The trigger is tied to surviving combat; Garena does not publish the exact disengagement timer.",
+      "It does not replace cover or teammate support during an active engagement."
+    ],
+    "limitationsHi": [
+      "Recovery 4 HP/s ki gradual rate se hoti hai, instant HP burst nahi hai.",
+      "Trigger combat survive karne se linked hai; exact disengagement timer Garena publish nahi karta.",
+      "Active engagement ke dauran yeh cover ya teammate support ka replacement nahi hai."
+    ]
   },
   {
     "id": "koda",
     "name": "Koda",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20252/b2f635a96ed787a8e540031402ea751b.png",
     "skill": "Aurora Vision",
     "type": "Active",
     "badge": "Official-source profile",
@@ -2825,6 +2926,10 @@
     ],
     "source": [
       {
+        "label": "Garena — Official Koda full-body character artwork",
+        "url": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20252/b2f635a96ed787a8e540031402ea751b.png"
+      },
+      {
         "label": "Garena — Koda character profile",
         "url": "https://ff.garena.com/en/chars/750"
       },
@@ -2845,12 +2950,45 @@
         "url": "https://ff.garena.com/en/article/1424/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "contained",
+    "tacticalEn": [
+      "Activate Aurora Vision before entering a contested rotation or checking likely enemy cover, then share each reveal with the squad through clear callouts.",
+      "Use the 15% movement-speed bonus to reposition with teammates while the detection window is active; do not assume every enemy will be revealed.",
+      "During parachuting, use the personal field-of-view highlights to call out visible locations because that information is not shared automatically with teammates."
+    ],
+    "tacticalHi": [
+      "Contested rotation mein enter karne ya likely enemy cover check karne se pehle Aurora Vision activate karo, phir har reveal ki clear callout squad ko do.",
+      "Detection window ke dauran 15% movement-speed bonus se teammates ke saath reposition karo; assume mat karo ki har enemy reveal hoga.",
+      "Parachuting ke waqt personal field-of-view highlights ko verbally call out karo, kyunki yeh information teammates ke saath automatically share nahi hoti."
+    ],
+    "strengthsEn": [
+      "Periodically reveals enemies behind cover within 50m, excluding crouching and prone targets.",
+      "Adds a 15% movement-speed bonus during the 8-second Aurora window.",
+      "Can highlight visible enemy locations during parachuting for the user."
+    ],
+    "strengthsHi": [
+      "50m ke andar cover ke peeche enemies ko interval par reveal karta hai; crouching aur prone targets detect nahi hote.",
+      "8-second Aurora window mein 15% movement-speed bonus deta hai.",
+      "Parachuting ke waqt user ko visible enemy locations highlight kar sakta hai."
+    ],
+    "limitationsEn": [
+      "The active window lasts 8 seconds and the cooldown is 45 seconds.",
+      "Crouching and prone enemies cannot be detected by the behind-cover scan.",
+      "Parachuting highlights are not shared with teammates.",
+      "OB54 Skill Boosts are optional BR enhancements and are separate from the base Aurora Vision values."
+    ],
+    "limitationsHi": [
+      "Active window 8 seconds ka hai aur cooldown 45 seconds hai.",
+      "Behind-cover scan crouching aur prone enemies ko detect nahi karta.",
+      "Parachuting highlights teammates ke saath share nahi hote.",
+      "OB54 Skill Boosts optional BR enhancements hain; yeh base Aurora Vision values se alag hain."
+    ]
   },
   {
     "id": "thiva",
     "name": "Thiva",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/217c0184667efa92bcec0caa73af73b9.png",
     "skill": "Vital Vibes",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -2900,6 +3038,10 @@
     ],
     "source": [
       {
+        "label": "Garena — Official Thiva full-body character artwork",
+        "url": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/217c0184667efa92bcec0caa73af73b9.png"
+      },
+      {
         "label": "Garena — Thiva character profile",
         "url": "https://ff.garena.com/en/chars/486"
       },
@@ -2916,6 +3058,35 @@
         "url": "https://ff.garena.com/en/article/674/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "contained",
+    "tacticalEn": [
+      "Prioritize a safe help-up behind cover when a teammate is downed; Thiva's 70% faster help-up speed shortens the time the squad must stay committed to the rescue.",
+      "After a successful help-up, keep the rescued teammate with the squad while the 60 HP recovery is applied over 3 seconds.",
+      "Track the 90-second cooldown and coordinate the next rescue window rather than assuming Vital Vibes is always available."
+    ],
+    "tacticalHi": [
+      "Teammate down ho toh cover ke peeche safe help-up ko priority do; Thiva ki 70% faster help-up speed rescue ke dauran squad ka exposure time kam karti hai.",
+      "Successful help-up ke baad rescued teammate ko squad ke saath rakho, jab 3 seconds mein 60 HP recovery apply hoti hai.",
+      "90-second cooldown track karo aur next rescue window coordinate karo; Vital Vibes ko hamesha available assume mat karo."
+    ],
+    "strengthsEn": [
+      "Increases teammate help-up speed by 70%, reducing the time needed to complete a rescue.",
+      "The successfully helped-up teammate receives 60 HP over 3 seconds."
+    ],
+    "strengthsHi": [
+      "Teammate help-up speed 70% badhata hai, jisse rescue complete karne ka time kam hota hai.",
+      "Jis teammate ka help-up successful hota hai, use 3 seconds mein 60 HP milte hain."
+    ],
+    "limitationsEn": [
+      "The ability has a 90-second cooldown.",
+      "The 60 HP recovery applies only after a successful help-up.",
+      "It does not provide a direct benefit while all teammates are already standing."
+    ],
+    "limitationsHi": [
+      "Ability ka cooldown 90 seconds hai.",
+      "60 HP recovery sirf successful help-up ke baad apply hoti hai.",
+      "Jab sab teammates already standing hon, tab yeh direct benefit nahi deti."
+    ]
   }
 ]
