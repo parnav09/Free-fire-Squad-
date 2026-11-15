@@ -3522,5 +3522,342 @@
       "Skill se mile Shield Points state khatam hone par remove ho jaate hain.",
       "Cooldown 75 seconds hai, aur Garena maximum refresh count publish nahi karta."
     ]
+  },
+  {
+    "id": "lila",
+    "name": "Lila",
+    "image": "",
+    "skill": "Gloo Strike",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB49 (21 May 2025)",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "introEn": "Passive that decelerates enemies and vehicles shot with rifles, freezing them and generating Gloo Walls upon knockdown.",
+    "introHi": "Passive that decelerates enemies and vehicles shot with rifles, freezing them and generating Gloo Walls upon knockdown.",
+    "currentEn": [
+      "When hitting enemies or vehicles with rifles or marksman rifles, reduces the enemies' movement speed by 10% or the vehicles' acceleration by 80% for 3 seconds. If the enemy is knocked down while decelerated, freezes them for up to 3 seconds and obtains 2 extra Gloo Walls."
+    ],
+    "currentHi": [
+      "When hitting enemies or vehicles with rifles or marksman rifles, reduces the enemies' movement speed by 10% or the vehicles' acceleration by 80% for 3 seconds. If the enemy is knocked down while decelerated, freezes them for up to 3 seconds and obtains 2 extra Gloo Walls."
+    ],
+    "rows": [
+      {
+        "en": "Enemy movement speed reduction",
+        "hi": "Enemy movement speed reduction",
+        "value": "-10%"
+      },
+      {
+        "en": "Vehicle acceleration reduction",
+        "hi": "Vehicle acceleration reduction",
+        "value": "-80%"
+      },
+      {
+        "en": "Deceleration duration",
+        "hi": "Deceleration duration",
+        "value": "3 seconds"
+      },
+      {
+        "en": "Freeze duration (on knockdown)",
+        "hi": "Freeze duration (on knockdown)",
+        "value": "Up to 3 seconds"
+      },
+      {
+        "en": "Extra Gloo Walls obtained",
+        "hi": "Extra Gloo Walls obtained",
+        "value": "+2"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The OB47 patch removed the original 10-second cooldown, making the skill continuously active upon landing successful rifle shots."
+    ],
+    "notesHi": [
+      "The OB47 patch removed the original 10-second cooldown, making the skill continuously active upon landing successful rifle shots."
+    ],
+    "historyEn": [
+      "OB46 (Aug 2024): Introduced. OB47 (Oct 2024): Vehicle decel 50% to 80%, removed 10s skill cooldown. OB49 (21 May 2025): Gloo Wall reward upon knock increased from 1 to 2."
+    ],
+    "historyHi": [
+      "OB46 (Aug 2024): Introduced. OB47 (Oct 2024): Vehicle decel 50% to 80%, removed 10s skill cooldown. OB49 (21 May 2025): Gloo Wall reward upon knock increased from 1 to 2."
+    ],
+    "source": [
+      {
+        "label": "OB49",
+        "url": "https://ff.garena.com/en/article/1473/"
+      },
+      {
+        "label": "OB47",
+        "url": "https://ff.garena.com/id/article/1418/"
+      }
+    ]
+  },
+  {
+    "id": "maro",
+    "name": "Maro",
+    "image": "",
+    "skill": "Falcon Fervor",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB54 (23 Jun 2026)",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "introEn": "Passive that scales weapon damage based on the distance to the target and deals extra damage to marked enemies.",
+    "introHi": "Passive that scales weapon damage based on the distance to the target and deals extra damage to marked enemies.",
+    "currentEn": [
+      "Damage increases with distance, up to a maximum of 20%. Damage to marked enemies increases by 5%."
+    ],
+    "currentHi": [
+      "Damage increases with distance, up to a maximum of 20%. Damage to marked enemies increases by 5%."
+    ],
+    "rows": [
+      {
+        "en": "Maximum distance damage bonus",
+        "hi": "Maximum distance damage bonus",
+        "value": "Up to +20%"
+      },
+      {
+        "en": "Damage to marked enemies",
+        "hi": "Damage to marked enemies",
+        "value": "+5%"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "Highly synergistic with information-gathering characters like Moco and Shirou."
+    ],
+    "notesHi": [
+      "Highly synergistic with information-gathering characters like Moco and Shirou."
+    ],
+    "historyEn": [
+      "OB41 (Aug 2023): Damage to marked enemies increased from 3.5% to 5%. OB54 (23 Jun 2026): Maximum distance damage bonus nerfed from 25% to 20%."
+    ],
+    "historyHi": [
+      "OB41 (Aug 2023): Damage to marked enemies increased from 3.5% to 5%. OB54 (23 Jun 2026): Maximum distance damage bonus nerfed from 25% to 20%."
+    ],
+    "source": [
+      {
+        "label": "OB54",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "OB41",
+        "url": "https://ff.garena.com/en/article/1385/"
+      },
+      {
+        "label": "Maro character page",
+        "url": "https://ff.garena.com/en/chars/446"
+      }
+    ]
+  },
+  {
+    "id": "shirou",
+    "name": "Shirou",
+    "image": "",
+    "skill": "Damage Delivered",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB53 (02 Apr 2026)",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "introEn": "Passive that marks attackers who hit the user and grants massive armor penetration on the first retaliatory shot.",
+    "introHi": "Passive that marks attackers who hit the user and grants massive armor penetration on the first retaliatory shot.",
+    "currentEn": [
+      "When hit by an enemy from within 100m, the attacker is marked for 8 seconds. Intel is shared with teammates. The first shot on marked enemies has 100% additional armor penetration. Maximum of 4 markings active at once."
+    ],
+    "currentHi": [
+      "When hit by an enemy from within 100m, the attacker is marked for 8 seconds. Intel is shared with teammates. The first shot on marked enemies has 100% additional armor penetration. Maximum of 4 markings active at once."
+    ],
+    "rows": [
+      {
+        "en": "Marking duration",
+        "hi": "Marking duration",
+        "value": "8 seconds"
+      },
+      {
+        "en": "Marking range",
+        "hi": "Marking range",
+        "value": "100m"
+      },
+      {
+        "en": "Maximum active markings",
+        "hi": "Maximum active markings",
+        "value": "4"
+      },
+      {
+        "en": "First shot armor penetration",
+        "hi": "First shot armor penetration",
+        "value": "+100%"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "Garena does not publish current cooldown"
+      }
+    ],
+    "notesEn": [
+      "The mark is universally visible to all teammates. Garena has not republished the cooldown value since it was reduced to 10 seconds in OB36."
+    ],
+    "notesHi": [
+      "The mark is universally visible to all teammates. Garena has not republished the cooldown value since it was reduced to 10 seconds in OB36."
+    ],
+    "historyEn": [
+      "OB36 (Sep 2022): Range 80m to 100m, Armor pen to 100%, Cooldown 25s to 10s. OB53 (02 Apr 2026): Marking duration 10s to 8s, Max markings explicitly capped at 4."
+    ],
+    "historyHi": [
+      "OB36 (Sep 2022): Range 80m to 100m, Armor pen to 100%, Cooldown 25s to 10s. OB53 (02 Apr 2026): Marking duration 10s to 8s, Max markings explicitly capped at 4."
+    ],
+    "source": [
+      {
+        "label": "OB53",
+        "url": "https://ff.garena.com/en/article/1640/"
+      },
+      {
+        "label": "OB36",
+        "url": "https://ff.garena.com/en-pk/article/931/"
+      },
+      {
+        "label": "Shirou character page",
+        "url": "https://ff.garena.com/en/chars/299"
+      }
+    ]
+  },
+  {
+    "id": "chrono",
+    "name": "Chrono",
+    "image": "",
+    "skill": "Time Turner",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB54 (23 Jun 2026)",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "introEn": "Active ability that creates an impenetrable static force field blocking incoming and outgoing damage.",
+    "introHi": "Active ability that creates an impenetrable static force field blocking incoming and outgoing damage.",
+    "currentEn": [
+      "Creates an impenetrable force field that blocks 1,000 damage. Unable to attack outside enemies from within the field. All effects last for 10 seconds."
+    ],
+    "currentHi": [
+      "Creates an impenetrable force field that blocks 1,000 damage. Unable to attack outside enemies from within the field. All effects last for 10 seconds."
+    ],
+    "rows": [
+      {
+        "en": "Force field HP",
+        "hi": "Force field HP",
+        "value": "1,000 damage"
+      },
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "10 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "45 seconds"
+      }
+    ],
+    "notesEn": [
+      "The shield blocks damage from all sources, both inside and out. Enemies can enter the shield dome."
+    ],
+    "notesHi": [
+      "The shield blocks damage from all sources, both inside and out. Enemies can enter the shield dome."
+    ],
+    "historyEn": [
+      "OB31 (Dec 2021): Removed ability to shoot outward, duration 6s, cooldown 120s. OB45 (Jun 2024): Duration 6s to 8s. OB54 (23 Jun 2026): Cooldown 60s to 45s, Shield HP 800 to 1000, Duration 8s to 10s."
+    ],
+    "historyHi": [
+      "OB31 (Dec 2021): Removed ability to shoot outward, duration 6s, cooldown 120s. OB45 (Jun 2024): Duration 6s to 8s. OB54 (23 Jun 2026): Cooldown 60s to 45s, Shield HP 800 to 1000, Duration 8s to 10s."
+    ],
+    "source": [
+      {
+        "label": "OB54",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "OB45",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "Chrono character page",
+        "url": "https://ff.garena.com/en/chars/299"
+      }
+    ]
+  },
+  {
+    "id": "dasha",
+    "name": "Dasha",
+    "image": "",
+    "skill": "Partying On",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB53 (02 Apr 2026)",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "introEn": "Passive that rewards knockdowns with a rapidly decaying rate of fire and movement speed boost.",
+    "introHi": "Passive that rewards knockdowns with a rapidly decaying rate of fire and movement speed boost.",
+    "currentEn": [
+      "After knocking down an enemy, enter Highlight mode for 10 seconds. Increases rate of fire by 18% and movement speed by 12% (decays quickly). Consecutively knocking down enemies resets the countdown and further boosts rate of fire by 4% and movement speed by 3%."
+    ],
+    "currentHi": [
+      "After knocking down an enemy, enter Highlight mode for 10 seconds. Increases rate of fire by 18% and movement speed by 12% (decays quickly). Consecutively knocking down enemies resets the countdown and further boosts rate of fire by 4% and movement speed by 3%."
+    ],
+    "rows": [
+      {
+        "en": "Highlight mode duration",
+        "hi": "Highlight mode duration",
+        "value": "10 seconds"
+      },
+      {
+        "en": "Rate of fire base bonus",
+        "hi": "Rate of fire base bonus",
+        "value": "+18%"
+      },
+      {
+        "en": "Movement speed base bonus",
+        "hi": "Movement speed base bonus",
+        "value": "+12%"
+      },
+      {
+        "en": "Streak bonus (Rate of Fire)",
+        "hi": "Streak bonus (Rate of Fire)",
+        "value": "+4% per subsequent knockdown"
+      },
+      {
+        "en": "Streak bonus (Movement)",
+        "hi": "Streak bonus (Movement)",
+        "value": "+3% per subsequent knockdown"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it."
+    ],
+    "notesHi": [
+      "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it."
+    ],
+    "historyEn": [
+      "OB39 (Mar 2023): Skill entirely reworked to Highlight mode (18% RoF, 12% Spd, 6s duration). OB53 (02 Apr 2026): Duration buffed from 6s to 10s."
+    ],
+    "historyHi": [
+      "OB39 (Mar 2023): Skill entirely reworked to Highlight mode (18% RoF, 12% Spd, 6s duration). OB53 (02 Apr 2026): Duration buffed from 6s to 10s."
+    ],
+    "source": [
+      {
+        "label": "OB53",
+        "url": "https://ff.garena.com/en/article/1640/"
+      },
+      {
+        "label": "OB39",
+        "url": "https://ff.garena.com/en/article/1120/"
+      }
+    ]
   }
 ]
