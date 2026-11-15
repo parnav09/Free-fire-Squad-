@@ -227,48 +227,48 @@ const baseProfiles: CharacterProfile[] = [
     status: "OB55 balance note checked · 14 Nov 2026",
   },
   {
-    id: "oscar", name: "Oscar", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20252/d5d04e40eb00900e96a28828decdaff0.png", skill: "Valiant Dash", type: "Active · Dash",
-    introEn: "The base ability, cooldown adjustment and BR Skill Boost options are documented separately.",
-    introHi: "Base ability, cooldown adjustment aur BR Skill Boost options ko alag-alag document kiya gaya hai.",
+    id: "oscar", name: "Oscar", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20252/d5d04e40eb00900e96a28828decdaff0.png", skill: "Valiant Dash", type: "Active",
+    badge: "Official-source profile", lastChanged: "OB54 (23 Jun 2026)",
+    introEn: "Active dash that destroys Gloo Walls and knocks back enemies.",
+    introHi: "Active dash jo Gloo Walls destroy karta hai aur enemies ko knockback deta hai.",
     currentEn: [
-      "Dashes in the selected direction and detonates the first 3 Gloo Walls encountered, dealing 25 damage to each listed wall.",
-      "Enemies encountered are listed as taking 25 damage and being knocked back.",
-      "Current official profile cooldown is 60 seconds.",
-      "In BR, OB54 documented two optional Skill Boosts: Phantom Dash increases dash range; Sustained Dash extends duration to 8 seconds, with speed initially reduced and then increasing.",
+      "Dashes toward the target direction, detonating the first 3 Gloo Walls in the way with 25 DMG, while also dealing 25 DMG to and knocking back enemies encountered."
     ],
     currentHi: [
-      "Selected direction mein dash karta hai aur raaste mein aane wali pehli 3 Gloo Walls ko detonate karta hai; listed wall damage 25 hai.",
-      "Encounter hone wale enemies ke liye 25 damage aur knockback listed hai.",
-      "Current official profile cooldown 60 seconds hai.",
-      "BR mein OB54 ne do optional Skill Boosts list kiye: Phantom Dash dash range badhata hai; Sustained Dash duration 8 seconds karta hai, jismein speed pehle kam hoti hai aur phir badhti hai.",
+      "Target direction mein dash karta hai, raaste mein aane wali pehli 3 Gloo Walls ko 25 DMG ke saath detonate karta hai, aur saamne aane wale enemies ko 25 DMG dekar knockback karta hai."
     ],
     rows: [
-      { en: "Gloo Walls affected", hi: "Gloo Walls affected", value: "First 3 in path" },
-      { en: "Listed wall damage", hi: "Listed wall damage", value: "25" },
-      { en: "Listed enemy effect", hi: "Listed enemy effect", value: "25 damage + knockback" },
-      { en: "Base cooldown", hi: "Base cooldown", value: "60 seconds" },
-      { en: "Sustained Dash boost duration", hi: "Sustained Dash boost duration", value: "8 seconds" },
+      { en: "Dash", hi: "Dash", value: "Toward the target direction" },
+      { en: "Gloo Walls detonated", hi: "Gloo Walls detonated", value: "First 3 in the way" },
+      { en: "Damage to Gloo Walls", hi: "Damage to Gloo Walls", value: "25 DMG" },
+      { en: "Damage to enemies", hi: "Damage to enemies", value: "25 DMG with knockback" },
+      { en: "Cooldown", hi: "Cooldown", value: "60 seconds" }
     ],
     notesEn: [
-      "Phantom Dash increases dash range; the patch note does not specify a numeric increase.",
-      "Sustained Dash lasts 8s and begins at a lower dash speed that increases over time.",
-      "The two Skill Boost options are BR progression choices; the patch notes state only one boost option can be selected.",
-      "OB54 increased the base cooldown from 45s to 60s.",
+      "The cooldown was raised in OB54 because the short cooldown made Oscar strong in too many situations. The skill indicator adjusts to slopes (OB50)."
     ],
     notesHi: [
-      "Phantom Dash dash range badhata hai; patch note numeric increase nahi batata.",
-      "Sustained Dash 8s tak rehta hai aur shuruat mein dash speed kam hoti hai, jo time ke saath badhti hai.",
-      "Dono Skill Boost options BR progression choices hain; patch notes ke mutabik sirf ek option select kiya ja sakta hai.",
-      "OB54 mein base cooldown 45s se 60s kiya gaya.",
+      "OB54 mein cooldown badhaya gaya kyunki chhota cooldown Oscar ko bahut zyada situations mein strong bana raha tha. Skill indicator slopes ke hisaab se adjust hota hai (OB50)."
     ],
-    historyEn: ["Oscar's base profile lists 60s cooldown. OB54 increased it from 45s to 60s and introduced Phantom Dash and Sustained Dash as BR Skill Boost options."],
-    historyHi: ["Oscar ke base profile mein 60s cooldown hai. OB54 ne ise 45s se 60s kiya aur BR Skill Boost options ke roop mein Phantom Dash aur Sustained Dash add kiye."],
+    historyEn: [
+      "OB48 (19 Feb 2025): Introduced with a 60s cooldown.",
+      "OB49 (21 May 2025): Skill Card added.",
+      "OB50 (30 Jul 2025): Skill indicator adjusts to slope inclines.",
+      "OB54 (23 Jun 2026): Cooldown 45s to 60s; 9th Anniversary event Skill Boosts: Phantom Dash (longer dash range) and Sustained Dash (8s dash with speed rising over time)."
+    ],
+    historyHi: [
+      "OB48 (19 Feb 2025): 60s cooldown ke saath introduce hua.",
+      "OB49 (21 May 2025): Skill Card add hua.",
+      "OB50 (30 Jul 2025): Skill indicator slope ke hisaab se adjust hota hai.",
+      "OB54 (23 Jun 2026): Cooldown 45s se 60s hua; 9th Anniversary event Skill Boosts: Phantom Dash (longer dash range) aur Sustained Dash (8s dash, jismein speed time ke saath badhti hai)."
+    ],
     source: [
-      { label: "Garena — Oscar character profile", url: "https://ff.garena.com/en/chars/769" },
-      { label: "Garena — OB54 Patch Notes", url: "https://ff.garena.com/en/article/1673" },
-      { label: "Garena — Original Oscar announcement", url: "https://ff.garena.com/en/article/1456" },
+      { label: "Garena — OB54", url: "https://ff.garena.com/en/article/1673/" },
+      { label: "Garena — OB50", url: "https://ff.garena.com/en/article/1511/" },
+      { label: "Garena — OB49", url: "https://ff.garena.com/en/article/1473/" },
+      { label: "Garena — OB48", url: "https://ff.garena.com/en/article/1456/" }
     ],
-    status: "OB54 cooldown / boost notes checked · 14 Nov 2026",
+    status: "OB55 values reconciled · 15 Nov 2026",
   },
   {
     id: "kassie", name: "Kassie", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/8d87fe1959e300741eda601e800c0f40.png", skill: "Electro Therapy", type: "Active · Healing / Link",
