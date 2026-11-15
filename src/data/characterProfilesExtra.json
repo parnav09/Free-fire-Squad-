@@ -2038,5 +2038,445 @@
         "url": "https://ff.garena.com/en/chars/"
       }
     ]
+  },
+  {
+    "id": "luna",
+    "name": "Luna",
+    "image": "",
+    "skill": "Fight-or-Flight",
+    "type": "Unverified",
+    "badge": "Official-source profile",
+    "lastChanged": "OB55 (10 Sep 2026)",
+    "introEn": "Passive-style firing-rate conversion ability; the official character page does not expose an Active/Passive tag.",
+    "introHi": "Firing-rate conversion ability; official character page par Active/Passive tag visible nahi hai.",
+    "currentEn": [
+      "Increases firing rate by 5%. When the user hits an enemy, up to 10% of the firing-rate bonus converts into movement speed. The conversion resets when the user survives combat."
+    ],
+    "currentHi": [
+      "Firing rate 5% badhata hai. Enemy ko hit karne par firing-rate bonus ka maximum 10% movement speed mein convert hota hai. Combat survive karne par conversion reset hota hai."
+    ],
+    "rows": [
+      {
+        "en": "Firing-rate increase",
+        "hi": "Firing-rate increase",
+        "value": "+5%"
+      },
+      {
+        "en": "Maximum conversion to movement speed",
+        "hi": "Maximum conversion to movement speed",
+        "value": "10% of firing-rate bonus"
+      },
+      {
+        "en": "Conversion reset",
+        "hi": "Conversion reset",
+        "value": "After surviving combat"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "Garena does not publish a cooldown"
+      }
+    ],
+    "notesEn": [
+      "Garena's current English character page lists 5% firing rate and 10% maximum conversion. The OB49 patch notes reduced the conversion cap from 15% to 10% while leaving the firing-rate value at 8%; OB55's current value is 5%.",
+      "The official character page does not show an [Active]/[Passive] tag. Type is therefore unverified, not inferred from the mechanic.",
+      "Garena does not publish the exact movement-speed percentage gained per hit beyond the stated conversion cap."
+    ],
+    "notesHi": [
+      "Garena ke current English character page par 5% firing rate aur 10% maximum conversion diya hai. OB49 mein conversion cap 15% se 10% hua tha; firing rate tab 8% tha. OB55 ka current value 5% hai.",
+      "Official character page par [Active]/[Passive] tag nahi dikh raha. Isliye type unverified hai; mechanic se guess nahi kiya gaya.",
+      "Har hit par exact movement-speed percentage Garena publish nahi karta; sirf conversion cap diya hai."
+    ],
+    "historyEn": [
+      "OB49 (21 May 2025): Maximum firing-rate-to-movement-speed conversion reduced 15% → 10%; firing-rate increase remained 8%.",
+      "OB55 (10 Sep 2026): Firing-rate increase reduced 8% → 5%; 10% maximum conversion retained."
+    ],
+    "historyHi": [
+      "OB49 (21 May 2025): Firing rate se movement-speed conversion cap 15% se 10% hua; firing-rate increase 8% raha.",
+      "OB55 (10 Sep 2026): Firing-rate increase 8% se 5% hua; 10% conversion cap same raha."
+    ],
+    "source": [
+      {
+        "label": "Garena — OB55 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1712/"
+      },
+      {
+        "label": "Garena — OB49 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1473/"
+      },
+      {
+        "label": "Garena — Luna character page",
+        "url": "https://ff.garena.com/en/chars/614"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "iris",
+    "name": "Iris",
+    "image": "",
+    "skill": "Wall Brawl",
+    "type": "Unverified",
+    "badge": "Official-source profile",
+    "lastChanged": "OB43 (24 Jan 2024; skill bug fix; latest balance values OB42)",
+    "introEn": "Marks enemies near a Gloo Wall and lets the user damage marked targets through that wall.",
+    "introHi": "Gloo Wall ke paas enemies ko mark karke wall ke paar damage pahunchane deta hai.",
+    "currentEn": [
+      "For 15 seconds after activating the skill, successfully firing at a Gloo Wall marks enemies within 7m and allows damage through that wall. The skill can affect up to 5 Gloo Walls. Cooldown: 60 seconds."
+    ],
+    "currentHi": [
+      "Skill activate karne ke baad 15 seconds tak Gloo Wall par successfully fire karne se 7m ke andar enemies mark hote hain aur wall ke paar damage lagta hai. Maximum 5 Gloo Walls affect hoti hain. Cooldown 60 seconds."
+    ],
+    "rows": [
+      {
+        "en": "Skill window",
+        "hi": "Skill window",
+        "value": "15 seconds"
+      },
+      {
+        "en": "Enemy marking radius",
+        "hi": "Enemy marking radius",
+        "value": "7m"
+      },
+      {
+        "en": "Maximum Gloo Walls affected",
+        "hi": "Maximum Gloo Walls affected",
+        "value": "5"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "60 seconds"
+      },
+      {
+        "en": "Damage through Gloo Wall",
+        "hi": "Damage through Gloo Wall",
+        "value": "Lower than usual; exact amount not published"
+      }
+    ],
+    "notesEn": [
+      "Damage dealt through Gloo Walls is lower than usual; Garena does not publish the exact damage multiplier/value.",
+      "OB43 fixed a damage bug when Iris's skill penetrated Gloo Walls; the latest numerical balance values remain those from OB42.",
+      "The official character page does not expose an [Active]/[Passive] tag; type is unverified."
+    ],
+    "notesHi": [
+      "Gloo Wall ke paar damage normal se kam hota hai; exact multiplier/value Garena publish nahi karta.",
+      "OB43 mein Gloo Wall penetration ke dauran Iris skill ka damage bug fix hua; latest numerical balance values OB42 ki hain.",
+      "Official character page par [Active]/[Passive] tag nahi hai; type unverified hai."
+    ],
+    "historyEn": [
+      "OB37 (11 Jan 2023): Skill window extended to 15s; marks enemies within 7m; affects up to 3/3/4/4/5/5 Gloo Walls by old rank values; cooldown old rank values 85/80/75/70/65/60s.",
+      "OB42 (30 Oct 2023): Maximum Gloo Walls affected increased 3 → 5; 15s duration, 7m marking radius and 60s cooldown retained.",
+      "OB43 (24 Jan 2024): Fixed a damage bug when Iris's skill penetrated Gloo Walls."
+    ],
+    "historyHi": [
+      "OB37 (11 Jan 2023): Skill window 15s hua; 7m ke enemies mark hote hain; purane rank-wise values mein maximum 3/3/4/4/5/5 Gloo Walls; cooldown 85/80/75/70/65/60s tha.",
+      "OB42 (30 Oct 2023): Maximum Gloo Walls 3 se 5 hui; 15s duration, 7m radius aur 60s cooldown same rahe.",
+      "OB43 (24 Jan 2024): Gloo Wall penetration par Iris skill damage bug fix hua."
+    ],
+    "source": [
+      {
+        "label": "Garena — OB43 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1317/"
+      },
+      {
+        "label": "Garena — OB42 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "Garena — OB37 Patch Notes",
+        "url": "https://ff.garena.com/en/article/968"
+      },
+      {
+        "label": "Garena — Iris character page",
+        "url": "https://ff.garena.com/en/chars/551"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "jbiebs",
+    "name": "J.Biebs",
+    "image": "",
+    "skill": "Silent Sentinel",
+    "type": "Unverified",
+    "badge": "Official-source profile",
+    "lastChanged": "OB37 (11 Jan 2023)",
+    "introEn": "Shares EP-based damage blocking with the user and nearby allies; allies' EP deductions are transferred to the skill user.",
+    "introHi": "User aur paas ke teammates ko EP ke through damage block karne deta hai; allies se deducted EP skill user ko milta hai.",
+    "currentEn": [
+      "The skill user and allies within 12m can block 12% damage using EP. EP deducted from allies is added to the skill user's EP."
+    ],
+    "currentHi": [
+      "Skill user aur 12m ke andar allies EP ka use karke 12% damage block kar sakte hain. Allies se deducted EP skill user ke EP mein add hota hai."
+    ],
+    "rows": [
+      {
+        "en": "Ally range",
+        "hi": "Ally range",
+        "value": "12m"
+      },
+      {
+        "en": "Damage blocked",
+        "hi": "Damage blocked",
+        "value": "12%"
+      },
+      {
+        "en": "EP transfer",
+        "hi": "EP transfer",
+        "value": "Ally EP deducted is added to skill user's EP"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "Garena does not publish a cooldown"
+      }
+    ],
+    "notesEn": [
+      "Garena's official English character page confirms the skill name and EP-transfer effect but does not list numerical values; current numerical values are taken from the latest located official patch adjustment.",
+      "A separate Thai-localized character page displays 15m and 8%, conflicting with the English patch-note values of 12m and 12%. Patch notes take precedence for this profile; localization discrepancy flagged.",
+      "The official character page does not expose an [Active]/[Passive] tag; type is unverified."
+    ],
+    "notesHi": [
+      "Garena ka English official character page skill name aur EP transfer confirm karta hai, lekin numeric values nahi deta; current values latest located official patch adjustment se liye gaye hain.",
+      "Thai-localized character page 15m aur 8% dikhata hai, jo English patch-note values 12m aur 12% se conflict karta hai. Is profile mein patch notes ko priority di gayi hai.",
+      "Official character page par [Active]/[Passive] tag nahi hai; type unverified hai."
+    ],
+    "historyEn": [
+      "OB37 (11 Jan 2023): Skill range standardized at 12m; damage blocked reduced to 6/6/9/9/12/12% by old rank values; allies' EP deductions transferred to the skill user."
+    ],
+    "historyHi": [
+      "OB37 (11 Jan 2023): Skill range 12m par fixed hua; purane rank-wise values mein damage block 6/6/9/9/12/12% hua; allies ka deducted EP skill user ko transfer hota hai."
+    ],
+    "source": [
+      {
+        "label": "Garena — OB37 Patch Notes",
+        "url": "https://ff.garena.com/en/article/968"
+      },
+      {
+        "label": "Garena — J.Biebs character page (English)",
+        "url": "https://ff.garena.com/en/chars/550"
+      },
+      {
+        "label": "Garena — J.Biebs character page (Thai localization discrepancy)",
+        "url": "https://ff.garena.com/en/chars/577"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "homer",
+    "name": "Homer",
+    "image": "",
+    "skill": "Senses Shockwave",
+    "type": "Unverified",
+    "badge": "Official-source profile",
+    "lastChanged": "OB54 (23 Jun 2026; BR Skill Boosts; base skill targeting last adjusted OB47)",
+    "introEn": "Sends a drone toward the nearest frontal enemy, creating a pulse that damages and slows targets.",
+    "introHi": "Nearest frontal enemy ki taraf drone bhejta hai; pulse damage deta hai aur targets ki movement aur firing speed kam karta hai.",
+    "currentEn": [
+      "Base skill: releases a drone toward the nearest enemy within a 100m frontal distance. It creates a 5m-diameter pulse, reduces movement speed by 40% and firing speed by 40%, lasts 5 seconds, deals 25 DMG, and has a 60-second cooldown.",
+      "OB54 BR Skill Boost 1 — UAV Shockwave: after hitting an enemy, scans the designated area (120m in BR, 30m in CS) and exposes in-range enemies on the minimap for 5 seconds.",
+      "OB54 BR Skill Boost 2 — Super Drone: launches an enhanced drone and gives the user a 15% speed boost for 15 seconds."
+    ],
+    "currentHi": [
+      "Base skill: 100m frontal distance ke andar nearest enemy ki taraf drone bhejta hai. 5m-diameter pulse banta hai, movement speed 40% aur firing speed 40% kam hoti hai, duration 5 seconds, damage 25 DMG aur cooldown 60 seconds.",
+      "OB54 BR Skill Boost 1 — UAV Shockwave: enemy hit hone ke baad designated area scan karta hai (BR mein 120m, CS mein 30m) aur 5 seconds ke liye in-range enemies minimap par reveal karta hai.",
+      "OB54 BR Skill Boost 2 — Super Drone: enhanced drone launch karta hai aur user ko 15 seconds ke liye 15% speed boost deta hai."
+    ],
+    "rows": [
+      {
+        "en": "Frontal target distance",
+        "hi": "Frontal target distance",
+        "value": "100m"
+      },
+      {
+        "en": "Pulse diameter",
+        "hi": "Pulse diameter",
+        "value": "5m"
+      },
+      {
+        "en": "Movement-speed reduction",
+        "hi": "Movement-speed reduction",
+        "value": "40%"
+      },
+      {
+        "en": "Firing-speed reduction",
+        "hi": "Firing-speed reduction",
+        "value": "40%"
+      },
+      {
+        "en": "Effect duration",
+        "hi": "Effect duration",
+        "value": "5 seconds"
+      },
+      {
+        "en": "Damage",
+        "hi": "Damage",
+        "value": "25 DMG"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "60 seconds"
+      },
+      {
+        "en": "OB54 Boost 1 scan",
+        "hi": "OB54 Boost 1 scan",
+        "value": "120m BR / 30m CS; reveals for 5 seconds"
+      },
+      {
+        "en": "OB54 Boost 2 speed bonus",
+        "hi": "OB54 Boost 2 speed bonus",
+        "value": "+15% for 15 seconds"
+      }
+    ],
+    "notesEn": [
+      "OB47 changed target priority so Homer prioritizes living enemies, reducing the likelihood of locking onto downed enemies.",
+      "OB54 Skill Boosts are BR progression enhancements, not a replacement for the base skill values. The two boosts are alternatives; only one can be selected.",
+      "Garena does not publish an exact pulse radius beyond the 5m diameter, nor a separate damage value for the Skill Boosts.",
+      "The official character page does not expose an [Active]/[Passive] tag; type is unverified."
+    ],
+    "notesHi": [
+      "OB47 mein target priority update hui: Homer living enemies ko priority deta hai, jisse downed enemies par lock hone ki possibility kam hoti hai.",
+      "OB54 Skill Boosts BR progression enhancements hain, base skill values ka replacement nahi. Dono boosts alternatives hain; ek hi select hota hai.",
+      "5m diameter ke alawa exact pulse radius ya Skill Boosts ka separate damage value Garena publish nahi karta.",
+      "Official character page par [Active]/[Passive] tag nahi hai; type unverified hai."
+    ],
+    "historyEn": [
+      "OB41 (10 Aug 2023): Pulse diameter reduced 5m → 3m; skill interaction with Moco's tagging was enabled.",
+      "OB42 (30 Oct 2023): Pulse diameter increased 3m → 4m.",
+      "OB43 (24 Jan 2024): Pulse diameter increased 4m → 5m; movement-speed reduction 60% → 40%; firing-speed reduction 35% → 40%; cooldown 90s → 60s. Drone targeting through obstacles was also fixed.",
+      "OB47 (3 Dec 2024): Target priority changed to prefer living enemies over downed enemies.",
+      "OB54 (23 Jun 2026): Added BR Skill Boost options UAV Shockwave and Super Drone."
+    ],
+    "historyHi": [
+      "OB41 (10 Aug 2023): Pulse diameter 5m se 3m hua; Moco tagging ke saath skill interaction enable hua.",
+      "OB42 (30 Oct 2023): Pulse diameter 3m se 4m hua.",
+      "OB43 (24 Jan 2024): Pulse diameter 4m se 5m; movement-speed reduction 60% se 40%; firing-speed reduction 35% se 40%; cooldown 90s se 60s hua. Obstacles ke through drone targeting bug bhi fix hua.",
+      "OB47 (3 Dec 2024): Target priority downed enemies ke bajay living enemies ko prefer karne lagi.",
+      "OB54 (23 Jun 2026): BR Skill Boost options UAV Shockwave aur Super Drone add hue."
+    ],
+    "source": [
+      {
+        "label": "Garena — OB54 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1673"
+      },
+      {
+        "label": "Garena — OB47 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1421/"
+      },
+      {
+        "label": "Garena — OB43 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1317/"
+      },
+      {
+        "label": "Garena — OB42 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "Garena — OB41 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1213/"
+      },
+      {
+        "label": "Garena — Homer character page",
+        "url": "https://ff.garena.com/en/chars/544"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "kenta",
+    "name": "Kenta",
+    "image": "",
+    "skill": "Tempest Raid",
+    "type": "Unverified",
+    "badge": "Official-source profile",
+    "lastChanged": "OB55 (10 Sep 2026)",
+    "introEn": "Sends a fast-moving tempest through Gloo Walls; the user can teleport to it and gain temporary damage reduction.",
+    "introHi": "Fast-moving tempest Gloo Walls ke paar bhejta hai; user uske paas teleport karke temporary damage reduction paata hai.",
+    "currentEn": [
+      "Unleashes a fast-moving swirling tempest that passes through Gloo Walls and lasts 8 seconds, dealing 25 DMG to enemies hit. While it is active, activate the skill again to teleport to its current location and gain a shield for 5 seconds with 20% damage reduction. The tempest disappears after teleporting. Cooldown: 45 seconds."
+    ],
+    "currentHi": [
+      "Fast-moving swirling tempest release hota hai jo Gloo Walls ke paar jaata hai aur 8 seconds rehta hai; hit enemies ko 25 DMG deta hai. Active rehte skill dobara activate karke uski current location par teleport ho sakte hain aur 5 seconds ke liye 20% damage reduction shield milta hai. Teleport ke baad tempest disappear ho jata hai. Cooldown 45 seconds."
+    ],
+    "rows": [
+      {
+        "en": "Tempest duration",
+        "hi": "Tempest duration",
+        "value": "8 seconds"
+      },
+      {
+        "en": "Damage",
+        "hi": "Damage",
+        "value": "25 DMG"
+      },
+      {
+        "en": "Teleport",
+        "hi": "Teleport",
+        "value": "Re-activate skill while tempest is active"
+      },
+      {
+        "en": "Shield duration",
+        "hi": "Shield duration",
+        "value": "5 seconds"
+      },
+      {
+        "en": "Damage reduction",
+        "hi": "Damage reduction",
+        "value": "20%"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "45 seconds"
+      }
+    ],
+    "notesEn": [
+      "OB55 is a complete rework: the former Swordsman's Wrath frontal shield is no longer the current skill. The current skill is Tempest Raid.",
+      "The tempest passes through Gloo Walls; it disappears after the user teleports.",
+      "The official character page does not expose an [Active]/[Passive] tag; type is unverified."
+    ],
+    "notesHi": [
+      "OB55 complete rework hai: purana Swordsman's Wrath frontal shield ab current skill nahi hai. Current skill Tempest Raid hai.",
+      "Tempest Gloo Walls ke paar jaata hai; user teleport kare toh tempest disappear hota hai.",
+      "Official character page par [Active]/[Passive] tag nahi hai; type unverified hai."
+    ],
+    "historyEn": [
+      "OB33 (23 Mar 2022): Kenta released with Swordsman's Wrath, a 5m frontal shield reducing incoming frontal weapon damage by 50%; old maximum duration 5s and old maximum cooldown 160s.",
+      "OB35 (2022): Shield damage reduction increased 50% → 65%; duration standardized to 5s; cooldown reduced to 120/110/100/90/80/70s.",
+      "OB39 (21 Mar 2023): Frontal damage reduction increased 50% → 60%; while firing, reduction increased 10% → 20%; duration 5s and cooldown 70s.",
+      "OB55 (10 Sep 2026): Complete rework to Tempest Raid — 8s tempest, 25 DMG, 5s shield with 20% damage reduction, 45s cooldown."
+    ],
+    "historyHi": [
+      "OB33 (23 Mar 2022): Kenta Swordsman's Wrath ke saath release hua: 5m frontal shield 50% incoming frontal weapon damage reduce karta tha; old max duration 5s aur max cooldown 160s tha.",
+      "OB35 (2022): Shield damage reduction 50% se 65%; duration fixed 5s; cooldown 120/110/100/90/80/70s hua.",
+      "OB39 (21 Mar 2023): Frontal damage reduction 50% se 60%; firing ke dauran reduction 10% se 20%; duration 5s aur cooldown 70s hua.",
+      "OB55 (10 Sep 2026): Tempest Raid mein complete rework — 8s tempest, 25 DMG, 5s shield with 20% damage reduction, 45s cooldown."
+    ],
+    "source": [
+      {
+        "label": "Garena — OB55 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1712/"
+      },
+      {
+        "label": "Garena — Kenta character page",
+        "url": "https://ff.garena.com/en/chars/525"
+      },
+      {
+        "label": "Garena — OB39 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1120/"
+      },
+      {
+        "label": "Garena — Kenta release / OB33",
+        "url": "https://ff.garena.com/en/article/674/"
+      },
+      {
+        "label": "Garena — Kenta earlier balance adjustment",
+        "url": "https://ff.garena.com/en/article/764/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
   }
 ]
