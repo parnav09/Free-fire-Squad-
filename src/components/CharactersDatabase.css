@@ -287,3 +287,82 @@
   .character-result-art img,
   .character-profile-art img { transition: none; transform: none; }
 }
+
+
+/* Centralized character artwork system — shared by catalogue cards and profile hero.
+   Per-character source art remains untouched unless its image entry is explicitly updated. */
+:root {
+  --character-art-bg: #0d1729;
+  --character-art-glow: rgba(76, 174, 224, .22);
+  --character-art-highlight: rgba(181, 230, 255, .10);
+  --character-art-shadow: rgba(0, 0, 0, .32);
+}
+.character-result-art,
+.character-profile-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 34%, var(--character-art-glow), transparent 62%),
+    radial-gradient(ellipse at 50% 100%, rgba(51, 100, 190, .13), transparent 58%),
+    linear-gradient(145deg, #142139 0%, var(--character-art-bg) 62%, #17172e 100%);
+}
+.character-result-art::before,
+.character-profile-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 28%, var(--character-art-highlight), transparent 54%),
+    linear-gradient(180deg, transparent 55%, rgba(3, 7, 15, .22));
+}
+.character-result-art img,
+.character-profile-art img {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  padding: 4px 7px 0;
+  filter: brightness(1.16) contrast(1.08) saturate(1.1)
+    drop-shadow(0 13px 19px var(--character-art-shadow));
+  transform: scale(1.045);
+  transform-origin: center bottom;
+  transition: transform .3s cubic-bezier(.2,.7,.2,1), filter .25s ease;
+  backface-visibility: hidden;
+}
+.character-result-card:hover .character-result-art img,
+.character-result-card:focus-visible .character-result-art img {
+  transform: scale(1.085);
+  filter: brightness(1.22) contrast(1.1) saturate(1.14)
+    drop-shadow(0 16px 22px var(--character-art-shadow));
+}
+.character-profile-page .character-profile-art:hover img {
+  transform: scale(1.075);
+  filter: brightness(1.22) contrast(1.1) saturate(1.14)
+    drop-shadow(0 17px 23px var(--character-art-shadow));
+}
+.character-result-art .character-result-monogram,
+.character-profile-art .character-profile-monogram {
+  position: relative;
+  z-index: 2;
+  background:
+    radial-gradient(ellipse at 50% 34%, var(--character-art-glow), transparent 60%),
+    linear-gradient(145deg, #142139, #0d1729 72%, #17172e);
+}
+@media (max-width: 640px) {
+  .character-result-art img { transform: scale(1.035); padding: 2px 3px 0; }
+  .character-profile-art img { transform: scale(1.025); padding: 2px 4px 0; }
+  .character-result-card:hover .character-result-art img { transform: scale(1.035); }
+  .character-profile-page .character-profile-art:hover img { transform: scale(1.025); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .character-result-art img,
+  .character-profile-art img { transition: none; transform: none; }
+}
