@@ -2157,12 +2157,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB43 (24 Jan 2024)",
     "introEn": "Active skill that marks enemies behind Gloo Walls and lets Iris damage them through the walls.",
-    "introHi": "Iris ki Active Skill Gloo Wall ke peeche chhupe enemies ko mark karti hai aur unhe wall ke paar se damage dene deti hai.",
+    "introHi": "एक Active Skill, जो Gloo Walls के पीछे मौजूद एनिमी को mark करती है और Iris को दीवार के पार से उन्हें Damage करने देती है।",
     "currentEn": [
       "For 15 seconds, successfully firing at a Gloo Wall marks enemies within 7m of it and penetrates the Gloo Wall to damage the marked enemies, with lower damage than usual. Works on up to 3 Gloo Walls."
     ],
     "currentHi": [
-      "15 seconds tak, Gloo Wall par successfully fire karne se uske 7m ke andar ke enemies mark ho jate hain. Phir bullets Gloo Wall ko penetrate karke marked enemies ko damage deti hain, lekin normal se kam damage hota hai. Yeh maximum 3 Gloo Walls par kaam karti hai."
+      "15 seconds तक Gloo Wall पर सफलतापूर्वक fire करने से उसके 7m के अंदर मौजूद एनिमी mark हो जाते हैं। इसके बाद Gloo Wall के पार से mark हुए एनिमी को Damage किया जा सकता है, लेकिन Damage सामान्य से कम होता है। यह Skill maximum 3 Gloo Walls पर काम करती है।"
     ],
     "rows": [
       {
@@ -2172,17 +2172,17 @@
       },
       {
         "en": "Mark range",
-        "hi": "Mark karne ki range",
+        "hi": "Mark Range",
         "value": "7m around the Gloo Wall"
       },
       {
         "en": "Gloo Walls affected",
-        "hi": "Affected Gloo Walls",
+        "hi": "प्रभावित Gloo Walls",
         "value": "3 maximum"
       },
       {
         "en": "Damage through walls",
-        "hi": "Wall ke paar damage",
+        "hi": "दीवार के पार से Damage",
         "value": "Lower than usual"
       },
       {
@@ -2196,8 +2196,8 @@
       "Attacks that penetrate Gloo Walls, like Iris's skill, show a clearer hit effect on the walls (OB49)."
     ],
     "notesHi": [
-      "Garena reduced damage ki exact value publish nahi karta.",
-      "Iris ki skill jaisi Gloo Wall penetrate karne wali attacks mein wall par hit effect zyada clearly dikhta hai (OB49)."
+      "Garena, कम हुए Damage की exact value publish नहीं करता।",
+      "Iris की Skill जैसी Gloo Wall के पार जाने वाली attacks पर दीवार पर ज्यादा साफ Hit Effect दिखता है (OB49)।"
     ],
     "historyEn": [
       "OB35 (2022): Introduced.",
@@ -2207,11 +2207,11 @@
       "OB49 (21 May 2025): Clearer visual effect when hitting Gloo Walls."
     ],
     "historyHi": [
-      "OB35 (2022): Skill introduce hui.",
-      "OB38 (Jan 2023): Skill ki duration badhai gayi.",
-      "OB40 (Jun 2023): Affected Gloo Walls 5 se 3 kar di gayi.",
-      "OB43 (24 Jan 2024): Skill ke Gloo Wall penetrate karne par damage se juda bug fix hua.",
-      "OB49 (21 May 2025): Gloo Wall par hit hone ka visual effect zyada clear kiya gaya."
+      "OB35 (2022): Introduce किया गया।",
+      "OB38 (Jan 2023): Skill Duration बढ़ाई गई।",
+      "OB40 (Jun 2023): प्रभावित Gloo Walls 5 से घटाकर 3 की गईं।",
+      "OB43 (24 Jan 2024): Skill के Gloo Walls के पार जाने पर Damage से जुड़ा bug ठीक किया गया।",
+      "OB49 (21 May 2025): Gloo Walls पर Hit होने का Visual Effect ज्यादा साफ किया गया।"
     ],
     "source": [
       {
@@ -2243,12 +2243,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB45 (Jun 2024)",
     "introEn": "Passive that lets J.Biebs and nearby allies block damage using EP, with allies' EP flowing to J.Biebs.",
-    "introHi": "J.Biebs ki Passive Skill, use aur paas ke teammates ko EP ke through damage block karne deti hai. Teammates ka use hua EP J.Biebs ko mil jata hai.",
+    "introHi": "एक Passive Skill, जिससे J.Biebs और आसपास के allies EP का इस्तेमाल करके Damage block कर सकते हैं। Allies का खर्च हुआ EP J.Biebs को मिलता है।",
     "currentEn": [
       "J.Biebs and allies within 15m can block 8% of damage using EP. The EP deducted from allies is added to J.Biebs's EP."
     ],
     "currentHi": [
-      "J.Biebs se 15m ke andar maujood woh aur uske teammates EP ka use karke 8% damage block kar sakte hain. Teammates se deduct hua EP, J.Biebs ke EP mein add ho jata hai."
+      "J.Biebs और 15m के अंदर मौजूद allies EP का इस्तेमाल करके 8% Damage block कर सकते हैं। Allies से घटाया गया EP, J.Biebs के EP में जुड़ जाता है।"
     ],
     "rows": [
       {
@@ -2258,12 +2258,12 @@
       },
       {
         "en": "Damage blocked using EP",
-        "hi": "EP se block hone wala damage",
+        "hi": "EP से Block होने वाला Damage",
         "value": "8%"
       },
       {
         "en": "EP transfer",
-        "hi": "EP transfer",
+        "hi": "EP Transfer",
         "value": "Allies' deducted EP is added to J.Biebs's EP"
       },
       {
@@ -2276,15 +2276,15 @@
       "The 15m range matches the support range of K and Olivia (OB46)."
     ],
     "notesHi": [
-      "15m ki range, K aur Olivia ki support range ke barabar hai (OB46)."
+      "15m की Range, K और Olivia की Support Range के बराबर है (OB46)।"
     ],
     "historyEn": [
       "OB38 (Jan 2023): Range fixed at 12m for all ranks (previously 6m to 12m); maximum damage block 15% to 12%.",
       "OB45 (Jun 2024): Range 12m to 15m; damage blocked 12% to 8%."
     ],
     "historyHi": [
-      "OB38 (Jan 2023): Sabhi ranks ke liye range 12m fix ki gayi (pehle 6m se 12m thi); maximum damage block 15% se 12% hua.",
-      "OB45 (Jun 2024): Range 12m se 15m aur damage block 12% se 8% kar diya gaya."
+      "OB38 (Jan 2023): सभी ranks के लिए Range 12m तय की गई (पहले 6m से 12m तक); Maximum Damage Block 15% से घटाकर 12% किया गया।",
+      "OB45 (Jun 2024): Range 12m से बढ़ाकर 15m; Damage Block 12% से घटाकर 8% किया गया।"
     ],
     "source": [
       {
@@ -2312,37 +2312,37 @@
     "badge": "Official-source profile",
     "lastChanged": "OB43 (24 Jan 2024)",
     "introEn": "Active drone that locks onto the nearest enemy and slows them with a pulse explosion.",
-    "introHi": "Homer ki Active Drone saamne maujood sabse nazdeek enemy ko lock karti hai aur pulse explosion se uski speed kam kar deti hai.",
+    "introHi": "एक Active Drone, जो सबसे नजदीकी एनिमी को lock करती है और Pulse Explosion से उसकी Speed कम करती है।",
     "currentEn": [
       "Releases a drone toward the nearest enemy within 100m in front. It creates a 5m-diameter pulse explosion that reduces enemies' movement speed by 40% and rate of fire by 40% for 5 seconds, and deals 25 DMG."
     ],
     "currentHi": [
-      "Homer saamne 100m ke andar sabse nazdeek enemy ki taraf drone bhejta hai. Drone 5m diameter ka pulse explosion banati hai, jo 5 seconds tak enemies ki Movement Speed aur Rate of Fire 40% kam kar deti hai aur 25 DMG deti hai."
+      "सामने 100m के अंदर मौजूद सबसे नजदीकी एनिमी की तरफ Drone भेजता है। यह 5m diameter का Pulse Explosion बनाती है, जो 5 seconds के लिए एनिमी की Movement Speed 40% और Rate of Fire 40% कम करता है, साथ ही 25 DMG देता है।"
     ],
     "rows": [
       {
         "en": "Lock range",
-        "hi": "Lock range",
+        "hi": "Lock Range",
         "value": "100m, nearest enemy in front"
       },
       {
         "en": "Pulse explosion",
-        "hi": "Pulse explosion",
+        "hi": "Pulse Explosion",
         "value": "5m diameter"
       },
       {
         "en": "Movement-speed reduction",
-        "hi": "Movement Speed reduction",
+        "hi": "Movement Speed में कमी",
         "value": "40%"
       },
       {
         "en": "Rate-of-fire reduction",
-        "hi": "Rate of Fire reduction",
+        "hi": "Rate of Fire में कमी",
         "value": "40%"
       },
       {
         "en": "Effect duration",
-        "hi": "Effect duration",
+        "hi": "Effect Duration",
         "value": "5 seconds"
       },
       {
@@ -2363,10 +2363,10 @@
       "A voice notification plays when no enemy is detected (OB49)."
     ],
     "notesHi": [
-      "Drone, Moco ki tagging skill trigger karti hai (OB40).",
-      "Drone ke target ko lock karne ke baad obstacles use rok nahi sakte (OB43).",
-      "Joseph, Homer ki drone se immune hai (OB42).",
-      "Enemy detect na hone par voice notification sunai deta hai (OB49)."
+      "यह Drone Moco की Tagging Skill को trigger करती है (OB40)।",
+      "Drone किसी target को lock कर ले, तो obstacles उसे रोक नहीं पाते (OB43)।",
+      "Joseph, Homer की Drone से immune है (OB42)।",
+      "कोई एनिमी detect न होने पर Voice Notification सुनाई देता है (OB49)।"
     ],
     "historyEn": [
       "OB40 (Jun 2023): Explosion diameter 5m to 3m; drone now triggers Moco's tagging.",
@@ -2376,11 +2376,11 @@
       "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: UAV Shockwave (extra scan after the hit exposes nearby enemies on the minimap for 5s, 120m in BR and 30m in CS) and Super Drone (glide on the drone with a 15% speed boost for 15s)."
     ],
     "historyHi": [
-      "OB40 (Jun 2023): Explosion diameter 5m se 3m kiya gaya; drone ab Moco ki tagging trigger karti hai.",
-      "OB42 (Oct 2023): Diameter 3m se 4m kiya gaya.",
-      "OB43 (24 Jan 2024): Diameter 4m se 5m; Movement Speed reduction 60% se 40%; Rate of Fire reduction 35% se 40%; cooldown 90s se 60s kiya gaya.",
-      "OB49 (21 May 2025): Enemy detect na hone par voice notification add kiya gaya.",
-      "OB54 (23 Jun 2026): 9th Anniversary Skill Boosts—UAV Shockwave (hit ke baad extra scan, jo BR mein 120m aur CS mein 30m tak ke nearby enemies ko 5s ke liye minimap par dikhata hai) aur Super Drone (drone par glide karte waqt 15s ke liye +15% speed)."
+      "OB40 (Jun 2023): Explosion Diameter 5m से घटाकर 3m किया गया; Drone अब Moco की Tagging Skill trigger करती है।",
+      "OB42 (Oct 2023): Diameter 3m से बढ़ाकर 4m किया गया।",
+      "OB43 (24 Jan 2024): Diameter 4m से बढ़ाकर 5m; Movement Speed Reduction 60% से घटाकर 40%; Rate of Fire Reduction 35% से बढ़ाकर 40%; Cooldown 90s से घटाकर 60s किया गया।",
+      "OB49 (21 May 2025): कोई एनिमी detect न होने पर Voice Notification जोड़ा गया।",
+      "OB54 (23 Jun 2026): 9th Anniversary event में Skill Boosts जोड़े गए: UAV Shockwave (Hit के बाद extra scan आसपास के एनिमी को Minimap पर 5s के लिए दिखाता है; BR में 120m और CS में 30m) और Super Drone (Drone पर glide करते समय 15s के लिए 15% Speed Boost)।"
     ],
     "source": [
       {
@@ -2416,27 +2416,27 @@
     "badge": "Official-source profile",
     "lastChanged": "OB55 (10 Sep 2026)",
     "introEn": "Active skill that sends a tempest through Gloo Walls, then teleports Kenta to it with a short shield.",
-    "introHi": "Kenta ki Active Skill Gloo Walls ke paar Tempest bhejti hai. Uske baad Kenta us jagah teleport karke thodi der ke liye shield pa leta hai.",
+    "introHi": "एक Active Skill, जो Gloo Walls के पार Tempest भेजती है। फिर Kenta वहाँ Teleport होकर थोड़ी देर के लिए Shield पा सकता है।",
     "currentEn": [
       "Unleashes a fast-moving, swirling tempest that passes through Gloo Walls and lasts 8 seconds, dealing 25 DMG to enemies hit. While the tempest is active, tap the skill again to teleport to its location and gain a shield for 5 seconds with 20% damage reduction. The tempest disappears after teleporting."
     ],
     "currentHi": [
-      "Kenta ek fast-moving, ghoomti hui Tempest release karta hai, jo Gloo Walls ke paar ja sakti hai aur 8 seconds tak rehti hai. Iski range mein aane wale enemies ko 25 DMG hota hai. Tempest active rehte hue skill ko dobara tap karke Kenta uski location par teleport kar sakta hai aur 5 seconds ke liye 20% damage reduction wala shield pa leta hai. Teleport ke baad Tempest gayab ho jati hai."
+      "तेजी से घूमती हुई Tempest छोड़ता है, जो Gloo Walls के पार जाती है और 8 seconds तक रहती है। इसकी चपेट में आने वाले एनिमी को 25 DMG मिलता है। Tempest active रहते हुए Skill दोबारा tap करने पर Kenta उसकी location पर Teleport हो जाता है और 5 seconds के लिए 20% Damage Reduction वाला Shield पाता है। Teleport के बाद Tempest गायब हो जाती है।"
     ],
     "rows": [
       {
         "en": "Tempest duration",
-        "hi": "Tempest duration",
+        "hi": "Tempest Duration",
         "value": "8 seconds"
       },
       {
         "en": "Tempest damage",
-        "hi": "Tempest damage",
+        "hi": "Tempest Damage",
         "value": "25 DMG"
       },
       {
         "en": "Passes through",
-        "hi": "Kis ke paar jaati hai",
+        "hi": "किसके पार जाती है",
         "value": "Gloo Walls"
       },
       {
@@ -2446,7 +2446,7 @@
       },
       {
         "en": "Shield after teleport",
-        "hi": "Teleport ke baad shield",
+        "hi": "Teleport के बाद Shield",
         "value": "5 seconds, 20% damage reduction"
       },
       {
@@ -2459,7 +2459,7 @@
       "OB55 replaced Kenta's original shield skill completely."
     ],
     "notesHi": [
-      "OB55 mein Kenta ki purani shield skill ko poori tarah replace kar diya gaya."
+      "OB55 में Kenta की original Shield Skill को पूरी तरह बदल दिया गया।"
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Introduced with Swordsman's Wrath: 5m frontal shield, 50% weapon damage reduction, lasts 2-5s, cooldown 210-160s.",
@@ -2467,9 +2467,9 @@
       "OB55 (10 Sep 2026): Complete rework into a tempest skill with teleport."
     ],
     "historyHi": [
-      "OB33 (23 Mar 2022): Swordsman's Wrath ke saath introduce hua—saamne 5m shield, 50% weapon damage reduction, 2–5s duration aur 210–160s cooldown.",
-      "OB38 (Jan 2023): Fire karne ke baad shield dobara pick kiya ja sakta tha; fire karte waqt 10% reduction aur 120–70s cooldown kiya gaya.",
-      "OB55 (10 Sep 2026): Skill ko poori tarah rework karke Tempest aur Teleport mein badal diya gaya."
+      "OB33 (23 Mar 2022): Swordsman's Wrath के साथ introduce किया गया: 5m frontal Shield, Weapon Damage Reduction 50%, Duration 2–5s और Cooldown 210–160s।",
+      "OB38 (Jan 2023): Fire करने के बाद Shield दोबारा उठाई जा सकती थी; Fire करते समय 10% Reduction और Cooldown 120–70s किया गया।",
+      "OB55 (10 Sep 2026): Tempest और Teleport वाली Skill में पूरी तरह rework किया गया।"
     ],
     "source": [
       {
@@ -2497,39 +2497,39 @@
     "badge": "Official-source profile",
     "lastChanged": "OB50 (30 Jul 2025)",
     "introEn": "Passive ability that restores deployed Gloo Wall durability and provides limited HP recovery to nearby teammates.",
-    "introHi": "Passive ability jo lagayi hui Gloo Wall ki durability wapas badhati hai aur paas ke teammates ko thodi HP wapas deti hai.",
+    "introHi": "एक Passive Ability, जो लगाई गई Gloo Wall की Durability वापस बढ़ाती है और आसपास के teammates को थोड़ी HP Recovery देती है।",
     "currentEn": [
       "After a Gloo Wall is deployed, it restores 160 durability per second during a 1.5-second effect window.",
       "Teammates within 5m recover 5 HP per second during the effect window."
     ],
     "currentHi": [
-      "Gloo Wall lagane ke baad 1.5 seconds tak har second uski 160 durability wapas badhti hai.",
-      "5m ke andar teammates ko is 1.5-second effect ke dauran har second 5 HP wapas milti hai."
+      "Gloo Wall लगाने के बाद 1.5-second Effect Window के दौरान उसकी Durability हर second 160 बढ़ती है।",
+      "इस Effect Window के दौरान 5m के अंदर मौजूद teammates हर second 5 HP recover करते हैं।"
     ],
     "rows": [
       {
         "en": "Gloo Wall durability restoration",
-        "hi": "Gloo Wall ki durability wapas badhne ki speed",
+        "hi": "Gloo Wall Durability Recovery",
         "value": "160 per second"
       },
       {
         "en": "Effect window after deployment",
-        "hi": "Gloo Wall lagane ke baad effect kitni der rehta hai",
+        "hi": "Deploy करने के बाद Effect Window",
         "value": "1.5 seconds"
       },
       {
         "en": "Nearby teammate HP recovery",
-        "hi": "Paas ke teammate ko har second kitni HP milti hai",
+        "hi": "पास के Teammates की HP Recovery",
         "value": "5 HP/s"
       },
       {
         "en": "Teammate range",
-        "hi": "Teammate kitni door tak ho sakta hai",
+        "hi": "Teammate Range",
         "value": "5m"
       },
       {
         "en": "Cooldown",
-        "hi": "Dobara use karne se pehle ka wait time",
+        "hi": "Cooldown",
         "value": "No cooldown"
       }
     ],
@@ -2540,10 +2540,10 @@
       "Garena does not publish a numeric cooldown for this passive ability."
     ],
     "notesHi": [
-      "Ek se zyada Gloo Walls lagane par teammate ko milne wali HP ek saath add nahi hoti.",
-      "OB42 mein har Gloo Wall par ek teammate ko maximum 40 HP milne ka zikr tha; baad ke patch notes confirm nahi karte ki yeh limit ab bhi hai ya nahi.",
-      "Garena abhi har Gloo Wall se teammate ko milne wali total maximum HP nahi batata.",
-      "Is passive ability ko dobara use karne ka exact cooldown Garena nahi batata."
+      "कई Gloo Walls लगाने से Teammate Healing Effect stack नहीं होता।",
+      "OB42 में हर Gloo Wall से हर teammate को maximum 40 HP मिलने की बात कही गई थी; बाद के Patch Notes यह confirm नहीं करते कि यह cap अब भी लागू है या नहीं।",
+      "Garena, हर teammate को एक Gloo Wall से मिलने वाली current maximum HP Recovery publish नहीं करता।",
+      "Garena इस Passive Ability का numeric Cooldown publish नहीं करता।"
     ],
     "historyEn": [
       "OB36 (21 Sep 2022): Gloo Wall durability restoration increased from 20/22/24/26/28/30% to 40/42/44/46/48/50% of current durability every 1s.",
@@ -2554,12 +2554,12 @@
       "OB50 (30 Jul 2025): The effect window changed from 2s to 1.5s and teammate recovery changed from 10 to 5 HP/s."
     ],
     "historyHi": [
-      "OB36 (21 Sep 2022): Har second Gloo Wall ki durability wapas badhne ki speed, current durability ke 20/22/24/26/28/30% se badhkar 40/42/44/46/48/50% hui.",
-      "OB41 (08 Aug 2023): Ice Iron ke mutabik hit hone par lagayi hui Gloo Wall 250 durability/s ki speed se repair hoti thi; 5m ke andar teammates ko 20 HP/s milti thi. Har wall par ek teammate ke liye 40 HP ki limit thi.",
-      "OB42 (30 Oct 2023): Gloo Wall ki repair speed 250 se 150 durability per second hui.",
-      "OB45 (26 Jun 2024): Repair speed 150 se 160 durability per second hui; teammate HP 20 se 10 HP/s hui aur Gloo Wall lagane ke baad 3s tak milti thi.",
-      "OB47 (02 Dec 2024): Gloo Wall lagane ke baad effect ka time 3s se 2s hua.",
-      "OB50 (30 Jul 2025): Effect ka time 2s se 1.5s hua aur teammate HP 10 se 5 HP/s hui."
+      "OB36 (21 Sep 2022): Gloo Wall Durability Recovery को हर 1s में current Durability के 20/22/24/26/28/30% से बढ़ाकर 40/42/44/46/48/50% किया गया।",
+      "OB41 (08 Aug 2023): Ice Iron में दर्ज किया गया कि Hit होने पर deployed Gloo Walls 250 Durability/s recover करती हैं; 5m के अंदर teammates 20 HP/s recover करते थे, हर teammate के लिए हर wall पर 40 HP cap के साथ।",
+      "OB42 (30 Oct 2023): Gloo Wall Durability Recovery 250 से घटाकर 150 per second की गई।",
+      "OB45 (26 Jun 2024): Durability Recovery 150 से बढ़ाकर 160 per second की गई; Teammate Recovery 20 से घटाकर 10 HP/s और deployment के बाद 3s तक की गई।",
+      "OB47 (02 Dec 2024): Deployment के बाद Effect Window 3s से घटाकर 2s की गई।",
+      "OB50 (30 Jul 2025): Effect Window 2s से घटाकर 1.5s और Teammate Recovery 10 से घटाकर 5 HP/s की गई।"
     ],
     "source": [
       {
@@ -2603,17 +2603,17 @@
       "Treat Ice Iron as a short support window, not sustained healing. Time the wall deployment around the squad's move rather than relying on repeated walls to stack recovery."
     ],
     "tacticalHi": [
-      "Squad ko kisi jagah hold karna ho ya zone ki taraf move karna ho, toh Gloo Wall us cover point par pehle lagao jahan team ko rukna hai. Isse repair ka short effect sahi time par milega.",
-      "Jab 1.5-second HP recovery chal rahi ho, teammates ko 5m ke andar rakho. Alag angles lene se pehle squad ko paas aane ka call do.",
-      "Ice Iron ko short support effect samjho, lagataar healing nahi. Gloo Wall lagane ka time squad ki movement ke saath match karo; multiple walls se HP effect stack nahi hota."
+      "Squad को किसी जगह hold या rotate करना हो, तो Gloo Wall उसी cover point पर लगाएँ जहाँ team रुकने वाली है, ताकि team के settle होते समय उसकी छोटी Recovery Window शुरू हो।",
+      "HP Recovery की छोटी Window के दौरान teammates को 5m के अंदर रखें; अलग-अलग angles पर फैलने से पहले regroup call दें।",
+      "Ice Iron को थोड़े समय के Support Effect की तरह लें, लगातार Healing की तरह नहीं। बार-बार Gloo Wall लगाकर Recovery stack होने की उम्मीद न करें; deployment का समय squad की movement के हिसाब से रखें।"
     ],
     "strengthsEn": [
       "Adds a short durability-restoration window to deployed Gloo Walls, helping the squad maintain temporary cover.",
       "Provides nearby teammates with a small HP-recovery window when they stay within 5m."
     ],
     "strengthsHi": [
-      "Gloo Wall lagane ke baad kuch pal ke liye uski durability wapas badhti hai, jisse squad temporary cover ko zyada der hold kar sakti hai.",
-      "5m ke andar teammates ko thodi HP wapas milti hai."
+      "Deployed Gloo Walls को थोड़े समय के लिए extra Durability मिलती है, जिससे squad का temporary cover बना रह सकता है।",
+      "5m के अंदर रहने वाले teammates को HP Recovery की छोटी Window मिलती है।"
     ],
     "limitationsEn": [
       "The post-deployment effect window is only 1.5 seconds, so timing matters.",
@@ -2621,9 +2621,9 @@
       "Garena does not publish a current per-wall maximum HP recovery total for each teammate."
     ],
     "limitationsHi": [
-      "Gloo Wall lagane ke baad effect sirf 1.5 seconds rehta hai, isliye sahi timing zaroori hai.",
-      "Ek se zyada Gloo Walls lagane par teammate ki HP recovery add nahi hoti.",
-      "Har teammate ko ek Gloo Wall se total kitni maximum HP mil sakti hai, Garena abhi nahi batata."
+      "Deployment के बाद Effect Window सिर्फ 1.5 seconds की है, इसलिए timing जरूरी है।",
+      "कई Gloo Walls लगाने से Teammate Healing Effect stack नहीं होता।",
+      "Garena, हर teammate के लिए एक Gloo Wall से मिलने वाली current maximum HP Recovery publish नहीं करता।"
     ]
   },
   {
@@ -2635,41 +2635,41 @@
     "badge": "Official-source profile",
     "lastChanged": "OB53 (02 Apr 2026)",
     "introEn": "Passive ability that marks nearby enemy teammates after a knockdown and applies a short movement-speed reduction.",
-    "introHi": "Passive ability jo enemy ko knockdown karne ke baad uske paas maujood teammates ko mark karti hai aur kuch seconds ke liye unki movement speed kam kar deti hai.",
+    "introHi": "एक Passive Ability, जो Knockdown के बाद आसपास मौजूद एनिमी teammates को mark करती है और थोड़े समय के लिए उनकी Movement Speed कम करती है।",
     "currentEn": [
       "After Otho knocks down an enemy, Memory Mist marks that enemy's teammates within 20m of the knocked-down enemy.",
       "Marked enemies have their movement speed reduced by 25% for 3 seconds.",
       "If Otho is knocked down by a nearby enemy, Memory Mist marks and slows the attacker and their teammates."
     ],
     "currentHi": [
-      "Otho jab kisi enemy ko knockdown karta hai, toh Memory Mist us downed enemy ke 20m ke andar maujood uske teammates ko mark karti hai.",
-      "Mark hue enemies ki movement speed 3 seconds ke liye 25% kam ho jaati hai.",
-      "Agar koi paas ka enemy Otho ko knockdown karta hai, toh Memory Mist us attacker aur uske teammates ko mark karke unki speed kam karti hai."
+      "Otho के किसी एनिमी को Knockdown करने के बाद Memory Mist, Knock हुए एनिमी से 20m के अंदर मौजूद उसके teammates को mark करती है।",
+      "Mark हुए एनिमी की Movement Speed 3 seconds के लिए 25% कम हो जाती है।",
+      "अगर Otho को कोई पास का एनिमी Knockdown करता है, तो Memory Mist उस attacker और उसके teammates को mark करके उनकी Speed कम करती है।"
     ],
     "rows": [
       {
         "en": "Primary trigger",
-        "hi": "Ability activate hone ki condition",
+        "hi": "Primary Trigger",
         "value": "Enemy knockdown"
       },
       {
         "en": "Marking range",
-        "hi": "Mark karne ki range",
+        "hi": "Marking Range",
         "value": "20m"
       },
       {
         "en": "Movement-speed reduction",
-        "hi": "Movement speed kitni kam hoti hai",
+        "hi": "Movement Speed में कमी",
         "value": "25%"
       },
       {
         "en": "Effect duration",
-        "hi": "Effect kitni der rehta hai",
+        "hi": "Effect Duration",
         "value": "3 seconds"
       },
       {
         "en": "Cooldown",
-        "hi": "Dobara use karne se pehle ka wait time",
+        "hi": "Cooldown",
         "value": "No cooldown"
       }
     ],
@@ -2679,9 +2679,9 @@
       "Garena does not publish a numeric cooldown for this passive ability."
     ],
     "notesHi": [
-      "20m ki range tab apply hoti hai jab Otho kisi enemy ko knockdown karta hai. Otho khud knockdown ho, toh us case ki alag range Garena nahi batata.",
-      "Memory Mist ek baar mein maximum kitne players ko mark kar sakti hai, Garena nahi batata.",
-      "Is passive ability ka exact cooldown Garena nahi batata."
+      "एनिमी को Knockdown करने वाले Trigger के लिए 20m Range दी गई है। खुद Knockdown होने वाले Trigger की अलग numeric Range Garena publish नहीं करता।",
+      "Memory Mist कितने maximum players को mark कर सकती है, यह Garena publish नहीं करता।",
+      "Garena इस Passive Ability का numeric Cooldown publish नहीं करता।"
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Maximum reveal range increased from 50m to 75m; teammate information-sharing duration increased from 4s to 6s.",
@@ -2689,9 +2689,9 @@
       "OB53 (02 Apr 2026): The mark-and-slow duration changed from 4s to 3s."
     ],
     "historyHi": [
-      "OB33 (23 Mar 2022): Enemies ko reveal karne ki maximum range 50m se 75m hui; teammates ke saath information share karne ka time 4s se 6s hua.",
-      "OB39 (21 Mar 2023): Memory Mist ka effect badla: enemy ko knockdown karne par uske 20m ke andar ke enemies mark hote aur 4s tak unki speed 25% kam hoti. Otho khud knockdown ho, tab bhi paas ke enemies mark aur slow hote.",
-      "OB53 (02 Apr 2026): Mark aur slow ka effect 4s se 3s hua."
+      "OB33 (23 Mar 2022): Maximum Reveal Range 50m से बढ़ाकर 75m; Teammates के साथ Information Sharing Duration 4s से बढ़ाकर 6s की गई।",
+      "OB39 (21 Mar 2023): Memory Mist को rework किया गया: एनिमी को Knockdown करने के बाद वह Knock हुए एनिमी से 20m के अंदर मौजूद एनिमी को mark करती है और 4s के लिए उनकी Speed 25% कम करती है; Otho के Knockdown होने पर भी आसपास के एनिमी mark और slow होते हैं।",
+      "OB53 (02 Apr 2026): Mark और Slow की Duration 4s से घटाकर 3s की गई।"
     ],
     "source": [
       {
@@ -2723,9 +2723,9 @@
       "If Otho is knocked down by a nearby enemy, immediately communicate the trigger so teammates know the attacker and nearby group have been marked and slowed."
     ],
     "tacticalHi": [
-      "Enemy knockdown hone ke baad uske aas-paas 20m mein mark hue players ki location squad ko call karo. Phir team milkar next move decide kar sakti hai.",
-      "3-second slow se squad ko thoda time milta hai. Is dauran position badalne, better angle lene ya safe jagah par reset karne ka call do.",
-      "Agar koi paas ka enemy Otho ko knockdown kare, toh turant squad ko batao. Isse teammates ko pata chalega ki attacker aur uske saathi mark hue hain aur unki speed kam hui hai."
+      "Knockdown के बाद down हुए opponent के आसपास 20m में mark हुए एनिमी की location call करें, फिर squad को आगे बढ़ाएँ।",
+      "3-second Slow से थोड़े समय का advantage मिलता है: इस दौरान position बदलें, बेहतर angle लें या reset करें।",
+      "अगर Otho को कोई पास का एनिमी Knockdown करता है, तो तुरंत teammates को बताएं, ताकि उन्हें पता रहे कि attacker और आसपास की team mark और slow हो चुकी है।"
     ],
     "strengthsEn": [
       "A knockdown can reveal the downed enemy's nearby teammates, giving the squad information for its next decision.",
@@ -2733,9 +2733,9 @@
       "The self-knockdown trigger can also mark and slow the nearby attacker and their teammates."
     ],
     "strengthsHi": [
-      "Enemy knockdown hone par uske paas chhupe teammates ki location pata chal sakti hai, jisse squad ko next move decide karne mein help milti hai.",
-      "25% slow hone se enemy group kuch seconds ke liye jaldi position change nahi kar paata.",
-      "Otho khud knockdown ho, tab bhi paas ka attacker aur uske teammates mark hote hain aur unki speed kam hoti hai."
+      "Knockdown से down हुए एनिमी के आसपास मौजूद teammates की location पता चल सकती है, जिससे squad अगला फैसला ले सकती है।",
+      "25% Movement Speed Reduction कुछ समय के लिए एनिमी team की repositioning बिगाड़ सकती है।",
+      "खुद Knockdown होने पर भी यह पास के attacker और उसके teammates को mark और slow कर सकती है।"
     ],
     "limitationsEn": [
       "The main trigger requires Otho to knock down an enemy; it is not a continuous scan.",
@@ -2743,9 +2743,9 @@
       "The mark-and-slow effect lasts only 3 seconds, and Garena does not publish a maximum mark count."
     ],
     "limitationsHi": [
-      "Main effect tabhi chalta hai jab Otho kisi enemy ko knockdown kare; yeh har waqt enemies ko scan nahi karta.",
-      "20m ki range downed enemy se gini jaati hai. Otho khud knockdown ho toh us case ki exact range Garena nahi batata.",
-      "Mark aur slow ka effect sirf 3 seconds rehta hai. Ek baar mein maximum kitne enemies mark honge, yeh bhi clear nahi hai."
+      "मुख्य Trigger के लिए Otho को एनिमी Knockdown करना जरूरी है; यह लगातार चलने वाला Scan नहीं है।",
+      "बताई गई 20m Range, Knock हुए एनिमी से मापी जाती है। खुद Knockdown होने वाले Trigger की अलग numeric Range Garena publish नहीं करता।",
+      "Mark और Slow Effect सिर्फ 3 seconds रहता है और maximum mark count Garena publish नहीं करता।"
     ]
   },
   {
@@ -2757,37 +2757,37 @@
     "badge": "Official-source profile",
     "lastChanged": "OB38 (11 Jan 2023)",
     "introEn": "Passive ability that restores HP after Leon survives combat.",
-    "introHi": "Passive ability jo fight se bachkar nikalne ke baad Leon ki HP dheere-dheere wapas badhati hai.",
+    "introHi": "एक Passive Ability, जो Combat से बच निकलने के बाद Leon को HP वापस देती है।",
     "currentEn": [
       "After surviving combat, Leon recovers 60 HP at a rate of 4 HP per second for 15 seconds."
     ],
     "currentHi": [
-      "Fight se bachkar nikalne ke baad Leon ko 15 seconds tak har second 4 HP wapas milti hai. Is tarah total 60 HP recover hoti hai."
+      "Combat से बचने के बाद Leon 15 seconds तक हर second 4 HP की दर से कुल 60 HP recover करता है।"
     ],
     "rows": [
       {
         "en": "Total HP recovery",
-        "hi": "Total kitni HP wapas milti hai",
+        "hi": "कुल HP Recovery",
         "value": "60 HP"
       },
       {
         "en": "Recovery rate",
-        "hi": "Har second kitni HP milti hai",
+        "hi": "Recovery Rate",
         "value": "4 HP/s"
       },
       {
         "en": "Recovery duration",
-        "hi": "HP milne ka time",
+        "hi": "Recovery Duration",
         "value": "15 seconds"
       },
       {
         "en": "Trigger",
-        "hi": "Ability kab shuru hoti hai",
+        "hi": "Trigger",
         "value": "After surviving combat"
       },
       {
         "en": "Cooldown",
-        "hi": "Dobara use karne se pehle ka wait time",
+        "hi": "Cooldown",
         "value": "No cooldown"
       }
     ],
@@ -2797,15 +2797,15 @@
       "Garena does not publish a numeric cooldown for this passive ability."
     ],
     "notesHi": [
-      "Game jab confirm kar leta hai ki Leon fight se bachkar nikal gaya hai, tab HP wapas milna shuru hoti hai.",
-      "Fight khatam hone ke kitni der baad recovery shuru hogi, iska exact timer Garena nahi batata.",
-      "Is passive ability ka exact cooldown Garena nahi batata."
+      "Game द्वारा Leon के Combat से बच निकलने की पुष्टि करने के बाद Recovery शुरू होती है।",
+      "Recovery Trigger शुरू होने का exact Combat-disengagement timer Garena publish नहीं करता।",
+      "Garena इस Passive Ability का numeric Cooldown publish नहीं करता।"
     ],
     "historyEn": [
       "OB38 (11 Jan 2023): Maximum recovery increased from 30 HP to 60 HP; recovery rate changed from 5 to 4 HP/s; maximum recovery duration changed from 6s to 15s."
     ],
     "historyHi": [
-      "OB38 (11 Jan 2023): Total HP recovery 30 se 60 hui; har second milne wali HP 5 se 4 hui; recovery ka maximum time 6s se 15s hua."
+      "OB38 (11 Jan 2023): Maximum Recovery 30 HP से बढ़ाकर 60 HP की गई; Recovery Rate 5 से घटाकर 4 HP/s और Maximum Recovery Duration 6s से बढ़ाकर 15s की गई।"
     ],
     "source": [
       {
@@ -2829,17 +2829,17 @@
       "Call out when you are disengaging so the squad can avoid leaving Leon isolated while the recovery is taking effect."
     ],
     "tacticalHi": [
-      "Fight khatam hone par cover ke peeche jao aur next risky position lene se pehle Buzzer Beater se HP wapas aane do.",
-      "HP recovery ke in 15 seconds ka use teammates ke saath dobara group banane aur next zone move plan karne mein karo. Ise instant heal mat samjho.",
-      "Fight se peeche hatte waqt squad ko call do, taaki HP wapas aate samay Leon akela na reh jaaye."
+      "Engagement खत्म होने के बाद cover के पीछे जगह बनाएं और दूसरी contested position लेने से पहले Buzzer Beater की Recovery होने दें।",
+      "Recovery Window का इस्तेमाल teammates के साथ regroup और अगली rotation की तैयारी के लिए करें; इसे तुरंत मिलने वाली Emergency Heal न समझें।",
+      "जब आप fight से disengage कर रहे हों तो teammates को call दें, ताकि Recovery के दौरान Leon अकेला न छूटे।"
     ],
     "strengthsEn": [
       "Provides up to 60 HP of recovery after surviving combat without requiring a manual activation.",
       "The 15-second recovery window can support a reset between engagements."
     ],
     "strengthsHi": [
-      "Fight se bachne ke baad bina button dabaye total 60 HP wapas milti hai.",
-      "15 seconds ka recovery time do fights ke beech squad ke saath dobara ready hone mein help karta hai."
+      "Manual Activation के बिना Combat से बचने के बाद maximum 60 HP Recovery मिलती है।",
+      "15-second Recovery Window दो engagements के बीच reset करने में मदद कर सकती है।"
     ],
     "limitationsEn": [
       "Recovery is gradual at 4 HP/s, not an instant HP burst.",
@@ -2847,9 +2847,9 @@
       "It does not replace cover or teammate support during an active engagement."
     ],
     "limitationsHi": [
-      "HP ek saath nahi milti; har second sirf 4 HP wapas aati hai.",
-      "Ability fight se safely bahar aane ke baad hi shuru hoti hai; exact timer Garena nahi batata.",
-      "Fight chal rahi ho, toh yeh cover ya teammate support ki jagah nahi le sakti."
+      "Recovery धीरे-धीरे 4 HP/s की दर से होती है, तुरंत HP नहीं मिलती।",
+      "Trigger, Combat से बचने पर निर्भर है; exact disengagement timer Garena publish नहीं करता।",
+      "Active Engagement के दौरान यह cover या teammate support की जगह नहीं लेती।"
     ]
   },
   {
@@ -2861,46 +2861,46 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Active ability that activates an aurora effect, increases movement speed and periodically reveals enemies behind cover.",
-    "introHi": "Active ability jo Aurora effect chalu karti hai, movement speed badhati hai aur cover ke peeche maujood enemies ki location baar-baar dikhati hai.",
+    "introHi": "एक Active Ability, जो Aurora Effect चालू करती है, Movement Speed बढ़ाती है और समय-समय पर cover के पीछे मौजूद एनिमी को reveal करती है।",
     "currentEn": [
       "Activates the Aurora power for 8 seconds and increases movement speed by 15%.",
       "Reveals enemies behind cover within 50m every 1 second; crouching or prone enemies cannot be detected.",
       "While parachuting, highlights enemy locations within the field of view, but the effect is not shared with teammates."
     ],
     "currentHi": [
-      "Aurora power 8 seconds ke liye chalu hoti hai aur movement speed 15% badhati hai.",
-      "50m ke andar cover ke peeche maujood enemies ki location har 1 second mein dikhati hai. Jhuk kar ya letkar chalne wale enemies detect nahi hote.",
-      "Parachute se utarte waqt saamne nazar aa rahe area ke enemies ki location highlight hoti hai, lekin yeh information teammates ko automatically nahi dikhti."
+      "8 seconds के लिए Aurora Power activate होती है और Movement Speed 15% बढ़ जाती है।",
+      "हर 1 second में 50m के अंदर cover के पीछे मौजूद एनिमी reveal होते हैं; crouch या prone एनिमी detect नहीं होते।",
+      "Parachuting के दौरान Field of View में आने वाली एनिमी की locations highlight होती हैं, लेकिन यह Effect teammates के साथ share नहीं होता।"
     ],
     "rows": [
       {
         "en": "Aurora duration",
-        "hi": "Aurora effect kitni der rehta hai",
+        "hi": "Aurora Duration",
         "value": "8 seconds"
       },
       {
         "en": "Movement-speed bonus",
-        "hi": "Movement speed kitni badhti hai",
+        "hi": "Movement Speed Bonus",
         "value": "+15%"
       },
       {
         "en": "Detection range",
-        "hi": "Enemy location dikhne ki range",
+        "hi": "Detection Range",
         "value": "50m"
       },
       {
         "en": "Detection interval",
-        "hi": "Location kitni der mein dobara check hoti hai",
+        "hi": "Detection Interval",
         "value": "Every 1 second"
       },
       {
         "en": "Crouching / prone detection",
-        "hi": "Jhuk kar / letkar chalne wale enemies",
+        "hi": "Crouching / Prone Detection",
         "value": "Not detected"
       },
       {
         "en": "Cooldown",
-        "hi": "Dobara use karne se pehle ka wait time",
+        "hi": "Cooldown",
         "value": "45 seconds"
       }
     ],
@@ -2910,9 +2910,9 @@
       "Only one of the two Skill Boost options can be selected. OB54 did not change the base duration, movement-speed bonus, detection range or cooldown."
     ],
     "notesHi": [
-      "Parachuting ke waqt enemy location ka highlight sirf Koda use karne wale player ko dikhta hai.",
-      "OB54 mein base Aurora Vision se alag do optional BR Skill Boosts diye gaye hain: Synced Vision pehli scan mein mile enemies ko 3 seconds ke liye mark karta hai aur unki information teammates ko bhi deta hai. Imprinted Vision maximum 3 stacks lagata hai; attack karne par har stack 10 extra DMG deta hai.",
-      "Dono Skill Boosts mein se ek hi choose kar sakte ho. OB54 ne base ability ka duration, movement-speed bonus, detection range ya cooldown nahi badla."
+      "Parachuting के दौरान मिलने वाला Highlight सिर्फ Koda को दिखाई देता है।",
+      "OB54 में दो optional BR Skill Boosts दिए गए हैं, जो base Aurora Vision values से अलग हैं: Synced Vision, पहले Detection Interval में reveal हुए एनिमी को 3 seconds के लिए mark करके जानकारी teammates के साथ share करता है; Imprinted Vision maximum 3 stacks लगाता है, और Attack से Imprints activate होने पर हर stack 10 extra DMG देता है।",
+      "दोनों Skill Boost options में से सिर्फ एक चुना जा सकता है। OB54 में base Duration, Movement Speed Bonus, Detection Range या Cooldown नहीं बदले गए।"
     ],
     "historyEn": [
       "OB47 (02 Dec 2024): Koda introduced with a 10s Aurora duration, +10% movement speed, 50m detection every 1s, a 60s cooldown, and a parachuting highlight not shared with teammates.",
@@ -2921,10 +2921,10 @@
       "OB54 (23 Jun 2026): Two optional BR Skill Boosts were listed again: Synced Vision (3s shared mark) and Imprinted Vision (up to 3 stacks; 10 DMG per stack when activated)."
     ],
     "historyHi": [
-      "OB47 (02 Dec 2024): Koda launch hua: Aurora 10s tak rehta tha, movement speed +10% thi, 50m range mein har 1s enemy location dikhata tha, cooldown 60s tha. Parachuting highlight teammates ko share nahi hota tha.",
-      "OB48 (19 Feb 2025): Movement-speed bonus 10% se 15% hua; cooldown 60s se 45s hua.",
-      "OB53 (02 Apr 2026): Aurora ka time 10s se 8s hua.",
-      "OB54 (23 Jun 2026): Do optional BR Skill Boosts phir list hue: Synced Vision (3s ke liye shared mark) aur Imprinted Vision (maximum 3 stacks; activate hone par har stack 10 DMG deta hai)."
+      "OB47 (02 Dec 2024): Koda को 10s Aurora Duration, +10% Movement Speed, हर 1s में 50m Detection, 60s Cooldown और teammates के साथ share न होने वाले Parachuting Highlight के साथ introduce किया गया।",
+      "OB48 (19 Feb 2025): Movement Speed Bonus 10% से बढ़ाकर 15%; Cooldown 60s से घटाकर 45s किया गया।",
+      "OB53 (02 Apr 2026): Aurora Duration 10s से घटाकर 8s की गई।",
+      "OB54 (23 Jun 2026): दो optional BR Skill Boosts फिर से दिए गए: Synced Vision (3s Shared Mark) और Imprinted Vision (maximum 3 stacks; activate होने पर हर stack 10 DMG)।"
     ],
     "source": [
       {
@@ -2960,9 +2960,9 @@
       "During parachuting, use the personal field-of-view highlights to call out visible locations because that information is not shared automatically with teammates."
     ],
     "tacticalHi": [
-      "Enemy cover check karne ya zone ki taraf risky route lene se pehle Aurora Vision chalu karo. Jo enemy location dikhe, uski clear callout squad ko do.",
-      "Scan chalte waqt 15% movement-speed bonus ka use teammates ke saath position badalne mein karo. Yeh mat samjho ki har enemy zaroor detect hoga.",
-      "Parachuting ke waqt jo enemy locations tumhe highlight dikhein, unhe voice chat par call karo, kyunki teammates ko yeh highlight apne aap nahi dikhta."
+      "Contested rotation में जाने या संभावित enemy cover check करने से पहले Aurora Vision activate करें, फिर हर reveal की जानकारी squad को साफ callouts में दें।",
+      "Detection Window active रहते हुए 15% Movement Speed Bonus का इस्तेमाल teammates के साथ reposition करने में करें; यह न मानें कि हर एनिमी reveal हो जाएगा।",
+      "Parachuting के दौरान Field of View में दिखने वाली locations call करें, क्योंकि यह जानकारी अपने आप teammates के साथ share नहीं होती।"
     ],
     "strengthsEn": [
       "Periodically reveals enemies behind cover within 50m, excluding crouching and prone targets.",
@@ -2970,9 +2970,9 @@
       "Can highlight visible enemy locations during parachuting for the user."
     ],
     "strengthsHi": [
-      "50m ke andar cover ke peeche maujood enemies ki location baar-baar dikha sakta hai. Jhuk kar ya letkar chalne wale enemies detect nahi hote.",
-      "8-second Aurora effect ke dauran 15% movement-speed bonus milta hai.",
-      "Parachuting ke waqt Koda use karne wale player ko saamne dikh rahe enemies ki location highlight ho sakti hai."
+      "50m के अंदर cover के पीछे मौजूद एनिमी को समय-समय पर reveal करती है; crouching और prone targets detect नहीं होते।",
+      "8-second Aurora Window के दौरान 15% Movement Speed Bonus देती है।",
+      "Parachuting के दौरान user को visible enemy locations highlight कर सकती है।"
     ],
     "limitationsEn": [
       "The active window lasts 8 seconds and the cooldown is 45 seconds.",
@@ -2981,10 +2981,10 @@
       "OB54 Skill Boosts are optional BR enhancements and are separate from the base Aurora Vision values."
     ],
     "limitationsHi": [
-      "Active effect sirf 8 seconds rehta hai aur cooldown 45 seconds hai.",
-      "Cover ke peeche scan jhuk kar ya letkar chalne wale enemies ko nahi pakadta.",
-      "Parachuting ke waqt milne wala highlight teammates ko share nahi hota.",
-      "OB54 Skill Boosts optional BR upgrades hain; yeh base Aurora Vision ability se alag hain."
+      "Active Window 8 seconds की है और Cooldown 45 seconds है।",
+      "Behind-cover Scan से crouching और prone एनिमी detect नहीं होते।",
+      "Parachuting Highlights teammates के साथ share नहीं होते।",
+      "OB54 Skill Boosts optional BR enhancements हैं और base Aurora Vision values से अलग हैं।"
     ]
   },
   {
@@ -2996,29 +2996,29 @@
     "badge": "Official-source profile",
     "lastChanged": "OB42 (30 Oct 2023)",
     "introEn": "Passive support ability that speeds up teammate help-ups and restores HP to the teammate who is successfully helped up.",
-    "introHi": "Passive support ability jo teammate ko revive karne ki speed badhati hai. Revive successful hone par us teammate ko extra HP bhi milti hai.",
+    "introHi": "एक Passive Support Ability, जो teammates को help up करने की Speed बढ़ाती है और सफलतापूर्वक help up हुए teammate को HP वापस देती है।",
     "currentEn": [
       "The speed of helping up teammates is increased by 70%.",
       "After a successful help-up, the helped-up teammate recovers 60 HP over 3 seconds."
     ],
     "currentHi": [
-      "Teammate ko revive karne ki speed 70% badh jaati hai.",
-      "Revive successful hone ke baad us teammate ko 3 seconds mein total 60 HP wapas milti hai."
+      "Teammates को help up करने की Speed 70% बढ़ जाती है।",
+      "सफल Help-up के बाद उस teammate को 3 seconds में 60 HP वापस मिलती है।"
     ],
     "rows": [
       {
         "en": "Help-up speed",
-        "hi": "Teammate ko revive karne ki speed",
+        "hi": "Help-up Speed",
         "value": "+70%"
       },
       {
         "en": "Teammate HP recovery",
-        "hi": "Revive ke baad teammate ko milne wali HP",
+        "hi": "Teammate HP Recovery",
         "value": "60 HP in 3 seconds"
       },
       {
         "en": "Cooldown",
-        "hi": "Dobara effect milne se pehle ka wait time",
+        "hi": "Cooldown",
         "value": "90 seconds"
       }
     ],
@@ -3026,7 +3026,7 @@
       "The HP recovery is applied to the teammate who was successfully helped up."
     ],
     "notesHi": [
-      "Extra HP usi teammate ko milti hai jiska revive successfully complete hua ho."
+      "HP Recovery उसी teammate को मिलती है जिसे सफलतापूर्वक help up किया गया हो।"
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Maximum help-up speed increased from 25% to 30%; HP recovery after a successful rescue increased from 40 HP to 50 HP over 5s.",
@@ -3034,9 +3034,9 @@
       "OB42 (30 Oct 2023): Cooldown increased from 60s to 90s; helped-up teammate recovery reduced from 100 HP to 60 HP over 3s."
     ],
     "historyHi": [
-      "OB33 (23 Mar 2022): Teammate ko revive karne ki maximum speed 25% se 30% hui; successful revive ke baad HP 5s mein 40 se 50 hui.",
-      "OB40 (30 May 2023): Vital Vibes ability badli: revive speed +70%, cooldown 60s aur revive hue teammate ko 3s mein 100 HP milti thi.",
-      "OB42 (30 Oct 2023): Cooldown 60s se 90s hua; revive hue teammate ki HP 3s mein 100 se 60 hui."
+      "OB33 (23 Mar 2022): Maximum Help-up Speed 25% से बढ़ाकर 30%; सफल Rescue के बाद HP Recovery 40 HP से बढ़ाकर 5s में 50 HP की गई।",
+      "OB40 (30 May 2023): Vital Vibes को rework करके +70% Help-up Speed, 60s Cooldown और help-up हुए teammate को 3s में 100 HP Recovery दी गई।",
+      "OB42 (30 Oct 2023): Cooldown 60s से बढ़ाकर 90s; help-up हुए teammate की Recovery 3s में 100 HP से घटाकर 60 HP की गई।"
     ],
     "source": [
       {
@@ -3068,17 +3068,17 @@
       "Track the 90-second cooldown and coordinate the next rescue window rather than assuming Vital Vibes is always available."
     ],
     "tacticalHi": [
-      "Teammate knockdown ho jaaye, toh pehle cover ke peeche safe revive do. Thiva ki 70% faster revive speed se team ko revive karne mein kam time lagta hai.",
-      "Revive complete hone ke baad us teammate ko squad ke paas rakho, taaki 3 seconds mein milne wali 60 HP ka benefit use kar sake.",
-      "90-second cooldown yaad rakho aur next revive ke liye teammates ke saath timing set karo. Vital Vibes har waqt ready nahi hota."
+      "Teammate Knockdown होने पर cover के पीछे सुरक्षित Help-up को priority दें; Thiva की 70% faster Help-up Speed से Rescue के दौरान squad को कम समय तक exposed रहना पड़ता है।",
+      "Successful Help-up के बाद rescued teammate को squad के साथ रखें, ताकि उसे 3 seconds में मिलने वाली 60 HP Recovery का फायदा मिल सके।",
+      "90-second Cooldown का ध्यान रखें और अगली Rescue Window coordinate करें; Vital Vibes को हर समय available न मानें।"
     ],
     "strengthsEn": [
       "Increases teammate help-up speed by 70%, reducing the time needed to complete a rescue.",
       "The successfully helped-up teammate receives 60 HP over 3 seconds."
     ],
     "strengthsHi": [
-      "Teammate ko revive karne ki speed 70% badh jaati hai, isliye revive jaldi complete hota hai.",
-      "Successful revive ke baad us teammate ko 3 seconds mein 60 HP wapas milti hai."
+      "Teammate Help-up Speed 70% बढ़ाती है, जिससे Rescue पूरा करने में कम समय लगता है।",
+      "सफलतापूर्वक help up हुए teammate को 3 seconds में 60 HP मिलती है।"
     ],
     "limitationsEn": [
       "The ability has a 90-second cooldown.",
@@ -3086,9 +3086,9 @@
       "It does not provide a direct benefit while all teammates are already standing."
     ],
     "limitationsHi": [
-      "Ability ka cooldown 90 seconds hai.",
-      "60 HP tabhi milti hai jab teammate ka revive successfully complete ho.",
-      "Jab koi teammate down nahi hai, tab is ability se direct benefit nahi milta."
+      "इस Ability का Cooldown 90 seconds है।",
+      "60 HP Recovery सिर्फ successful Help-up के बाद मिलती है।",
+      "जब सभी teammates पहले से खड़े हों, तब यह सीधा कोई फायदा नहीं देती।"
     ]
   },
   {
