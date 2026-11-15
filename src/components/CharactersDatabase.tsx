@@ -61,7 +61,7 @@ const baseProfiles: CharacterProfile[] = [
   {
     id: "ray", name: "Ray", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20264/1a2c81cd893f6ea43a527cb3b7b2f897.png", skill: "Bond of Eclipse", type: "Active · Tag / Link",
     introEn: "A survival ability profile based on Garena's current official character page.",
-    introHi: "yah Profile, Garena ke current Official Character Page par aadhaarit hai.",
+    introHi: "Ye Profile Garena ke current Official Character Page par di gayi information par based hai.",
     currentEn: [
       "Projects forward in a 30m fan-shaped area and tags the first undowned enemy hit for 10 seconds.",
       "Creates a link visible within 40m only to the skill user and the tagged target.",
@@ -94,7 +94,7 @@ const baseProfiles: CharacterProfile[] = [
   {
     id: "morse", name: "Morse", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20261/87b0db20d90350d22979b03d8b65a567.png", skill: "Stealth Bytes", type: "Active · Stealth",
     introEn: "A stealth-focused ability. Current OB55 adjustments supersede older OB52 values.",
-    introHi: "yah Stealth par aadhaarit Ability hai. OB55 ke current badalaav puraane OB52 Values ki jagah laagu hote hain.",
+    introHi: "Ye Stealth-focused Ability hai. OB55 ke current changes, purane OB52 values ki jagah apply hote hain.",
     currentEn: [
       "Enters Stealth: enemies beyond 12m have difficulty seeing Morse, and enemy detection does not detect him.",
       "Grants a 20% movement-speed bonus and 25 temporary Shield Points.",
@@ -129,7 +129,7 @@ const baseProfiles: CharacterProfile[] = [
   {
     id: "nero", name: "Nero", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202510/5d937a0ac5fe4e67c97fb8fb8e43455e.png", skill: "Cryo Mind", type: "Active · Plushie / Area",
     introEn: "The current official character profile and older patch notes contain conflicting plushie and damage values; the conflict is explicitly flagged below.",
-    introHi: "Current Official Character Profile aur puraane Patch Notes mein Plushie aur Damage ki Values alag-alag hain; is antar ko niche saaf taur par bataayaa gayaa hai.",
+    introHi: "Current Official Character Profile aur purane Patch Notes mein Plushie aur Damage ki Values alag hain. Is difference ko neeche clearly flag kiya gaya hai.",
     currentEn: [
       "The current official profile describes a plushie with 1 HP, lasting 12 seconds and able to travel up to 50m (100m in BR).",
       "It tracks the nearest enemy in sight within 8m and creates an 8m-radius area.",
@@ -166,7 +166,7 @@ const baseProfiles: CharacterProfile[] = [
   {
     id: "rin", name: "Rin", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20257/9aa96a782fab8633cbb57f9229e7a5e6.png", skill: "Gale of Kunai", type: "Passive · Stored charges",
     introEn: "A passive character ability listed by Garena. Weapon-specific mechanics are intentionally not detailed in this profile.",
-    introHi: "Garena ki suchi mein di gai ek Passive Character Ability. is Profile mein Weapon-specific Mechanics ki Detail jaanabujhakar shaamil nahi ki gai hai.",
+    introHi: "Garena ne Rin ki is Passive Character Ability ko list kiya hai. Is Profile mein Weapon-specific Mechanics ki details jaanbujhkar nahi di gayi hain.",
     currentEn: [
       "Gale of Kunai is listed as Rin's passive survival ability.",
       "This profile keeps the character catalogue entry and official reference, but omits weapon-use details and combat guidance.",
@@ -195,7 +195,7 @@ const baseProfiles: CharacterProfile[] = [
     id: "oscar", name: "Oscar", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20252/d5d04e40eb00900e96a28828decdaff0.png", skill: "Valiant Dash", type: "Active",
     badge: "Official-source profile", lastChanged: "OB54 (23 Jun 2026)",
     introEn: "Active dash that destroys Gloo Walls and knocks back enemies.",
-    introHi: "ek Active Dash, jo Gloo Walls Destroy karta hai aur Enemy ko Knockback deta hai.",
+    introHi: "Oscar ki Active Dash Skill Gloo Walls destroy karti hai aur saamne aane wale Enemies ko Knockback deti hai.",
     currentEn: [
       "Dashes toward the target direction, detonating the first 3 Gloo Walls in the way with 25 DMG, while also dealing 25 DMG to and knocking back enemies encountered."
     ],
@@ -229,7 +229,7 @@ const baseProfiles: CharacterProfile[] = [
   {
     id: "kassie", name: "Kassie", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/8d87fe1959e300741eda601e800c0f40.png", skill: "Electro Therapy", type: "Active · Healing / Link",
     introEn: "A support-focused character profile. Garena's current English page provides the complete healing values and link conditions.",
-    introHi: "yah Support par kendrit Character Profile hai. Garena ke Current English Page par Healing Values aur Link Conditions puri Detail mein di gai hain.",
+    introHi: "Ye Support-focused Character Profile hai. Garena ka current English Page Healing Values aur Link Conditions ki complete details deta hai.",
     currentEn: [
       "Basic Therapy forms a healing bond with one teammate and restores 3 HP/s to both Kassie and that teammate; the effect does not stack.",
       "The maximum bonding range is 20m. The bond breaks automatically beyond that range and can also be canceled manually.",
@@ -268,7 +268,7 @@ const baseProfiles: CharacterProfile[] = [
   {
     id: "kairos", name: "Kairos", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/ed1e34b6c47b37675eae84daffdf63b1.png", skill: "Defense Breaker", type: "Passive · EP modes",
     introEn: "A two-state passive ability driven by EP. Current English profile values are recorded separately from older short-form localized summaries.",
-    introHi: "EP se chalane vaali do Modes ki Passive Ability. Current English Profile ki Values ko puraane Short-form Localized Summaries se alag rakhaa gayaa hai.",
+    introHi: "Ye EP se chalne wali two-mode Passive Ability hai. Current English Profile ki Values ko purane short-form localized summaries se alag rakha gaya hai.",
     currentEn: [
       "Defense Mode automatically restores 2 EP per second until EP is full.",
       "Breaker Mode activates when EP is full and the skill user first hits a shielded or armored target.",
@@ -307,7 +307,7 @@ const baseProfiles: CharacterProfile[] = [
   {
     id: "ryden", name: "Ryden", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20241/fb808bb7cfc4820384c7a52fee3201ea.png", skill: "Spider Trap", type: "Active · Deployable device",
     introEn: "An inventor character whose official skill entry describes a deployable spider device. The detailed values are cross-checked against Garena's localized character page.",
-    introHi: "yah Inventor Character hai jisaki Official Skill ek Deployable Spider Device bataati hai. Detailed Values ko Garena ke Localized Character Page se Cross-check kiya gayaa hai.",
+    introHi: "Ryden ek Inventor Character hai. Uski Official Skill ek deployable Spider Device describe karti hai. Detailed Values ko Garena ke localized character page se cross-check kiya gaya hai.",
     currentEn: [
       "The ability releases a destructible spider device that can remain active for up to 60 seconds.",
       "The device's movement can be stopped by activating the skill again within the first 10 seconds.",
@@ -347,7 +347,7 @@ const baseProfiles: CharacterProfile[] = [
   {
     id: "ignis", name: "Ignis", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20241/a393f95f57bdaa3d2031a052b6acef24.png", skill: "Untamed Flame", type: "Active · Moving screen",
     introEn: "Ignis's current English character page uses the name Untamed Flame. Older patch notes use Flame Mirage for the earlier version of the ability.",
-    introHi: "Ignis ke Current English Character Page par Skill ka naam Untamed Flame hai. puraane Patch Notes mein Ability ke pahale Version ke liye Flame Mirage naam istemaal hua thaa.",
+    introHi: "Ignis ke current English Character Page par Skill ka naam Untamed Flame hai. Purane Patch Notes mein Ability ke earlier version ko Flame Mirage kaha gaya tha.",
     currentEn: [
       "The current official profile describes a flaming screen that is 12m wide and lasts 10 seconds.",
       "The maximum deployment distance is listed as 15m.",
@@ -386,7 +386,7 @@ const baseProfiles: CharacterProfile[] = [
   {
     id: "suzy", name: "Suzy", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/2cdde4e7d5010be2a35971e19f2285e4.png", skill: "Money Mark", type: "Passive · In-match currency",
     introEn: "A bounty-themed passive ability whose official profile describes an in-match currency reward connected to marked opponents.",
-    introHi: "ek Bounty-themed Passive Ability, jisamen Official Profile Marked Opponents se judaa In-match Currency Reward bataati hai.",
+    introHi: "Ye Bounty-themed Passive Ability hai. Official Profile ke mutabik marked Opponents se In-match Currency Reward milta hai.",
     currentEn: [
       "The current official profile lists 100 in-match currency for an ally who eliminates a marked opponent.",
       "Suzy receives an additional 100 in-match currency for an elimination she earns herself.",
