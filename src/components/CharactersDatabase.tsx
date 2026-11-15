@@ -68,7 +68,7 @@ const baseProfiles: CharacterProfile[] = [
       "If the tagged target reaches 30 HP or below, the ability's listed instant knockdown condition is met.",
       "A tagged target being knocked down or eliminated resets the skill and restores 10 HP per second for 3 seconds.",
     ],
-    currentHi: ["30m ke Fan-shaped Area mein aage Effect bhejataa hai aur Hit hue pahale Undowned Enemy ko 10 seconds ke liye Tag karta hai.","40m ke andar Link sirph Skill User aur Tagged Target ko dikhaai deta hai.","Tagged Target ki HP 30 yaa usase kam hone par bataai gai Instant Knockdown Condition puri ho jaati hai.","Tagged Target ke Knockdown yaa Eliminate hone par Skill Reset hoti hai aur 3 seconds tak har second 10 HP vaapas milti hai."],
+    currentHi: ["30m ke Fan-shaped Area mein aage Effect bhejataa hai aur Hit hue pahale Undowned Enemy ko 10 seconds ke liye Tag karta hai.","40m ke andar Link sirph Skill User aur Tagged Target ko dikhaai deta hai.","Tagged Target ki HP 30 yaa usase kam hone par bataai gai Instant Knockdown Condition puri ho jaati hai.","Tagged Target ke Knockdown yaa Eliminate hone par Skill Reset hoti hai aur 3 seconds tak har second 10 HP wapas milti hai."],
     rows: [
       { en: "Forward area", hi: "aage ka Area", value: "30m · Fan-shaped" },
       { en: "Tag duration", hi: "Tag Duration", value: "10 seconds" },
@@ -82,9 +82,9 @@ const baseProfiles: CharacterProfile[] = [
       "The reset and HP recovery are conditional on the tagged target being knocked down or eliminated.",
       "The current official profile lists a 30 HP threshold; an older OB53 announcement listed 40 HP. The current profile is used for the present-day value.",
     ],
-    notesHi: ["Link sirph Skill User aur Tagged Target ko dikhaai deta hai.","Skill Reset aur HP Recovery tabhi hoti hai jab Tagged Target Knockdown yaa Eliminate ho.","Current Official Profile mein 30 HP Threshold diyaa gayaa hai; puraane OB53 Announcement mein 40 HP thaa. aaj ki Value ke liye Current Profile istemaal ki gai hai."],
+    notesHi: ["Link sirph Skill User aur Tagged Target ko dikhaai deta hai.","Skill Reset aur HP Recovery tabhi hoti hai jab Tagged Target Knockdown yaa Eliminate ho.","Current Official Profile mein 30 HP Threshold diya gaya hai; purane OB53 Announcement mein 40 HP tha. aaj ki Value ke liye Current Profile istemaal ki gai hai."],
     historyEn: ["OB53 introduction announcement listed the threshold as 40 HP or below. The current official character profile now lists 30 HP or below."],
-    historyHi: ["OB53 ke Introduction Announcement mein Threshold 40 HP yaa usase kam bataayaa gayaa thaa. Current Official Character Profile mein ab 30 HP yaa usase kam diyaa gayaa hai."],
+    historyHi: ["OB53 ke Introduction Announcement mein Threshold 40 HP yaa usase kam bataya gaya tha. Current Official Character Profile mein ab 30 HP yaa usase kam diya gaya hai."],
     source: [
       { label: "Garena — Ray character profile", url: "https://ff.garena.com/en/chars/794" },
       { label: "Garena — OB53 Patch Notes", url: "https://ff.garena.com/en/article/1640/" },
@@ -136,7 +136,7 @@ const baseProfiles: CharacterProfile[] = [
       "Inside the area, neither the user nor enemies can place Gloo Walls; the profile lists 6 HP/s loss for enemies.",
       "The area disappears if the plushie is destroyed; the destroyer is marked for 5 seconds.",
     ],
-    currentHi: ["Current Official Profile ke mutaabik Plushie ke paas 1 HP hai, yah 12 seconds tak rehta hai aur 50m tak jaa sakataa hai (BR mein 100m).","yah 8m ke andar Line of Sight mein maujood sabse najadiki Enemy ko Track karta hai aur 8m Radius ka Area banata hai.","Area ke andar n to user aur n hi Enemy Gloo Walls lagaa sakate hain; Profile ke mutaabik Enemy ki HP har second 6 kam hoti hai.","Plushie Destroy hone par Area gaayab ho jata hai; use Destroy karne vaalaa 5 seconds ke liye Mark hota hai."],
+    currentHi: ["Current Official Profile ke mutabik Plushie ke paas 1 HP hai, yah 12 seconds tak rehta hai aur 50m tak ja sakta hai (BR mein 100m).","yah 8m ke andar Line of Sight mein maujood sabse nazdeeki Enemy ko Track karta hai aur 8m Radius ka Area banata hai.","Area ke andar n to user aur n hi Enemy Gloo Walls lagaa sakate hain; Profile ke mutabik Enemy ki HP har second 6 kam hoti hai.","Plushie Destroy hone par Area gaayab ho jata hai; use Destroy karne vaalaa 5 seconds ke liye Mark hota hai."],
     rows: [
       { en: "Plushie HP (current profile)", hi: "Plushie HP (Current Profile)", value: "1 HP" },
       { en: "Plushie duration", hi: "Plushie Duration", value: "12 seconds" },
@@ -153,9 +153,9 @@ const baseProfiles: CharacterProfile[] = [
       "OB55 notes mention a bug fix for the plushie getting stuck, but do not provide replacement HP or damage values.",
       "Because these official sources conflict, treat 1 HP and 6 HP/s as the current profile snapshot, not a fully reconciled patch-history conclusion. Verify in-game before relying on exact values.",
     ],
-    notesHi: ["Current Official Character Profile mein Plushie ke liye 1 HP aur Area Effect ke liye 6 HP/s diyaa gayaa hai.","OB53 Patch Notes mein pahale Plushie 150 HP ka bataayaa gayaa thaa aur Area Effect 16 se ghataakar 14 HP/s kiya gayaa thaa.","OB55 Notes mein Plushie ke atakane se judaa Bug Fix hai, lekin nai HP yaa Damage Values nahi di gain.","Official Sources mein antar hone ke kaaran 1 HP aur 6 HP/s ko Current Profile Snapshot maanen, puri tarah Reconciled Patch History ka nishkarsh nahi. Exact Values par bharosaa karne se pahale Game mein Verify karen."],
+    notesHi: ["Current Official Character Profile mein Plushie ke liye 1 HP aur Area Effect ke liye 6 HP/s diya gaya hai.","OB53 Patch Notes mein pahale Plushie 150 HP ka bataya gaya tha aur Area Effect 16 se ghataakar 14 HP/s kiya gayaa tha.","OB55 Notes mein Plushie ke atakane se judaa Bug Fix hai, lekin nai HP yaa Damage Values nahi di gain.","Official Sources mein antar hone ke kaaran 1 HP aur 6 HP/s ko Current Profile Snapshot maanen, puri tarah Reconciled Patch History ka nishkarsh nahi. Exact Values par bharosaa karne se pahale Game mein Verify karen."],
     historyEn: ["OB53 documented a 150-HP plushie and a reduction from 16 to 14 HP/s. The current official character profile now displays 1 HP and 6 HP/s. OB55 only records a stuck-plushie bug fix. This remains a source discrepancy."],
-    historyHi: ["OB53 mein 150-HP Plushie aur Area Effect ko 16 se ghataakar 14 HP/s karne ka ullekh thaa. Current Official Character Profile ab 1 HP aur 6 HP/s dikhaataa hai. OB55 mein sirph Plushie ke atakane ka Bug Fix darj hai. Sources ke bich yah antar abhi bhi maujood hai."],
+    historyHi: ["OB53 mein 150-HP Plushie aur Area Effect ko 16 se ghataakar 14 HP/s karne ka ullekh tha. Current Official Character Profile ab 1 HP aur 6 HP/s dikhaataa hai. OB55 mein sirph Plushie ke atakane ka Bug Fix darj hai. Sources ke bich yah antar abhi bhi maujood hai."],
     source: [
       { label: "Garena — Nero character profile", url: "https://ff.garena.com/en/chars/775" },
       { label: "Garena — OB53 Patch Notes", url: "https://ff.garena.com/en/article/1640/" },
@@ -210,7 +210,7 @@ const baseProfiles: CharacterProfile[] = [
     notesEn: [
       "The cooldown was raised in OB54 because the short cooldown made Oscar strong in too many situations. The skill indicator adjusts to slopes (OB50)."
     ],
-    notesHi: ["OB54 mein Cooldown badhaayaa gayaa kyonki kam Cooldown ki vajah se Oscar bahut jyaadaa Situations mein majabut ho rahaa thaa. Skill Indicator dhalaan ke hisaab se Adjust hota hai (OB50)."],
+    notesHi: ["OB54 mein Cooldown badhaayaa gayaa kyonki kam Cooldown ki vajah se Oscar bahut jyaadaa Situations mein majabut ho rahaa tha. Skill Indicator dhalaan ke hisaab se Adjust hota hai (OB50)."],
     historyEn: [
       "OB48 (19 Feb 2025): Introduced with a 60s cooldown.",
       "OB49 (21 May 2025): Skill Card added.",
@@ -237,7 +237,7 @@ const baseProfiles: CharacterProfile[] = [
       "When the target's HP is below 50, the skill auto-releases; the automatic heal is 50% of the manual amount.",
       "The official profile lists a 60-second cooldown for Focused Therapy; Basic Therapy has no cooldown."
     ],
-    currentHi: ["Basic Therapy ek Teammate ke saath Healing Bond banati hai aur Kassie tathaa us Teammate, donon ko 3 HP/s vaapas deti hai; yah Effect Stack nahi hota.","Maximum Bonding Range 20m hai. isase jyaadaa doori hone par Bond apane aap tut jata hai aur ise Manually bhi Cancel kiya jaa sakataa hai.","Skill dobaaraa istemaal karne par Focused Therapy Trigger hoti hai aur Target ko 100 HP vaapas deti hai.","Target ki HP 50 se kam hone par Skill apane aap Release hoti hai; Automatic Heal, Manual Amount ka 50% hota hai.","Official Profile mein Focused Therapy ka Cooldown 60 seconds diyaa gayaa hai; Basic Therapy ka koi Cooldown nahi hai."],
+    currentHi: ["Basic Therapy ek Teammate ke saath Healing Bond banati hai aur Kassie tathaa us Teammate, donon ko 3 HP/s wapas deti hai; yah Effect Stack nahi hota.","Maximum Bonding Range 20m hai. isase jyaadaa doori hone par Bond apane aap tut jata hai aur ise Manually bhi Cancel kiya ja sakta hai.","Skill dobaaraa istemaal karne par Focused Therapy Trigger hoti hai aur Target ko 100 HP wapas deti hai.","Target ki HP 50 se kam hone par Skill apane aap Release hoti hai; Automatic Heal, Manual Amount ka 50% hota hai.","Official Profile mein Focused Therapy ka Cooldown 60 seconds diya gaya hai; Basic Therapy ka koi Cooldown nahi hai."],
     rows: [
       { en: "Basic Therapy recovery", hi: "Basic Therapy Recovery", value: "3 HP/s · self + teammate" },
       { en: "Bond range", hi: "Bond Range", value: "20m maximum" },
@@ -253,12 +253,12 @@ const baseProfiles: CharacterProfile[] = [
       "The automatic release condition and manual reactivation are separate details in Garena's description.",
       "No additional verified hidden mechanics are stated on the current official page."
     ],
-    notesHi: ["Healing Bond ke baare mein saaf taur par bataayaa gayaa hai ki yah Stack nahi hota.","20m ki Range Bond banaae rakhane ki Limit hai; isase jyaadaa doori hone par Link tut jata hai.","Automatic Release Condition aur Manual Reactivation, Garena ke Description mein alag-alag Details hain.","Current Official Page par koi atirikt Verified Hidden Mechanics nahi di gai hain."],
+    notesHi: ["Healing Bond ke baare mein saaf taur par bataya gaya hai ki yah Stack nahi hota.","20m ki Range Bond banaae rakhane ki Limit hai; isase jyaadaa doori hone par Link tut jata hai.","Automatic Release Condition aur Manual Reactivation, Garena ke Description mein alag-alag Details hain.","Current Official Page par koi atirikt Verified Hidden Mechanics nahi di gai hain."],
     historyEn: [
       "Kassie's introduction notes document Basic Therapy at 3 HP/s for both linked players, a 20m maximum bond range, and Focused Therapy at 100 HP with a 60s cooldown.",
       "The current official character profile retains those same listed values; no later official numeric balance change was confirmed in the sources checked for this phase."
     ],
-    historyHi: ["Kassie ke Introduction Notes mein Linked donon Players ke liye Basic Therapy 3 HP/s, Maximum Bond Range 20m aur Focused Therapy 100 HP ke saath 60s Cooldown diyaa gayaa hai.","Current Official Character Profile mein bhi yahi Values di gai hain; is Phase mein jaanche gae Sources mein baad ka koi Official Numeric Balance Change Confirm nahi hua."],
+    historyHi: ["Kassie ke Introduction Notes mein Linked donon Players ke liye Basic Therapy 3 HP/s, Maximum Bond Range 20m aur Focused Therapy 100 HP ke saath 60s Cooldown diya gaya hai.","Current Official Character Profile mein bhi yahi Values di gai hain; is Phase mein jaanche gae Sources mein baad ka koi Official Numeric Balance Change Confirm nahi hua."],
     source: [
       { label: "Garena — Kassie character profile", url: "https://ff.garena.com/en/chars/727" },
       { label: "Garena — Kassie introduction / character notes", url: "https://ff.garena.com/en/article/1357/" }
@@ -276,7 +276,7 @@ const baseProfiles: CharacterProfile[] = [
       "The official page describes an additional reduction to Shield Points or Armor Durability equal to 120 of the damage inflicted on shielded or armored targets.",
       "When EP reaches 0, the ability returns to Defense Mode."
     ],
-    currentHi: ["Defense Mode mein EP Full hone tak har second apane aap 2 EP vaapas milta hai.","EP Full hone par aur Skill User ke Shielded yaa Armored Target ko pahali baar Hit karne par Breaker Mode Activate hota hai.","Breaker Mode Active rehne par har second 5 EP kharch hota hai.","Official Page ke mutaabik Shielded yaa Armored Target par die gae Damage ke 120 ke baraabar atirikt Shield Points yaa Armor Durability kam hoti hai.","EP 0 hone par Ability vaapas Defense Mode mein aa jaati hai."],
+    currentHi: ["Defense Mode mein EP Full hone tak har second apane aap 2 EP wapas milta hai.","EP Full hone par aur Skill User ke Shielded yaa Armored Target ko pahali baar Hit karne par Breaker Mode Activate hota hai.","Breaker Mode Active rehne par har second 5 EP kharch hota hai.","Official Page ke mutabik Shielded yaa Armored Target par die gae Damage ke 120 ke baraabar atirikt Shield Points yaa Armor Durability kam hoti hai.","EP 0 hone par Ability wapas Defense Mode mein aa jaati hai."],
     rows: [
       { en: "Defense Mode recovery", hi: "Defense Mode Recovery", value: "2 EP/s" },
       { en: "Breaker Mode EP cost", hi: "Breaker Mode EP Cost", value: "5 EP/s" },
@@ -292,12 +292,12 @@ const baseProfiles: CharacterProfile[] = [
       "The phrase '120 of the damage inflicted' is preserved as Garena's wording rather than silently reinterpreted as a percentage.",
       "No additional verified hidden mechanics are stated on the current official page."
     ],
-    notesHi: ["Skill, Defense Mode aur Breaker Mode ke bich apane aap Switch hoti hai; Official Page mein Manual Toggle nahi diyaa gayaa hai.","English Profile mein Exact 2 EP/s aur 5 EP/s Rates di gai hain; Short Localized Summaries mein ye Values nahi hain.","'120 of the damage inflicted' Phrase ko Garena ke Original Wording ke rup mein rakhaa gayaa hai; binaa pramaan ise Percentage nahi maanaa gayaa.","Current Official Page par koi atirikt Verified Hidden Mechanics nahi di gai hain."],
+    notesHi: ["Skill, Defense Mode aur Breaker Mode ke bich apane aap Switch hoti hai; Official Page mein Manual Toggle nahi diya gaya hai.","English Profile mein Exact 2 EP/s aur 5 EP/s Rates di gai hain; Short Localized Summaries mein ye Values nahi hain.","'120 of the damage inflicted' Phrase ko Garena ke Original Wording ke rup mein rakhaa gayaa hai; binaa pramaan ise Percentage nahi maanaa gayaa.","Current Official Page par koi atirikt Verified Hidden Mechanics nahi di gai hain."],
     historyEn: [
       "Kairos was introduced with Defense Breaker as an EP-based passive. The current English profile supplies the numeric recovery and consumption rates.",
       "No later official numeric balance adjustment for Defense Breaker was confirmed in the sources checked for this phase; older short-form localized pages are not used to overwrite the current English values."
     ],
-    historyHi: ["Kairos ko Defense Breaker naam ki EP-based Passive Ability ke saath Introduce kiya gayaa thaa. Current English Profile mein Numeric Recovery aur Consumption Rates di gai hain.","is Phase mein jaanche gae Sources mein Defense Breaker ka baad ka koi Official Numeric Balance Adjustment Confirm nahi hua; puraane Short-form Localized Pages ke aadhaar par Current English Values nahi badali gai hain."],
+    historyHi: ["Kairos ko Defense Breaker naam ki EP-based Passive Ability ke saath Introduce kiya gayaa tha. Current English Profile mein Numeric Recovery aur Consumption Rates di gai hain.","is Phase mein jaanche gae Sources mein Defense Breaker ka baad ka koi Official Numeric Balance Adjustment Confirm nahi hua; purane Short-form Localized Pages ke aadhaar par Current English Values nahi badali gai hain."],
     source: [
       { label: "Garena — Kairos character profile", url: "https://ff.garena.com/en/chars/728" },
       { label: "Garena — Kairos introduction / character notes", url: "https://ff.garena.com/en/article/1332/" }
@@ -315,7 +315,7 @@ const baseProfiles: CharacterProfile[] = [
       "The listed movement reduction is 80%, and the listed HP effect is 10 HP per second for 4 seconds.",
       "The official localized profile lists a 60-second cooldown and up to 2 stored charges, with 10 seconds between uses."
     ],
-    currentHi: ["Ability ek Destructible Spider Device Release karti hai, jo maximum 60 seconds tak Active rah sakataa hai.","pahale 10 seconds ke andar Skill dobaaraa Activate karake Device ki Movement roki jaa sakati hai.","iska Detection Radius 5m diyaa gayaa hai; yah sabse pahale Detect hue Opponent par Response karta hai.","Movement Reduction 80% di gai hai aur HP Effect 4 seconds tak har second 10 HP hai.","Official Localized Profile mein 60-second Cooldown aur maximum 2 Stored Charges di gai hain; donon Uses ke bich 10 seconds ka Gap hai."],
+    currentHi: ["Ability ek Destructible Spider Device Release karti hai, jo maximum 60 seconds tak Active rah sakataa hai.","pahale 10 seconds ke andar Skill dobaaraa Activate karake Device ki Movement roki ja sakti hai.","iska Detection Radius 5m diya gaya hai; yah sabse pahale Detect hue Opponent par Response karta hai.","Movement Reduction 80% di gai hai aur HP Effect 4 seconds tak har second 10 HP hai.","Official Localized Profile mein 60-second Cooldown aur maximum 2 Stored Charges di gai hain; donon Uses ke bich 10 seconds ka Gap hai."],
     rows: [
       { en: "Device duration", hi: "Device Duration", value: "Up to 60 seconds" },
       { en: "Movement-stop window", hi: "Movement-stop Window", value: "First 10 seconds" },
@@ -332,7 +332,7 @@ const baseProfiles: CharacterProfile[] = [
       "The current English character page provides only a short summary, so exact numerical mechanics are attributed to Garena's Indonesian profile rather than presented as text from the English page.",
       "No additional verified hidden mechanics are stated in the official sources checked."
     ],
-    notesHi: ["Garena ke Detailed Localized Profile ke mutaabik Spider Device ko Destroy kiya jaa sakataa hai.","10-second Stop Window, Device ki 60-second Maximum Duration se alag hai.","Current English Character Page sirph Short Summary deta hai, isalie Exact Numeric Mechanics ko Garena ke Indonesian Profile se liyaa gayaa hai, English Page ka Text bataakar nahi.","jaanche gae Official Sources mein koi atirikt Verified Hidden Mechanics nahi di gai hain."],
+    notesHi: ["Garena ke Detailed Localized Profile ke mutabik Spider Device ko Destroy kiya ja sakta hai.","10-second Stop Window, Device ki 60-second Maximum Duration se alag hai.","Current English Character Page sirph Short Summary deta hai, isalie Exact Numeric Mechanics ko Garena ke Indonesian Profile se liyaa gayaa hai, English Page ka Text bataakar nahi.","jaanche gae Official Sources mein koi atirikt Verified Hidden Mechanics nahi di gai hain."],
     historyEn: [
       "The detailed official profile records a 60s device duration, 5m detection radius, 80% movement reduction, 10 HP/s for 4s, 60s cooldown and up to 2 stored charges.",
       "No later official numeric balance change was confirmed in the sources checked for this phase. The English page remains a summary and does not expose the full value set."
@@ -361,7 +361,7 @@ const baseProfiles: CharacterProfile[] = [
       { en: "Maximum deployment distance", hi: "Maximum Deployment Distance", value: "15m" },
       { en: "Cooldown", hi: "Cooldown", value: "60 seconds" },
       { en: "Skill name on current page", hi: "Current Page par Skill Name", value: "Untamed Flame" },
-      { en: "Earlier patch-note name", hi: "puraane Patch Notes mein Skill Name", value: "Flame Mirage" }
+      { en: "Earlier patch-note name", hi: "purane Patch Notes mein Skill Name", value: "Flame Mirage" }
     ],
     notesEn: [
       "The current character page is treated as the present-day reference; the OB42 introduction values are historical and should not overwrite it.",
@@ -369,13 +369,13 @@ const baseProfiles: CharacterProfile[] = [
       "The ability's naming changed in the official page from the older Flame Mirage wording to Untamed Flame.",
       "No additional verified hidden mechanics are stated on the current official page."
     ],
-    notesHi: ["Current Character Page ko aaj ki Reference Value maanaa gayaa hai; OB42 ki Introduction Values puraani hain aur unhen Current Values ki jagah istemaal nahi kiya gayaa.","Current English Profile mein 12m Width, 10s Duration, 15m Maximum Deployment Distance aur 60s Cooldown die gae hain.","Official Page par Ability ka naam puraane Flame Mirage se badalakar Untamed Flame ho gayaa hai.","Current Official Page par koi atirikt Verified Hidden Mechanics nahi di gai hain."],
+    notesHi: ["Current Character Page ko aaj ki Reference Value maanaa gayaa hai; OB42 ki Introduction Values puraani hain aur unhen Current Values ki jagah istemaal nahi kiya gayaa.","Current English Profile mein 12m Width, 10s Duration, 15m Maximum Deployment Distance aur 60s Cooldown die gae hain.","Official Page par Ability ka naam purane Flame Mirage se badalakar Untamed Flame ho gayaa hai.","Current Official Page par koi atirikt Verified Hidden Mechanics nahi di gai hain."],
     historyEn: [
       "OB42 introduced Ignis as Flame Mirage with a 10m-wide screen lasting 8s and a 15m maximum deployment distance.",
       "A later official rework documented a 10m-wide screen lasting 10s, moving at 6m/s for up to 5s, with a 60s cooldown.",
       "The current English character page now lists Untamed Flame at 12m width, 10s duration, 15m maximum deployment distance and 60s cooldown. This current profile is used as the present snapshot."
     ],
-    historyHi: ["OB42 mein Ignis ko Flame Mirage naam se Introduce kiya gayaa thaa: 10m chaudi Screen, 8s Duration aur 15m Maximum Deployment Distance.","baad ke Official Rework mein 10m chaudi Screen, 10s Duration, maximum 5s tak 6m/s Movement aur 60s Cooldown darj hua.","Current English Character Page ab Untamed Flame ke liye 12m Width, 10s Duration, 15m Maximum Deployment Distance aur 60s Cooldown deta hai. aaj ki Snapshot Value ke liye Current Profile istemaal ki gai hai."],
+    historyHi: ["OB42 mein Ignis ko Flame Mirage naam se Introduce kiya gayaa tha: 10m chaudi Screen, 8s Duration aur 15m Maximum Deployment Distance.","baad ke Official Rework mein 10m chaudi Screen, 10s Duration, maximum 5s tak 6m/s Movement aur 60s Cooldown darj hua.","Current English Character Page ab Untamed Flame ke liye 12m Width, 10s Duration, 15m Maximum Deployment Distance aur 60s Cooldown deta hai. aaj ki Snapshot Value ke liye Current Profile istemaal ki gai hai."],
     source: [
       { label: "Garena — Ignis current character profile", url: "https://ff.garena.com/en/chars/716" },
       { label: "Garena — OB42 introduction notes", url: "https://ff.garena.com/en/article/1266/" },
@@ -392,7 +392,7 @@ const baseProfiles: CharacterProfile[] = [
       "Suzy receives an additional 100 in-match currency for an elimination she earns herself.",
       "The official character page does not provide a numeric cooldown, marking duration, marking range or maximum-mark count."
     ],
-    currentHi: ["Current Official Profile ke mutaabik Marked Opponent ko Eliminate karne vaale Ally ko 100 In-match Currency milti hai.","Suzy ko apni Elimination par atirikt 100 In-match Currency milti hai.","Official Character Page Numeric Cooldown, Marking Duration, Marking Range yaa Maximum Mark Count nahi bataataa."],
+    currentHi: ["Current Official Profile ke mutabik Marked Opponent ko Eliminate karne vaale Ally ko 100 In-match Currency milti hai.","Suzy ko apni Elimination par atirikt 100 In-match Currency milti hai.","Official Character Page Numeric Cooldown, Marking Duration, Marking Range yaa Maximum Mark Count nahi bataataa."],
     rows: [
       { en: "Ally reward", hi: "Ally Reward", value: "100 in-match currency" },
       { en: "Suzy's additional reward", hi: "Suzy ka Additional Reward", value: "100 in-match currency" },
@@ -410,7 +410,7 @@ const baseProfiles: CharacterProfile[] = [
       "Suzy's introduction notes describe the Money Mark reward as 100 in-match currency for an ally who eliminates a marked opponent, plus an extra 100 for Suzy when she earns an elimination.",
       "The current official character page retains the same reward amounts. No later official numeric change was confirmed in the sources checked for this phase."
     ],
-    historyHi: ["Suzy ke Introduction Notes mein Money Mark Reward is tarah diyaa gayaa hai: Marked Opponent ko Eliminate karne vaale Ally ko 100 In-match Currency aur Suzy ko apni Elimination par atirikt 100.","Current Official Character Page par bhi yahi Reward Amounts hain. is Phase mein jaanche gae Sources mein baad ka koi Official Numeric Change Confirm nahi hua."],
+    historyHi: ["Suzy ke Introduction Notes mein Money Mark Reward is tarah diya gaya hai: Marked Opponent ko Eliminate karne vaale Ally ko 100 In-match Currency aur Suzy ko apni Elimination par atirikt 100.","Current Official Character Page par bhi yahi Reward Amounts hain. is Phase mein jaanche gae Sources mein baad ka koi Official Numeric Change Confirm nahi hua."],
     source: [
       { label: "Garena — Suzy character profile", url: "https://ff.garena.com/en/chars/677" },
       { label: "Garena — Suzy introduction / character notes", url: "https://ff.garena.com/en/article/1213/" }
