@@ -4097,8 +4097,8 @@
       }
     ],
     "abilityDisplayOnce": true,
-    "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "subtitle": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
     "tacticalEn": [
       "The effect is conditional on simultaneous movement and firing; it does not provide the stated bonuses while stationary.",
       "In squad play, communicate when you are repositioning so teammates can maintain shared awareness of your movement."
@@ -4123,7 +4123,7 @@
       "Effect conditional hai; character stationary ho toh yeh apply nahi hota.",
       "Checked official sources separate duration ya cooldown specify nahi karte."
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "artworkMode": "cutout"
   },
   {
@@ -4215,8 +4215,8 @@
       }
     ],
     "abilityDisplayOnce": true,
-    "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "subtitle": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
     "tacticalEn": [
       "The passive bonus builds only from the user's own eliminations and remains until the stated reset condition.",
       "Keep track of the current round state because the accumulated bonus does not carry through player elimination or a round reset."
@@ -4241,7 +4241,7 @@
       "Ability ka bonus eliminations ke saath build hota hai; match/round ke start par full bonus nahi milta.",
       "Player eliminate hone ya round reset hone par accumulated effect clear ho jaata hai."
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "artworkMode": "cutout"
   },
   {
@@ -4327,8 +4327,8 @@
       }
     ],
     "abilityDisplayOnce": true,
-    "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "subtitle": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
     "tacticalEn": [
       "The activation requirement is a continuous 4-second sprint, so the ability is not immediately active when a match begins or after every movement burst.",
       "The 5-second window is limited; the enhanced effect applies only to the first shot that hits a target within that window."
@@ -4353,7 +4353,7 @@
       "Activate hone se pehle continuous sprint requirement complete karni padti hai.",
       "5-second window mein target ko hit karne wali sirf pehli shot ko stated 106% damage effect milta hai."
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "artworkMode": "cutout"
   },
   {
@@ -4440,8 +4440,8 @@
       }
     ],
     "abilityDisplayOnce": true,
-    "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "subtitle": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
     "tacticalEn": [
       "The passive effect scales with lost maximum HP; its listed values are not a fixed bonus at full HP.",
       "The frontal-reduction portion applies to incoming damage from the front, as stated by Garena."
@@ -4466,7 +4466,7 @@
       "Bonus maximum HP loss par depend karta hai; yeh flat always-on value nahi hai.",
       "Damage-reduction effect specifically frontal direction ke liye described hai."
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "artworkMode": "cutout"
   },
   {
@@ -4556,8 +4556,8 @@
       }
     ],
     "abilityDisplayOnce": true,
-    "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "subtitle": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
     "tacticalEn": [
       "The mark shares location information with teammates, making clear squad communication important when a mark appears.",
       "The longer duration is conditional on the marked target moving; the base duration remains 3 seconds."
@@ -4582,7 +4582,7 @@
       "Base mark duration 3 seconds ki short window hai.",
       "Checked official sources separate numeric cooldown ya mark range publish nahi karte."
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "artworkMode": "cutout"
   }
 ]
