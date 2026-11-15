@@ -699,16 +699,16 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB45 (26 Jun 2024)",
     "introEn": "Active scan that reveals enemy positions and shares them with the squad.",
-    "introHi": "Active scan jo enemy ki location reveal karta hai aur squad ke saath share karta hai.",
+    "introHi": "एक Active Scan, जो एनिमी की positions दिखाता है और उन्हें Squad के साथ share करता है।",
     "rows": [
       {
         "en": "Scan range",
-        "hi": "Scan range",
+        "hi": "Scan Range",
         "value": "80m"
       },
       {
         "en": "Detects",
-        "hi": "Kya detect karta hai",
+        "hi": "किन्हें Detect करता है",
         "value": "Enemies not prone or crouching"
       },
       {
@@ -718,7 +718,7 @@
       },
       {
         "en": "Position sharing",
-        "hi": "Location sharing",
+        "hi": "Position Sharing",
         "value": "Shared with teammates"
       },
       {
@@ -731,14 +731,15 @@
       "Locates enemies within 80m who are not prone or crouching for 10 seconds. Enemy positions are shared with teammates."
     ],
     "currentHi": [
-      "Clu scan se enemy positions reveal hoti hain aur squad ke saath share hoti hain."
+      "10 seconds तक 80m के अंदर मौजूद उन एनिमी की location पता चलती है जो prone या crouch नहीं कर रहे होते। एनिमी की positions teammates के साथ share होती हैं।"
     ],
     "notesEn": [
       "Prone or crouching enemies are not revealed.",
       "Scanned enemies get a notification on their minimap and screen."
     ],
     "notesHi": [
-      "Prone ya crouch kar rahe enemies reveal nahi hote. Scan hone par enemy ke minimap aur screen par notification aata hai."
+      "Prone या crouch कर रहे एनिमी reveal नहीं होते।",
+      "Scan हुए एनिमी को उनके Minimap और screen पर notification मिलता है।"
     ],
     "historyEn": [
       "OB34 (25 May 2022): Duration 5-7.5s to 5-10s, cooldown 75-60s to 75-50s by level.",
@@ -747,10 +748,10 @@
       "OB45 (26 Jun 2024): Scan range 65m to 80m."
     ],
     "historyHi": [
-      "OB34 (25 May 2022): Duration 5–7.5s se 5–10s; cooldown 75–60s se level ke hisaab se 75–50s hua.",
-      "OB37 (Nov 2022): Maximum scan range 75m se 65m hui.",
-      "OB40 (Jun 2023): Cooldown 50s se 45s hua; scanned enemies ko notification milne laga.",
-      "OB45 (26 Jun 2024): Scan range 65m se 80m hui."
+      "OB34 (25 May 2022): Level के हिसाब से Duration 5–7.5s से बढ़ाकर 5–10s और Cooldown 75–60s से घटाकर 75–50s किया गया।",
+      "OB37 (Nov 2022): Maximum Scan Range 75m से घटाकर 65m की गई।",
+      "OB40 (Jun 2023): Cooldown 50s से घटाकर 45s किया गया; Scan हुए एनिमी को notification मिलने लगा।",
+      "OB45 (26 Jun 2024): Scan Range 65m से बढ़ाकर 80m की गई।"
     ],
     "source": [
       {
@@ -786,7 +787,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB48 (19 Feb 2025)",
     "introEn": "Passive that grows with every elimination: tougher against headshots and stronger headshots.",
-    "introHi": "Passive skill jo har elimination ke saath stronger hota hai: headshots se protection badhti hai aur headshot damage bhi boost hota hai.",
+    "introHi": "एक Passive Skill, जो हर Elimination के साथ मजबूत होती है: Headshot से बचाव बढ़ता है और Headshot Damage भी बढ़ता है।",
     "rows": [
       {
         "en": "Trigger",
@@ -800,22 +801,22 @@
       },
       {
         "en": "Headshot damage taken",
-        "hi": "Headshot damage taken",
+        "hi": "लिया गया Headshot Damage",
         "value": "-4% per spectator"
       },
       {
         "en": "Maximum headshot reduction",
-        "hi": "Maximum headshot reduction",
+        "hi": "Maximum Headshot Damage Reduction",
         "value": "-12%"
       },
       {
         "en": "Headshot damage dealt",
-        "hi": "Headshot damage dealt",
+        "hi": "दिया गया Headshot Damage",
         "value": "+10% per spectator"
       },
       {
         "en": "Maximum headshot bonus",
-        "hi": "Maximum headshot bonus",
+        "hi": "Maximum Headshot Bonus",
         "value": "+30%"
       },
       {
@@ -828,13 +829,13 @@
       "Every elimination adds one spectator, and spectators never decrease. Each spectator reduces headshot damage taken by 4% and increases headshot damage dealt by 10%."
     ],
     "currentHi": [
-      "Har elimination ke saath Wolfrahh ka effect badhta hai—headshot damage kam leta hai aur headshot damage zyada deta hai."
+      "हर Elimination पर 1 Spectator जुड़ता है और Spectators कम नहीं होते। हर Spectator से लिया गया Headshot Damage 4% कम और दिया गया Headshot Damage 10% बढ़ जाता है।"
     ],
     "notesEn": [
       "Maximum effect is reached at 3 spectators."
     ],
     "notesHi": [
-      "Maximum effect 3 spectators par milta hai."
+      "Maximum Effect 3 Spectators पर मिलता है।"
     ],
     "historyEn": [
       "OB22 (May 2020): Introduced.",
@@ -842,9 +843,9 @@
       "OB48 (19 Feb 2025): Headshot damage taken reduction 7% to 4% per spectator, maximum 21% to 12%."
     ],
     "historyHi": [
-      "OB22 (May 2020): Introduced hua.",
-      "OB34 (25 May 2022): Required spectators 6 se 3 hue; limb damage bonus ki jagah headshot damage bonus aaya.",
-      "OB48 (19 Feb 2025): Headshot damage taken reduction har spectator par 7% se 4%, maximum 21% se 12% hui."
+      "OB22 (May 2020): Introduce किया गया।",
+      "OB34 (25 May 2022): जरूरी Spectators 6 से घटाकर 3 किए गए; Limb Damage Bonus की जगह Headshot Damage Bonus दिया गया।",
+      "OB48 (19 Feb 2025): हर Spectator पर लिए गए Headshot Damage में कमी 7% से घटाकर 4% और maximum कमी 21% से घटाकर 12% की गई।"
     ],
     "source": [
       {
@@ -875,7 +876,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB42 (Oct 2023)",
     "introEn": "Passive that refills Jai's magazine after a knockdown or an active skill.",
-    "introHi": "Passive skill jo knockdown ya active skill use karne ke baad Jai ki magazine refill karta hai.",
+    "introHi": "एक Passive Skill, जो Knockdown करने या Active Skill इस्तेमाल करने के बाद Jai की Magazine refill करती है।",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
@@ -885,7 +886,7 @@
       },
       {
         "en": "Magazine refill",
-        "hi": "Magazine refill",
+        "hi": "Magazine Refill",
         "value": "100% of max capacity"
       },
       {
@@ -903,21 +904,21 @@
       "After knocking down an enemy or using an active skill, the gun's magazine reloads automatically to 100% of its maximum capacity."
     ],
     "currentHi": [
-      "Enemy ko knockdown karne ya active skill use karne ke baad gun ki magazine automatically maximum capacity ke 100% tak refill ho jaati hai."
+      "एनिमी को Knockdown करने या Active Skill इस्तेमाल करने के बाद Gun की Magazine अपने आप उसकी maximum capacity के 100% तक refill हो जाती है।"
     ],
     "notesEn": [
       "Works with Assault Rifles, Pistols, SMGs, Shotguns and Sniper Rifles. The active-skill trigger leaves Jai with a loaded weapon right after using a skill."
     ],
     "notesHi": [
-      "Assault Rifles, Pistols, SMGs, Shotguns aur Sniper Rifles par kaam karta hai. Active skill use karne ke turant baad Jai ke paas loaded weapon hota hai."
+      "Assault Rifles, Pistols, SMGs, Shotguns और Sniper Rifles के साथ काम करती है। Active Skill इस्तेमाल करने के तुरंत बाद Jai की Gun loaded रहती है।"
     ],
     "historyEn": [
       "Sep 2020 (Booyah Day): Reload capacity maximum 25% to 45%; Shotguns added.",
       "OB42 (Oct 2023): Reworked. Magazine now refills after a knockdown or an active skill, to 100% for all weapon types including Sniper Rifles."
     ],
     "historyHi": [
-      "Sep 2020 (Booyah Day): Reload capacity maximum 25% se 45% hui; Shotguns add hue.",
-      "OB42 (Oct 2023): Rework hua. Ab knockdown ya active skill ke baad magazine 100% refill hoti hai, Sniper Rifles samet sab weapon types par."
+      "Sep 2020 (Booyah Day): Maximum Reload Capacity 25% से बढ़ाकर 45% की गई; Shotguns जोड़ी गईं।",
+      "OB42 (Oct 2023): Skill को rework किया गया। अब Knockdown या Active Skill के बाद Magazine सभी weapon types के लिए 100% तक refill होती है, जिसमें Sniper Rifles भी शामिल हैं।"
     ],
     "source": [
       {
@@ -940,27 +941,27 @@
     "badge": "Official-source profile",
     "lastChanged": "OB47 (2 Dec 2024)",
     "introEn": "Passive that boosts explosive damage and range, and splits each grenade into mini grenades after it explodes.",
-    "introHi": "Passive skill jo explosive damage aur range badhata hai, aur grenade explode hone ke baad use mini grenades mein split karta hai.",
+    "introHi": "एक Passive Skill, जो Explosive Damage और Range बढ़ाती है। Grenade explode होने के बाद छोटे Mini Grenades में बँट जाता है।",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
         "en": "Explosive weapon damage",
-        "hi": "Explosive weapon damage",
+        "hi": "Explosive Weapon Damage",
         "value": "+20%"
       },
       {
         "en": "Explosive damage range",
-        "hi": "Explosive damage range",
+        "hi": "Explosive Damage Range",
         "value": "+10%"
       },
       {
         "en": "Mini grenades",
-        "hi": "Mini grenades",
+        "hi": "Mini Grenades",
         "value": "3 per grenade, after the explosion"
       },
       {
         "en": "Mini grenade damage",
-        "hi": "Mini grenade damage",
+        "hi": "Mini Grenade Damage",
         "value": "20% of the original grenade"
       },
       {
@@ -973,13 +974,13 @@
       "Explosive weapon damage increases by 20% and range increases by 10%. Each grenade splits into 3 mini grenades after exploding, dealing 20% of the original grenade's damage."
     ],
     "currentHi": [
-      "Explosive weapon damage 20% aur range 10% badhti hai. Har grenade explode hone ke baad 3 mini grenades mein split hota hai, jo original grenade ke damage ka 20% deal karte hain."
+      "Explosive Weapon Damage 20% और Range 10% बढ़ जाती है। हर Grenade explode होने के बाद 3 Mini Grenades में बँट जाता है, जो original Grenade के Damage का 20% देते हैं।"
     ],
     "notesEn": [
       "Grenades split only after exploding, so grenade cooking is no longer disrupted (OB47). Since OB47 this skill replaces Art of Demolition for all players."
     ],
     "notesHi": [
-      "Grenade explode hone ke baad hi split hota hai, isliye grenade cook karna ab interrupt nahi hota (OB47). OB47 se ye skill sab players ke liye Art of Demolition ki jagah aa gaya."
+      "Grenade अब सिर्फ explode होने के बाद split होते हैं, इसलिए Grenade cook करने की प्रक्रिया बाधित नहीं होती (OB47)। OB47 से सभी players के लिए इस Skill ने Art of Demolition की जगह ले ली है।"
     ],
     "historyEn": [
       "OB29 (Aug 2021): Art of Demolition damage bonus raised, maximum 16% to 20%.",
@@ -987,9 +988,9 @@
       "OB47 (2 Dec 2024): Split Blitz replaced Art of Demolition for all players; grenades now split after exploding, mini grenades deal 20%."
     ],
     "historyHi": [
-      "OB29 (Aug 2021): Art of Demolition damage bonus maximum 16% se 20% hua.",
-      "OB39 (Mar 2023): Awakened Alvaro “Rageblast” ke saath Split Blitz aaya: +20% damage, +10% range; grenade detonate hone se 1 second pehle 3 extra grenades mein split hota tha, 30% damage ke saath.",
-      "OB47 (2 Dec 2024): Split Blitz sab players ke liye Art of Demolition ki jagah aaya; grenade ab explode hone ke baad split hota hai aur mini grenades 20% damage karte hain."
+      "OB29 (Aug 2021): Art of Demolition का Damage Bonus maximum 16% से बढ़ाकर 20% किया गया।",
+      "OB39 (Mar 2023): Awakened Alvaro \"Rageblast\" को Split Blitz के साथ introduce किया गया: +20% Damage, +10% Range; Grenades फटने से 1 second पहले 3 extra Grenades में बँटते थे, जो 30% Damage देते थे।",
+      "OB47 (2 Dec 2024): सभी players के लिए Split Blitz ने Art of Demolition की जगह ली; Grenades अब explode होने के बाद split होते हैं और Mini Grenades 20% Damage देते हैं।"
     ],
     "source": [
       {
@@ -1020,7 +1021,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB36 (Sep 2022)",
     "introEn": "Passive that restores EP for every enemy Miguel knocks down.",
-    "introHi": "Passive skill jo Miguel ke har enemy knockdown par EP restore karta hai.",
+    "introHi": "एक Passive Skill, जो Miguel के हर Knockdown पर EP वापस देती है।",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
@@ -1030,7 +1031,7 @@
       },
       {
         "en": "EP gained",
-        "hi": "EP gained",
+        "hi": "मिलने वाले EP",
         "value": "200 EP per knockdown"
       },
       {
@@ -1043,21 +1044,21 @@
       "Gains 200 EP for each knockdown."
     ],
     "currentHi": [
-      "Miguel har knockdown par 200 EP gain karta hai."
+      "हर Knockdown पर 200 EP मिलते हैं।"
     ],
     "notesEn": [
       "Triggers on knockdowns, not eliminations. Can be paired with other recovery skills."
     ],
     "notesHi": [
-      "Knockdown par trigger hota hai, elimination par nahi. Dusri recovery skills ke saath pair kar sakte ho."
+      "यह Skill Knockdown पर trigger होती है, Elimination पर नहीं। इसे दूसरी Recovery Skills के साथ use किया जा सकता है।"
     ],
     "historyEn": [
       "OB35 (Aug 2022): Crazy Slayer now triggers on knockdowns instead of eliminations, 30-80 EP by level.",
       "OB36 (Sep 2022): EP per knockdown 30-80 to 100-200."
     ],
     "historyHi": [
-      "OB35 (Aug 2022): Crazy Slayer elimination ki jagah knockdown par trigger hone laga, level ke hisaab se 30–80 EP.",
-      "OB36 (Sep 2022): Har knockdown par EP 30–80 se 100–200 hua."
+      "OB35 (Aug 2022): Crazy Slayer अब Elimination की जगह Knockdown पर trigger होती है; Level के हिसाब से 30–80 EP मिलते हैं।",
+      "OB36 (Sep 2022): हर Knockdown पर EP 30–80 से बढ़ाकर 100–200 किए गए।"
     ],
     "source": [
       {
@@ -1080,27 +1081,27 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Passive that speeds up reloads and reduces enemy healing on every hit.",
-    "introHi": "Passive skill jo reload speed badhata hai aur har hit par enemy ki healing reduce karta hai.",
+    "introHi": "एक Passive Skill, जो Reload Speed बढ़ाती है और हर Hit पर एनिमी की Healing कम करती है।",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
         "en": "Reload speed",
-        "hi": "Reload speed",
+        "hi": "Reload Speed",
         "value": "+20%"
       },
       {
         "en": "Healing reduction on hit target",
-        "hi": "Hit target ki healing reduction",
+        "hi": "Hit हुए Target की Healing में कमी",
         "value": "50%"
       },
       {
         "en": "Healing reduction duration",
-        "hi": "Healing reduction duration",
+        "hi": "Healing Reduction Duration",
         "value": "6 seconds"
       },
       {
         "en": "Maximum healing reduction",
-        "hi": "Maximum healing reduction",
+        "hi": "Maximum Healing Reduction",
         "value": "50%"
       },
       {
@@ -1113,13 +1114,13 @@
       "Reload speed increases by 20%. Every time Nikita hits an enemy, that target gets a 50% healing reduction for 6 seconds (maximum 50%)."
     ],
     "currentHi": [
-      "Reload speed 20% badhti hai. Nikita jab bhi enemy ko hit karti hai, target ki healing 6 seconds ke liye 50% reduce ho jaati hai (maximum 50%)."
+      "Reload Speed 20% बढ़ जाती है। Nikita जब भी किसी एनिमी को hit करती है, उस target की Healing 6 seconds के लिए 50% कम हो जाती है (maximum 50%)।"
     ],
     "notesEn": [
       "Built to counter high-healing characters such as Ford and Kassie. Hits do not stack the reduction beyond the 50% maximum. A visual indicator now shows when you apply Healing Reduction on an enemy (OB54)."
     ],
     "notesHi": [
-      "Ford aur Kassie jaise high-healing characters ko counter karne ke liye useful hai. Hits se reduction 50% maximum se upar stack nahi hoti. OB54 mein enemy par Healing Reduction apply hone ka visual indicator add hua."
+      "यह Ford और Kassie जैसे ज्यादा Healing देने वाले characters को counter करने के लिए उपयोगी है। Hits से Healing Reduction 50% की maximum limit से आगे stack नहीं होती। OB54 में अब एनिमी पर Healing Reduction apply होने पर visual indicator दिखता है।"
     ],
     "historyEn": [
       "OB37 (Nov 2022): Reload speed 14-24% to a flat 20%.",
@@ -1128,10 +1129,10 @@
       "OB54 (23 Jun 2026): Reload speed 30% to 20%."
     ],
     "historyHi": [
-      "OB37 (Nov 2022): Reload speed 14–24% se fixed 20% hui.",
-      "OB42 (Oct 2023): Rework—reload speed +20%, 10s ke liye 30% healing reduction.",
-      "OB48 (19 Feb 2025): Healing reduction 30% se 50%, duration 10s se 6s; reload speed 30% hui.",
-      "OB54 (23 Jun 2026): Reload speed 30% se 20% hui."
+      "OB37 (Nov 2022): Reload Speed 14–24% से बदलकर fixed 20% की गई।",
+      "OB42 (Oct 2023): Rework किया गया: +20% Reload Speed और 10s के लिए 30% Healing Reduction।",
+      "OB48 (19 Feb 2025): Healing Reduction 30% से बढ़ाकर 50%, Duration 10s से घटाकर 6s; Reload Speed 30% की गई।",
+      "OB54 (23 Jun 2026): Reload Speed 30% से घटाकर 20% की गई।"
     ],
     "source": [
       {
@@ -1166,17 +1167,17 @@
     "badge": "Official-source profile",
     "lastChanged": "OB45 (26 Jun 2024)",
     "introEn": "Passive that lets any weapon heal teammates and boosts Heal Pistol healing.",
-    "introHi": "Passive skill jisse kisi bhi weapon se teammates ko heal kar sakte hain aur Heal Pistol ki healing bhi badhti hai.",
+    "introHi": "एक Passive Skill, जिससे किसी भी Weapon से teammates को heal किया जा सकता है और Heal Pistol की Healing भी बढ़ती है।",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
         "en": "Healing with ammo",
-        "hi": "Ammo se healing",
+        "hi": "Ammo से Healing",
         "value": "20% of damage dealt, to teammates"
       },
       {
         "en": "Heal Pistol bonus",
-        "hi": "Heal Pistol bonus",
+        "hi": "Heal Pistol Bonus",
         "value": "+20% healing effect"
       },
       {
@@ -1189,13 +1190,13 @@
       "Shooting teammates with any weapon heals them for 20% of the damage dealt. Heal Pistols have a 20% higher healing effect."
     ],
     "currentHi": [
-      "Kisi bhi weapon se teammate ko shoot karne par dealt damage ka 20% heal hota hai. Heal Pistol ki healing effect 20% zyada hoti hai."
+      "किसी भी Weapon से teammate को shoot करने पर दिए गए Damage का 20% उसे heal करता है। Heal Pistols की Healing Effect 20% बढ़ जाती है।"
     ],
     "notesEn": [
       "Pairs with the Heal Pistol-Y, which helps up downed teammates by shooting them (OB49)."
     ],
     "notesHi": [
-      "Heal Pistol-Y ke saath useful hai; OB49 mein ye downed teammates ko shoot karke help-up karta hai."
+      "यह Heal Pistol-Y के साथ काम करती है, जिससे down हुए teammates को shoot करके help up किया जा सकता है (OB49)।"
     ],
     "historyEn": [
       "OB21 (Apr 2020): Introduced with Healing Song.",
@@ -1204,10 +1205,10 @@
       "OB45 (26 Jun 2024): Reworked into Remedy Rounds."
     ],
     "historyHi": [
-      "OB21 (Apr 2020): Healing Song ke saath introduce hui.",
-      "OB40 (Jun 2023): Healing Song rework—help-up par 80 HP shield aur 10% speed boost; downed teammates 35% dheere bleed karte hain.",
-      "OB44 (Apr 2024): Help-up speed boost 10% se 80% hui.",
-      "OB45 (26 Jun 2024): Remedy Rounds mein rework hui."
+      "OB21 (Apr 2020): Healing Song के साथ introduce किया गया।",
+      "OB40 (Jun 2023): Healing Song rework हुई: Help-up पर 80 HP Shield और 10% Speed Boost; down हुए teammates की Bleeding Speed 35% कम।",
+      "OB44 (Apr 2024): Help-up Speed Boost 10% से बढ़ाकर 80% किया गया।",
+      "OB45 (26 Jun 2024): Skill को Remedy Rounds में rework किया गया।"
     ],
     "source": [
       {
@@ -1237,12 +1238,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB44 (Apr 2024)",
     "introEn": "Passive that grants immunity to disruptive effects and a short movement-speed boost.",
-    "introHi": "Passive jo disruptive effects se immunity aur short movement-speed boost deta hai.",
+    "introHi": "एक Passive Skill, जो परेशान करने वाले effects से immunity और थोड़े समय के लिए Movement Speed Boost देती है।",
     "currentEn": [
       "Become immune to disruptive effects (slowdown, marking, skill-silencing) and gain a 10% movement-speed boost for 5 seconds."
     ],
     "currentHi": [
-      "Slowdown, marking aur skill-silencing jaise disruptive effects se immunity milti hai aur 5 seconds ke liye 10% movement-speed boost milta hai."
+      "Slowdown, marking और Skill-silencing जैसे disruptive effects से immunity मिलती है और 5 seconds के लिए Movement Speed 10% बढ़ जाती है।"
     ],
     "rows": [
       {
@@ -1252,7 +1253,7 @@
       },
       {
         "en": "Movement-speed bonus",
-        "hi": "Movement-speed bonus",
+        "hi": "Movement Speed Bonus",
         "value": "10%"
       },
       {
@@ -1270,7 +1271,7 @@
       "Immune to Moco's marking, Homer's drone and A124's nano interference. Garena does not publish the exact trigger condition. Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
     ],
     "notesHi": [
-      "Moco ki marking, Homer ke drone aur A124 ke nano interference se immune. Garena exact trigger condition publish nahi karta. Movement speed ki global maximum limit hai; skills, items aur events ke bonuses usse exceed nahi kar sakte (OB54)."
+      "Moco की Marking, Homer की Drone और A124 के Nano Interference से immunity मिलती है। Garena exact Trigger Condition publish नहीं करता। Movement Speed की एक global maximum limit है; Skills, items और events के bonuses इस limit को पार नहीं कर सकते (OB54)।"
     ],
     "historyEn": [
       "OB35 (Jul 2022): Original skill Nutty Movement had its speed boost lowered.",
@@ -1278,9 +1279,9 @@
       "OB44 (Apr 2024): Cooldown 60s to 45s."
     ],
     "historyHi": [
-      "OB35 (Jul 2022): Original Nutty Movement skill ka speed boost kam hua.",
-      "OB42 (Oct 2023): Silver Spoon mein rework—immunity aur 5s ke liye 10% speed, cooldown 60s.",
-      "OB44 (Apr 2024): Cooldown 60s se 45s hua."
+      "OB35 (Jul 2022): Original Skill Nutty Movement का Speed Boost कम किया गया।",
+      "OB42 (Oct 2023): Silver Spoon में rework किया गया: 5s के लिए immunity और 10% Speed; Cooldown 60s।",
+      "OB44 (Apr 2024): Cooldown 60s से घटाकर 45s किया गया।"
     ],
     "source": [
       {
@@ -1312,12 +1313,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB55 (10 Sep 2026)",
     "introEn": "Active skill that turns Wukong into a bush for ambushes and repositioning.",
-    "introHi": "Active skill jo Wukong ko bush mein badal deta hai, ambush aur repositioning ke liye.",
+    "introHi": "एक Active Skill, जो Wukong को Bush में बदल देती है ताकि वह Ambush कर सके और अपनी Position बदल सके।",
     "currentEn": [
       "Transforms into a bush with a 10% reduction in movement speed for 10 seconds. The transformation ends when Wukong attacks. The cooldown resets if Wukong takes down an enemy within 10 seconds after releasing the skill."
     ],
     "currentHi": [
-      "Wukong 10 seconds ke liye bush ban jata hai aur movement speed 10% kam hoti hai. Attack karte hi transformation end ho jata hai. Skill release karne ke 10 seconds ke andar enemy takedown karne par cooldown reset hota hai."
+      "Wukong 10 seconds के लिए Bush में बदल जाता है और उसकी Movement Speed 10% कम हो जाती है। Wukong के Attack करते ही Transformation खत्म हो जाता है। Skill इस्तेमाल करने के 10 seconds के अंदर Wukong किसी एनिमी को knock करता है, तो Cooldown reset हो जाता है।"
     ],
     "rows": [
       {
@@ -1332,7 +1333,7 @@
       },
       {
         "en": "Movement-speed reduction",
-        "hi": "Movement-speed reduction",
+        "hi": "Movement Speed में कमी",
         "value": "10%"
       },
       {
@@ -1342,7 +1343,7 @@
       },
       {
         "en": "Cooldown reset",
-        "hi": "Cooldown reset",
+        "hi": "Cooldown Reset",
         "value": "On a takedown within 10 seconds of release"
       }
     ],
@@ -1350,7 +1351,7 @@
       "Interactions that keep Camouflage: using Vending Machines, War Chests and Portal Go, eating Mushrooms, helping up teammates. Interactions that remove Camouflage: using vehicles, ziplines and Launch Pads (OB47)."
     ],
     "notesHi": [
-      "Camouflage bana rehta hai: Vending Machines, War Chests aur Portal Go use karna, Mushrooms khana, teammates ko revive/help up karna. Camouflage hat jata hai: vehicles, ziplines aur Launch Pads use karne par (OB47)."
+      "Camouflage को बनाए रखने वाली interactions: Vending Machines, War Chests और Portal Go इस्तेमाल करना, Mushrooms खाना और teammates को help up करना। Camouflage खत्म करने वाली interactions: Vehicles, ziplines और Launch Pads इस्तेमाल करना (OB47)।"
     ],
     "historyEn": [
       "Sep 2021: Movement speed reduced by 20% while camouflaged.",
@@ -1364,15 +1365,15 @@
       "OB55 (10 Sep 2026): Cooldown 90s to 75s."
     ],
     "historyHi": [
-      "Sep 2021: Camouflage mein movement speed 20% kam hui.",
-      "OB34 (25 May 2022): Speed reduction 20% se 10% hua.",
-      "OB42 (Oct 2023): Speed reduction 10% se 5%, cooldown 200s.",
-      "OB43 (24 Jan 2024): Speed reduction hata di gayi.",
-      "OB45 (26 Jun 2024): Cooldown 200s se 75s hua.",
-      "OB47 (2 Dec 2024): Cooldown 75s se 90s; interactions se Camouflage break hona band hua.",
-      "OB52 (9 Jan 2026): 10% speed reduction add; duration 15s se 10s, cooldown 120s se 90s; cooldown reset release ke 10s ke andar takedown tak limited.",
-      "OB54 (23 Jun 2026): 9th Anniversary Skill Boosts—Camo Decoy (moving decoy, 10 DMG/10s ya human form par disappear) aur Cloned Camo (2 extra bushes, 10s).",
-      "OB55 (10 Sep 2026): Cooldown 90s se 75s hua."
+      "Sep 2021: Camouflage के दौरान Movement Speed 20% कम की गई।",
+      "OB34 (25 May 2022): Speed Reduction 20% से घटाकर 10% की गई।",
+      "OB42 (Oct 2023): Speed Reduction 10% से घटाकर 5% और Cooldown 200s किया गया।",
+      "OB43 (24 Jan 2024): Speed Reduction हटा दी गई।",
+      "OB45 (26 Jun 2024): Cooldown 200s से घटाकर 75s किया गया।",
+      "OB47 (2 Dec 2024): Cooldown 75s से बढ़ाकर 90s किया गया; Camouflage तोड़े बिना कुछ interactions की अनुमति दी गई।",
+      "OB52 (9 Jan 2026): 10% Speed Reduction जोड़ी गई; Duration 15s से घटाकर 10s, Cooldown 120s से घटाकर 90s किया गया; Cooldown Reset को Skill छोड़ने के 10s के अंदर किए गए takedowns तक सीमित किया गया।",
+      "OB54 (23 Jun 2026): 9th Anniversary event में Skill Boosts जोड़े गए: Camo Decoy (एक moving decoy छोड़ता है, जो 10 DMG, 10s या Wukong के human form में लौटने पर गायब हो जाता है) और Cloned Camo (10s तक रहने वाले दो extra bushes)।",
+      "OB55 (10 Sep 2026): Cooldown 90s से घटाकर 75s किया गया।"
     ],
     "source": [
       {
