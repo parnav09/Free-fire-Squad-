@@ -2534,12 +2534,14 @@
     "notesEn": [
       "The teammate-healing effect cannot be stacked by deploying multiple Gloo Walls.",
       "OB42 stated a maximum of 40 HP per teammate per Gloo Wall; later patch notes do not explicitly reconfirm whether that cap remains.",
-      "Garena does not publish a current maximum HP recovery total per teammate per Gloo Wall."
+      "Garena does not publish a current maximum HP recovery total per teammate per Gloo Wall.",
+      "Garena does not publish a numeric cooldown for this passive ability."
     ],
     "notesHi": [
       "Multiple Gloo Walls deploy karne se teammate-healing effect stack nahi hota.",
       "OB42 mein har Gloo Wall par per teammate maximum 40 HP bataya gaya tha; baad ke patch notes confirm nahi karte ki yeh cap ab bhi apply hota hai ya nahi.",
-      "Garena current per-wall maximum teammate HP recovery total publish nahi karta."
+      "Garena current per-wall maximum teammate HP recovery total publish nahi karta.",
+      "Is passive ability ka numeric cooldown Garena publish nahi karta."
     ],
     "historyEn": [
       "OB36 (21 Sep 2022): Gloo Wall durability restoration increased from 20/22/24/26/28/30% to 40/42/44/46/48/50% of current durability every 1s.",
@@ -2638,11 +2640,13 @@
     ],
     "notesEn": [
       "The 20m range is stated for the enemy-knockdown trigger. Garena does not publish a separate numeric range for the self-knockdown trigger.",
-      "Garena does not publish the maximum number of players that Memory Mist can mark."
+      "Garena does not publish the maximum number of players that Memory Mist can mark.",
+      "Garena does not publish a numeric cooldown for this passive ability."
     ],
     "notesHi": [
       "20m range enemy-knockdown trigger ke liye diya gaya hai. Self-knockdown trigger ki alag numeric range Garena publish nahi karta.",
-      "Memory Mist maximum kitne players ko mark kar sakti hai, yeh Garena publish nahi karta."
+      "Memory Mist maximum kitne players ko mark kar sakti hai, yeh Garena publish nahi karta.",
+      "Is passive ability ka numeric cooldown Garena publish nahi karta."
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Maximum reveal range increased from 50m to 75m; teammate information-sharing duration increased from 4s to 6s.",
@@ -2719,11 +2723,13 @@
     ],
     "notesEn": [
       "The recovery begins after the game registers that Leon has survived combat.",
-      "Garena does not publish the exact combat-disengagement timer that determines when the recovery trigger begins."
+      "Garena does not publish the exact combat-disengagement timer that determines when the recovery trigger begins.",
+      "Garena does not publish a numeric cooldown for this passive ability."
     ],
     "notesHi": [
       "Game Leon ke combat se survive karne ko register karne ke baad recovery shuru hoti hai.",
-      "Recovery trigger kab activate hota hai, uska exact combat-disengagement timer Garena publish nahi karta."
+      "Recovery trigger kab activate hota hai, uska exact combat-disengagement timer Garena publish nahi karta.",
+      "Is passive ability ka numeric cooldown Garena publish nahi karta."
     ],
     "historyEn": [
       "OB38 (11 Jan 2023): Maximum recovery increased from 30 HP to 60 HP; recovery rate changed from 5 to 4 HP/s; maximum recovery duration changed from 6s to 15s."
