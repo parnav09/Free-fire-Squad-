@@ -2048,45 +2048,50 @@
     "badge": "Official-source profile",
     "lastChanged": "OB55 (10 Sep 2026)",
     "introEn": "Passive that boosts rate of fire and converts part of it into movement speed after Luna lands a hit.",
-    "introHi": "Passive that boosts rate of fire and converts part of it into movement speed after Luna lands a hit.",
+    "introHi": "लूना की Passive Skill दुश्मन पर Hit लगने के बाद Rate of Fire का कुछ हिस्सा Movement Speed में बदल देती है।",
     "currentEn": [
       "Increases rate of fire by 5%. When Luna hits an enemy, up to 10% of her rate of fire converts into movement speed. The conversion resets when she survives combat."
     ],
     "currentHi": [
-      "Increases rate of fire by 5%. When Luna hits an enemy, up to 10% of her rate of fire converts into movement speed. The conversion resets when she survives combat."
+      "Rate of Fire में 5% की बढ़ोतरी होती है। लूना जब किसी दुश्मन को Hit करती है, तो उसके Rate of Fire का अधिकतम 10% Movement Speed में बदल जाता है। Combat से बचकर निकलने पर यह Conversion Reset हो जाता है।"
     ],
     "rows": [
       {
         "en": "Rate of fire bonus",
-        "hi": "Rate of fire bonus",
-        "value": "+5%"
+        "hi": "Rate of Fire बोनस",
+        "value": "+5%",
+        "valueHi": "+5%"
       },
       {
         "en": "Movement-speed conversion",
-        "hi": "Movement-speed conversion",
-        "value": "Up to 10% of rate of fire"
+        "hi": "Movement Speed में Conversion",
+        "value": "Up to 10% of rate of fire",
+        "valueHi": "Rate of Fire का अधिकतम 10%"
       },
       {
         "en": "Trigger",
         "hi": "Trigger",
-        "value": "Landing a hit on an enemy"
+        "value": "Landing a hit on an enemy",
+        "valueHi": "दुश्मन पर Hit लगाना"
       },
       {
         "en": "Reset",
         "hi": "Reset",
-        "value": "After surviving combat"
+        "value": "After surviving combat",
+        "valueHi": "Combat से बचने के बाद"
       },
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "No cooldown"
+        "value": "No cooldown",
+        "valueHi": "कोई Cooldown नहीं"
       }
     ],
     "notesEn": [
       "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
     ],
     "notesHi": [
-      "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
+      "Movement Speed की एक Global Maximum Limit होती है। Skills, Items और Events से मिलने वाले Bonus इस सीमा को पार नहीं कर सकते (OB54)।"
     ],
     "historyEn": [
       "OB36 (Sep 2022): Introduced.",
@@ -2095,10 +2100,10 @@
       "OB55 (10 Sep 2026): Rate of fire bonus 8% to 5%."
     ],
     "historyHi": [
-      "OB36 (Sep 2022): Introduced.",
-      "Before OB49: rate of fire +8%, up to 15% converted to movement speed.",
-      "OB49 (21 May 2025): Maximum conversion 15% to 10%.",
-      "OB55 (10 Sep 2026): Rate of fire bonus 8% to 5%."
+      "OB36 (Sep 2022): Skill Introduce हुई।",
+      "OB49 से पहले: Rate of Fire +8%; अधिकतम 15% Movement Speed में Convert होता था।",
+      "OB49 (21 May 2025): Maximum Conversion 15% से 10% किया गया।",
+      "OB55 (10 Sep 2026): Rate of Fire Bonus 8% से 5% किया गया।"
     ],
     "source": [
       {
@@ -2129,38 +2134,43 @@
     "badge": "Official-source profile",
     "lastChanged": "OB43 (24 Jan 2024)",
     "introEn": "Active skill that marks enemies behind Gloo Walls and lets Iris damage them through the walls.",
-    "introHi": "Active skill that marks enemies behind Gloo Walls and lets Iris damage them through the walls.",
+    "introHi": "Iris की Active Skill Gloo Walls के पीछे मौजूद दुश्मनों को Mark करती है और दीवार के पार उन्हें Damage पहुँचाने देती है।",
     "currentEn": [
       "For 15 seconds, successfully firing at a Gloo Wall marks enemies within 7m of it and penetrates the Gloo Wall to damage the marked enemies, with lower damage than usual. Works on up to 3 Gloo Walls."
     ],
     "currentHi": [
-      "For 15 seconds, successfully firing at a Gloo Wall marks enemies within 7m of it and penetrates the Gloo Wall to damage the marked enemies, with lower damage than usual. Works on up to 3 Gloo Walls."
+      "15 सेकंड तक, Gloo Wall पर सफलतापूर्वक Fire करने से उसके 7m के भीतर मौजूद दुश्मन Mark हो जाते हैं। इसके बाद गोली Gloo Wall को पार करके Mark किए गए दुश्मनों को Damage देती है, लेकिन सामान्य से कम Damage होता है। यह अधिकतम 3 Gloo Walls पर काम करती है।"
     ],
     "rows": [
       {
         "en": "Duration",
         "hi": "Duration",
-        "value": "15 seconds"
+        "value": "15 seconds",
+        "valueHi": "15 सेकंड"
       },
       {
         "en": "Mark range",
-        "hi": "Mark range",
-        "value": "7m around the Gloo Wall"
+        "hi": "Mark करने की Range",
+        "value": "7m around the Gloo Wall",
+        "valueHi": "Gloo Wall के आसपास 7m"
       },
       {
         "en": "Gloo Walls affected",
-        "hi": "Gloo Walls affected",
-        "value": "3 maximum"
+        "hi": "प्रभावित Gloo Walls",
+        "value": "3 maximum",
+        "valueHi": "अधिकतम 3"
       },
       {
         "en": "Damage through walls",
-        "hi": "Damage through walls",
-        "value": "Lower than usual"
+        "hi": "दीवार के पार Damage",
+        "value": "Lower than usual",
+        "valueHi": "सामान्य से कम"
       },
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "60 seconds"
+        "value": "60 seconds",
+        "valueHi": "60 सेकंड"
       }
     ],
     "notesEn": [
@@ -2168,8 +2178,8 @@
       "Attacks that penetrate Gloo Walls, like Iris's skill, show a clearer hit effect on the walls (OB49)."
     ],
     "notesHi": [
-      "Garena does not publish the reduced damage value.",
-      "Attacks that penetrate Gloo Walls, like Iris's skill, show a clearer hit effect on the walls (OB49)."
+      "Garena कम Damage की सटीक Value प्रकाशित नहीं करता।",
+      "Iris जैसी Gloo Wall को पार करने वाली Attacks में दीवार पर Hit Effect अधिक स्पष्ट दिखाई देता है (OB49)।"
     ],
     "historyEn": [
       "OB35 (2022): Introduced.",
@@ -2179,11 +2189,11 @@
       "OB49 (21 May 2025): Clearer visual effect when hitting Gloo Walls."
     ],
     "historyHi": [
-      "OB35 (2022): Introduced.",
-      "OB38 (Jan 2023): Skill duration increased.",
-      "OB40 (Jun 2023): Gloo Walls affected 5 to 3.",
-      "OB43 (24 Jan 2024): Fixed a damage bug when the skill penetrates Gloo Walls.",
-      "OB49 (21 May 2025): Clearer visual effect when hitting Gloo Walls."
+      "OB35 (2022): Skill Introduce हुई।",
+      "OB38 (Jan 2023): Skill की Duration बढ़ाई गई।",
+      "OB40 (Jun 2023): प्रभावित Gloo Walls की संख्या 5 से 3 की गई।",
+      "OB43 (24 Jan 2024): Skill से Gloo Walls पार करते समय होने वाला Damage Bug Fix किया गया।",
+      "OB49 (21 May 2025): Gloo Wall पर Hit होने का Visual Effect अधिक स्पष्ट किया गया।"
     ],
     "source": [
       {
@@ -2214,48 +2224,52 @@
     "badge": "Official-source profile",
     "lastChanged": "OB45 (Jun 2024)",
     "introEn": "Passive that lets J.Biebs and nearby allies block damage using EP, with allies' EP flowing to J.Biebs.",
-    "introHi": "Passive that lets J.Biebs and nearby allies block damage using EP, with allies' EP flowing to J.Biebs.",
+    "introHi": "J.Biebs की Passive Skill उसे और पास के Teammates को EP के जरिए Damage Block करने देती है। Teammates का खर्च हुआ EP J.Biebs को मिलता है।",
     "currentEn": [
       "J.Biebs and allies within 15m can block 8% of damage using EP. The EP deducted from allies is added to J.Biebs's EP."
     ],
     "currentHi": [
-      "J.Biebs and allies within 15m can block 8% of damage using EP. The EP deducted from allies is added to J.Biebs's EP."
+      "J.Biebs से 15m के भीतर मौजूद वह और उसके Teammates EP का इस्तेमाल करके 8% Damage Block कर सकते हैं। Teammates से खर्च हुआ EP J.Biebs के EP में जुड़ जाता है।"
     ],
     "rows": [
       {
         "en": "Range",
         "hi": "Range",
-        "value": "15m"
+        "value": "15m",
+        "valueHi": "15m"
       },
       {
         "en": "Damage blocked using EP",
-        "hi": "Damage blocked using EP",
-        "value": "8%"
+        "hi": "EP से Block किया गया Damage",
+        "value": "8%",
+        "valueHi": "8%"
       },
       {
         "en": "EP transfer",
-        "hi": "EP transfer",
-        "value": "Allies' deducted EP is added to J.Biebs's EP"
+        "hi": "EP Transfer",
+        "value": "Allies' deducted EP is added to J.Biebs's EP",
+        "valueHi": "Teammates का खर्च हुआ EP J.Biebs के EP में जुड़ता है"
       },
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "No cooldown"
+        "value": "No cooldown",
+        "valueHi": "कोई Cooldown नहीं"
       }
     ],
     "notesEn": [
       "The 15m range matches the support range of K and Olivia (OB46)."
     ],
     "notesHi": [
-      "The 15m range matches the support range of K and Olivia (OB46)."
+      "15m की Range, K और Olivia की Support Range के बराबर है (OB46)।"
     ],
     "historyEn": [
       "OB38 (Jan 2023): Range fixed at 12m for all ranks (previously 6m to 12m); maximum damage block 15% to 12%.",
       "OB45 (Jun 2024): Range 12m to 15m; damage blocked 12% to 8%."
     ],
     "historyHi": [
-      "OB38 (Jan 2023): Range fixed at 12m for all ranks (previously 6m to 12m); maximum damage block 15% to 12%.",
-      "OB45 (Jun 2024): Range 12m to 15m; damage blocked 12% to 8%."
+      "OB38 (Jan 2023): सभी Ranks पर Range 12m तय की गई (पहले 6m से 12m); Maximum Damage Block 15% से 12% हुआ।",
+      "OB45 (Jun 2024): Range 12m से 15m; Damage Block 12% से 8% किया गया।"
     ],
     "source": [
       {
@@ -2282,48 +2296,55 @@
     "badge": "Official-source profile",
     "lastChanged": "OB43 (24 Jan 2024)",
     "introEn": "Active drone that locks onto the nearest enemy and slows them with a pulse explosion.",
-    "introHi": "Active drone that locks onto the nearest enemy and slows them with a pulse explosion.",
+    "introHi": "Homer की Active Drone सामने मौजूद सबसे नज़दीकी दुश्मन को Lock करती है और Pulse Explosion से उसकी गति कम करती है।",
     "currentEn": [
       "Releases a drone toward the nearest enemy within 100m in front. It creates a 5m-diameter pulse explosion that reduces enemies' movement speed by 40% and rate of fire by 40% for 5 seconds, and deals 25 DMG."
     ],
     "currentHi": [
-      "Releases a drone toward the nearest enemy within 100m in front. It creates a 5m-diameter pulse explosion that reduces enemies' movement speed by 40% and rate of fire by 40% for 5 seconds, and deals 25 DMG."
+      "Homer सामने 100m के भीतर सबसे नज़दीकी दुश्मन की ओर Drone भेजता है। Drone 5m Diameter का Pulse Explosion बनाती है, जो 5 सेकंड तक दुश्मनों की Movement Speed और Rate of Fire को 40% कम करती है और 25 DMG देती है।"
     ],
     "rows": [
       {
         "en": "Lock range",
-        "hi": "Lock range",
-        "value": "100m, nearest enemy in front"
+        "hi": "Lock Range",
+        "value": "100m, nearest enemy in front",
+        "valueHi": "सामने सबसे नज़दीकी दुश्मन, 100m"
       },
       {
         "en": "Pulse explosion",
-        "hi": "Pulse explosion",
-        "value": "5m diameter"
+        "hi": "Pulse Explosion",
+        "value": "5m diameter",
+        "valueHi": "5m Diameter"
       },
       {
         "en": "Movement-speed reduction",
-        "hi": "Movement-speed reduction",
-        "value": "40%"
+        "hi": "Movement Speed में कमी",
+        "value": "40%",
+        "valueHi": "40%"
       },
       {
         "en": "Rate-of-fire reduction",
-        "hi": "Rate-of-fire reduction",
-        "value": "40%"
+        "hi": "Rate of Fire में कमी",
+        "value": "40%",
+        "valueHi": "40%"
       },
       {
         "en": "Effect duration",
-        "hi": "Effect duration",
-        "value": "5 seconds"
+        "hi": "Effect Duration",
+        "value": "5 seconds",
+        "valueHi": "5 सेकंड"
       },
       {
         "en": "Damage",
         "hi": "Damage",
-        "value": "25 DMG"
+        "value": "25 DMG",
+        "valueHi": "25 DMG"
       },
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "60 seconds"
+        "value": "60 seconds",
+        "valueHi": "60 सेकंड"
       }
     ],
     "notesEn": [
@@ -2333,10 +2354,10 @@
       "A voice notification plays when no enemy is detected (OB49)."
     ],
     "notesHi": [
-      "The drone triggers Moco's tagging skill (OB40).",
-      "Once the drone locks a target, obstacles do not block it (OB43).",
-      "Joseph is immune to Homer's drone (OB42).",
-      "A voice notification plays when no enemy is detected (OB49)."
+      "Drone, Moco की Tagging Skill Trigger करती है (OB40)।",
+      "Drone Target को Lock कर लेने के बाद Obstacles उसे रोक नहीं सकते (OB43)।",
+      "Joseph, Homer की Drone से Immune है (OB42)।",
+      "दुश्मन न मिलने पर Voice Notification सुनाई देता है (OB49)।"
     ],
     "historyEn": [
       "OB40 (Jun 2023): Explosion diameter 5m to 3m; drone now triggers Moco's tagging.",
@@ -2346,11 +2367,11 @@
       "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: UAV Shockwave (extra scan after the hit exposes nearby enemies on the minimap for 5s, 120m in BR and 30m in CS) and Super Drone (glide on the drone with a 15% speed boost for 15s)."
     ],
     "historyHi": [
-      "OB40 (Jun 2023): Explosion diameter 5m to 3m; drone now triggers Moco's tagging.",
-      "OB42 (Oct 2023): Diameter 3m to 4m.",
-      "OB43 (24 Jan 2024): Diameter 4m to 5m, movement-speed reduction 60% to 40%, rate-of-fire reduction 35% to 40%, cooldown 90s to 60s.",
-      "OB49 (21 May 2025): Voice notification added when no enemies are detected.",
-      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: UAV Shockwave (extra scan after the hit exposes nearby enemies on the minimap for 5s, 120m in BR and 30m in CS) and Super Drone (glide on the drone with a 15% speed boost for 15s)."
+      "OB40 (Jun 2023): Explosion Diameter 5m से 3m किया गया; Drone अब Moco की Tagging Trigger करती है।",
+      "OB42 (Oct 2023): Diameter 3m से 4m किया गया।",
+      "OB43 (24 Jan 2024): Diameter 4m से 5m; Movement Speed में कमी 60% से 40%; Rate of Fire में कमी 35% से 40%; Cooldown 90s से 60s किया गया।",
+      "OB49 (21 May 2025): दुश्मन न मिलने पर Voice Notification जोड़ा गया।",
+      "OB54 (23 Jun 2026): 9th Anniversary Skill Boosts—UAV Shockwave (Hit के बाद अतिरिक्त Scan, जो BR में 120m और CS में 30m तक आसपास के दुश्मनों को 5s के लिए Minimap पर दिखाता है) और Super Drone (Drone पर Glide करने के दौरान 15s तक +15% Speed)।"
     ],
     "source": [
       {
@@ -2385,50 +2406,56 @@
     "badge": "Official-source profile",
     "lastChanged": "OB55 (10 Sep 2026)",
     "introEn": "Active skill that sends a tempest through Gloo Walls, then teleports Kenta to it with a short shield.",
-    "introHi": "Active skill that sends a tempest through Gloo Walls, then teleports Kenta to it with a short shield.",
+    "introHi": "Kenta की Active Skill Gloo Walls के पार Tempest भेजती है। फिर Kenta उस जगह Teleport होकर थोड़े समय के लिए Shield पाता है।",
     "currentEn": [
       "Unleashes a fast-moving, swirling tempest that passes through Gloo Walls and lasts 8 seconds, dealing 25 DMG to enemies hit. While the tempest is active, tap the skill again to teleport to its location and gain a shield for 5 seconds with 20% damage reduction. The tempest disappears after teleporting."
     ],
     "currentHi": [
-      "Unleashes a fast-moving, swirling tempest that passes through Gloo Walls and lasts 8 seconds, dealing 25 DMG to enemies hit. While the tempest is active, tap the skill again to teleport to its location and gain a shield for 5 seconds with 20% damage reduction. The tempest disappears after teleporting."
+      "Kenta तेज़ घूमती हुई Tempest छोड़ता है, जो Gloo Walls के पार जाती है और 8 सेकंड तक रहती है। इसकी चपेट में आने वाले दुश्मनों को 25 DMG होता है। Tempest Active रहते हुए Skill को दोबारा Tap करके Kenta उसकी Location पर Teleport कर सकता है और 5 सेकंड के लिए 20% Damage Reduction वाला Shield पाता है। Teleport के बाद Tempest गायब हो जाती है।"
     ],
     "rows": [
       {
         "en": "Tempest duration",
-        "hi": "Tempest duration",
-        "value": "8 seconds"
+        "hi": "Tempest Duration",
+        "value": "8 seconds",
+        "valueHi": "8 सेकंड"
       },
       {
         "en": "Tempest damage",
-        "hi": "Tempest damage",
-        "value": "25 DMG"
+        "hi": "Tempest Damage",
+        "value": "25 DMG",
+        "valueHi": "25 DMG"
       },
       {
         "en": "Passes through",
-        "hi": "Passes through",
-        "value": "Gloo Walls"
+        "hi": "किसके पार जाती है",
+        "value": "Gloo Walls",
+        "valueHi": "Gloo Walls"
       },
       {
         "en": "Teleport",
         "hi": "Teleport",
-        "value": "Tap the skill again to teleport to the tempest"
+        "value": "Tap the skill again to teleport to the tempest",
+        "valueHi": "Skill दोबारा Tap करके Tempest तक Teleport"
       },
       {
         "en": "Shield after teleport",
-        "hi": "Shield after teleport",
-        "value": "5 seconds, 20% damage reduction"
+        "hi": "Teleport के बाद Shield",
+        "value": "5 seconds, 20% damage reduction",
+        "valueHi": "5 सेकंड; 20% Damage Reduction"
       },
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "45 seconds"
+        "value": "45 seconds",
+        "valueHi": "45 सेकंड"
       }
     ],
     "notesEn": [
       "OB55 replaced Kenta's original shield skill completely."
     ],
     "notesHi": [
-      "OB55 replaced Kenta's original shield skill completely."
+      "OB55 में Kenta की पुरानी Shield Skill को पूरी तरह बदल दिया गया।"
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Introduced with Swordsman's Wrath: 5m frontal shield, 50% weapon damage reduction, lasts 2-5s, cooldown 210-160s.",
@@ -2436,9 +2463,9 @@
       "OB55 (10 Sep 2026): Complete rework into a tempest skill with teleport."
     ],
     "historyHi": [
-      "OB33 (23 Mar 2022): Introduced with Swordsman's Wrath: 5m frontal shield, 50% weapon damage reduction, lasts 2-5s, cooldown 210-160s.",
-      "OB38 (Jan 2023): Shield can be picked back up after firing, 10% reduction while firing, cooldown 120-70s.",
-      "OB55 (10 Sep 2026): Complete rework into a tempest skill with teleport."
+      "OB33 (23 Mar 2022): Swordsman's Wrath के साथ Introduce हुआ—सामने 5m Shield, 50% Weapon Damage Reduction, 2–5s Duration और 210–160s Cooldown।",
+      "OB38 (Jan 2023): Fire करने के बाद Shield दोबारा उठाया जा सकता था; Fire करते समय 10% Reduction और 120–70s Cooldown किया गया।",
+      "OB55 (10 Sep 2026): Tempest और Teleport वाली Skill में पूरी तरह Rework किया गया।"
     ],
     "source": [
       {
