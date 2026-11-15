@@ -2485,5 +2485,431 @@
     ],
     "status": "OB55 values reconciled · 15 Nov 2026",
     "artworkMode": "cutout"
+  },
+  {
+    "id": "nairi",
+    "name": "Nairi",
+    "image": "",
+    "skill": "Ice Iron",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB50 (30 Jul 2025)",
+    "introEn": "Passive ability that restores deployed Gloo Wall durability and provides limited HP recovery to nearby teammates.",
+    "introHi": "Passive ability jo deployed Gloo Wall ki durability restore karti hai aur paas ke teammates ko limited HP recovery deti hai.",
+    "currentEn": [
+      "After a Gloo Wall is deployed, it restores 160 durability per second during a 1.5-second effect window.",
+      "Teammates within 5m recover 5 HP per second during the effect window."
+    ],
+    "currentHi": [
+      "Gloo Wall deploy hone ke baad 1.5-second effect window mein har second 160 durability restore hoti hai.",
+      "5m ke andar teammates ko effect window ke dauran 5 HP per second recover hota hai."
+    ],
+    "rows": [
+      {
+        "en": "Gloo Wall durability restoration",
+        "hi": "Gloo Wall durability restoration",
+        "value": "160 per second"
+      },
+      {
+        "en": "Effect window after deployment",
+        "hi": "Deployment ke baad effect window",
+        "value": "1.5 seconds"
+      },
+      {
+        "en": "Nearby teammate HP recovery",
+        "hi": "Paas ke teammate ki HP recovery",
+        "value": "5 HP/s"
+      },
+      {
+        "en": "Teammate range",
+        "hi": "Teammate range",
+        "value": "5m"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The teammate-healing effect cannot be stacked by deploying multiple Gloo Walls.",
+      "OB42 stated a maximum of 40 HP per teammate per Gloo Wall; later patch notes do not explicitly reconfirm whether that cap remains.",
+      "Garena does not publish a current maximum HP recovery total per teammate per Gloo Wall."
+    ],
+    "notesHi": [
+      "Multiple Gloo Walls deploy karne se teammate-healing effect stack nahi hota.",
+      "OB42 mein har Gloo Wall par per teammate maximum 40 HP bataya gaya tha; baad ke patch notes confirm nahi karte ki yeh cap ab bhi apply hota hai ya nahi.",
+      "Garena current per-wall maximum teammate HP recovery total publish nahi karta."
+    ],
+    "historyEn": [
+      "OB36 (21 Sep 2022): Gloo Wall durability restoration increased from 20/22/24/26/28/30% to 40/42/44/46/48/50% of current durability every 1s.",
+      "OB41 (08 Aug 2023): Ice Iron documented as restoring 250 durability/s to deployed Gloo Walls when hit; teammates within 5m recovered 20 HP/s, with a 40 HP per-teammate cap per wall.",
+      "OB42 (30 Oct 2023): Gloo Wall durability restoration reduced from 250 to 150 per second.",
+      "OB45 (24 Jun 2024): Durability restoration increased from 150 to 160 per second; teammate recovery changed from 20 to 10 HP/s, within 3s after deployment.",
+      "OB47 (02 Dec 2024): The post-deployment effect window changed from 3s to 2s.",
+      "OB50 (30 Jul 2025): The effect window changed from 2s to 1.5s and teammate recovery changed from 10 to 5 HP/s."
+    ],
+    "historyHi": [
+      "OB36 (21 Sep 2022): Gloo Wall durability restoration har 1s mein current durability ke 20/22/24/26/28/30% se badhkar 40/42/44/46/48/50% hui.",
+      "OB41 (08 Aug 2023): Ice Iron ke mutabik hit hone par deployed Gloo Walls 250 durability/s restore karti thi; 5m ke andar teammates 20 HP/s recover karte the, har wall par per teammate 40 HP cap tha.",
+      "OB42 (30 Oct 2023): Gloo Wall durability restoration 250 se 150 per second hui.",
+      "OB45 (24 Jun 2024): Durability restoration 150 se 160 per second hui; teammate recovery 20 se 10 HP/s hui, deployment ke baad 3s ke andar.",
+      "OB47 (02 Dec 2024): Deployment ke baad effect window 3s se 2s hui.",
+      "OB50 (30 Jul 2025): Effect window 2s se 1.5s hui aur teammate recovery 10 se 5 HP/s hui."
+    ],
+    "source": [
+      {
+        "label": "Garena — Nairi character profile",
+        "url": "https://ff.garena.com/en/chars/536"
+      },
+      {
+        "label": "Garena — OB50 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1511/"
+      },
+      {
+        "label": "Garena — OB47 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1424/"
+      },
+      {
+        "label": "Garena — OB45 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "Garena — OB42 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "Garena — OB41 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1213/"
+      },
+      {
+        "label": "Garena — OB36 Patch Notes",
+        "url": "https://ff.garena.com/en/article/871/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "otho",
+    "name": "Otho",
+    "image": "",
+    "skill": "Memory Mist",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB53 (02 Apr 2026)",
+    "introEn": "Passive ability that marks nearby enemy teammates after a knockdown and applies a short movement-speed reduction.",
+    "introHi": "Passive ability jo knockdown ke baad paas ke enemy teammates ko mark karti hai aur unki movement speed kuch samay ke liye kam karti hai.",
+    "currentEn": [
+      "After Otho knocks down an enemy, Memory Mist marks that enemy's teammates within 20m of the knocked-down enemy.",
+      "Marked enemies have their movement speed reduced by 25% for 3 seconds.",
+      "If Otho is knocked down by a nearby enemy, Memory Mist marks and slows the attacker and their teammates."
+    ],
+    "currentHi": [
+      "Otho ke enemy ko knockdown karne par Memory Mist, knocked-down enemy ke 20m ke andar uske teammates ko mark karti hai.",
+      "Marked enemies ki movement speed 3 seconds ke liye 25% kam hoti hai.",
+      "Agar Otho ko paas ka enemy knockdown karta hai, toh Memory Mist attacker aur uske teammates ko mark karke slow karti hai."
+    ],
+    "rows": [
+      {
+        "en": "Primary trigger",
+        "hi": "Primary trigger",
+        "value": "Enemy knockdown"
+      },
+      {
+        "en": "Marking range",
+        "hi": "Marking range",
+        "value": "20m"
+      },
+      {
+        "en": "Movement-speed reduction",
+        "hi": "Movement-speed reduction",
+        "value": "25%"
+      },
+      {
+        "en": "Effect duration",
+        "hi": "Effect duration",
+        "value": "3 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The 20m range is stated for the enemy-knockdown trigger. Garena does not publish a separate numeric range for the self-knockdown trigger.",
+      "Garena does not publish the maximum number of players that Memory Mist can mark."
+    ],
+    "notesHi": [
+      "20m range enemy-knockdown trigger ke liye diya gaya hai. Self-knockdown trigger ki alag numeric range Garena publish nahi karta.",
+      "Memory Mist maximum kitne players ko mark kar sakti hai, yeh Garena publish nahi karta."
+    ],
+    "historyEn": [
+      "OB33 (23 Mar 2022): Maximum reveal range increased from 50m to 75m; teammate information-sharing duration increased from 4s to 6s.",
+      "OB39 (21 Mar 2023): Memory Mist reworked: after knocking down an enemy, it marks enemies within 20m of the knocked-down enemy and slows them by 25% for 4s; when Otho is knocked down, it also marks and slows nearby enemies.",
+      "OB53 (02 Apr 2026): The mark-and-slow duration changed from 4s to 3s."
+    ],
+    "historyHi": [
+      "OB33 (23 Mar 2022): Maximum reveal range 50m se 75m hui; teammates ke saath information-sharing duration 4s se 6s hui.",
+      "OB39 (21 Mar 2023): Memory Mist rework hui: enemy knockdown ke baad knocked-down enemy ke 20m ke andar enemies mark hote aur 25% slow 4s tak lagta; Otho knockdown hone par bhi nearby enemies mark aur slow hote.",
+      "OB53 (02 Apr 2026): Mark-and-slow duration 4s se 3s hui."
+    ],
+    "source": [
+      {
+        "label": "Garena — Otho character profile",
+        "url": "https://ff.garena.com/en/chars/520"
+      },
+      {
+        "label": "Garena — OB53 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1640/"
+      },
+      {
+        "label": "Garena — OB39 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1120/"
+      },
+      {
+        "label": "Garena — OB33 Patch Notes",
+        "url": "https://ff.garena.com/en/article/674/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "leon",
+    "name": "Leon",
+    "image": "",
+    "skill": "Buzzer Beater",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB38 (11 Jan 2023)",
+    "introEn": "Passive ability that restores HP after Leon survives combat.",
+    "introHi": "Passive ability jo combat se survive karne ke baad Leon ki HP restore karti hai.",
+    "currentEn": [
+      "After surviving combat, Leon recovers 60 HP at a rate of 4 HP per second for 15 seconds."
+    ],
+    "currentHi": [
+      "Combat se survive karne ke baad Leon 15 seconds tak 4 HP per second ki rate se total 60 HP recover karta hai."
+    ],
+    "rows": [
+      {
+        "en": "Total HP recovery",
+        "hi": "Total HP recovery",
+        "value": "60 HP"
+      },
+      {
+        "en": "Recovery rate",
+        "hi": "Recovery rate",
+        "value": "4 HP/s"
+      },
+      {
+        "en": "Recovery duration",
+        "hi": "Recovery duration",
+        "value": "15 seconds"
+      },
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "After surviving combat"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The recovery begins after the game registers that Leon has survived combat.",
+      "Garena does not publish the exact combat-disengagement timer that determines when the recovery trigger begins."
+    ],
+    "notesHi": [
+      "Game Leon ke combat se survive karne ko register karne ke baad recovery shuru hoti hai.",
+      "Recovery trigger kab activate hota hai, uska exact combat-disengagement timer Garena publish nahi karta."
+    ],
+    "historyEn": [
+      "OB38 (11 Jan 2023): Maximum recovery increased from 30 HP to 60 HP; recovery rate changed from 5 to 4 HP/s; maximum recovery duration changed from 6s to 15s."
+    ],
+    "historyHi": [
+      "OB38 (11 Jan 2023): Maximum recovery 30 HP se 60 HP hui; recovery rate 5 se 4 HP/s hui; maximum recovery duration 6s se 15s hui."
+    ],
+    "source": [
+      {
+        "label": "Garena — Leon character profile",
+        "url": "https://ff.garena.com/en/chars/504"
+      },
+      {
+        "label": "Garena — OB38 Patch Notes",
+        "url": "https://ff.garena.com/en/article/968/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "koda",
+    "name": "Koda",
+    "image": "",
+    "skill": "Aurora Vision",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB54 (23 Jun 2026)",
+    "introEn": "Active ability that activates an aurora effect, increases movement speed and periodically reveals enemies behind cover.",
+    "introHi": "Active ability jo aurora effect activate karti hai, movement speed badhati hai aur cover ke peeche enemies ko interval par reveal karti hai.",
+    "currentEn": [
+      "Activates the Aurora power for 8 seconds and increases movement speed by 15%.",
+      "Reveals enemies behind cover within 50m every 1 second; crouching or prone enemies cannot be detected.",
+      "While parachuting, highlights enemy locations within the field of view, but the effect is not shared with teammates."
+    ],
+    "currentHi": [
+      "Aurora power 8 seconds ke liye activate hoti hai aur movement speed 15% badhati hai.",
+      "50m ke andar cover ke peeche enemies ko har 1 second mein reveal karti hai; crouching ya prone enemies detect nahi hote.",
+      "Parachuting ke dauran field of view ke andar enemy locations highlight hoti hain, lekin yeh effect teammates ke saath share nahi hota."
+    ],
+    "rows": [
+      {
+        "en": "Aurora duration",
+        "hi": "Aurora duration",
+        "value": "8 seconds"
+      },
+      {
+        "en": "Movement-speed bonus",
+        "hi": "Movement-speed bonus",
+        "value": "+15%"
+      },
+      {
+        "en": "Detection range",
+        "hi": "Detection range",
+        "value": "50m"
+      },
+      {
+        "en": "Detection interval",
+        "hi": "Detection interval",
+        "value": "Every 1 second"
+      },
+      {
+        "en": "Crouching / prone detection",
+        "hi": "Crouching / prone detection",
+        "value": "Not detected"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "45 seconds"
+      }
+    ],
+    "notesEn": [
+      "The parachuting highlight is visible only to Koda's user.",
+      "OB54 lists two optional BR Skill Boosts, separate from the base Aurora Vision values: Synced Vision marks enemies revealed during the first detection interval for 3 seconds and shares the information with teammates; Imprinted Vision applies up to 3 stacks, with 10 additional DMG per stack when the imprints are activated by an attack.",
+      "Only one of the two Skill Boost options can be selected. OB54 did not change the base duration, movement-speed bonus, detection range or cooldown."
+    ],
+    "notesHi": [
+      "Parachuting highlight sirf Koda ke user ko visible hota hai.",
+      "OB54 mein base Aurora Vision se alag do optional BR Skill Boosts listed hain: Synced Vision first detection interval mein reveal hue enemies ko 3 seconds ke liye mark karke information teammates se share karta hai; Imprinted Vision maximum 3 stacks lagata hai, aur attack se imprint activate hone par har stack 10 additional DMG deta hai.",
+      "Dono Skill Boost options mein se sirf ek select ho sakta hai. OB54 ne base duration, movement-speed bonus, detection range ya cooldown change nahi kiya."
+    ],
+    "historyEn": [
+      "OB47 (02 Dec 2024): Koda introduced with a 10s Aurora duration, +10% movement speed, 50m detection every 1s, a 60s cooldown, and a parachuting highlight not shared with teammates.",
+      "OB48 (19 Feb 2025): Movement-speed bonus increased from 10% to 15%; cooldown reduced from 60s to 45s.",
+      "OB53 (02 Apr 2026): Aurora duration reduced from 10s to 8s.",
+      "OB54 (23 Jun 2026): Two optional BR Skill Boosts were listed again: Synced Vision (3s shared mark) and Imprinted Vision (up to 3 stacks; 10 DMG per stack when activated)."
+    ],
+    "historyHi": [
+      "OB47 (02 Dec 2024): Koda introduce hua: Aurora duration 10s, movement speed +10%, 50m detection har 1s, cooldown 60s, aur parachuting highlight teammates ke saath share nahi hota tha.",
+      "OB48 (19 Feb 2025): Movement-speed bonus 10% se 15% hua; cooldown 60s se 45s hua.",
+      "OB53 (02 Apr 2026): Aurora duration 10s se 8s hui.",
+      "OB54 (23 Jun 2026): Do optional BR Skill Boosts phir se list hue: Synced Vision (3s shared mark) aur Imprinted Vision (maximum 3 stacks; activate hone par 10 DMG per stack)."
+    ],
+    "source": [
+      {
+        "label": "Garena — Koda character profile",
+        "url": "https://ff.garena.com/en/chars/750"
+      },
+      {
+        "label": "Garena — OB54 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "Garena — OB53 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1640/"
+      },
+      {
+        "label": "Garena — OB48 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1456/"
+      },
+      {
+        "label": "Garena — OB47 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1424/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "thiva",
+    "name": "Thiva",
+    "image": "",
+    "skill": "Vital Vibes",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB42 (30 Oct 2023)",
+    "introEn": "Passive support ability that speeds up teammate help-ups and restores HP to the teammate who is successfully helped up.",
+    "introHi": "Passive support ability jo teammate ka help-up fast karti hai aur successful help-up ke baad us teammate ki HP restore karti hai.",
+    "currentEn": [
+      "The speed of helping up teammates is increased by 70%.",
+      "After a successful help-up, the helped-up teammate recovers 60 HP over 3 seconds."
+    ],
+    "currentHi": [
+      "Teammates ko help-up karne ki speed 70% increase hoti hai.",
+      "Successful help-up ke baad helped-up teammate 3 seconds mein 60 HP recover karta hai."
+    ],
+    "rows": [
+      {
+        "en": "Help-up speed",
+        "hi": "Help-up speed",
+        "value": "+70%"
+      },
+      {
+        "en": "Teammate HP recovery",
+        "hi": "Teammate HP recovery",
+        "value": "60 HP in 3 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "90 seconds"
+      }
+    ],
+    "notesEn": [
+      "The HP recovery is applied to the teammate who was successfully helped up."
+    ],
+    "notesHi": [
+      "HP recovery us teammate ko milti hai jiska help-up successfully complete hua."
+    ],
+    "historyEn": [
+      "OB33 (23 Mar 2022): Maximum help-up speed increased from 25% to 30%; HP recovery after a successful rescue increased from 40 HP to 50 HP over 5s.",
+      "OB40 (30 May 2023): Vital Vibes reworked to +70% help-up speed, 60s cooldown and 100 HP recovered by the helped-up teammate over 3s.",
+      "OB42 (30 Oct 2023): Cooldown increased from 60s to 90s; helped-up teammate recovery reduced from 100 HP to 60 HP over 3s."
+    ],
+    "historyHi": [
+      "OB33 (23 Mar 2022): Maximum help-up speed 25% se 30% hui; successful rescue ke baad HP recovery 40 HP se 50 HP in 5s hui.",
+      "OB40 (30 May 2023): Vital Vibes rework hui: +70% help-up speed, 60s cooldown aur helped-up teammate ko 3s mein 100 HP recovery.",
+      "OB42 (30 Oct 2023): Cooldown 60s se 90s hua; helped-up teammate recovery 100 HP se 60 HP in 3s hui."
+    ],
+    "source": [
+      {
+        "label": "Garena — Thiva character profile",
+        "url": "https://ff.garena.com/en/chars/486"
+      },
+      {
+        "label": "Garena — OB42 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "Garena — OB40 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "Garena — OB33 Patch Notes",
+        "url": "https://ff.garena.com/en/article/674/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
   }
 ]
