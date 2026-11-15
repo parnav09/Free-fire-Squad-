@@ -424,7 +424,7 @@ const profiles: CharacterProfile[] = [...baseProfiles, ...(extraProfiles as Char
 // The 19 remaining ability-character entries plus the two default characters.
 // These are searchable name-only entries; no unverified ability/profile data is fabricated.
 const pendingCharacterNames = [
-  "Steffie", "Misha", "Maxim", "Caroline", "Notora", "Kla", "Primis", "Nulla",
+  "Steffie", "Misha", "Maxim", "Caroline", "Notora", "Primis", "Nulla",
 ];
 
 type CharacterArtworkProps = { profile: CharacterProfile; variant: "card" | "profile" };
