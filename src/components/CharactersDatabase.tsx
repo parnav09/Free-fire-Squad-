@@ -523,6 +523,15 @@ const baseProfiles: CharacterProfile[] = [
 ];
 const profiles: CharacterProfile[] = [...baseProfiles, ...(extraProfiles as CharacterProfile[])];
 
+// The 24 remaining ability-character entries plus the two default characters.
+// These are searchable name-only entries; no unverified ability/profile data is fabricated.
+const pendingCharacterNames = [
+  "Nairi", "Otho", "Leon", "Koda", "Thiva", "Dimitri", "D-Bee", "Maro",
+  "Skyler", "Xayne", "Shirou", "Chrono", "Dasha", "Luqueta", "Kelly",
+  "Hayato", "Moco", "Steffie", "Misha", "Maxim", "Lila", "Caroline",
+  "Notora", "Kla", "Primis", "Nulla",
+];
+
 type CharacterArtworkProps = { profile: CharacterProfile; variant: "card" | "profile" };
 function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
   const [failed, setFailed] = useState(false);
@@ -572,14 +581,39 @@ const editDistanceWithin = (a: string, b: string, limit: number) => {
   return previous[b.length];
 };
 
-const typoLimitFor = (term: string) => term.length >= 9 ? 2 : term.length >= 4 ? 1 : 0;
+const nameTypoLimitFor = (term: string) => term.length >= 9 ? 2 : term.length >= 3 ? 1 : 0;
+const skillTypoLimitFor = (term: string) => term.length >= 9 ? 2 : term.length >= 4 ? 1 : 0;
+
+const characterNameTermScore = (rawName: string, term: string) => {
+  const name = normalizeSearchText(rawName);
+  const nameWords = name.split(" ").filter(Boolean);
+  const compactName = name.split(" ").join("");
+  const compactTerm = term.split(" ").join("");
+  if (name === term || compactName === compactTerm) return 150;
+  if (name.startsWith(term) || nameWords.some(word => word.startsWith(term)) || compactName.startsWith(compactTerm)) return 130;
+  if (name.includes(term) || compactName.includes(compactTerm)) return 118;
+  const limit = nameTypoLimitFor(compactTerm);
+  const distance = limit
+    ? Math.min(
+        editDistanceWithin(compactTerm, compactName, limit),
+        ...nameWords.map(word => editDistanceWithin(compactTerm, word, limit)),
+        limit + 1,
+      )
+    : limit + 1;
+  return distance <= limit ? 108 - distance * 12 : 0;
+};
+
+const characterNameSearchScore = (name: string, query: string) => {
+  const terms = normalizeSearchText(query).split(" ").filter(Boolean);
+  if (!terms.length) return -1;
+  const scores = terms.map(term => characterNameTermScore(name, term));
+  return scores.every(score => score > 0) ? scores.reduce((total, score) => total + score, 0) : -1;
+};
 
 const profileSearchScore = (profile: CharacterProfile, query: string) => {
   const terms = normalizeSearchText(query).split(" ").filter(Boolean);
   if (!terms.length) return 0;
 
-  const name = normalizeSearchText(profile.name);
-  const nameWords = name.split(" ").filter(Boolean);
   const skill = normalizeSearchText(profile.skill);
   const skillWords = skill.split(" ").filter(Boolean);
   const content = normalizeSearchText([
@@ -589,15 +623,14 @@ const profileSearchScore = (profile: CharacterProfile, query: string) => {
   ].join(" "));
 
   const scoreTerm = (term: string) => {
-    if (name === term) return 140;
-    if (name.startsWith(term) || nameWords.some(word => word.startsWith(term))) return 125;
-    if (name.includes(term)) return 115;
-    const limit = typoLimitFor(term);
-    const nameDistance = limit ? Math.min(...nameWords.map(word => editDistanceWithin(term, word, limit)), limit + 1) : limit + 1;
-    if (nameDistance <= limit) return 105 - nameDistance * 12;
+    const nameScore = characterNameTermScore(profile.name, term);
+    if (nameScore > 0) return nameScore;
     if (skill.includes(term)) return 75;
-    const skillDistance = limit ? Math.min(...skillWords.map(word => editDistanceWithin(term, word, limit)), limit + 1) : limit + 1;
-    if (skillDistance <= limit) return 62 - skillDistance * 8;
+    const skillLimit = skillTypoLimitFor(term);
+    const skillDistance = skillLimit
+      ? Math.min(...skillWords.map(word => editDistanceWithin(term, word, skillLimit)), skillLimit + 1)
+      : skillLimit + 1;
+    if (skillDistance <= skillLimit) return 62 - skillDistance * 8;
     if (content.includes(term)) return 35;
     return 0;
   };
@@ -621,9 +654,30 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     .filter(result => result.score >= 0)
     .sort((a, b) => b.score - a.score || a.profile.name.localeCompare(b.profile.name, undefined, { sensitivity: "base" }))
     .map(result => result.profile), [query]);
-  const suggestions = matches.slice(0, 6);
-  const chooseSuggestion = (profile: CharacterProfile) => {
-    setQuery(profile.name);
+  const pendingNameMatches = useMemo(() => {
+    if (!query.trim()) return [];
+    return pendingCharacterNames
+      .map(name => ({ name, score: characterNameSearchScore(name, query) }))
+      .filter(result => result.score >= 0)
+      .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+  }, [query]);
+  const suggestions = [
+    ...matches.map(profile => ({
+      id: profile.id,
+      name: profile.name,
+      score: profileSearchScore(profile, query),
+      meta: `${profile.skill} · ${profile.type.split(" · ")[0]}`,
+    })),
+    ...pendingNameMatches.map(result => ({
+      id: `pending-${result.name}`,
+      name: result.name,
+      score: result.score,
+      meta: "Name-only index · detailed profile pending",
+    })),
+  ].sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, undefined, { sensitivity: "base" })).slice(0, 6);
+  const totalMatchCount = matches.length + pendingNameMatches.length;
+  const chooseSuggestion = (suggestion: { name: string }) => {
+    setQuery(suggestion.name);
     setShowSuggestions(false);
     setActiveSuggestionIndex(0);
   };
@@ -718,13 +772,17 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
       </div>
     </div>
     <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "Character profiles with shared profile layout, source notes and patch history." : "Character profiles with shared profile layout, source notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
-    <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((profile, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={profile.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(profile)}><span className="character-suggestion-name">{profile.name}</span><span className="character-suggestion-meta">{profile.skill} · {profile.type.split(" · ")[0]}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
-    <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{matches.length} {isHindi ? "profiles found" : "profiles found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
-    {matches.length ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className={`character-result-card ${profile.artworkMode === "cutout" ? "character-result-card--cutout" : profile.artworkMode === "contained" ? "character-result-card--contained" : ""}`} key={profile.id} onClick={() => setSelectedId(profile.id)}>
+    <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((suggestion, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={suggestion.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(suggestion)}><span className="character-suggestion-name">{suggestion.name}</span><span className="character-suggestion-meta">{suggestion.meta}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
+    <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{totalMatchCount} {isHindi ? "matches found" : "matches found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
+    {totalMatchCount ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className={`character-result-card ${profile.artworkMode === "cutout" ? "character-result-card--cutout" : profile.artworkMode === "contained" ? "character-result-card--contained" : ""}`} key={profile.id} onClick={() => setSelectedId(profile.id)}>
       <div className="character-result-art"><CharacterArtwork profile={profile} variant="card" /></div>
       <div className="character-result-copy"><span className="character-result-status">{profile.badge || "OFFICIAL-SOURCE PROFILE"}</span><h2>{profile.name}</h2><b>{cardAbilityLabel(profile)}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
       <span className="character-result-chevron" aria-hidden="true">↗</span>
-    </button>)}</div> : <div className="character-empty-state"><b>{isHindi ? "No matching character" : "No matching character"}</b><span>{isHindi ? "Koi doosra character name ya ability search karein." : "Try another name or ability."}</span></div>}
+    </button>)}{pendingNameMatches.map(result => <div className="character-result-card character-result-card--pending" key={`pending-${result.name}`}>
+      <div className="character-result-art"><div className="character-result-monogram"><span>{result.name.split(/[- ]/).map(part => part[0]).join("").slice(0, 2).toUpperCase()}</span><small>NAME INDEX</small></div></div>
+      <div className="character-result-copy"><span className="character-result-status">NAME-ONLY SEARCH</span><h2>{result.name}</h2><b>Detailed profile pending</b><p>This character name supports typo-tolerant search. Ability details and artwork have not been added yet.</p><span className="character-result-open">Searchable name · no profile page yet</span></div>
+      <span className="character-result-chevron" aria-hidden="true">⌕</span>
+    </div>)}</div> : <div className="character-empty-state"><b>{isHindi ? "No matching character" : "No matching character"}</b><span>{isHindi ? "Koi doosra character name ya ability search karein." : "Try another name or ability."}</span></div>}
     <div className="character-load-more-wrap">{!query.trim() && visibleCount < matches.length && <button type="button" className="character-load-more" onClick={() => setVisibleCount(count => Math.min(count + batchSize, matches.length))}>More <span aria-hidden="true">↓</span></button>}<p>{isHindi ? "Values official Garena character pages aur patch notes se cross-check ki gayi hain. Jahan current English page aur localized details differ karte hain, source limitation clearly flag ki gayi hai." : "Values are cross-checked against official Garena character pages and patch notes. Source limitations and conflicting values are explicitly flagged."}</p></div>
   </main>;
 }
