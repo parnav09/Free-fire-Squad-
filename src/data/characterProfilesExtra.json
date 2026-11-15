@@ -1216,5 +1216,423 @@
         "url": "https://ff.garena.com/en/article/223/"
       }
     ]
+  },
+  {
+    "id": "joseph",
+    "name": "Joseph",
+    "skill": "Silver Spoon",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB44 (Apr 2024)",
+    "introEn": "Active skill that grants immunity to disruptive effects and a short movement-speed boost.",
+    "introHi": "Active skill jo disruptive effects se immunity aur short movement-speed boost deta hai.",
+    "currentEn": [
+      "Become immune to disruptive effects (slowdown, marking, skill-silencing) and gain a 10% movement-speed boost for 5 seconds."
+    ],
+    "currentHi": [
+      "Slowdown, marking aur skill-silencing jaise disruptive effects se immunity milti hai aur 5 seconds ke liye 10% movement-speed boost milta hai."
+    ],
+    "rows": [
+      {
+        "en": "Immunity",
+        "hi": "Immunity",
+        "value": "Slowdown, marking, skill-silencing"
+      },
+      {
+        "en": "Movement-speed bonus",
+        "hi": "Movement-speed bonus",
+        "value": "10%"
+      },
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "5 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "45 seconds"
+      }
+    ],
+    "notesEn": [
+      "Immune to Moco's marking, Homer's drone and A124's nano interference. Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
+    ],
+    "notesHi": [
+      "Moco ki marking, Homer ke drone aur A124 ke nano interference se immune. Movement speed ki global maximum limit hai; skills, items aur events ke bonuses usse exceed nahi kar sakte (OB54)."
+    ],
+    "historyEn": [
+      "OB35 (Jul 2022): Original skill Nutty Movement had its speed boost lowered.",
+      "OB42 (Oct 2023): Reworked into Silver Spoon: immunity and 10% speed for 5s, cooldown 60s.",
+      "OB44 (Apr 2024): Cooldown 60s to 45s."
+    ],
+    "historyHi": [
+      "OB35 (Jul 2022): Original Nutty Movement skill ka speed boost kam hua.",
+      "OB42 (Oct 2023): Silver Spoon mein rework—immunity aur 5s ke liye 10% speed, cooldown 60s.",
+      "OB44 (Apr 2024): Cooldown 60s se 45s hua."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB44",
+        "url": "https://ff.garena.com/en/article/1332/"
+      },
+      {
+        "label": "Garena – OB42",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "Garena – OB35",
+        "url": "https://ff.garena.com/en/article/811/"
+      }
+    ],
+    "status": "OB55 values reconciled · 14 Nov 2026"
+  },
+  {
+    "id": "wukong",
+    "name": "Wukong",
+    "skill": "Camouflage",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB55 (10 Sep 2026)",
+    "introEn": "Active skill that turns Wukong into a bush for ambushes and repositioning.",
+    "introHi": "Active skill jo Wukong ko bush mein badal deta hai, ambush aur repositioning ke liye.",
+    "currentEn": [
+      "Transforms into a bush with a 10% reduction in movement speed for 10 seconds. The transformation ends when Wukong attacks. The cooldown resets if Wukong takes down an enemy within 10 seconds after releasing the skill."
+    ],
+    "currentHi": [
+      "Wukong 10 seconds ke liye bush ban jata hai aur movement speed 10% kam hoti hai. Attack karte hi transformation end ho jata hai. Skill release karne ke 10 seconds ke andar enemy takedown karne par cooldown reset hota hai."
+    ],
+    "rows": [
+      {
+        "en": "Transformation",
+        "hi": "Transformation",
+        "value": "Bush"
+      },
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "10 seconds"
+      },
+      {
+        "en": "Movement-speed reduction",
+        "hi": "Movement-speed reduction",
+        "value": "10%"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "75 seconds"
+      },
+      {
+        "en": "Cooldown reset",
+        "hi": "Cooldown reset",
+        "value": "On a takedown within 10 seconds of release"
+      }
+    ],
+    "notesEn": [
+      "Interactions that keep Camouflage: using Vending Machines, War Chests and Portal Go, eating Mushrooms, helping up teammates. Interactions that remove Camouflage: using vehicles, ziplines and Launch Pads (OB47)."
+    ],
+    "notesHi": [
+      "Camouflage bana rehta hai: Vending Machines, War Chests aur Portal Go use karna, Mushrooms khana, teammates ko revive/help up karna. Camouflage hat jata hai: vehicles, ziplines aur Launch Pads use karne par (OB47)."
+    ],
+    "historyEn": [
+      "Sep 2021: Movement speed reduced by 20% while camouflaged.",
+      "OB34 (25 May 2022): Speed reduction 20% to 10%.",
+      "OB42 (Oct 2023): Speed reduction 10% to 5%, cooldown 200s.",
+      "OB43 (24 Jan 2024): Speed reduction removed.",
+      "OB45 (24 Jun 2024): Cooldown 200s to 75s.",
+      "OB47 (2 Dec 2024): Cooldown 75s to 90s; interactions allowed without breaking Camouflage.",
+      "OB52 (9 Jan 2026): 10% speed reduction added, duration 15s to 10s, cooldown 120s to 90s, cooldown reset limited to takedowns within 10s of release.",
+      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: Camo Decoy (leaves a moving decoy that disappears after 10 DMG, 10s or when Wukong returns to human form) and Cloned Camo (two extra bushes, lasting 10s).",
+      "OB55 (10 Sep 2026): Cooldown 90s to 75s."
+    ],
+    "historyHi": [
+      "Sep 2021: Camouflage mein movement speed 20% kam hui.",
+      "OB34 (25 May 2022): Speed reduction 20% se 10% hua.",
+      "OB42 (Oct 2023): Speed reduction 10% se 5%, cooldown 200s.",
+      "OB43 (24 Jan 2024): Speed reduction hata di gayi.",
+      "OB45 (24 Jun 2024): Cooldown 200s se 75s hua.",
+      "OB47 (2 Dec 2024): Cooldown 75s se 90s; interactions se Camouflage break hona band hua.",
+      "OB52 (9 Jan 2026): 10% speed reduction add; duration 15s se 10s, cooldown 120s se 90s; cooldown reset release ke 10s ke andar takedown tak limited.",
+      "OB54 (23 Jun 2026): 9th Anniversary Skill Boosts—Camo Decoy (moving decoy, 10 DMG/10s ya human form par disappear) aur Cloned Camo (2 extra bushes, 10s).",
+      "OB55 (10 Sep 2026): Cooldown 90s se 75s hua."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB55",
+        "url": "https://ff.garena.com/en/article/1712/"
+      },
+      {
+        "label": "Garena – OB54",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "Garena – OB52",
+        "url": "https://ff.garena.com/en/article/1595/"
+      },
+      {
+        "label": "Garena – OB47",
+        "url": "https://ff.garena.com/en/article/1424/"
+      },
+      {
+        "label": "Garena – OB45",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "Garena – OB43",
+        "url": "https://ff.garena.com/en/article/1306/"
+      },
+      {
+        "label": "Garena – OB42",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "Garena – OB34",
+        "url": "https://ff.garena.com/en/article/735/"
+      },
+      {
+        "label": "Garena – Sep 2021 patch",
+        "url": "https://ff.garena.com/en/article/505/"
+      }
+    ],
+    "status": "OB55 values reconciled · 14 Nov 2026"
+  },
+  {
+    "id": "olivia",
+    "name": "Olivia",
+    "skill": "Healing Touch",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB54 (23 Jun 2026)",
+    "introEn": "Passive that boosts healing and shares single-target healing with nearby teammates.",
+    "introHi": "Passive jo healing boost karta hai aur single-target healing paas ke teammates ke saath share karta hai.",
+    "currentEn": [
+      "Increases healing effects by 30% and spreads 90% of the user's single-target healing amount to teammates within 20m."
+    ],
+    "currentHi": [
+      "Healing effects 30% badhata hai aur user ki single-target healing ka 90% 20m ke andar teammates ko share karta hai."
+    ],
+    "rows": [
+      {
+        "en": "Healing-effect bonus",
+        "hi": "Healing-effect bonus",
+        "value": "+30%"
+      },
+      {
+        "en": "Shared healing",
+        "hi": "Shared healing",
+        "value": "90% of single-target healing"
+      },
+      {
+        "en": "Share range",
+        "hi": "Share range",
+        "value": "20m"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "Built as a team healer to support nearby teammates."
+    ],
+    "notesHi": [
+      "Nearby teammates ko support karne ke liye team-healer role mein designed."
+    ],
+    "historyEn": [
+      "OB27 (Apr 2021): Revive bonus HP raised, maximum 40 to 70.",
+      "Jan 2022 (Illuminate): Revive bonus HP maximum 70 to 80.",
+      "OB40 (Jun 2023): Reworked: spreads 80% of single-target healing to teammates within 10m; revive role passed to Thiva.",
+      "OB45 (24 Jun 2024): Added +30% healing effects; spread range 10m to 15m.",
+      "OB54 (23 Jun 2026): Shared healing 80% to 90%, range 15m to 20m."
+    ],
+    "historyHi": [
+      "OB27 (Apr 2021): Revive bonus HP maximum 40 se 70 hua.",
+      "Jan 2022 (Illuminate): Revive bonus HP maximum 70 se 80 hua.",
+      "OB40 (Jun 2023): Rework—single-target healing ka 80% 10m ke teammates ko share; revive role Thiva ko mila.",
+      "OB45 (24 Jun 2024): +30% healing effects add; share range 10m se 15m.",
+      "OB54 (23 Jun 2026): Shared healing 80% se 90%, range 15m se 20m."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB54",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "Garena – OB45",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "Garena – OB40",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "Garena – Illuminate patch",
+        "url": "https://ff.garena.com/id/article/600/"
+      },
+      {
+        "label": "Garena – OB27",
+        "url": "https://ff.garena.com/en/article/428/"
+      },
+      {
+        "label": "Garena – Olivia character page",
+        "url": "https://ff.garena.com/en/chars/18"
+      }
+    ],
+    "status": "OB55 values reconciled · 14 Nov 2026"
+  },
+  {
+    "id": "shani",
+    "name": "Shani",
+    "skill": "Gear Recycle",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB53 (2 Apr 2026)",
+    "introEn": "Passive that gives Shield Points to Shani and nearby teammates whenever she uses an active skill.",
+    "introHi": "Passive jo Shani ke active skill use karne par use aur nearby teammates ko Shield Points deta hai.",
+    "currentEn": [
+      "When using an active skill, gives 30 Shield Points to self and teammates within 10m. The Shield Points decay after 10 seconds, after which players can obtain the effect again."
+    ],
+    "currentHi": [
+      "Active skill use karne par khud ko aur 10m ke andar teammates ko 30 Shield Points milte hain. 10 seconds baad Shield Points decay ho jaate hain, phir effect dobara mil sakta hai."
+    ],
+    "rows": [
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Using an active skill"
+      },
+      {
+        "en": "Shield Points",
+        "hi": "Shield Points",
+        "value": "30"
+      },
+      {
+        "en": "Range",
+        "hi": "Range",
+        "value": "Self and teammates within 10m"
+      },
+      {
+        "en": "Shield decay",
+        "hi": "Shield decay",
+        "value": "10 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "10 seconds"
+      }
+    ],
+    "notesEn": [
+      "Shield Points are deducted before HP. Shield Points ignore armor damage-reduction buffs. Shield Points do not protect against Danger Zone, fall or bleeding damage."
+    ],
+    "notesHi": [
+      "Shield Points HP se pehle deduct hote hain. Ye armor damage-reduction buffs ko ignore karte hain. Danger Zone, fall ya bleeding damage se protection nahi dete."
+    ],
+    "historyEn": [
+      "OB41 (Aug 2023): Reworked: 50 Shield Points, decay after 5s, cooldown 10s.",
+      "OB45 (24 Jun 2024): 50 to 40 Shield Points.",
+      "OB48 (19 Feb 2025): 40 to 30 Shield Points.",
+      "OB53 (2 Apr 2026): Decay time 5s to 10s."
+    ],
+    "historyHi": [
+      "OB41 (Aug 2023): Rework—50 Shield Points, 5s baad decay, cooldown 10s.",
+      "OB45 (24 Jun 2024): Shield Points 50 se 40 hue.",
+      "OB48 (19 Feb 2025): Shield Points 40 se 30 hue.",
+      "OB53 (2 Apr 2026): Decay time 5s se 10s hua."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB53",
+        "url": "https://ff.garena.com/en/article/1640/"
+      },
+      {
+        "label": "Garena – OB48",
+        "url": "https://ff.garena.com/en/article/1456/"
+      },
+      {
+        "label": "Garena – OB45",
+        "url": "https://ff.garena.com/en-pk/article/1368/"
+      },
+      {
+        "label": "Garena – OB41",
+        "url": "https://ff.garena.com/en/article/1213/"
+      }
+    ],
+    "status": "OB55 values reconciled · 14 Nov 2026"
+  },
+  {
+    "id": "ford",
+    "name": "Ford",
+    "skill": "Iron Will",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB51 (Oct 2025)",
+    "introEn": "Passive that restores HP over time after Ford takes damage.",
+    "introHi": "Passive jo Ford ko damage lene ke baad time ke saath HP restore karta hai.",
+    "currentEn": [
+      "Gains 10 HP/s for 3 seconds when taking damage. The skill resets immediately after Ford releases an active skill."
+    ],
+    "currentHi": [
+      "Damage lene par 3 seconds tak 10 HP/s milta hai. Ford active skill release karte hi skill turant reset ho jata hai."
+    ],
+    "rows": [
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Taking damage"
+      },
+      {
+        "en": "HP recovery",
+        "hi": "HP recovery",
+        "value": "10 HP/s"
+      },
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "3 seconds"
+      },
+      {
+        "en": "Total HP recovery",
+        "hi": "Total HP recovery",
+        "value": "30 HP"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "20 seconds"
+      }
+    ],
+    "notesEn": [
+      "Cooldown 20 seconds between triggers."
+    ],
+    "notesHi": [
+      "Har trigger ke beech 20 seconds ka cooldown."
+    ],
+    "historyEn": [
+      "OB39 (Mar 2023): Reworked to restore HP when taking damage, 10 HP/s for 3s, cooldown 20s; Danger Zone survivability reduced.",
+      "OB45 (24 Jun 2024): Duration 3s to 4s.",
+      "OB51 (Oct 2025): Duration 4s to 3s."
+    ],
+    "historyHi": [
+      "OB39 (Mar 2023): Damage lene par HP restore rework—3s ke liye 10 HP/s, cooldown 20s; Danger Zone survivability kam hui.",
+      "OB45 (24 Jun 2024): Duration 3s se 4s hua.",
+      "OB51 (Oct 2025): Duration 4s se 3s hua."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB51",
+        "url": "https://ff.garena.com/en/article/1557/"
+      },
+      {
+        "label": "Garena – OB45",
+        "url": "https://ff.garena.com/en-pk/article/1368/"
+      },
+      {
+        "label": "Garena – OB39",
+        "url": "https://ff.garena.com/en/article/1120/"
+      }
+    ],
+    "status": "OB55 values reconciled · 14 Nov 2026"
   }
 ]
