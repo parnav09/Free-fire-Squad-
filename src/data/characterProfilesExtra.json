@@ -868,7 +868,7 @@
   {
     "id": "jai",
     "name": "Jai",
-    "image": "https://dl.dir.freefiremobile.com/common/web_event/officialwebsite/character/Jai/Jai.jpg",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202412/077ccf77edb55d6b9d529e4afc1ae965.png",
     "skill": "Raging Reload",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -928,7 +928,7 @@
         "url": "https://ff.garena.com/en/article/322/"
       }
     ],
-    "artworkMode": "contained"
+    "artworkMode": "cutout"
   },
   {
     "id": "alvaro",
@@ -1581,8 +1581,8 @@
       }
     ],
     "status": "OB55 values reconciled · 14 Nov 2026",
-    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Shani.jpg",
-    "artworkMode": "contained"
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20229/2a790a2ca70a797b5384a122ad7d8d10.png",
+    "artworkMode": "cutout"
   },
   {
     "id": "ford",
