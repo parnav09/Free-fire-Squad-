@@ -4599,5 +4599,369 @@
     ],
     "status": "OB55 values reconciled 15 Nov 2026",
     "artworkMode": "official-fullbody"
+  },
+  {
+    "id": "steffie",
+    "name": "STEFFIE",
+    "image": "",
+    "skill": "Painted Refuge",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB33 (23 Mar 2022)",
+    "introEn": "Active that creates a protective graffiti area that blocks throwables, reduces bullet damage, and restores armor.",
+    "introHi": "Active that creates a protective graffiti area that blocks throwables, reduces bullet damage, and restores armor.",
+    "currentEn": [
+      "Creates a 4m area that completely blocks incoming throwables. Allies inside the area restore 10% armor durability every second, and ammunition damage taken from enemies is reduced by 20%. The effects do not stack."
+    ],
+    "currentHi": [
+      "Creates a 4m area that completely blocks incoming throwables. Allies inside the area restore 10% armor durability every second, and ammunition damage taken from enemies is reduced by 20%. The effects do not stack."
+    ],
+    "rows": [
+      {
+        "en": "Area radius",
+        "hi": "Area radius",
+        "value": "4m"
+      },
+      {
+        "en": "Throwable block",
+        "hi": "Throwable block",
+        "value": "Complete block"
+      },
+      {
+        "en": "Bullet damage reduction",
+        "hi": "Bullet damage reduction",
+        "value": "20%"
+      },
+      {
+        "en": "Armor durability restoration",
+        "hi": "Armor durability restoration",
+        "value": "10% per second"
+      },
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "15 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "60 seconds"
+      }
+    ],
+    "notesEn": [
+      "The throwable block acts as a physical barrier in the engine, preventing grenade entry."
+    ],
+    "notesHi": [
+      "The throwable block acts as a physical barrier in the engine, preventing grenade entry."
+    ],
+    "historyEn": [
+      "OB20 (Feb 2020): Introduced.",
+      "OB33 (23 Mar 2022): Skill reworked; throwable block and armor restoration added; cooldown set to 60s."
+    ],
+    "historyHi": [
+      "OB20 (Feb 2020): Introduced.",
+      "OB33 (23 Mar 2022): Skill reworked; throwable block and armor restoration added; cooldown set to 60s."
+    ],
+    "source": [
+      {
+        "label": "OB33",
+        "url": "https://ff.garena.com/en/article/735/"
+      },
+      {
+        "label": "Steffie character page",
+        "url": "https://ff.garena.com/en/chars/159"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "status": "OB55 values reconciled · 16 Nov 2026"
+  },
+  {
+    "id": "misha",
+    "name": "MISHA",
+    "image": "",
+    "skill": "Afterburner",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB54 (23 Jun 2026)",
+    "introEn": "Passive that increases driving speed and reduces damage taken while making the user harder to target on mounts.",
+    "introHi": "Passive that increases driving speed and reduces damage taken while making the user harder to target on mounts.",
+    "currentEn": [
+      "Increases driving speed by 20% and reduces damage taken while inside vehicles by 30%. The user becomes harder to be targeted by enemy aim while driving or riding."
+    ],
+    "currentHi": [
+      "Increases driving speed by 20% and reduces damage taken while inside vehicles by 30%. The user becomes harder to be targeted by enemy aim while driving or riding."
+    ],
+    "rows": [
+      {
+        "en": "Driving speed bonus",
+        "hi": "Driving speed bonus",
+        "value": "+20%"
+      },
+      {
+        "en": "Damage taken reduction",
+        "hi": "Damage taken reduction",
+        "value": "30%"
+      },
+      {
+        "en": "Targeting",
+        "hi": "Targeting",
+        "value": "Harder to be targeted"
+      },
+      {
+        "en": "Mount compatibility",
+        "hi": "Mount compatibility",
+        "value": "Vehicles and Horses"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The skill is fully compatible with organic mounts introduced in recent patches."
+    ],
+    "notesHi": [
+      "The skill is fully compatible with organic mounts introduced in recent patches."
+    ],
+    "historyEn": [
+      "2018: Introduced.",
+      "OB27 (14 Apr 2021): Speed increased from 12% to 20%; damage reduction increased from 30%; added targeting difficulty.",
+      "OB54 (23 Jun 2026): Skill expanded to take effect on horses."
+    ],
+    "historyHi": [
+      "2018: Introduced.",
+      "OB27 (14 Apr 2021): Speed increased from 12% to 20%; damage reduction increased from 30%; added targeting difficulty.",
+      "OB54 (23 Jun 2026): Skill expanded to take effect on horses."
+    ],
+    "source": [
+      {
+        "label": "OB54",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "OB27",
+        "url": "https://ff.garena.com/en/article/428/"
+      },
+      {
+        "label": "Misha character page",
+        "url": "https://ff.garena.com/en/chars/9"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "status": "OB55 values reconciled · 16 Nov 2026"
+  },
+  {
+    "id": "maxim",
+    "name": "MAXIM",
+    "image": "",
+    "skill": "Gluttony",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB34 (25 May 2022)",
+    "introEn": "Passive that drastically reduces the animation time required to use healing items and eat mushrooms.",
+    "introHi": "Passive that drastically reduces the animation time required to use healing items and eat mushrooms.",
+    "currentEn": [
+      "Reduces the time required for eating mushrooms and using Med Kits by 25%."
+    ],
+    "currentHi": [
+      "Reduces the time required for eating mushrooms and using Med Kits by 25%."
+    ],
+    "rows": [
+      {
+        "en": "Consumable speed bonus",
+        "hi": "Consumable speed bonus",
+        "value": "+25%"
+      },
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Eating mushrooms or using Med Kits"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "This alters the baseline frame data for healing animations."
+    ],
+    "notesHi": [
+      "This alters the baseline frame data for healing animations."
+    ],
+    "historyEn": [
+      "2018: Introduced.",
+      "OB27 (Apr 2021): Speed buffed to 40%.",
+      "OB31 (Dec 2021): Speed nerfed to 30%.",
+      "OB32 (Jan 2022): Speed nerfed to 25%.",
+      "OB34 (May 2022): Maintained at 25%."
+    ],
+    "historyHi": [
+      "2018: Introduced.",
+      "OB27 (Apr 2021): Speed buffed to 40%.",
+      "OB31 (Dec 2021): Speed nerfed to 30%.",
+      "OB32 (Jan 2022): Speed nerfed to 25%.",
+      "OB34 (May 2022): Maintained at 25%."
+    ],
+    "source": [
+      {
+        "label": "OB32",
+        "url": "https://ff.garena.com/en/article/598/"
+      },
+      {
+        "label": "OB31",
+        "url": "https://ff.garena.com/en/article/541/"
+      },
+      {
+        "label": "Maxim character page",
+        "url": "https://ff.garena.com/en/chars/15"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "status": "OB55 values reconciled · 16 Nov 2026"
+  },
+  {
+    "id": "caroline",
+    "name": "CAROLINE",
+    "image": "",
+    "skill": "Agility",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB33 (23 Mar 2022)",
+    "introEn": "Passive that removes equipment weight penalties and boosts movement speed when a shotgun is equipped.",
+    "introHi": "Passive that removes equipment weight penalties and boosts movement speed when a shotgun is equipped.",
+    "currentEn": [
+      "When holding a shotgun, movement speed is dynamically increased to allow for greater agility and gap closing."
+    ],
+    "currentHi": [
+      "When holding a shotgun, movement speed is dynamically increased to allow for greater agility and gap closing."
+    ],
+    "rows": [
+      {
+        "en": "Movement speed bonus",
+        "hi": "Movement speed bonus",
+        "value": "Garena does not publish exact maximum percentage"
+      },
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Holding a shotgun"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The exact maximum buff percentage is currently omitted from recent official patch values. Garena does not publish this specific numerical ceiling."
+    ],
+    "notesHi": [
+      "The exact maximum buff percentage is currently omitted from recent official patch values. Garena does not publish this specific numerical ceiling."
+    ],
+    "historyEn": [
+      "2018: Introduced.",
+      "OB33 (23 Mar 2022): Movement speed bonuses buffed to increase gap-closing viability against equipment weight algorithms."
+    ],
+    "historyHi": [
+      "2018: Introduced.",
+      "OB33 (23 Mar 2022): Movement speed bonuses buffed to increase gap-closing viability against equipment weight algorithms."
+    ],
+    "source": [
+      {
+        "label": "OB33",
+        "url": "https://ff.garena.com/en/article/674/"
+      },
+      {
+        "label": "Caroline character page",
+        "url": "https://ff.garena.com/en/chars/11"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "status": "OB55 values reconciled · 16 Nov 2026"
+  },
+  {
+    "id": "notora",
+    "name": "NOTORA",
+    "image": "",
+    "skill": "Racer's Blessing",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB19 (11 Dec 2019)",
+    "introEn": "Passive that acts as a mobile healing station, restoring health for all squadmates residing within a driven vehicle.",
+    "introHi": "Passive that acts as a mobile healing station, restoring health for all squadmates residing within a driven vehicle.",
+    "currentEn": [
+      "When driving a vehicle, restores 5 HP every 2 seconds for the driver and all passengers on the vehicle. Multiple instances of this skill do not stack."
+    ],
+    "currentHi": [
+      "When driving a vehicle, restores 5 HP every 2 seconds for the driver and all passengers on the vehicle. Multiple instances of this skill do not stack."
+    ],
+    "rows": [
+      {
+        "en": "HP recovery",
+        "hi": "HP recovery",
+        "value": "5 HP"
+      },
+      {
+        "en": "Tick rate",
+        "hi": "Tick rate",
+        "value": "Every 2 seconds"
+      },
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Driving a vehicle"
+      },
+      {
+        "en": "Effect scope",
+        "hi": "Effect scope",
+        "value": "All members in the vehicle"
+      },
+      {
+        "en": "Stacking",
+        "hi": "Stacking",
+        "value": "Effects do not stack"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "Healing occurs without consuming restorative items."
+    ],
+    "notesHi": [
+      "Healing occurs without consuming restorative items."
+    ],
+    "historyEn": [
+      "OB19 (11 Dec 2019): Introduced with max 5 HP every 2s recovery."
+    ],
+    "historyHi": [
+      "OB19 (11 Dec 2019): Introduced with max 5 HP every 2s recovery."
+    ],
+    "source": [
+      {
+        "label": "OB19",
+        "url": "https://ff.garena.com/en/article/106/"
+      },
+      {
+        "label": "Notora character page",
+        "url": "https://ff.garena.com/en/chars/147"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "status": "OB55 values reconciled · 16 Nov 2026"
   }
 ]
