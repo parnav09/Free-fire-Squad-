@@ -600,8 +600,6 @@ const profileSearchScore = (profile: CharacterProfile, query: string) => {
     const skillDistance = limit ? Math.min(...skillWords.map(word => editDistanceWithin(term, word, limit)), limit + 1) : limit + 1;
     if (skillDistance <= limit) return 62 - skillDistance * 8;
     if (content.includes(term)) return 35;
-    const contentDistance = limit ? Math.min(...contentWords.map(word => editDistanceWithin(term, word, limit)), limit + 1) : limit + 1;
-    if (contentDistance <= limit) return 22 - contentDistance * 5;
     return 0;
   };
 
