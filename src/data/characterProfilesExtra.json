@@ -4022,7 +4022,7 @@
   {
     "id": "d-bee",
     "name": "D-BEE",
-    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/f1a09717ed71e7302da8d4cc889d2e33.png",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20229/f1a09717ed71e7302da8d4cc889d2e33.png",
     "skill": "Bullet Beats",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -4089,7 +4089,7 @@
       },
       {
         "label": "Garena — OB46 Patch Notes (Bullet Beats)",
-        "url": "https://ff.garena.com/en/article/1385/"
+        "url": "https://ff.garena.com/en-pk/article/1391/"
       },
       {
         "label": "Garena — OB35 Patch Notes",
@@ -4124,7 +4124,7 @@
       "Checked official sources separate duration ya cooldown specify nahi karte."
     ],
     "status": "OB55 values reconciled 15 Nov 2026",
-    "artworkMode": "cutout"
+    "artworkMode": "official-fullbody"
   },
   {
     "id": "luqueta",
@@ -4208,10 +4208,6 @@
       {
         "label": "Garena — OB48 Patch Notes",
         "url": "https://ff.garena.com/en/article/1456/"
-      },
-      {
-        "label": "Garena — OB46 Patch Notes",
-        "url": "https://ff.garena.com/en/article/1385/"
       }
     ],
     "abilityDisplayOnce": true,
@@ -4242,7 +4238,7 @@
       "Player eliminate hone ya round reset hone par accumulated effect clear ho jaata hai."
     ],
     "status": "OB55 values reconciled 15 Nov 2026",
-    "artworkMode": "cutout"
+    "artworkMode": "official-fullbody"
   },
   {
     "id": "kelly",
@@ -4252,15 +4248,20 @@
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB47 (2 Dec 2024)",
-    "introEn": "A passive ability that activates after a sustained sprint and empowers the first shot that hits a target during its active window.",
-    "introHi": "Deadly Velocity ek passive ability hai. Continuous sprint ke baad activate hoti hai aur active window ke dauran target par lagne wali pehli shot ko extra damage deti hai.",
+    "introEn": "A passive ability that increases sprinting speed and activates Deadly Velocity after a sustained sprint, empowering the first shot that hits a target during its active window.",
+    "introHi": "Kelly ki passive ability sprinting speed increase karti hai. 4 seconds continuous sprint ke baad Deadly Velocity activate hoti hai, jisme active window ke dauran target par lagne wali pehli shot ko extra damage milta hai.",
     "currentEn": [
-      "Sprint continuously for 4 seconds to activate Deadly Velocity. The effect lasts 5 seconds; the first shot that hits a target during this window deals 106% damage."
+      "Sprinting speed increases by 6%. Sprint continuously for 4 seconds to activate Deadly Velocity. The effect lasts 5 seconds; the first shot that hits a target during this window deals 106% damage."
     ],
     "currentHi": [
-      "Deadly Velocity activate karne ke liye 4 seconds tak continuously sprint karna hota hai. Effect 5 seconds rehta hai; is window mein target par lagne wali pehli shot 106% damage deal karti hai."
+      "Sprinting speed 6% increase hoti hai. Deadly Velocity activate karne ke liye 4 seconds tak continuously sprint karna hota hai. Effect 5 seconds rehta hai; is window mein target par lagne wali pehli shot 106% damage deal karti hai."
     ],
     "rows": [
+      {
+        "en": "Sprinting-speed bonus",
+        "hi": "Sprinting speed bonus",
+        "value": "+6%"
+      },
       {
         "en": "Activation condition",
         "hi": "Activate hone ki condition",
@@ -4295,12 +4296,14 @@
     "notesEn": [
       "The official character page specifies the sprint trigger, 5-second active window and 106% damage on the first shot that hits a target.",
       "The profile does not publish a separate cooldown value.",
-      "OB47's awakening-system change replaced non-awakened skills with their awakened versions for all players; both character appearances remained selectable."
+      "OB47's awakening-system change replaced non-awakened skills with their awakened versions for all players; both character appearances remained selectable.",
+      "Garena's official localized Kelly profile also lists a 6% sprint-speed increase alongside Deadly Velocity."
     ],
     "notesHi": [
       "Official character page sprint trigger, 5-second active window aur first target-hit par 106% damage specify karta hai.",
       "Profile separate cooldown value publish nahi karta.",
-      "OB47 ke awakening-system change mein non-awakened skills ko sab players ke liye awakened versions se replace kiya gaya; dono character appearances selectable rahi."
+      "OB47 ke awakening-system change mein non-awakened skills ko sab players ke liye awakened versions se replace kiya gaya; dono character appearances selectable rahi.",
+      "Garena ke official localized Kelly profile par Deadly Velocity ke saath 6% sprint-speed increase bhi listed hai."
     ],
     "historyEn": [
       "2018: Kelly introduced with Dash.",
@@ -4314,12 +4317,16 @@
     ],
     "source": [
       {
-        "label": "Garena — Kelly character profile",
+        "label": "Garena — Kelly character profile (Deadly Velocity)",
         "url": "https://ff.garena.com/en/chars/1"
       },
       {
-        "label": "Garena — OB47 Patch Notes",
-        "url": "https://ff.garena.com/en/article/1424/"
+        "label": "Garena — Kelly official localized profile (6% sprint speed)",
+        "url": "https://ff.garena.com/en/chars/37"
+      },
+      {
+        "label": "Garena — OB47 Patch Notes (awakening-system optimization)",
+        "url": "https://ff.garena.com/en/article/1421/"
       },
       {
         "label": "Garena — Kelly Awakening / OB20 historical profile",
@@ -4354,7 +4361,7 @@
       "5-second window mein target ko hit karne wali sirf pehli shot ko stated 106% damage effect milta hai."
     ],
     "status": "OB55 values reconciled 15 Nov 2026",
-    "artworkMode": "cutout"
+    "artworkMode": "official-fullbody"
   },
   {
     "id": "hayato",
@@ -4428,7 +4435,7 @@
       },
       {
         "label": "Garena — OB47 Patch Notes (integrated Art of Blades)",
-        "url": "https://ff.garena.com/en/article/1424/"
+        "url": "https://ff.garena.com/en/article/1421/"
       },
       {
         "label": "Garena — OB45 Patch Notes",
@@ -4467,7 +4474,7 @@
       "Damage-reduction effect specifically frontal direction ke liye described hai."
     ],
     "status": "OB55 values reconciled 15 Nov 2026",
-    "artworkMode": "cutout"
+    "artworkMode": "official-fullbody"
   },
   {
     "id": "moco",
@@ -4583,6 +4590,6 @@
       "Checked official sources separate numeric cooldown ya mark range publish nahi karte."
     ],
     "status": "OB55 values reconciled 15 Nov 2026",
-    "artworkMode": "cutout"
+    "artworkMode": "official-fullbody"
   }
 ]
