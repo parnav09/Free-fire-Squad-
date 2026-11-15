@@ -572,7 +572,8 @@ const editDistanceWithin = (a: string, b: string, limit: number) => {
   return previous[b.length];
 };
 
-const typoLimitFor = (term: string) => term.length >= 9 ? 2 : term.length >= 4 ? 1 : 0;
+const nameTypoLimitFor = (term: string) => term.length >= 9 ? 2 : term.length >= 3 ? 1 : 0;
+const skillTypoLimitFor = (term: string) => term.length >= 9 ? 2 : term.length >= 4 ? 1 : 0;
 
 const profileSearchScore = (profile: CharacterProfile, query: string) => {
   const terms = normalizeSearchText(query).split(" ").filter(Boolean);
@@ -580,6 +581,9 @@ const profileSearchScore = (profile: CharacterProfile, query: string) => {
 
   const name = normalizeSearchText(profile.name);
   const nameWords = name.split(" ").filter(Boolean);
+  // Compare a separator-free form too, so names such as "J.Biebs" and
+  // "A-Patroa" remain searchable when users omit punctuation or spaces.
+  const compactName = name.replace(/\\s+/g, "");
   const skill = normalizeSearchText(profile.skill);
   const skillWords = skill.split(" ").filter(Boolean);
   const content = normalizeSearchText([
@@ -589,15 +593,27 @@ const profileSearchScore = (profile: CharacterProfile, query: string) => {
   ].join(" "));
 
   const scoreTerm = (term: string) => {
-    if (name === term) return 140;
-    if (name.startsWith(term) || nameWords.some(word => word.startsWith(term))) return 125;
-    if (name.includes(term)) return 115;
-    const limit = typoLimitFor(term);
-    const nameDistance = limit ? Math.min(...nameWords.map(word => editDistanceWithin(term, word, limit)), limit + 1) : limit + 1;
-    if (nameDistance <= limit) return 105 - nameDistance * 12;
+    const compactTerm = term.replace(/\\s+/g, "");
+    if (name === term || compactName === compactTerm) return 150;
+    if (name.startsWith(term) || nameWords.some(word => word.startsWith(term)) || compactName.startsWith(compactTerm)) return 130;
+    if (name.includes(term) || compactName.includes(compactTerm)) return 118;
+
+    const nameLimit = nameTypoLimitFor(compactTerm);
+    const nameDistance = nameLimit
+      ? Math.min(
+          editDistanceWithin(compactTerm, compactName, nameLimit),
+          ...nameWords.map(word => editDistanceWithin(compactTerm, word, nameLimit)),
+          nameLimit + 1,
+        )
+      : nameLimit + 1;
+    if (nameDistance <= nameLimit) return 108 - nameDistance * 12;
+
     if (skill.includes(term)) return 75;
-    const skillDistance = limit ? Math.min(...skillWords.map(word => editDistanceWithin(term, word, limit)), limit + 1) : limit + 1;
-    if (skillDistance <= limit) return 62 - skillDistance * 8;
+    const skillLimit = skillTypoLimitFor(term);
+    const skillDistance = skillLimit
+      ? Math.min(...skillWords.map(word => editDistanceWithin(term, word, skillLimit)), skillLimit + 1)
+      : skillLimit + 1;
+    if (skillDistance <= skillLimit) return 62 - skillDistance * 8;
     if (content.includes(term)) return 35;
     return 0;
   };
