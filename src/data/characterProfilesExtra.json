@@ -2170,7 +2170,7 @@
       "OB43 (24 Jan 2024): Fixed a damage bug when Iris's skill penetrated Gloo Walls."
     ],
     "historyHi": [
-      "OB37 (11 Jan 2023): Skill window 15s hua; 7m ke enemies mark hote hain; purane rank-wise values mein maximum 3/3/4/4/5/5 Gloo Walls; cooldown 85/80/75/70/65/60s tha.",
+      "OB37 (11 Jan 2023): Skill window 15s hua; 7m ke enemies mark hote hain; maximum 5 Gloo Walls; cooldown 60s tha.",
       "OB42 (30 Oct 2023): Maximum Gloo Walls 3 se 5 hui; 15s duration, 7m radius aur 60s cooldown same rahe.",
       "OB43 (24 Jan 2024): Gloo Wall penetration par Iris skill damage bug fix hua."
     ],
@@ -2243,10 +2243,10 @@
       "Official character page par [Active]/[Passive] tag nahi hai; type unverified hai."
     ],
     "historyEn": [
-      "OB37 (11 Jan 2023): Skill range standardized at 12m; damage blocked reduced to 6/6/9/9/12/12% by old rank values; allies' EP deductions transferred to the skill user."
+      "OB37 (11 Jan 2023): Skill range standardized at 12m; maximum damage blocked reduced to 12%; allies' EP deductions transferred to the skill user."
     ],
     "historyHi": [
-      "OB37 (11 Jan 2023): Skill range 12m par fixed hua; purane rank-wise values mein damage block 6/6/9/9/12/12% hua; allies ka deducted EP skill user ko transfer hota hai."
+      "OB37 (11 Jan 2023): Skill range 12m par fixed hua; maximum damage block 12% hua; allies ka deducted EP skill user ko transfer hota hai."
     ],
     "source": [
       {
