@@ -4018,5 +4018,379 @@
       "Highlight start karne ke liye knockdown chahiye; bonuses jaldi decay hote hain aur movement speed global cap ke under rahti hai."
     ],
     "abilityDisplayOnce": true
+  },
+  {
+    "id": "d-bee",
+    "name": "D-BEE",
+    "image": "",
+    "skill": "Bullet Beats",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB41 (10 Aug 2023)",
+    "introEn": "Passive that significantly increases movement speed and accuracy when firing a weapon while moving.",
+    "introHi": "Passive that significantly increases movement speed and accuracy when firing a weapon while moving.",
+    "currentEn": [
+      "When the user fires a weapon while actively moving, movement speed increases by 50% and accuracy increases by 60%."
+    ],
+    "currentHi": [
+      "When the user fires a weapon while actively moving, movement speed increases by 50% and accuracy increases by 60%."
+    ],
+    "rows": [
+      {
+        "en": "Movement speed bonus",
+        "hi": "Movement speed bonus",
+        "value": "+50%"
+      },
+      {
+        "en": "Accuracy bonus",
+        "hi": "Accuracy bonus",
+        "value": "+60%"
+      },
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Firing while moving"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The global maximum movement speed cap applies; bonuses from skills, items, and events cannot exceed this systemic limit."
+    ],
+    "notesHi": [
+      "The global maximum movement speed cap applies; bonuses from skills, items, and events cannot exceed this systemic limit."
+    ],
+    "historyEn": [
+      "OB28 (8 Jun 2021): Introduced.",
+      "OB35 (20 Jul 2022): Movement speed 10% to 20%; accuracy 20% to 45%.",
+      "OB41 (10 Aug 2023): Movement speed 30% to 50%; accuracy increased to 60%."
+    ],
+    "historyHi": [
+      "OB28 (8 Jun 2021): Introduced.",
+      "OB35 (20 Jul 2022): Movement speed 10% to 20%; accuracy 20% to 45%.",
+      "OB41 (10 Aug 2023): Movement speed 30% to 50%; accuracy increased to 60%."
+    ],
+    "source": [
+      {
+        "label": "OB41",
+        "url": "https://ff.garena.com/en/article/1385/"
+      },
+      {
+        "label": "OB35",
+        "url": "https://ff.garena.com/en/article/735/"
+      },
+      {
+        "label": "D-Bee character page",
+        "url": "https://ff.garena.com/en/chars/464"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "luqueta",
+    "name": "LUQUETA",
+    "image": "",
+    "skill": "Hat Trick",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB49 (21 May 2025)",
+    "introEn": "Passive that permanently increases maximum Shield Points after securing an elimination.",
+    "introHi": "Passive that permanently increases maximum Shield Points after securing an elimination.",
+    "currentEn": [
+      "Every elimination secured by the user increases their maximum Shield Points permanently by 15. The effect stacks up to a maximum boost of 45. The bonus clears once the player is eliminated or the round is reset."
+    ],
+    "currentHi": [
+      "Every elimination secured by the user increases their maximum Shield Points permanently by 15. The effect stacks up to a maximum boost of 45. The bonus clears once the player is eliminated or the round is reset."
+    ],
+    "rows": [
+      {
+        "en": "Shield Points per elimination",
+        "hi": "Shield Points per elimination",
+        "value": "15"
+      },
+      {
+        "en": "Maximum Shield Points limit",
+        "hi": "Maximum Shield Points limit",
+        "value": "45"
+      },
+      {
+        "en": "Maximum stacks",
+        "hi": "Maximum stacks",
+        "value": "3"
+      },
+      {
+        "en": "Reset",
+        "hi": "Reset",
+        "value": "After player elimination or round reset"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "Shield Points absorb weapon damage but do not prevent zone damage."
+    ],
+    "notesHi": [
+      "Shield Points absorb weapon damage but do not prevent zone damage."
+    ],
+    "historyEn": [
+      "OB23 (29 Jul 2020): Introduced providing maximum HP.",
+      "OB41 (10 Aug 2023): HP boost converted to Shield Points; 25 per elimination, max 50.",
+      "OB48 (Early 2025): 20 per elimination, max 40.",
+      "OB49 (21 May 2025): Stack limit increased to 3; 15 per elimination, maximum boost 45."
+    ],
+    "historyHi": [
+      "OB23 (29 Jul 2020): Introduced providing maximum HP.",
+      "OB41 (10 Aug 2023): HP boost converted to Shield Points; 25 per elimination, max 50.",
+      "OB48 (Early 2025): 20 per elimination, max 40.",
+      "OB49 (21 May 2025): Stack limit increased to 3; 15 per elimination, maximum boost 45."
+    ],
+    "source": [
+      {
+        "label": "OB49",
+        "url": "https://ff.garena.com/en/article/1473/"
+      },
+      {
+        "label": "OB48",
+        "url": "https://ff.garena.com/en/article/1456/"
+      },
+      {
+        "label": "OB41",
+        "url": "https://ff.garena.com/en/article/1385/"
+      },
+      {
+        "label": "Luqueta character page",
+        "url": "https://ff.garena.com/en/chars/243"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "kelly",
+    "name": "KELLY",
+    "image": "",
+    "skill": "Dash",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB47 (2 Dec 2024)",
+    "introEn": "Passive that permanently increases sprinting speed and empowers the damage of the first shot fired after sprinting.",
+    "introHi": "Passive that permanently increases sprinting speed and empowers the damage of the first shot fired after sprinting.",
+    "currentEn": [
+      "Increases sprinting speed by 6%. After sprinting continuously for 4 seconds, the Deadly Velocity state activates for 5 seconds. The first shot landed on a target during this state inflicts 106% damage."
+    ],
+    "currentHi": [
+      "Increases sprinting speed by 6%. After sprinting continuously for 4 seconds, the Deadly Velocity state activates for 5 seconds. The first shot landed on a target during this state inflicts 106% damage."
+    ],
+    "rows": [
+      {
+        "en": "Sprinting speed bonus",
+        "hi": "Sprinting speed bonus",
+        "value": "+6%"
+      },
+      {
+        "en": "Deadly Velocity trigger",
+        "hi": "Deadly Velocity trigger",
+        "value": "Sprint for 4 seconds"
+      },
+      {
+        "en": "Deadly Velocity damage",
+        "hi": "Deadly Velocity damage",
+        "value": "106% damage on first shot"
+      },
+      {
+        "en": "Deadly Velocity duration",
+        "hi": "Deadly Velocity duration",
+        "value": "5 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The awakened skill effects are natively merged into the baseline skill for all players."
+    ],
+    "notesHi": [
+      "The awakened skill effects are natively merged into the baseline skill for all players."
+    ],
+    "historyEn": [
+      "2018: Introduced.",
+      "OB20 (Feb 2020): Awakened Deadly Velocity introduced.",
+      "OB47 (2 Dec 2024): Original and awakened skills merged into one permanent profile."
+    ],
+    "historyHi": [
+      "2018: Introduced.",
+      "OB20 (Feb 2020): Awakened Deadly Velocity introduced.",
+      "OB47 (2 Dec 2024): Original and awakened skills merged into one permanent profile."
+    ],
+    "source": [
+      {
+        "label": "Kelly character page",
+        "url": "https://ff.garena.com/en/chars/1"
+      },
+      {
+        "label": "OB47 historical skill merge",
+        "url": "https://ff.garena.com/en/article/1424/"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "hayato",
+    "name": "HAYATO",
+    "image": "",
+    "skill": "Bushido",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB45 (24 Jun 2024)",
+    "introEn": "Passive that increases armor penetration and reduces incoming frontal damage as the user's health depletes.",
+    "introHi": "Passive that increases armor penetration and reduces incoming frontal damage as the user's health depletes.",
+    "currentEn": [
+      "For every 13% decrease in the user's maximum HP, weapon armor penetration increases by 5%. Simultaneously, for every 10% decrease in maximum HP, incoming frontal damage is reduced by 2%."
+    ],
+    "currentHi": [
+      "For every 13% decrease in the user's maximum HP, weapon armor penetration increases by 5%. Simultaneously, for every 10% decrease in maximum HP, incoming frontal damage is reduced by 2%."
+    ],
+    "rows": [
+      {
+        "en": "Armor penetration bonus",
+        "hi": "Armor penetration bonus",
+        "value": "+5% per 13% maximum HP loss"
+      },
+      {
+        "en": "Frontal damage reduction",
+        "hi": "Frontal damage reduction",
+        "value": "2% per 10% maximum HP loss"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The awakened skill effects are natively merged into the baseline skill for all players."
+    ],
+    "notesHi": [
+      "The awakened skill effects are natively merged into the baseline skill for all players."
+    ],
+    "historyEn": [
+      "2019: Introduced.",
+      "OB35 (Jul 2022): Armor penetration reduced from 10% to 7.5% per 10% HP loss.",
+      "OB39 (Mar 2023): Penetration adjusted to 5% per 13% HP loss.",
+      "OB45 (24 Jun 2024): Frontal damage reduction reduced from 3% to 2% per 10% HP loss."
+    ],
+    "historyHi": [
+      "2019: Introduced.",
+      "OB35 (Jul 2022): Armor penetration reduced from 10% to 7.5% per 10% HP loss.",
+      "OB39 (Mar 2023): Penetration adjusted to 5% per 13% HP loss.",
+      "OB45 (24 Jun 2024): Frontal damage reduction reduced from 3% to 2% per 10% HP loss."
+    ],
+    "source": [
+      {
+        "label": "OB45",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "OB39",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "Hayato character page",
+        "url": "https://ff.garena.com/en/chars/3"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "moco",
+    "name": "MOCO",
+    "image": "",
+    "skill": "Hacker's Eye",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB53 (2 Apr 2026)",
+    "introEn": "Passive that marks shot enemies, tracking their location and sharing the intelligence with the squad.",
+    "introHi": "Passive that marks shot enemies, tracking their location and sharing the intelligence with the squad.",
+    "currentEn": [
+      "Marks the enemy hit, exposing their location in the field of view and the minimap, and shares this data with teammates for 3 seconds. If the marked enemy moves, the location is exposed for a longer duration, up to 4 seconds."
+    ],
+    "currentHi": [
+      "Marks the enemy hit, exposing their location in the field of view and the minimap, and shares this data with teammates for 3 seconds. If the marked enemy moves, the location is exposed for a longer duration, up to 4 seconds."
+    ],
+    "rows": [
+      {
+        "en": "Base mark duration",
+        "hi": "Base mark duration",
+        "value": "3 seconds"
+      },
+      {
+        "en": "Moving target extension",
+        "hi": "Moving target extension",
+        "value": "Up to 4 seconds"
+      },
+      {
+        "en": "Visibility",
+        "hi": "Visibility",
+        "value": "Field of view and minimap"
+      },
+      {
+        "en": "Intel sharing",
+        "hi": "Intel sharing",
+        "value": "Shared with teammates"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "Counters exist; detection-blocking devices like the Jammer prevent marking."
+    ],
+    "notesHi": [
+      "Counters exist; detection-blocking devices like the Jammer prevent marking."
+    ],
+    "historyEn": [
+      "OB13 (Jan 2019): Introduced.",
+      "OB49 (21 May 2025): Base mark duration reduced from 5s to 4s; moving extension from 6.5s to 5.5s.",
+      "OB53 (2 Apr 2026): Base mark reduced from 4s to 3s; moving extension from 5.5s to 4s."
+    ],
+    "historyHi": [
+      "OB13 (Jan 2019): Introduced.",
+      "OB49 (21 May 2025): Base mark duration reduced from 5s to 4s; moving extension from 6.5s to 5.5s.",
+      "OB53 (2 Apr 2026): Base mark reduced from 4s to 3s; moving extension from 5.5s to 4s."
+    ],
+    "source": [
+      {
+        "label": "OB53",
+        "url": "https://ff.garena.com/en/article/1640/"
+      },
+      {
+        "label": "OB49",
+        "url": "https://ff.garena.com/en/article/1473/"
+      },
+      {
+        "label": "Moco character page",
+        "url": "https://ff.garena.com/en/chars/433"
+      }
+    ],
+    "abilityDisplayOnce": true,
+    "subtitle": "OB55 values reconciled · 15 Nov 2026",
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
   }
 ]
