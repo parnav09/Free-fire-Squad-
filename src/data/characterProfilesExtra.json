@@ -4038,7 +4038,7 @@
     "rows": [
       {
         "en": "Movement-speed bonus",
-        "hi": "Movement-speed bonus",
+        "hi": "Movement speed bonus",
         "value": "+50%"
       },
       {
@@ -4048,7 +4048,7 @@
       },
       {
         "en": "Activation condition",
-        "hi": "Activation condition",
+        "hi": "Trigger condition",
         "value": "Firing while moving"
       },
       {
@@ -4145,7 +4145,7 @@
     "rows": [
       {
         "en": "Shield Points per elimination",
-        "hi": "Har elimination par Shield Points",
+        "hi": "Har Shield Points per elimination",
         "value": "+15"
       },
       {
@@ -4263,7 +4263,7 @@
     "rows": [
       {
         "en": "Activation condition",
-        "hi": "Activation condition",
+        "hi": "Activate hone ki condition",
         "value": "Sprint continuously for 4 seconds"
       },
       {
@@ -4375,7 +4375,7 @@
     "rows": [
       {
         "en": "Armor-penetration increase",
-        "hi": "Armor-penetration increase",
+        "hi": "Armor penetration increase",
         "value": "+3.5% per 10% maximum HP loss"
       },
       {
@@ -4385,7 +4385,7 @@
       },
       {
         "en": "Trigger",
-        "hi": "Trigger",
+        "hi": "Trigger condition",
         "value": "Maximum HP decreases"
       },
       {
@@ -4493,7 +4493,7 @@
       },
       {
         "en": "Moving-target mark duration",
-        "hi": "Moving-target mark duration",
+        "hi": "Moving target par mark duration",
         "value": "Up to 4 seconds"
       },
       {
