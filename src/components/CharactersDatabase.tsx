@@ -587,7 +587,6 @@ const profileSearchScore = (profile: CharacterProfile, query: string) => {
     ...profile.currentEn, ...profile.currentHi, ...profile.notesEn, ...profile.notesHi,
     ...profile.historyEn, ...profile.historyHi, ...profile.rows.flatMap(row => [row.en, row.hi, row.value]),
   ].join(" "));
-  const contentWords = content.split(" ").filter(Boolean);
 
   const scoreTerm = (term: string) => {
     if (name === term) return 140;
