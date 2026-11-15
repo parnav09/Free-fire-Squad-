@@ -585,7 +585,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(4);
+  const [visibleCount, setVisibleCount] = useState(profiles.length);
   const [batchSize, setBatchSize] = useState(4);
   const isHindi = language === "hi-en";
   const selected = profiles.find(profile => profile.id === selectedId);
@@ -604,7 +604,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     setQuery("");
     setShowSuggestions(false);
     setActiveSuggestionIndex(0);
-    setVisibleCount(batchSize);
+    setVisibleCount(profiles.length);
     window.scrollTo({ top: 0, behavior: "auto" });
   };
 
