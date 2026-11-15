@@ -4022,23 +4022,23 @@
   {
     "id": "d-bee",
     "name": "D-BEE",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/f1a09717ed71e7302da8d4cc889d2e33.png",
     "skill": "Bullet Beats",
     "type": "Passive",
     "badge": "Official-source profile",
-    "lastChanged": "OB41 (10 Aug 2023)",
-    "introEn": "Passive that significantly increases movement speed and accuracy when firing a weapon while moving.",
-    "introHi": "Passive that significantly increases movement speed and accuracy when firing a weapon while moving.",
+    "lastChanged": "OB46 (1 Sep 2024)",
+    "introEn": "A passive ability that boosts movement speed and accuracy while firing on the move.",
+    "introHi": "Bullet Beats ek passive ability hai. Match mein move karte hue fire karne par movement speed aur accuracy dono boost hote hain.",
     "currentEn": [
-      "When the user fires a weapon while actively moving, movement speed increases by 50% and accuracy increases by 60%."
+      "While firing and moving at the same time, movement speed increases by 50% and accuracy increases by 60%."
     ],
     "currentHi": [
-      "When the user fires a weapon while actively moving, movement speed increases by 50% and accuracy increases by 60%."
+      "Jab character move karte hue fire karta hai, movement speed 50% increase hoti hai aur accuracy 60% increase hoti hai."
     ],
     "rows": [
       {
-        "en": "Movement speed bonus",
-        "hi": "Movement speed bonus",
+        "en": "Movement-speed bonus",
+        "hi": "Movement-speed bonus",
         "value": "+50%"
       },
       {
@@ -4047,76 +4047,111 @@
         "value": "+60%"
       },
       {
-        "en": "Trigger",
-        "hi": "Trigger",
+        "en": "Activation condition",
+        "hi": "Activation condition",
         "value": "Firing while moving"
+      },
+      {
+        "en": "Ability type",
+        "hi": "Ability type",
+        "value": "Passive"
       },
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "No cooldown"
+        "value": "Not listed on the official profile"
       }
     ],
     "notesEn": [
-      "The global maximum movement speed cap applies; bonuses from skills, items, and events cannot exceed this systemic limit."
+      "The bonus requires movement and firing to happen simultaneously; standing still while firing does not meet the stated trigger.",
+      "The official character page gives a short description; the numerical values are documented in Garena's OB46 patch notes.",
+      "No separate duration or cooldown is published in the official sources checked."
     ],
     "notesHi": [
-      "The global maximum movement speed cap applies; bonuses from skills, items, and events cannot exceed this systemic limit."
+      "Bonus tabhi apply hota hai jab movement aur firing ek saath ho; sirf khade hokar fire karne se stated trigger complete nahi hota.",
+      "Official character page short description deta hai; exact numerical values Garena ke OB46 patch notes mein documented hain.",
+      "Checked official sources mein separate duration ya cooldown publish nahi kiya gaya."
     ],
     "historyEn": [
-      "OB28 (8 Jun 2021): Introduced.",
-      "OB35 (20 Jul 2022): Movement speed 10% to 20%; accuracy 20% to 45%.",
-      "OB41 (10 Aug 2023): Movement speed 30% to 50%; accuracy increased to 60%."
+      "OB28 (Jun 2021): D-Bee introduced with Bullet Beats.",
+      "OB35 (20 Jul 2022): Movement-speed bonus increased from 10% to 20%; accuracy increased from 20% to 45%.",
+      "OB46 (1 Sep 2024): Movement-speed bonus increased from 30% to 50%; accuracy set to 60%."
     ],
     "historyHi": [
-      "OB28 (8 Jun 2021): Introduced.",
-      "OB35 (20 Jul 2022): Movement speed 10% to 20%; accuracy 20% to 45%.",
-      "OB41 (10 Aug 2023): Movement speed 30% to 50%; accuracy increased to 60%."
+      "OB28 (Jun 2021): D-Bee aur Bullet Beats introduce hue.",
+      "OB35 (20 Jul 2022): Movement-speed bonus 10% se 20% aur accuracy 20% se 45% hui.",
+      "OB46 (1 Sep 2024): Movement-speed bonus 30% se 50% aur accuracy 60% ki gayi."
     ],
     "source": [
       {
-        "label": "OB41",
+        "label": "Garena — D-Bee character profile",
+        "url": "https://ff.garena.com/en/chars/464"
+      },
+      {
+        "label": "Garena — OB46 Patch Notes (Bullet Beats)",
         "url": "https://ff.garena.com/en/article/1385/"
       },
       {
-        "label": "OB35",
+        "label": "Garena — OB35 Patch Notes",
         "url": "https://ff.garena.com/en/article/735/"
-      },
-      {
-        "label": "D-Bee character page",
-        "url": "https://ff.garena.com/en/chars/464"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "tacticalEn": [
+      "The effect is conditional on simultaneous movement and firing; it does not provide the stated bonuses while stationary.",
+      "In squad play, communicate when you are repositioning so teammates can maintain shared awareness of your movement."
+    ],
+    "tacticalHi": [
+      "Is ability ka bonus tabhi milta hai jab movement aur firing saath ho; stationary rehne par stated bonus apply nahi hota.",
+      "Squad play mein reposition karte waqt teammates ko call do, taaki sabko tumhari movement aur spacing ka clear idea rahe."
+    ],
+    "strengthsEn": [
+      "Provides two simultaneous passive bonuses under its stated trigger.",
+      "No active-skill activation input is required."
+    ],
+    "strengthsHi": [
+      "Stated trigger complete hone par do passive bonuses ek saath milte hain.",
+      "Iske liye alag se active-skill button press nahi karna padta."
+    ],
+    "limitationsEn": [
+      "The effect is conditional and does not apply when the character is stationary.",
+      "The official sources checked do not specify a separate duration or cooldown."
+    ],
+    "limitationsHi": [
+      "Effect conditional hai; character stationary ho toh yeh apply nahi hota.",
+      "Checked official sources separate duration ya cooldown specify nahi karte."
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   },
   {
     "id": "luqueta",
     "name": "LUQUETA",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20229/28b704e964e8057d7fc76e1a2cca7d26.png",
     "skill": "Hat Trick",
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB49 (21 May 2025)",
-    "introEn": "Passive that permanently increases maximum Shield Points after securing an elimination.",
-    "introHi": "Passive that permanently increases maximum Shield Points after securing an elimination.",
+    "introEn": "A passive ability that permanently raises maximum Shield Points with each elimination, up to a capped bonus.",
+    "introHi": "Hat Trick ek passive ability hai. Har elimination par maximum Shield Points permanently badhte hain, lekin iska total bonus ek fixed cap tak hi jaata hai.",
     "currentEn": [
-      "Every elimination secured by the user increases their maximum Shield Points permanently by 15. The effect stacks up to a maximum boost of 45. The bonus clears once the player is eliminated or the round is reset."
+      "Each elimination increases maximum Shield Points by 15. The bonus stacks up to 45 Shield Points in total and is cleared when the player is eliminated or the round resets."
     ],
     "currentHi": [
-      "Every elimination secured by the user increases their maximum Shield Points permanently by 15. The effect stacks up to a maximum boost of 45. The bonus clears once the player is eliminated or the round is reset."
+      "Har elimination par maximum Shield Points 15 badhte hain. Bonus stack hokar maximum 45 Shield Points tak pahunch sakta hai. Player eliminate hone ya round reset hone par yeh bonus clear ho jaata hai."
     ],
     "rows": [
       {
         "en": "Shield Points per elimination",
-        "hi": "Shield Points per elimination",
-        "value": "15"
+        "hi": "Har elimination par Shield Points",
+        "value": "+15"
       },
       {
-        "en": "Maximum Shield Points limit",
-        "hi": "Maximum Shield Points limit",
-        "value": "45"
+        "en": "Maximum total bonus",
+        "hi": "Maximum total bonus",
+        "value": "+45 Shield Points"
       },
       {
         "en": "Maximum stacks",
@@ -4124,150 +4159,224 @@
         "value": "3"
       },
       {
-        "en": "Reset",
-        "hi": "Reset",
-        "value": "After player elimination or round reset"
+        "en": "Reset condition",
+        "hi": "Reset condition",
+        "value": "Player elimination or round reset"
+      },
+      {
+        "en": "Ability type",
+        "hi": "Ability type",
+        "value": "Passive"
       },
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "No cooldown"
+        "value": "Not listed on the official profile"
       }
     ],
     "notesEn": [
-      "Shield Points absorb weapon damage but do not prevent zone damage."
+      "The bonus affects maximum Shield Points, not ordinary HP.",
+      "The effect is personal to the player using Luqueta; it is not described as a squad-wide reward.",
+      "Garena's OB49 notes confirm the current +15 per elimination and +45 maximum."
     ],
     "notesHi": [
-      "Shield Points absorb weapon damage but do not prevent zone damage."
+      "Yeh bonus maximum Shield Points ko increase karta hai, normal HP ko nahi.",
+      "Effect Luqueta use karne wale player ka personal bonus hai; official description ise poori squad ka shared reward nahi batati.",
+      "Garena ke OB49 notes current +15 per elimination aur +45 maximum confirm karte hain."
     ],
     "historyEn": [
-      "OB23 (29 Jul 2020): Introduced providing maximum HP.",
-      "OB41 (10 Aug 2023): HP boost converted to Shield Points; 25 per elimination, max 50.",
-      "OB48 (Early 2025): 20 per elimination, max 40.",
-      "OB49 (21 May 2025): Stack limit increased to 3; 15 per elimination, maximum boost 45."
+      "OB23 (29 Jul 2020): Hat Trick introduced as a maximum-HP increase per elimination, capped at 35.",
+      "OB46 (1 Sep 2024): The HP bonus was converted to Shield Points; +25 per elimination, up to +50.",
+      "OB48 (Feb 2025): The per-elimination and maximum values were reduced to +20 and +40.",
+      "OB49 (21 May 2025): Maximum stacks increased to 3; +15 per elimination and +45 maximum."
     ],
     "historyHi": [
-      "OB23 (29 Jul 2020): Introduced providing maximum HP.",
-      "OB41 (10 Aug 2023): HP boost converted to Shield Points; 25 per elimination, max 50.",
-      "OB48 (Early 2025): 20 per elimination, max 40.",
-      "OB49 (21 May 2025): Stack limit increased to 3; 15 per elimination, maximum boost 45."
+      "OB23 (29 Jul 2020): Hat Trick introduce hui; har elimination par maximum HP badhta tha, cap 35 tha.",
+      "OB46 (1 Sep 2024): HP bonus ko Shield Points mein convert kiya gaya; har elimination par +25, maximum +50.",
+      "OB48 (Feb 2025): Per-elimination aur maximum values +20 aur +40 ki gayi.",
+      "OB49 (21 May 2025): Maximum stacks 3 hue; har elimination par +15 aur maximum +45 hua."
     ],
     "source": [
       {
-        "label": "OB49",
+        "label": "Garena — Luqueta character profile",
+        "url": "https://ff.garena.com/en/chars/243"
+      },
+      {
+        "label": "Garena — OB49 Patch Notes",
         "url": "https://ff.garena.com/en/article/1473/"
       },
       {
-        "label": "OB48",
+        "label": "Garena — OB48 Patch Notes",
         "url": "https://ff.garena.com/en/article/1456/"
       },
       {
-        "label": "OB41",
+        "label": "Garena — OB46 Patch Notes",
         "url": "https://ff.garena.com/en/article/1385/"
-      },
-      {
-        "label": "Luqueta character page",
-        "url": "https://ff.garena.com/en/chars/243"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "tacticalEn": [
+      "The passive bonus builds only from the user's own eliminations and remains until the stated reset condition.",
+      "Keep track of the current round state because the accumulated bonus does not carry through player elimination or a round reset."
+    ],
+    "tacticalHi": [
+      "Passive bonus user ki apni eliminations se build hota hai aur stated reset condition tak bana rehta hai.",
+      "Current round state yaad rakho, kyunki player elimination ya round reset ke baad accumulated bonus carry forward nahi hota."
+    ],
+    "strengthsEn": [
+      "The bonus can accumulate across up to three eliminations.",
+      "The increased maximum Shield Points remain for the rest of the round unless a reset condition occurs."
+    ],
+    "strengthsHi": [
+      "Bonus maximum three eliminations tak stack ho sakta hai.",
+      "Reset condition na aaye toh increased maximum Shield Points round ke baaki time tak rehte hain."
+    ],
+    "limitationsEn": [
+      "The ability needs eliminations to build value; it does not grant the full bonus at the start.",
+      "The accumulated effect is cleared on player elimination or round reset."
+    ],
+    "limitationsHi": [
+      "Ability ka bonus eliminations ke saath build hota hai; match/round ke start par full bonus nahi milta.",
+      "Player eliminate hone ya round reset hone par accumulated effect clear ho jaata hai."
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   },
   {
     "id": "kelly",
     "name": "KELLY",
-    "image": "",
-    "skill": "Dash",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202311/a80ef2744fa83dc119cc09249d70444e.png",
+    "skill": "Deadly Velocity",
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB47 (2 Dec 2024)",
-    "introEn": "Passive that permanently increases sprinting speed and empowers the damage of the first shot fired after sprinting.",
-    "introHi": "Passive that permanently increases sprinting speed and empowers the damage of the first shot fired after sprinting.",
+    "introEn": "A passive ability that activates after a sustained sprint and empowers the first shot that hits a target during its active window.",
+    "introHi": "Deadly Velocity ek passive ability hai. Continuous sprint ke baad activate hoti hai aur active window ke dauran target par lagne wali pehli shot ko extra damage deti hai.",
     "currentEn": [
-      "Increases sprinting speed by 6%. After sprinting continuously for 4 seconds, the Deadly Velocity state activates for 5 seconds. The first shot landed on a target during this state inflicts 106% damage."
+      "Sprint continuously for 4 seconds to activate Deadly Velocity. The effect lasts 5 seconds; the first shot that hits a target during this window deals 106% damage."
     ],
     "currentHi": [
-      "Increases sprinting speed by 6%. After sprinting continuously for 4 seconds, the Deadly Velocity state activates for 5 seconds. The first shot landed on a target during this state inflicts 106% damage."
+      "Deadly Velocity activate karne ke liye 4 seconds tak continuously sprint karna hota hai. Effect 5 seconds rehta hai; is window mein target par lagne wali pehli shot 106% damage deal karti hai."
     ],
     "rows": [
       {
-        "en": "Sprinting speed bonus",
-        "hi": "Sprinting speed bonus",
-        "value": "+6%"
+        "en": "Activation condition",
+        "hi": "Activation condition",
+        "value": "Sprint continuously for 4 seconds"
       },
       {
-        "en": "Deadly Velocity trigger",
-        "hi": "Deadly Velocity trigger",
-        "value": "Sprint for 4 seconds"
-      },
-      {
-        "en": "Deadly Velocity damage",
-        "hi": "Deadly Velocity damage",
-        "value": "106% damage on first shot"
-      },
-      {
-        "en": "Deadly Velocity duration",
-        "hi": "Deadly Velocity duration",
+        "en": "Effect duration",
+        "hi": "Effect duration",
         "value": "5 seconds"
+      },
+      {
+        "en": "First-hit damage",
+        "hi": "First-hit damage",
+        "value": "106%"
+      },
+      {
+        "en": "Affected hit count",
+        "hi": "Affected hit count",
+        "value": "First 1 shot that hits a target"
+      },
+      {
+        "en": "Ability type",
+        "hi": "Ability type",
+        "value": "Passive"
       },
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "No cooldown"
+        "value": "Not listed on the official profile"
       }
     ],
     "notesEn": [
-      "The awakened skill effects are natively merged into the baseline skill for all players."
+      "The official character page specifies the sprint trigger, 5-second active window and 106% damage on the first shot that hits a target.",
+      "The profile does not publish a separate cooldown value.",
+      "OB47's awakening-system change replaced non-awakened skills with their awakened versions for all players; both character appearances remained selectable."
     ],
     "notesHi": [
-      "The awakened skill effects are natively merged into the baseline skill for all players."
+      "Official character page sprint trigger, 5-second active window aur first target-hit par 106% damage specify karta hai.",
+      "Profile separate cooldown value publish nahi karta.",
+      "OB47 ke awakening-system change mein non-awakened skills ko sab players ke liye awakened versions se replace kiya gaya; dono character appearances selectable rahi."
     ],
     "historyEn": [
-      "2018: Introduced.",
-      "OB20 (Feb 2020): Awakened Deadly Velocity introduced.",
-      "OB47 (2 Dec 2024): Original and awakened skills merged into one permanent profile."
+      "2018: Kelly introduced with Dash.",
+      "OB20 (Feb 2020): Awakened Kelly and Deadly Velocity introduced.",
+      "OB47 (2 Dec 2024): Garena replaced non-awakened skills with their awakened versions for all players; Kelly's Deadly Velocity became the standard skill profile."
     ],
     "historyHi": [
-      "2018: Introduced.",
-      "OB20 (Feb 2020): Awakened Deadly Velocity introduced.",
-      "OB47 (2 Dec 2024): Original and awakened skills merged into one permanent profile."
+      "2018: Kelly, Dash ability ke saath introduce hui.",
+      "OB20 (Feb 2020): Awakened Kelly aur Deadly Velocity introduce hue.",
+      "OB47 (2 Dec 2024): Garena ne sab players ke liye non-awakened skills ko awakened versions se replace kiya; Deadly Velocity Kelly ka standard skill profile bana."
     ],
     "source": [
       {
-        "label": "Kelly character page",
+        "label": "Garena — Kelly character profile",
         "url": "https://ff.garena.com/en/chars/1"
       },
       {
-        "label": "OB47 historical skill merge",
+        "label": "Garena — OB47 Patch Notes",
         "url": "https://ff.garena.com/en/article/1424/"
+      },
+      {
+        "label": "Garena — Kelly Awakening / OB20 historical profile",
+        "url": "https://ff.garena.com/en/article/299/"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "tacticalEn": [
+      "The activation requirement is a continuous 4-second sprint, so the ability is not immediately active when a match begins or after every movement burst.",
+      "The 5-second window is limited; the enhanced effect applies only to the first shot that hits a target within that window."
+    ],
+    "tacticalHi": [
+      "Activation ke liye 4 seconds ka continuous sprint zaroori hai; match start hote hi ya har chhoti movement ke baad ability automatically active nahi hoti.",
+      "5-second window limited hai; is duration mein target ko hit karne wali sirf pehli shot par enhanced effect apply hota hai."
+    ],
+    "strengthsEn": [
+      "The trigger and active window are clearly defined in Garena's current profile.",
+      "The ability is passive and does not require a separate activation button."
+    ],
+    "strengthsHi": [
+      "Garena ke current profile mein trigger aur active window clearly defined hain.",
+      "Yeh passive ability hai, isliye alag activation button press nahi karna padta."
+    ],
+    "limitationsEn": [
+      "The effect requires a continuous sprint before activation.",
+      "Only the first shot that hits a target during the 5-second window receives the stated 106% damage effect."
+    ],
+    "limitationsHi": [
+      "Activate hone se pehle continuous sprint requirement complete karni padti hai.",
+      "5-second window mein target ko hit karne wali sirf pehli shot ko stated 106% damage effect milta hai."
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   },
   {
     "id": "hayato",
     "name": "HAYATO",
-    "image": "",
-    "skill": "Bushido",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/d8800f78f00e9831fc157a04aa3078aa.png",
+    "skill": "Art of Blades",
     "type": "Passive",
     "badge": "Official-source profile",
-    "lastChanged": "OB45 (24 Jun 2024)",
-    "introEn": "Passive that increases armor penetration and reduces incoming frontal damage as the user's health depletes.",
-    "introHi": "Passive that increases armor penetration and reduces incoming frontal damage as the user's health depletes.",
+    "lastChanged": "OB47 (2 Dec 2024)",
+    "introEn": "A passive ability that combines armor penetration and frontal damage reduction, with both effects scaling as maximum HP is lost.",
+    "introHi": "Art of Blades ek passive ability hai jo maximum HP kam hone ke saath armor penetration aur frontal damage reduction dono provide karti hai.",
     "currentEn": [
-      "For every 13% decrease in the user's maximum HP, weapon armor penetration increases by 5%. Simultaneously, for every 10% decrease in maximum HP, incoming frontal damage is reduced by 2%."
+      "For every 10% decrease in maximum HP, armor penetration increases by 3.5% and frontal damage taken decreases by 2%."
     ],
     "currentHi": [
-      "For every 13% decrease in the user's maximum HP, weapon armor penetration increases by 5%. Simultaneously, for every 10% decrease in maximum HP, incoming frontal damage is reduced by 2%."
+      "Maximum HP mein har 10% ki kami par armor penetration 3.5% increase hoti hai aur saamne se aane wale damage mein 2% reduction milta hai."
     ],
     "rows": [
       {
-        "en": "Armor penetration bonus",
-        "hi": "Armor penetration bonus",
-        "value": "+5% per 13% maximum HP loss"
+        "en": "Armor-penetration increase",
+        "hi": "Armor-penetration increase",
+        "value": "+3.5% per 10% maximum HP loss"
       },
       {
         "en": "Frontal damage reduction",
@@ -4275,62 +4384,106 @@
         "value": "2% per 10% maximum HP loss"
       },
       {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Maximum HP decreases"
+      },
+      {
+        "en": "Ability type",
+        "hi": "Ability type",
+        "value": "Passive"
+      },
+      {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "No cooldown"
+        "value": "Not listed on the official profile"
       }
     ],
     "notesEn": [
-      "The awakened skill effects are natively merged into the baseline skill for all players."
+      "The two effects scale from the same maximum-HP-loss condition.",
+      "The current official character page explicitly lists 2% frontal damage reduction per 10% maximum HP loss. Garena's OB47 patch notes document the integrated armor-penetration value of 3.5% per 10% HP lost.",
+      "The earlier Bushido / Art of Blades values were changed over time; the OB47 integrated value is used for the current profile."
     ],
     "notesHi": [
-      "The awakened skill effects are natively merged into the baseline skill for all players."
+      "Dono effects ek hi maximum-HP-loss condition ke saath scale karte hain.",
+      "Current official character page har 10% maximum HP loss par 2% frontal damage reduction confirm karta hai. Garena ke OB47 patch notes integrated armor-penetration value 3.5% per 10% HP loss batate hain.",
+      "Purane Bushido / Art of Blades values time ke saath change hue; current profile mein OB47 integrated value use ki gayi hai."
     ],
     "historyEn": [
-      "2019: Introduced.",
-      "OB35 (Jul 2022): Armor penetration reduced from 10% to 7.5% per 10% HP loss.",
-      "OB39 (Mar 2023): Penetration adjusted to 5% per 13% HP loss.",
-      "OB45 (24 Jun 2024): Frontal damage reduction reduced from 3% to 2% per 10% HP loss."
+      "OB35 (Jul 2022): Armor penetration was reduced from 10% to 7.5% per 10% maximum HP loss.",
+      "OB39 (Mar 2023): Armor penetration was adjusted to 5% per 13% maximum HP loss.",
+      "OB45 (24 Jun 2024): Awakened frontal damage reduction was reduced from 3% to 2% per 10% maximum HP loss.",
+      "OB47 (2 Dec 2024): Original and awakened skills were integrated; Art of Blades listed +3.5% armor penetration and 2% less frontal damage taken per 10% HP lost."
     ],
     "historyHi": [
-      "2019: Introduced.",
-      "OB35 (Jul 2022): Armor penetration reduced from 10% to 7.5% per 10% HP loss.",
-      "OB39 (Mar 2023): Penetration adjusted to 5% per 13% HP loss.",
-      "OB45 (24 Jun 2024): Frontal damage reduction reduced from 3% to 2% per 10% HP loss."
+      "OB35 (Jul 2022): Armor penetration 10% se 7.5% per 10% maximum HP loss hui.",
+      "OB39 (Mar 2023): Armor penetration 5% per 13% maximum HP loss adjust hui.",
+      "OB45 (24 Jun 2024): Awakened frontal damage reduction 3% se 2% per 10% maximum HP loss hui.",
+      "OB47 (2 Dec 2024): Original aur awakened skills integrate hue; Art of Blades ne har 10% HP loss par +3.5% armor penetration aur 2% frontal damage reduction list ki."
     ],
     "source": [
       {
-        "label": "OB45",
+        "label": "Garena — Hayato character profile",
+        "url": "https://ff.garena.com/en/chars/3"
+      },
+      {
+        "label": "Garena — OB47 Patch Notes (integrated Art of Blades)",
+        "url": "https://ff.garena.com/en/article/1424/"
+      },
+      {
+        "label": "Garena — OB45 Patch Notes",
         "url": "https://ff.garena.com/en/article/1357/"
       },
       {
-        "label": "OB39",
+        "label": "Garena — OB39 Patch Notes",
         "url": "https://ff.garena.com/en/article/1170/"
-      },
-      {
-        "label": "Hayato character page",
-        "url": "https://ff.garena.com/en/chars/3"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "tacticalEn": [
+      "The passive effect scales with lost maximum HP; its listed values are not a fixed bonus at full HP.",
+      "The frontal-reduction portion applies to incoming damage from the front, as stated by Garena."
+    ],
+    "tacticalHi": [
+      "Passive effect maximum HP loss ke saath scale karta hai; full HP par listed values ka full bonus assume nahi karna chahiye.",
+      "Frontal damage reduction Garena ke description ke mutabik saamne se aane wale damage par apply hota hai."
+    ],
+    "strengthsEn": [
+      "Both listed effects scale from one shared condition.",
+      "No separate active-skill activation is required."
+    ],
+    "strengthsHi": [
+      "Dono listed effects ek shared condition ke saath scale karte hain.",
+      "Alag active-skill activation ki zaroorat nahi hoti."
+    ],
+    "limitationsEn": [
+      "The bonus depends on maximum HP loss and is not a flat always-on value.",
+      "The damage-reduction effect is specifically described as frontal."
+    ],
+    "limitationsHi": [
+      "Bonus maximum HP loss par depend karta hai; yeh flat always-on value nahi hai.",
+      "Damage-reduction effect specifically frontal direction ke liye described hai."
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   },
   {
     "id": "moco",
     "name": "MOCO",
-    "image": "",
-    "skill": "Hacker's Eye",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202210/769ceca68c62ec35cdbf90f1c0d7c73f.png",
+    "skill": "Enigma's Eye",
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB53 (2 Apr 2026)",
-    "introEn": "Passive that marks shot enemies, tracking their location and sharing the intelligence with the squad.",
-    "introHi": "Passive that marks shot enemies, tracking their location and sharing the intelligence with the squad.",
+    "introEn": "A passive information ability that marks enemies Moco hits and shares their location with the squad for a limited time.",
+    "introHi": "Enigma's Eye ek passive information ability hai. Moco jis enemy ko hit karti hai uski location kuch seconds ke liye mark hoti hai aur squad ke saath share hoti hai.",
     "currentEn": [
-      "Marks the enemy hit, exposing their location in the field of view and the minimap, and shares this data with teammates for 3 seconds. If the marked enemy moves, the location is exposed for a longer duration, up to 4 seconds."
+      "Marks an enemy hit by Moco, exposing the target's location in the field of view and on the minimap, and sharing it with teammates for 3 seconds. If the marked enemy is moving, the location remains exposed for up to 4 seconds."
     ],
     "currentHi": [
-      "Marks the enemy hit, exposing their location in the field of view and the minimap, and shares this data with teammates for 3 seconds. If the marked enemy moves, the location is exposed for a longer duration, up to 4 seconds."
+      "Moco ke hit kiye enemy ki location field of view aur minimap par mark hoti hai aur teammates ke saath 3 seconds tak share hoti hai. Agar marked enemy move kar raha ho, toh uski location maximum 4 seconds tak exposed reh sakti hai."
     ],
     "rows": [
       {
@@ -4339,58 +4492,97 @@
         "value": "3 seconds"
       },
       {
-        "en": "Moving target extension",
-        "hi": "Moving target extension",
+        "en": "Moving-target mark duration",
+        "hi": "Moving-target mark duration",
         "value": "Up to 4 seconds"
       },
       {
-        "en": "Visibility",
-        "hi": "Visibility",
-        "value": "Field of view and minimap"
+        "en": "Location display",
+        "hi": "Location display",
+        "value": "Field of view + minimap"
       },
       {
-        "en": "Intel sharing",
-        "hi": "Intel sharing",
+        "en": "Information sharing",
+        "hi": "Information sharing",
         "value": "Shared with teammates"
+      },
+      {
+        "en": "Ability type",
+        "hi": "Ability type",
+        "value": "Passive"
       },
       {
         "en": "Cooldown",
         "hi": "Cooldown",
-        "value": "No cooldown"
+        "value": "Not listed on the official profile"
       }
     ],
     "notesEn": [
-      "Counters exist; detection-blocking devices like the Jammer prevent marking."
+      "The current Garena profile names the ability Enigma's Eye; Hacker's Eye is not the name shown on the current official character page.",
+      "The mark duration is 3 seconds, extending up to 4 seconds when the marked target is moving.",
+      "Garena's official page does not publish a numeric cooldown or a separate mark-range value."
     ],
     "notesHi": [
-      "Counters exist; detection-blocking devices like the Jammer prevent marking."
+      "Current Garena profile par ability ka naam Enigma's Eye hai; current official character page par Hacker's Eye naam nahi diya gaya.",
+      "Mark 3 seconds rehta hai; marked target move kar raha ho toh duration maximum 4 seconds tak extend ho sakti hai.",
+      "Garena ka official page numeric cooldown ya separate mark-range value publish nahi karta."
     ],
     "historyEn": [
-      "OB13 (Jan 2019): Introduced.",
-      "OB49 (21 May 2025): Base mark duration reduced from 5s to 4s; moving extension from 6.5s to 5.5s.",
-      "OB53 (2 Apr 2026): Base mark reduced from 4s to 3s; moving extension from 5.5s to 4s."
+      "OB13 (Jan 2019): Moco and Enigma's Eye introduced.",
+      "OB49 (21 May 2025): Base mark duration reduced from 5s to 4s; moving-target duration reduced from 6.5s to 5.5s.",
+      "OB53 (2 Apr 2026): Base mark duration reduced from 4s to 3s; moving-target duration reduced from 5.5s to 4s."
     ],
     "historyHi": [
-      "OB13 (Jan 2019): Introduced.",
-      "OB49 (21 May 2025): Base mark duration reduced from 5s to 4s; moving extension from 6.5s to 5.5s.",
-      "OB53 (2 Apr 2026): Base mark reduced from 4s to 3s; moving extension from 5.5s to 4s."
+      "OB13 (Jan 2019): Moco aur Enigma's Eye introduce hue.",
+      "OB49 (21 May 2025): Base mark duration 5s se 4s aur moving-target duration 6.5s se 5.5s hui.",
+      "OB53 (2 Apr 2026): Base mark duration 4s se 3s aur moving-target duration 5.5s se 4s hui."
     ],
     "source": [
       {
-        "label": "OB53",
+        "label": "Garena — Moco character profile (current detailed values)",
+        "url": "https://ff.garena.com/en/chars/10"
+      },
+      {
+        "label": "Garena — Moco character profile",
+        "url": "https://ff.garena.com/en/chars/433"
+      },
+      {
+        "label": "Garena — OB53 Patch Notes",
         "url": "https://ff.garena.com/en/article/1640/"
       },
       {
-        "label": "OB49",
+        "label": "Garena — OB49 Patch Notes",
         "url": "https://ff.garena.com/en/article/1473/"
-      },
-      {
-        "label": "Moco character page",
-        "url": "https://ff.garena.com/en/chars/433"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 15 Nov 2026"
+    "subtitleHi": "OB55 values reconciled · 15 Nov 2026",
+    "tacticalEn": [
+      "The mark shares location information with teammates, making clear squad communication important when a mark appears.",
+      "The longer duration is conditional on the marked target moving; the base duration remains 3 seconds."
+    ],
+    "tacticalHi": [
+      "Mark ki location information teammates ke saath share hoti hai, isliye mark dikhne par squad communication clear rakhna useful hai.",
+      "Longer duration tabhi milti hai jab marked target move kar raha ho; base duration 3 seconds hi hai."
+    ],
+    "strengthsEn": [
+      "Shares marked-target location with teammates and the minimap.",
+      "Provides a longer mark window when the target is moving."
+    ],
+    "strengthsHi": [
+      "Marked target ki location teammates aur minimap ke saath share hoti hai.",
+      "Target move kar raha ho toh mark window thodi longer hoti hai."
+    ],
+    "limitationsEn": [
+      "The base mark duration is short at 3 seconds.",
+      "The official sources checked do not publish a separate numeric cooldown or mark range."
+    ],
+    "limitationsHi": [
+      "Base mark duration 3 seconds ki short window hai.",
+      "Checked official sources separate numeric cooldown ya mark range publish nahi karte."
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   }
 ]
