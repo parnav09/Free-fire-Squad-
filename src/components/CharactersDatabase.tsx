@@ -523,13 +523,12 @@ const baseProfiles: CharacterProfile[] = [
 ];
 const profiles: CharacterProfile[] = [...baseProfiles, ...(extraProfiles as CharacterProfile[])];
 
-// The 24 remaining ability-character entries plus the two default characters.
+// The 19 remaining ability-character entries plus the two default characters.
 // These are searchable name-only entries; no unverified ability/profile data is fabricated.
 const pendingCharacterNames = [
-  "Nairi", "Otho", "Leon", "Koda", "Thiva", "Dimitri", "D-Bee", "Maro",
-  "Skyler", "Xayne", "Shirou", "Chrono", "Dasha", "Luqueta", "Kelly",
-  "Hayato", "Moco", "Steffie", "Misha", "Maxim", "Lila", "Caroline",
-  "Notora", "Kla", "Primis", "Nulla",
+  "Dimitri", "D-Bee", "Maro", "Skyler", "Xayne", "Shirou", "Chrono",
+  "Dasha", "Luqueta", "Kelly", "Hayato", "Moco", "Steffie", "Misha",
+  "Maxim", "Lila", "Caroline", "Notora", "Kla", "Primis", "Nulla",
 ];
 
 type CharacterArtworkProps = { profile: CharacterProfile; variant: "card" | "profile" };
