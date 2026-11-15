@@ -3603,23 +3603,23 @@
     "artworkMode": "cutout",
     "rowsHi": [
       {
-        "hi": "Enemy movement speed reduction",
+        "hi": "एनिमी की Movement Speed में कमी",
         "en": "Enemy movement speed reduction"
       },
       {
-        "hi": "Vehicle acceleration reduction",
+        "hi": "Vehicle Acceleration में कमी",
         "en": "Vehicle acceleration reduction"
       },
       {
-        "hi": "Deceleration duration",
+        "hi": "Deceleration Duration",
         "en": "Deceleration duration"
       },
       {
-        "hi": "Freeze duration (knockdown par)",
+        "hi": "Knockdown पर Freeze Duration",
         "en": "Freeze duration (on knockdown)"
       },
       {
-        "hi": "Extra Gloo Walls",
+        "hi": "मिलने वाली Extra Gloo Walls",
         "en": "Extra Gloo Walls obtained"
       },
       {
@@ -3709,8 +3709,8 @@
     ],
     "artworkMode": "cutout",
     "rowsHi": [
-      "Maximum distance damage bonus",
-      "Marked enemies par damage",
+      "Maximum Distance Damage Bonus",
+      "Mark हुए एनिमी को Damage",
       "Cooldown"
     ],
     "tacticalEn": [
@@ -3805,10 +3805,10 @@
     ],
     "artworkMode": "cutout",
     "rowsHi": [
-      "Mark duration",
-      "Mark range",
-      "Maximum active marks",
-      "First shot armor penetration",
+      "Marking Duration",
+      "Marking Range",
+      "Maximum Active Marks",
+      "पहली Shot की Armor Penetration",
       "Cooldown"
     ],
     "tacticalEn": [
@@ -3893,7 +3893,7 @@
     ],
     "artworkMode": "cutout",
     "rowsHi": [
-      "Force field HP",
+      "Force Field HP",
       "Duration",
       "Cooldown"
     ],
@@ -3994,11 +3994,11 @@
     ],
     "artworkMode": "cutout",
     "rowsHi": [
-      "Highlight mode duration",
-      "Base rate of fire bonus",
-      "Base movement speed bonus",
-      "Streak bonus (Rate of Fire)",
-      "Streak bonus (Movement)",
+      "Highlight Mode Duration",
+      "Rate of Fire का Base Bonus",
+      "Movement Speed का Base Bonus",
+      "Streak Bonus (Rate of Fire)",
+      "Streak Bonus (Movement)",
       "Cooldown"
     ],
     "tacticalEn": [
@@ -4104,7 +4104,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान 15 Nov 2026",
     "tacticalEn": [
       "The effect is conditional on simultaneous movement and firing; it does not provide the stated bonuses while stationary.",
       "In squad play, communicate when you are repositioning so teammates can maintain shared awareness of your movement."
@@ -4222,7 +4222,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान 15 Nov 2026",
     "tacticalEn": [
       "The passive bonus builds only from the user's own eliminations and remains until the stated reset condition.",
       "Keep track of the current round state because the accumulated bonus does not carry through player elimination or a round reset."
@@ -4345,7 +4345,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान 15 Nov 2026",
     "tacticalEn": [
       "The activation requirement is a continuous 4-second sprint, so the ability is not immediately active when a match begins or after every movement burst.",
       "The 5-second window is limited; the enhanced effect applies only to the first shot that hits a target within that window."
@@ -4458,7 +4458,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान 15 Nov 2026",
     "tacticalEn": [
       "The passive effect scales with lost maximum HP; its listed values are not a fixed bonus at full HP.",
       "The frontal-reduction portion applies to incoming damage from the front, as stated by Garena."
@@ -4574,7 +4574,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled 15 Nov 2026",
-    "subtitleHi": "OB55 values reconciled 15 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान 15 Nov 2026",
     "tacticalEn": [
       "The mark shares location information with teammates, making clear squad communication important when a mark appears.",
       "The longer duration is conditional on the marked target moving; the base duration remains 3 seconds."
@@ -4676,7 +4676,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान · 16 Nov 2026",
     "status": "OB55 values reconciled · 16 Nov 2026",
     "artworkMode": "official-fullbody"
   },
@@ -4755,7 +4755,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान · 16 Nov 2026",
     "status": "OB55 values reconciled · 16 Nov 2026",
     "artworkMode": "official-fullbody"
   },
@@ -4828,7 +4828,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान · 16 Nov 2026",
     "status": "OB55 values reconciled · 16 Nov 2026",
     "artworkMode": "official-fullbody"
   },
@@ -4891,7 +4891,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान · 16 Nov 2026",
     "status": "OB55 values reconciled · 16 Nov 2026",
     "artworkMode": "official-fullbody"
   },
@@ -4967,7 +4967,7 @@
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
-    "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
+    "subtitleHi": "OB55 Values का मिलान · 16 Nov 2026",
     "status": "OB55 values reconciled · 16 Nov 2026",
     "artworkMode": "official-fullbody"
   }
