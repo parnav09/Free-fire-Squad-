@@ -1638,5 +1638,397 @@
       }
     ],
     "status": "OB55 values reconciled · 14 Nov 2026"
+  },
+  {
+    "id": "k",
+    "name": "K",
+    "image": "",
+    "skill": "Master of All",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "lastChanged": "OB46 (4 Sep 2024)",
+    "introEn": "Active skill that switches between EP-conversion support and personal EP recovery modes.",
+    "introHi": "Active skill jo EP-conversion support aur khud EP recover karne ke modes ke beech switch karta hai.",
+    "currentEn": [
+      "Master of All increases Max EP by 50. Jiu-jitsu Mode boosts EP conversion for allies within 15m by 600%. Psychology Mode restores 3 EP every 1s, up to 250 EP."
+    ],
+    "currentHi": [
+      "Master of All Max EP ko 50 badhata hai. Jiu-jitsu Mode mein 15m ke andar allies ka EP conversion 600% badhta hai. Psychology Mode mein har 1s par 3 EP recover hota hai, maximum 250 EP tak."
+    ],
+    "rows": [
+      {
+        "en": "Max EP bonus",
+        "hi": "Max EP bonus",
+        "value": "+50 EP"
+      },
+      {
+        "en": "Jiu-jitsu ally range",
+        "hi": "Jiu-jitsu ally range",
+        "value": "15m"
+      },
+      {
+        "en": "EP conversion increase",
+        "hi": "EP conversion increase",
+        "value": "600%"
+      },
+      {
+        "en": "Psychology recovery",
+        "hi": "Psychology recovery",
+        "value": "3 EP every 1 second"
+      },
+      {
+        "en": "Psychology cap",
+        "hi": "Psychology cap",
+        "value": "250 EP"
+      },
+      {
+        "en": "Mode switch cooldown",
+        "hi": "Mode switch cooldown",
+        "value": "6 seconds"
+      }
+    ],
+    "notesEn": [
+      "Garena does not publish a separate numeric EP-conversion rate beyond the stated 600% increase."
+    ],
+    "notesHi": [
+      "Garena 600% increase ke alawa EP-conversion rate ka alag numeric value publish nahi karta."
+    ],
+    "historyEn": [
+      "OB46 (4 Sep 2024): Jiu-jitsu ally range 6m → 15m; Psychology recovery interval 2s → 1s; mode-switch cooldown 3s → 6s. Max EP 50; conversion boost 600%; recovery cap 250 EP."
+    ],
+    "historyHi": [
+      "OB46 (4 Sep 2024): Jiu-jitsu ally range 6m se 15m; Psychology recovery interval 2s se 1s; mode-switch cooldown 3s se 6s hua. Max EP +50, conversion boost 600%, recovery cap 250 EP."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB46 Patch Notes",
+        "url": "https://ff.garena.com/en-pk/article/1391/"
+      },
+      {
+        "label": "Garena – K character page",
+        "url": "https://ff.garena.com/en/chars/"
+      }
+    ]
+  },
+  {
+    "id": "sonia",
+    "name": "Sonia",
+    "image": "",
+    "skill": "Nano Lifeshield",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "lastChanged": "OB50 (30 Jul 2025)",
+    "introEn": "Passive survival skill that briefly protects Sonia after fatal damage, then requires a knockdown before its shield expires.",
+    "introHi": "Passive survival skill jo fatal damage ke baad Sonia ko thodi der protect karta hai; shield khatam hone se pehle knockdown zaroori hai.",
+    "currentEn": [
+      "After fatal damage, Sonia enters an invulnerable and immobile state for 0.4s, then gains a 1 HP shield for 2s. Sonia is eliminated when the shield disappears."
+    ],
+    "currentHi": [
+      "Fatal damage ke baad Sonia 0.4s invulnerable aur immobile hoti hai, phir 2s ke liye 1 HP shield milta hai. Shield khatam hote hi Sonia eliminate ho jaati hai."
+    ],
+    "rows": [
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Fatal damage"
+      },
+      {
+        "en": "Invulnerability",
+        "hi": "Invulnerability",
+        "value": "0.4 seconds"
+      },
+      {
+        "en": "Shield",
+        "hi": "Shield",
+        "value": "1 HP"
+      },
+      {
+        "en": "Shield duration",
+        "hi": "Shield duration",
+        "value": "2 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "180 seconds"
+      }
+    ],
+    "notesEn": [
+      "The OB50 notes specify elimination when the shield disappears; no successful knockdown rescue condition remains in the current profile. Garena does not publish a different outcome if the shield is depleted early."
+    ],
+    "notesHi": [
+      "OB50 notes ke mutabik shield disappear hote hi elimination hota hai; current profile mein knockdown se bachne wali condition nahi hai. Shield jaldi deplete ho toh exact outcome Garena publish nahi karta."
+    ],
+    "historyEn": [
+      "OB45 (26 Jun 2024): Shield reduced 150 HP → 100 HP.",
+      "OB48 (19 Feb 2025): Revival feature removed; 0.5s → 0.4s invulnerability and shield duration 3s → 2s; shield 100 HP → 50 HP.",
+      "OB50 (30 Jul 2025): Shield 50 HP → 1 HP; user is eliminated when shield disappears."
+    ],
+    "historyHi": [
+      "OB45 (26 Jun 2024): Shield 150 HP se 100 HP hua.",
+      "OB48 (19 Feb 2025): Revival feature remove; invulnerability 0.5s se 0.4s, shield duration 3s se 2s aur shield 100 HP se 50 HP hua.",
+      "OB50 (30 Jul 2025): Shield 50 HP se 1 HP; shield disappear hote hi elimination."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB50 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1511/"
+      },
+      {
+        "label": "Garena – OB48 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1456/"
+      },
+      {
+        "label": "Garena – OB45 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "Garena – Sonia character page",
+        "url": "https://ff.garena.com/en/chars/"
+      }
+    ]
+  },
+  {
+    "id": "orion",
+    "name": "Orion",
+    "image": "",
+    "skill": "Crimson Crush",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "lastChanged": "OB46 (4 Sep 2024)",
+    "introEn": "Active defensive skill that consumes Crimson Energy to grant temporary protection and drain nearby enemies' HP.",
+    "introHi": "Active defensive skill jo Crimson Energy consume karke temporary protection deta hai aur paas ke enemies ki HP absorb karta hai.",
+    "currentEn": [
+      "Replaces EP with 300 Crimson Energy. Consumes 200 energy to activate protection for 3s; Orion cannot take damage or attack and absorbs 10 HP (ignoring enemy Shield Points) from enemies within 5m. Movement speed is reduced by 10%. Cooldown: 3s."
+    ],
+    "currentHi": [
+      "EP ki jagah 300 Crimson Energy milti hai. 200 energy consume karke 3s protection activate hota hai; Orion damage nahi le sakta aur attack nahi kar sakta, aur 5m ke enemies se 10 HP absorb karta hai (enemy Shield Points ignore). Movement speed 10% kam hoti hai. Cooldown 3s."
+    ],
+    "rows": [
+      {
+        "en": "Crimson Energy",
+        "hi": "Crimson Energy",
+        "value": "300"
+      },
+      {
+        "en": "Activation cost",
+        "hi": "Activation cost",
+        "value": "200 energy"
+      },
+      {
+        "en": "Protection duration",
+        "hi": "Protection duration",
+        "value": "3 seconds"
+      },
+      {
+        "en": "HP absorption",
+        "hi": "HP absorption",
+        "value": "10 HP"
+      },
+      {
+        "en": "Absorption radius",
+        "hi": "Absorption radius",
+        "value": "5m"
+      },
+      {
+        "en": "Movement speed penalty",
+        "hi": "Movement speed penalty",
+        "value": "-10%"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "3 seconds"
+      }
+    ],
+    "notesEn": [
+      "Protection prevents damage and attacking while active. HP absorption ignores enemy Shield Points."
+    ],
+    "notesHi": [
+      "Protection active hone par damage aur attacking dono unavailable hote hain. HP absorption enemy Shield Points ko ignore karta hai."
+    ],
+    "historyEn": [
+      "OB46 (4 Sep 2024): Movement-speed penalty reduced 20% → 10%."
+    ],
+    "historyHi": [
+      "OB46 (4 Sep 2024): Movement-speed penalty 20% se 10% hui."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB46 Patch Notes",
+        "url": "https://ff.garena.com/en-pk/article/1391/"
+      },
+      {
+        "label": "Garena – Orion character page",
+        "url": "https://ff.garena.com/en/chars/"
+      }
+    ]
+  },
+  {
+    "id": "santino",
+    "name": "Santino",
+    "image": "",
+    "skill": "Shape Splitter",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "lastChanged": "OB50 (30 Jul 2025)",
+    "introEn": "Active mobility skill that deploys a moving mannequin and allows limited position swaps with it.",
+    "introHi": "Active mobility skill jo moving mannequin deploy karta hai aur uske saath limited position swap allow karta hai.",
+    "currentEn": [
+      "Spawns a 200 HP mannequin that moves autonomously for 25s. When within 90m, use the skill again to swap positions; up to 2 swaps, with only one swap allowed within 3s. The player who destroys the mannequin is marked for 5s. Teleport is prohibited if mannequin is 10m higher than Santino. Cooldown: 60s."
+    ],
+    "currentHi": [
+      "200 HP mannequin 25s tak khud move karta hai. 90m ke andar ho toh skill dobara use karke position swap kar sakte hain; total 2 swaps, aur 3s ke andar sirf ek swap. Mannequin destroy karne wala player 5s mark hota hai. Mannequin Santino se 10m zyada upar ho toh teleport allowed nahi. Cooldown 60s."
+    ],
+    "rows": [
+      {
+        "en": "Mannequin HP",
+        "hi": "Mannequin HP",
+        "value": "200 HP"
+      },
+      {
+        "en": "Mannequin duration",
+        "hi": "Mannequin duration",
+        "value": "25 seconds"
+      },
+      {
+        "en": "Swap range",
+        "hi": "Swap range",
+        "value": "90m"
+      },
+      {
+        "en": "Maximum swaps",
+        "hi": "Maximum swaps",
+        "value": "2"
+      },
+      {
+        "en": "Swap interval restriction",
+        "hi": "Swap interval restriction",
+        "value": "1 swap per 3 seconds"
+      },
+      {
+        "en": "Destroyer mark",
+        "hi": "Destroyer mark",
+        "value": "5 seconds"
+      },
+      {
+        "en": "Vertical restriction",
+        "hi": "Vertical restriction",
+        "value": "No teleport if mannequin is 10m higher"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "60 seconds"
+      }
+    ],
+    "notesEn": [
+      "OB50 added the 10m vertical restriction. Garena does not publish a separate exact movement speed for the mannequin."
+    ],
+    "notesHi": [
+      "OB50 mein 10m vertical restriction add hui. Mannequin ki exact movement speed Garena publish nahi karta."
+    ],
+    "historyEn": [
+      "OB39 (Mar 2023): Mannequin changed from stationary to autonomous movement; cooldown 80s.",
+      "OB44 (16 Apr 2024): Mannequin duration 12s → 25s; cooldown 75s → 60s; swap limit set to 2 and 3s spacing; mark destroyer for 5s.",
+      "OB50 (30 Jul 2025): Mannequin range 60m → 90m; vertical restriction added (no teleport if mannequin is 10m higher)."
+    ],
+    "historyHi": [
+      "OB39 (Mar 2023): Mannequin stationary se autonomous movement hua; cooldown 80s.",
+      "OB44 (16 Apr 2024): Duration 12s se 25s; cooldown 75s se 60s; 2 swaps/3s spacing aur destroyer mark 5s.",
+      "OB50 (30 Jul 2025): Mannequin range 60m se 90m; 10m higher hone par teleport restriction add."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB50 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1511/"
+      },
+      {
+        "label": "Garena – OB44 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1332/"
+      },
+      {
+        "label": "Garena – Santino character page",
+        "url": "https://ff.garena.com/en/chars/673"
+      }
+    ]
+  },
+  {
+    "id": "tatsuya",
+    "name": "Tatsuya",
+    "image": "",
+    "skill": "Rebel Rush",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "lastChanged": "OB47 (2 Dec 2024)",
+    "introEn": "Active mobility skill that rapidly dashes forward and stores up to two charges.",
+    "introHi": "Active mobility skill jo rapid forward dash karta hai aur maximum do charges store karta hai.",
+    "currentEn": [
+      "Dashes forward rapidly for 0.3s. Stores up to 2 uses, with a 5s cooldown between uses. Dash replenishment time: 60s."
+    ],
+    "currentHi": [
+      "0.3s ke liye rapid forward dash karta hai. Maximum 2 uses store hote hain, aur uses ke beech 5s cooldown hai. Dash replenish time 60s."
+    ],
+    "rows": [
+      {
+        "en": "Dash duration",
+        "hi": "Dash duration",
+        "value": "0.3 seconds"
+      },
+      {
+        "en": "Stored uses",
+        "hi": "Stored uses",
+        "value": "2"
+      },
+      {
+        "en": "Cooldown between uses",
+        "hi": "Cooldown between uses",
+        "value": "5 seconds"
+      },
+      {
+        "en": "Dash replenishment",
+        "hi": "Dash replenishment",
+        "value": "60 seconds"
+      }
+    ],
+    "notesEn": [
+      "Garena does not publish the dash distance or exact dash speed."
+    ],
+    "notesHi": [
+      "Garena dash distance ya exact dash speed publish nahi karta."
+    ],
+    "historyEn": [
+      "OB43 (19 Feb 2024): Stored charges 3 → 2.",
+      "OB44 (16 Apr 2024): Dash replenishment 45s → 60s.",
+      "OB47 (2 Dec 2024): Cooldown between uses 1s → 5s."
+    ],
+    "historyHi": [
+      "OB43 (19 Feb 2024): Stored charges 3 se 2.",
+      "OB44 (16 Apr 2024): Dash replenishment 45s se 60s.",
+      "OB47 (2 Dec 2024): Uses ke beech cooldown 1s se 5s."
+    ],
+    "source": [
+      {
+        "label": "Garena – OB47 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1424/"
+      },
+      {
+        "label": "Garena – OB44 Patch Notes",
+        "url": "https://ff.garena.com/en-pk/article/1339/"
+      },
+      {
+        "label": "Garena – OB43 Patch Notes",
+        "url": "https://ff.garena.com/en-pk/article/1317/"
+      },
+      {
+        "label": "Garena – Tatsuya character page",
+        "url": "https://ff.garena.com/en/chars/"
+      }
+    ]
   }
 ]
