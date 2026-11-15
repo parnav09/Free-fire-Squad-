@@ -8,7 +8,7 @@ type DetailRow = { en: string; hi: string; value: string };
 type CharacterProfile = {
   id: string;
   image: string;
-  artworkMode?: "cutout" | "contained";
+  artworkMode?: "cutout" | "contained" | "official-fullbody";
   abilityDisplayOnce?: boolean;
   name: string;
   skill: string;
@@ -550,6 +550,7 @@ function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
   </div>;
   if (!profile.image || failed) return monogram;
   return <img
+    className={profile.artworkMode === "official-fullbody" ? "character-art-image--official-fullbody" : undefined}
     src={profile.image}
     alt={profile.name}
     loading={variant === "card" ? "lazy" : "eager"}
@@ -728,7 +729,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     </div>
     <article className="character-profile">
       <header className="character-profile-identity">
-        <div className={`character-profile-art ${shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
+        <div className={`character-profile-art ${shownProfile.artworkMode === "official-fullbody" ? "character-profile-art--official-fullbody" : shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
         <div className="character-profile-heading">
           <h2>{shownProfile.name}</h2>
           <span className="character-confirmed">{shownProfile.badge || "Official-source profile"}</span>
