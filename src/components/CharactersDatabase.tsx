@@ -22,7 +22,7 @@ type CharacterProfile = {
   notesHi: string[];
   historyEn: string[];
   historyHi: string[];
-  source: { label: string; url: string }[];
+  source: { label: string; url?: string }[];
   status: string;
   subtitle?: string;
   subtitleHi?: string;
@@ -669,7 +669,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         </section>
         <section className="character-detail-block character-source-block">
           <h3>{sectionTitle("Official Sources", "Official Sources")}</h3>
-          <ul>{shownProfile.source.map(source => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.label}</a></li>)}</ul>
+          <ul>{shownProfile.source.map(source => <li key={source.url || source.label}>{source.url ? <a href={source.url} target="_blank" rel="noreferrer">{source.label}</a> : source.label}</li>)}</ul>
         </section>
       </section>
     </article>
