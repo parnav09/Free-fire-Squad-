@@ -9,6 +9,7 @@ type CharacterProfile = {
   id: string;
   image: string;
   artworkMode?: "cutout" | "contained";
+  abilityDisplayOnce?: boolean;
   name: string;
   skill: string;
   type: string;
