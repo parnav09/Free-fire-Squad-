@@ -13,7 +13,7 @@
       "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
     ],
     "currentHi": [
-      "5m ka aur banataa hai, jo 10 seconds tak Movement Speed 15% badhata hai aur har second 5 HP wapas deta hai. aur active rehne par har 2 seconds mein Alok se 2m peeche ek Music Note girataa hai, jo 5 seconds tak rehta hai. Note uthaane wale teammates ko 10 seconds tak 15% Movement Speed aur 5 HP/s milta hai. Drop the Beat ke kai Aura ek-dusare ke saath stack nahi hote."
+      "5m ka Aura banata hai, jo 10 seconds tak Movement Speed 15% badhata hai aur har second 5 HP wapas deta hai. Aura active rehne par har 2 seconds mein Alok se 2m peeche ek Music Note girata hai, jo 5 seconds tak rehta hai. Note uthaane wale teammates ko 10 seconds tak 15% Movement Speed aur 5 HP/s milta hai. Drop the Beat ke kai Aura ek-dusre ke saath stack nahi hote."
     ],
     "rows": [
       {
@@ -43,7 +43,7 @@
       },
       {
         "en": "Music note drop",
-        "hi": "Music Note girane ka samaya aur jagah",
+        "hi": "Music Note girane ka samay aur jagah",
         "value": "Every 2 seconds, 2m behind Alok"
       },
       {
@@ -120,12 +120,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB42 (Oct 2023)",
     "introEn": "Electromagnetic wave that blocks enemy skills, deals damage and interrupts interactions.",
-    "introHi": "ek Electromagnetic Wave chhodta hai, jo Enemy ki Skills block karti hai, Damage deti hai aur unki chala rahi interactions ko rokti hai.",
+    "introHi": "ek Electromagnetic Wave chhodta hai, jo Enemy ki Skills block karti hai, Damage deti hai aur unki chal rahi interactions ko rokti hai.",
     "currentEn": [
       "Unleashes an 8m electromagnetic wave. Enemies inside cannot activate skills, take 25 DMG, and have their interaction countdowns (such as reviving) interrupted."
     ],
     "currentHi": [
-      "8m ki Electromagnetic Wave chhodta hai. iske andar maujuda Enemy apni Skills activate nahi kara paaenge, unhen 25 DMG milta hai aur unki interactions ka countdown (jaise revive karna) ruka jata hai."
+      "8m ki Electromagnetic Wave chhodta hai. iske andar maujood Enemy apni Skills activate nahi kara paaenge, unhen 25 DMG milta hai aur unki interactions ka countdown (jaise revive karna) ruka jata hai."
     ],
     "rows": [
       {
@@ -163,7 +163,7 @@
       "Skill can be cancelled while aiming. Joseph is immune to A124's interference."
     ],
     "notesHi": [
-      "Aim karte samaya Skill cancel ki jaa sakati hai. Joseph, A124 ke interference se immune hai."
+      "Aim karte samay Skill cancel ki jaa sakati hai. Joseph, A124 ke interference se immune hai."
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Reworked into an 8m wave that disables enemy skills.",
@@ -171,7 +171,7 @@
     ],
     "historyHi": [
       "OB33 (23 Mar 2022): Skill ko badalakara 8m ki Wave banaayaa gayaa, jo Enemy ki Skills disable karti hai.",
-      "OB42 (Oct 2023): 25 DMG jodaa gayaa; Duration 30s se ghata kar 20s aur Cooldown 75s se ghata kar 50s kiya gayaa; Aim karte samaya Skill cancel karne ka option jodaa gayaa."
+      "OB42 (Oct 2023): 25 DMG jodaa gayaa; Duration 30s se ghata kar 20s aur Cooldown 75s se ghata kar 50s kiya gayaa; Aim karte samay Skill cancel karne ka option jodaa gayaa."
     ],
     "source": [
       {
@@ -195,12 +195,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB46 (Sep 2024)",
     "introEn": "Passive that slows armor durability loss and adds armor damage reduction, boosted by nearby teammates.",
-    "introHi": "ek Passive Skill, jo Armor ki Durability kama hone ki Speed ghatati hai aur Armor Damage Reduction deti hai. aas-paas ke teammates se iska bonus badhta hai.",
+    "introHi": "ek Passive Skill, jo Armor ki Durability kam hone ki Speed ghatati hai aur Armor Damage Reduction deti hai. aas-paas ke teammates se iska bonus badhta hai.",
     "currentEn": [
       "Armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
     ],
     "currentHi": [
-      "Armor ki Durability 40% dhimi Speed se kama hoti hai. Wolf Pack se 4% Armor Damage Reduction milta hai, saath hi 15m ke andar maujuda har teammate ke liye 1% extra milta hai."
+      "Armor ki Durability 40% dheere kam hoti hai. Wolf Pack se 4% Armor Damage Reduction milta hai, saath hi 15m ke andar maujood har teammate ke liye 1% extra milta hai."
     ],
     "rows": [
       {
@@ -233,7 +233,7 @@
       "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack. Since OB47 the awakened skill replaces the original for all players."
     ],
     "notesHi": [
-      "Shield Points par Armor Damage Reduction ke buffs laagu nahi hote, isalie Wolf Pack Shield Points se hone wale Damage ko kama nahi karta. OB46 ke notes mein yaha nahi bataayaa gayaa ki teammates ke paasa bhi Wolf Pack honaa zaroori hai ya nahi. OB47 se sabhi players ke liye Awakened Skill ne original Skill ki jagaha le li hai."
+      "Shield Points par Armor Damage Reduction ke buffs laagu nahi hote, isalie Wolf Pack Shield Points se hone wale Damage ko kam nahi karta. OB46 ke notes mein yaha nahi bataayaa gayaa ki teammates ke paasa bhi Wolf Pack honaa zaroori hai ya nahi. OB47 se sabhi players ke liye Awakened Skill ne original Skill ki jagaha le li hai."
     ],
     "historyEn": [
       "OB40 (Jun 2023): Armor durability loss reduction 20% to 25%.",
@@ -321,7 +321,7 @@
       "Shield Points are removed before HP. Shield Points ignore armor damage-reduction buffs. Shield Points do not protect against Danger Zone, fall or bleeding damage."
     ],
     "notesHi": [
-      "HP se pahale Shield Points kama hote hain. Shield Points par Armor Damage Reduction ke buffs laagu nahi hote. Shield Points, Danger Zone, girane ya bleeding se hone wale Damage se nahi bachaate."
+      "HP se pahale Shield Points kam hote hain. Shield Points par Armor Damage Reduction ke buffs laagu nahi hote. Shield Points, Danger Zone, girane ya bleeding se hone wale Damage se nahi bachaate."
     ],
     "historyEn": [
       "OB41 (Aug 2023): 40 extra HP converted to 40 Shield Points.",
@@ -484,7 +484,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB50 (30 Jul 2025)",
     "introEn": "Passive that increases accuracy while Laura is scoped in.",
-    "introHi": "ek Passive Skill, jo Scope mein aim karte samaya Accuracy badhti hai.",
+    "introHi": "ek Passive Skill, jo Scope mein aim karte samay Accuracy badhti hai.",
     "rows": [
       {
         "en": "Condition",
@@ -506,7 +506,7 @@
       "Accuracy increases by 60% while scoped in."
     ],
     "currentHi": [
-      "Scope mein rahate samaya Accuracy 60% badha jaati hai."
+      "Scope mein rahate samay Accuracy 60% badha jaati hai."
     ],
     "notesEn": [
       "Built to help long-range shooters land shots."
@@ -587,7 +587,7 @@
       "Works while using Sniper Rifles or Marksman Rifles."
     ],
     "notesHi": [
-      "yaha Skill Sniper Rifles ya Marksman Rifles istemaala karte samaya kaama karti hai."
+      "yaha Skill Sniper Rifles ya Marksman Rifles istemaala karte samay kaama karti hai."
     ],
     "historyEn": [
       "OB27 (Apr 2021): Became a passive skill that silences sniper and marksman fire.",
@@ -731,7 +731,7 @@
       "Locates enemies within 80m who are not prone or crouching for 10 seconds. Enemy positions are shared with teammates."
     ],
     "currentHi": [
-      "10 seconds tak 80m ke andar maujuda una Enemy ki location pataa chalati hai jo prone ya crouch nahi kara rahe hote. Enemy ki positions teammates ke saath share hoti hain."
+      "10 seconds tak 80m ke andar maujood una Enemy ki location pataa chalati hai jo prone ya crouch nahi kara rahe hote. Enemy ki positions teammates ke saath share hoti hain."
     ],
     "notesEn": [
       "Prone or crouching enemies are not revealed.",
@@ -829,7 +829,7 @@
       "Every elimination adds one spectator, and spectators never decrease. Each spectator reduces headshot damage taken by 4% and increases headshot damage dealt by 10%."
     ],
     "currentHi": [
-      "har Elimination par 1 Spectator judataa hai aur Spectators kama nahi hote. har Spectator se liyaa gayaa Headshot Damage 4% kama aur diyaa gayaa Headshot Damage 10% badha jata hai."
+      "har Elimination par 1 Spectator judataa hai aur Spectators kam nahi hote. har Spectator se liyaa gayaa Headshot Damage 4% kam aur diyaa gayaa Headshot Damage 10% badha jata hai."
     ],
     "notesEn": [
       "Maximum effect is reached at 3 spectators."
@@ -1081,7 +1081,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Passive that speeds up reloads and reduces enemy healing on every hit.",
-    "introHi": "ek Passive Skill, jo Reload Speed badhti hai aur har Hit par Enemy ki Healing kama karti hai.",
+    "introHi": "ek Passive Skill, jo Reload Speed badhti hai aur har Hit par Enemy ki Healing kam karti hai.",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
@@ -1114,7 +1114,7 @@
       "Reload speed increases by 20%. Every time Nikita hits an enemy, that target gets a 50% healing reduction for 6 seconds (maximum 50%)."
     ],
     "currentHi": [
-      "Reload Speed 20% badha jaati hai. Nikita jaba bhi kisi Enemy ko hit karti hai, usa target ki Healing 6 seconds ke liye 50% kama ho jaati hai (maximum 50%)."
+      "Reload Speed 20% badha jaati hai. Nikita jaba bhi kisi Enemy ko hit karti hai, usa target ki Healing 6 seconds ke liye 50% kam ho jaati hai (maximum 50%)."
     ],
     "notesEn": [
       "Built to counter high-healing characters such as Ford and Kassie. Hits do not stack the reduction beyond the 50% maximum. A visual indicator now shows when you apply Healing Reduction on an enemy (OB54)."
@@ -1238,7 +1238,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB44 (Apr 2024)",
     "introEn": "Passive that grants immunity to disruptive effects and a short movement-speed boost.",
-    "introHi": "ek Passive Skill, jo pareshaana karne wale effects se immunity aur thode samaya ke liye Movement Speed Boost deti hai.",
+    "introHi": "ek Passive Skill, jo pareshaana karne wale effects se immunity aur thode samay ke liye Movement Speed Boost deti hai.",
     "currentEn": [
       "Become immune to disruptive effects (slowdown, marking, skill-silencing) and gain a 10% movement-speed boost for 5 seconds."
     ],
@@ -1279,7 +1279,7 @@
       "OB44 (Apr 2024): Cooldown 60s to 45s."
     ],
     "historyHi": [
-      "OB35 (Jul 2022): Original Skill Nutty Movement ka Speed Boost kama kiya gayaa.",
+      "OB35 (Jul 2022): Original Skill Nutty Movement ka Speed Boost kam kiya gayaa.",
       "OB42 (Oct 2023): Silver Spoon mein rework kiya gayaa: 5s ke liye immunity aur 10% Speed; Cooldown 60s.",
       "OB44 (Apr 2024): Cooldown 60s se ghata kar 45s kiya gayaa."
     ],
@@ -1318,7 +1318,7 @@
       "Transforms into a bush with a 10% reduction in movement speed for 10 seconds. The transformation ends when Wukong attacks. The cooldown resets if Wukong takes down an enemy within 10 seconds after releasing the skill."
     ],
     "currentHi": [
-      "Wukong 10 seconds ke liye Bush mein badala jata hai aur usaki Movement Speed 10% kama ho jaati hai. Wukong ke Attack karte hi Transformation khatma ho jata hai. Skill istemaala karne ke 10 seconds ke andar Wukong kisi Enemy ko knock karta hai, to Cooldown reset ho jata hai."
+      "Wukong 10 seconds ke liye Bush mein badala jata hai aur usaki Movement Speed 10% kam ho jaati hai. Wukong ke Attack karte hi Transformation khatma ho jata hai. Skill istemaala karne ke 10 seconds ke andar Wukong kisi Enemy ko knock karta hai, to Cooldown reset ho jata hai."
     ],
     "rows": [
       {
@@ -1365,7 +1365,7 @@
       "OB55 (10 Sep 2026): Cooldown 90s to 75s."
     ],
     "historyHi": [
-      "Sep 2021: Camouflage ke dauraana Movement Speed 20% kama ki gai.",
+      "Sep 2021: Camouflage ke dauraana Movement Speed 20% kam ki gai.",
       "OB34 (25 May 2022): Speed Reduction 20% se ghata kar 10% ki gai.",
       "OB42 (Oct 2023): Speed Reduction 10% se ghata kar 5% aur Cooldown 200s kiya gayaa.",
       "OB43 (24 Jan 2024): Speed Reduction hataa di gai.",
@@ -1517,7 +1517,7 @@
       "When using an active skill, gives 30 Shield Points to self and teammates within 10m. The Shield Points decay after 10 seconds, after which players can obtain the effect again."
     ],
     "currentHi": [
-      "Active Skill istemaala karne par Shani aur 10m ke andar maujuda teammates ko 30 Shield Points milate hain. ye Shield Points 10 seconds baada dhire-dhire khatma ho jaate hain; iske baada players dobaaraa yaha Effect paa sakate hain."
+      "Active Skill istemaala karne par Shani aur 10m ke andar maujood teammates ko 30 Shield Points milate hain. ye Shield Points 10 seconds baada dhire-dhire khatma ho jaate hain; iske baada players dobaaraa yaha Effect paa sakate hain."
     ],
     "rows": [
       {
@@ -1550,7 +1550,7 @@
       "Shield Points are deducted before HP. Shield Points ignore armor damage-reduction buffs. Shield Points do not protect against Danger Zone, fall or bleeding damage."
     ],
     "notesHi": [
-      "HP se pahale Shield Points kama hote hain. Shield Points par Armor Damage Reduction ke buffs laagu nahi hote. Shield Points, Danger Zone, girane ya bleeding se hone wale Damage se nahi bachaate."
+      "HP se pahale Shield Points kam hote hain. Shield Points par Armor Damage Reduction ke buffs laagu nahi hote. Shield Points, Danger Zone, girane ya bleeding se hone wale Damage se nahi bachaate."
     ],
     "historyEn": [
       "OB41 (Aug 2023): Reworked: 50 Shield Points, decay after 5s, cooldown 10s.",
@@ -1562,7 +1562,7 @@
       "OB41 (Aug 2023): Rework kiya gayaa: 50 Shield Points, 5s baada khatma hote the aur Cooldown 10s thaa.",
       "OB45 (26 Jun 2024): Shield Points 50 se ghata kar 40 kie gae.",
       "OB48 (19 Feb 2025): Shield Points 40 se ghata kar 30 kie gae.",
-      "OB53 (2 Apr 2026): Shield khatma hone ka samaya 5s se badha kar 10s kiya gayaa."
+      "OB53 (2 Apr 2026): Shield khatma hone ka samay 5s se badha kar 10s kiya gayaa."
     ],
     "source": [
       {
@@ -1594,7 +1594,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB51 (Oct 2025)",
     "introEn": "Passive that restores HP over time after Ford takes damage.",
-    "introHi": "ek Passive Skill, jo Ford ko Damage lagane ke baada samaya ke saath HP wapas deti hai.",
+    "introHi": "ek Passive Skill, jo Ford ko Damage lagane ke baada samay ke saath HP wapas deti hai.",
     "currentEn": [
       "Gains 10 HP/s for 3 seconds when taking damage. The skill resets immediately after Ford releases an active skill."
     ],
@@ -1640,7 +1640,7 @@
       "OB51 (Oct 2025): Duration 4s to 3s."
     ],
     "historyHi": [
-      "OB39 (Mar 2023): Damage lagane par 3s tak 10 HP/s Recovery aur 20s Cooldown ke saath Skill ko rework kiya gayaa; Danger Zone mein Survivability kama ki gai.",
+      "OB39 (Mar 2023): Damage lagane par 3s tak 10 HP/s Recovery aur 20s Cooldown ke saath Skill ko rework kiya gayaa; Danger Zone mein Survivability kam ki gai.",
       "OB45 (26 Jun 2024): Duration 3s se badha kar 4s ki gai.",
       "OB51 (Oct 2025): Duration 4s se ghata kar 3s ki gai."
     ],
@@ -1783,7 +1783,7 @@
       "The OB50 notes specify elimination when the shield disappears; no successful knockdown rescue condition remains in the current profile. Garena does not publish a different outcome if the shield is depleted early."
     ],
     "notesHi": [
-      "OB50 ke notes ke mutaabika Shield khatma hone par Sonia eliminate ho jaati hai; current profile mein Knockdown karake bachane ki condition nahi hai. Shield samaya se pahale puri taraha khatma ho jaae to kyaa hota hai, isaki alaga jaanakaari Garena publish nahi karta."
+      "OB50 ke notes ke mutaabika Shield khatma hone par Sonia eliminate ho jaati hai; current profile mein Knockdown karake bachane ki condition nahi hai. Shield samay se pahale poori tarah khatma ho jaae to kyaa hota hai, isaki alaga jaanakaari Garena publish nahi karta."
     ],
     "historyEn": [
       "OB45 (26 Jun 2024): Shield reduced 150 HP → 100 HP.",
@@ -1825,12 +1825,12 @@
     "status": "OB55 values reconciled · 15 Nov 2026",
     "lastChanged": "OB46 (4 Sep 2024)",
     "introEn": "Active defensive skill that consumes Crimson Energy to grant temporary protection and drain nearby enemies' HP.",
-    "introHi": "ek Active Defensive Skill, jo Crimson Energy kharcha karake thode samaya ki Protection deti hai aur aas-paas ke Enemy ki HP absorb karti hai.",
+    "introHi": "ek Active Defensive Skill, jo Crimson Energy kharcha karake thode samay ki Protection deti hai aur aas-paas ke Enemy ki HP absorb karti hai.",
     "currentEn": [
       "Replaces EP with 300 Crimson Energy. Consumes 200 energy to activate protection for 3s; Orion cannot take damage or attack and absorbs 10 HP (ignoring enemy Shield Points) from enemies within 5m. Movement speed is reduced by 10%. Cooldown: 3s."
     ],
     "currentHi": [
-      "EP ki jagaha 300 Crimson Energy milti hai. Protection activate karne ke liye 200 Energy kharcha hoti hai aur yaha 3s tak rehti hai; is dauraana Orion ko Damage nahi lagataa aur vaha Attack nahi kara sakataa. 5m ke andar maujuda Enemy se 10 HP absorb hoti hai (Enemy ke Shield Points ko ignore karake). Movement Speed 10% kama ho jaati hai. Cooldown: 3s."
+      "EP ki jagaha 300 Crimson Energy milti hai. Protection activate karne ke liye 200 Energy kharcha hoti hai aur yaha 3s tak rehti hai; is dauraana Orion ko Damage nahi lagataa aur vaha Attack nahi kara sakataa. 5m ke andar maujood Enemy se 10 HP absorb hoti hai (Enemy ke Shield Points ko ignore karake). Movement Speed 10% kam ho jaati hai. Cooldown: 3s."
     ],
     "rows": [
       {
@@ -1995,12 +1995,12 @@
     "status": "OB55 values reconciled · 15 Nov 2026",
     "lastChanged": "OB52 (9 Jan 2026)",
     "introEn": "Active mobility skill that dashes forward and refreshes its cooldown after a timely knockdown.",
-    "introHi": "ek Active Mobility Skill, jo aage ki tarapha Dash karti hai aur sahi samaya par Knockdown karne par apanaa Cooldown reset kara deti hai.",
+    "introHi": "ek Active Mobility Skill, jo aage ki tarapha Dash karti hai aur sahi samay par Knockdown karne par apanaa Cooldown reset kara deti hai.",
     "currentEn": [
       "Rushes forward quickly for 0.3s. Knocking down an enemy within 10s after skill release resets Rebel Rush's cooldown. If no qualifying knockdown occurs, cooldown is 90s."
     ],
     "currentHi": [
-      "0.3s ke liye teji se aage Dash karta hai. Skill chhodane ke 10s ke andar kisi Enemy ko Knockdown karne par Rebel Rush ka Cooldown reset ho jata hai. agara is samaya mein Knockdown nahi hota, to Cooldown 90s rehta hai."
+      "0.3s ke liye tez se aage Dash karta hai. Skill chhodane ke 10s ke andar kisi Enemy ko Knockdown karne par Rebel Rush ka Cooldown reset ho jata hai. agara is samay mein Knockdown nahi hota, to Cooldown 90s rehta hai."
     ],
     "rows": [
       {
@@ -2157,12 +2157,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB43 (24 Jan 2024)",
     "introEn": "Active skill that marks enemies behind Gloo Walls and lets Iris damage them through the walls.",
-    "introHi": "ek Active Skill, jo Gloo Walls ke peeche maujuda Enemy ko mark karti hai aur Iris ko divaara ke paar se unhen Damage karne deti hai.",
+    "introHi": "ek Active Skill, jo Gloo Walls ke peeche maujood Enemy ko mark karti hai aur Iris ko divaara ke paar se unhen Damage karne deti hai.",
     "currentEn": [
       "For 15 seconds, successfully firing at a Gloo Wall marks enemies within 7m of it and penetrates the Gloo Wall to damage the marked enemies, with lower damage than usual. Works on up to 3 Gloo Walls."
     ],
     "currentHi": [
-      "15 seconds tak Gloo Wall par saphalataapurvaka fire karne se usake 7m ke andar maujuda Enemy mark ho jaate hain. iske baada Gloo Wall ke paar se mark hue Enemy ko Damage kiya jaa sakataa hai, lekina Damage saamaanya se kama hota hai. yaha Skill maximum 3 Gloo Walls par kaama karti hai."
+      "15 seconds tak Gloo Wall par saphalataapurvaka fire karne se usake 7m ke andar maujood Enemy mark ho jaate hain. iske baada Gloo Wall ke paar se mark hue Enemy ko Damage kiya jaa sakataa hai, lekina Damage saamaanya se kam hota hai. yaha Skill maximum 3 Gloo Walls par kaama karti hai."
     ],
     "rows": [
       {
@@ -2196,7 +2196,7 @@
       "Attacks that penetrate Gloo Walls, like Iris's skill, show a clearer hit effect on the walls (OB49)."
     ],
     "notesHi": [
-      "Garena, kama hue Damage ki exact value publish nahi karta.",
+      "Garena, kam hue Damage ki exact value publish nahi karta.",
       "Iris ki Skill jaisi Gloo Wall ke paar jaane wali attacks par divaara par jyaadaa saaf Hit Effect dikhataa hai (OB49)."
     ],
     "historyEn": [
@@ -2248,7 +2248,7 @@
       "J.Biebs and allies within 15m can block 8% of damage using EP. The EP deducted from allies is added to J.Biebs's EP."
     ],
     "currentHi": [
-      "J.Biebs aur 15m ke andar maujuda allies EP ka istemaala karake 8% Damage block kara sakate hain. Allies se ghataayaa gayaa EP, J.Biebs ke EP mein juda jata hai."
+      "J.Biebs aur 15m ke andar maujood allies EP ka istemaala karake 8% Damage block kara sakate hain. Allies se ghataayaa gayaa EP, J.Biebs ke EP mein juda jata hai."
     ],
     "rows": [
       {
@@ -2312,12 +2312,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB43 (24 Jan 2024)",
     "introEn": "Active drone that locks onto the nearest enemy and slows them with a pulse explosion.",
-    "introHi": "ek Active Drone, jo sabse najadiki Enemy ko lock karti hai aur Pulse Explosion se usaki Speed kama karti hai.",
+    "introHi": "ek Active Drone, jo sabse najadiki Enemy ko lock karti hai aur Pulse Explosion se usaki Speed kam karti hai.",
     "currentEn": [
       "Releases a drone toward the nearest enemy within 100m in front. It creates a 5m-diameter pulse explosion that reduces enemies' movement speed by 40% and rate of fire by 40% for 5 seconds, and deals 25 DMG."
     ],
     "currentHi": [
-      "saamane 100m ke andar maujuda sabse najadiki Enemy ki tarapha Drone bhejataa hai. yaha 5m diameter ka Pulse Explosion banati hai, jo 5 seconds ke liye Enemy ki Movement Speed 40% aur Rate of Fire 40% kama karta hai, saath hi 25 DMG deta hai."
+      "saamane 100m ke andar maujood sabse najadiki Enemy ki tarapha Drone bhejataa hai. yaha 5m diameter ka Pulse Explosion banati hai, jo 5 seconds ke liye Enemy ki Movement Speed 40% aur Rate of Fire 40% kam karta hai, saath hi 25 DMG deta hai."
     ],
     "rows": [
       {
@@ -2380,7 +2380,7 @@
       "OB42 (Oct 2023): Diameter 3m se badha kar 4m kiya gayaa.",
       "OB43 (24 Jan 2024): Diameter 4m se badha kar 5m; Movement Speed Reduction 60% se ghata kar 40%; Rate of Fire Reduction 35% se badha kar 40%; Cooldown 90s se ghata kar 60s kiya gayaa.",
       "OB49 (21 May 2025): koi Enemy detect na hone par Voice Notification jodaa gayaa.",
-      "OB54 (23 Jun 2026): 9th Anniversary event mein Skill Boosts jode gae: UAV Shockwave (Hit ke baada extra scan aas-paas ke Enemy ko Minimap par 5s ke liye dikhaataa hai; BR mein 120m aur CS mein 30m) aur Super Drone (Drone par glide karte samaya 15s ke liye 15% Speed Boost)."
+      "OB54 (23 Jun 2026): 9th Anniversary event mein Skill Boosts jode gae: UAV Shockwave (Hit ke baada extra scan aas-paas ke Enemy ko Minimap par 5s ke liye dikhaataa hai; BR mein 120m aur CS mein 30m) aur Super Drone (Drone par glide karte samay 15s ke liye 15% Speed Boost)."
     ],
     "source": [
       {
@@ -2421,7 +2421,7 @@
       "Unleashes a fast-moving, swirling tempest that passes through Gloo Walls and lasts 8 seconds, dealing 25 DMG to enemies hit. While the tempest is active, tap the skill again to teleport to its location and gain a shield for 5 seconds with 20% damage reduction. The tempest disappears after teleporting."
     ],
     "currentHi": [
-      "teji se ghumati hui Tempest chhodta hai, jo Gloo Walls ke paar jaati hai aur 8 seconds tak rehti hai. isaki chapeta mein aane wale Enemy ko 25 DMG milta hai. Tempest active rahate hue Skill dobaaraa tap karne par Kenta usaki location par Teleport ho jata hai aur 5 seconds ke liye 20% Damage Reduction wala Shield paataa hai. Teleport ke baada Tempest gaayaba ho jaati hai."
+      "tez se ghumati hui Tempest chhodta hai, jo Gloo Walls ke paar jaati hai aur 8 seconds tak rehti hai. isaki chapeta mein aane wale Enemy ko 25 DMG milta hai. Tempest active rahate hue Skill dobaaraa tap karne par Kenta usaki location par Teleport ho jata hai aur 5 seconds ke liye 20% Damage Reduction wala Shield paataa hai. Teleport ke baada Tempest gaayaba ho jaati hai."
     ],
     "rows": [
       {
@@ -2459,7 +2459,7 @@
       "OB55 replaced Kenta's original shield skill completely."
     ],
     "notesHi": [
-      "OB55 mein Kenta ki original Shield Skill ko puri taraha badala diyaa gayaa."
+      "OB55 mein Kenta ki original Shield Skill ko poori tarah badala diyaa gayaa."
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Introduced with Swordsman's Wrath: 5m frontal shield, 50% weapon damage reduction, lasts 2-5s, cooldown 210-160s.",
@@ -2468,8 +2468,8 @@
     ],
     "historyHi": [
       "OB33 (23 Mar 2022): Swordsman's Wrath ke saath introduce kiya gayaa: 5m frontal Shield, Weapon Damage Reduction 50%, Duration 2–5s aur Cooldown 210–160s.",
-      "OB38 (Jan 2023): Fire karne ke baada Shield dobaaraa uthaai jaa sakati thi; Fire karte samaya 10% Reduction aur Cooldown 120–70s kiya gayaa.",
-      "OB55 (10 Sep 2026): Tempest aur Teleport wali Skill mein puri taraha rework kiya gayaa."
+      "OB38 (Jan 2023): Fire karne ke baada Shield dobaaraa uthaai jaa sakati thi; Fire karte samay 10% Reduction aur Cooldown 120–70s kiya gayaa.",
+      "OB55 (10 Sep 2026): Tempest aur Teleport wali Skill mein poori tarah rework kiya gayaa."
     ],
     "source": [
       {
@@ -2504,7 +2504,7 @@
     ],
     "currentHi": [
       "Gloo Wall lagaane ke baada 1.5-second Effect Window ke dauraana usaki Durability har second 160 badhti hai.",
-      "is Effect Window ke dauraana 5m ke andar maujuda teammates har second 5 HP recover karte hain."
+      "is Effect Window ke dauraana 5m ke andar maujood teammates har second 5 HP recover karte hain."
     ],
     "rows": [
       {
@@ -2603,16 +2603,16 @@
       "Treat Ice Iron as a short support window, not sustained healing. Time the wall deployment around the squad's move rather than relying on repeated walls to stack recovery."
     ],
     "tacticalHi": [
-      "Squad ko kisi jagaha hold ya rotate karna ho, to Gloo Wall usi cover point par lagaaen jahaan team rukane wali hai, taaki team ke settle hote samaya usaki chhoti Recovery Window shuru ho.",
+      "Squad ko kisi jagaha hold ya rotate karna ho, to Gloo Wall usi cover point par lagaaen jahaan team rukane wali hai, taaki team ke settle hote samay usaki chhoti Recovery Window shuru ho.",
       "HP Recovery ki chhoti Window ke dauraana teammates ko 5m ke andar rakhen; alaga-alaga angles par phailane se pahale regroup call den.",
-      "Ice Iron ko thode samaya ke Support Effect ki taraha len, lagaataara Healing ki taraha nahi. baara-baara Gloo Wall lagaakara Recovery stack hone ki ummida na karen; deployment ka samaya squad ki movement ke hisaaba se rakhen."
+      "Ice Iron ko thode samay ke Support Effect ki taraha len, lagaataara Healing ki taraha nahi. baara-baara Gloo Wall lagaakara Recovery stack hone ki ummida na karen; deployment ka samay squad ki movement ke hisaaba se rakhen."
     ],
     "strengthsEn": [
       "Adds a short durability-restoration window to deployed Gloo Walls, helping the squad maintain temporary cover.",
       "Provides nearby teammates with a small HP-recovery window when they stay within 5m."
     ],
     "strengthsHi": [
-      "Deployed Gloo Walls ko thode samaya ke liye extra Durability milti hai, jisase squad ka temporary cover banaa raha sakataa hai.",
+      "Deployed Gloo Walls ko thode samay ke liye extra Durability milti hai, jisase squad ka temporary cover banaa raha sakataa hai.",
       "5m ke andar rehne wale teammates ko HP Recovery ki chhoti Window milti hai."
     ],
     "limitationsEn": [
@@ -2635,16 +2635,16 @@
     "badge": "Official-source profile",
     "lastChanged": "OB53 (02 Apr 2026)",
     "introEn": "Passive ability that marks nearby enemy teammates after a knockdown and applies a short movement-speed reduction.",
-    "introHi": "ek Passive Ability, jo Knockdown ke baada aas-paas maujuda Enemy teammates ko mark karti hai aur thode samaya ke liye unki Movement Speed kama karti hai.",
+    "introHi": "ek Passive Ability, jo Knockdown ke baada aas-paas maujood Enemy teammates ko mark karti hai aur thode samay ke liye unki Movement Speed kam karti hai.",
     "currentEn": [
       "After Otho knocks down an enemy, Memory Mist marks that enemy's teammates within 20m of the knocked-down enemy.",
       "Marked enemies have their movement speed reduced by 25% for 3 seconds.",
       "If Otho is knocked down by a nearby enemy, Memory Mist marks and slows the attacker and their teammates."
     ],
     "currentHi": [
-      "Otho ke kisi Enemy ko Knockdown karne ke baada Memory Mist, Knock hue Enemy se 20m ke andar maujuda usake teammates ko mark karti hai.",
-      "Mark hue Enemy ki Movement Speed 3 seconds ke liye 25% kama ho jaati hai.",
-      "agara Otho ko koi paasa ka Enemy Knockdown karta hai, to Memory Mist usa attacker aur usake teammates ko mark karake unki Speed kama karti hai."
+      "Otho ke kisi Enemy ko Knockdown karne ke baada Memory Mist, Knock hue Enemy se 20m ke andar maujood usake teammates ko mark karti hai.",
+      "Mark hue Enemy ki Movement Speed 3 seconds ke liye 25% kam ho jaati hai.",
+      "agara Otho ko koi paasa ka Enemy Knockdown karta hai, to Memory Mist usa attacker aur usake teammates ko mark karake unki Speed kam karti hai."
     ],
     "rows": [
       {
@@ -2690,7 +2690,7 @@
     ],
     "historyHi": [
       "OB33 (23 Mar 2022): Maximum Reveal Range 50m se badha kar 75m; Teammates ke saath Information Sharing Duration 4s se badha kar 6s ki gai.",
-      "OB39 (21 Mar 2023): Memory Mist ko rework kiya gayaa: Enemy ko Knockdown karne ke baada vaha Knock hue Enemy se 20m ke andar maujuda Enemy ko mark karti hai aur 4s ke liye unki Speed 25% kama karti hai; Otho ke Knockdown hone par bhi aas-paas ke Enemy mark aur slow hote hain.",
+      "OB39 (21 Mar 2023): Memory Mist ko rework kiya gayaa: Enemy ko Knockdown karne ke baada vaha Knock hue Enemy se 20m ke andar maujood Enemy ko mark karti hai aur 4s ke liye unki Speed 25% kam karti hai; Otho ke Knockdown hone par bhi aas-paas ke Enemy mark aur slow hote hain.",
       "OB53 (02 Apr 2026): Mark aur Slow ki Duration 4s se ghata kar 3s ki gai."
     ],
     "source": [
@@ -2724,7 +2724,7 @@
     ],
     "tacticalHi": [
       "Knockdown ke baada down hue opponent ke aas-paas 20m mein mark hue Enemy ki location call karen, phira squad ko aage badhaaen.",
-      "3-second Slow se thode samaya ka advantage milta hai: is dauraana position badalen, behatara angle len ya reset karen.",
+      "3-second Slow se thode samay ka advantage milta hai: is dauraana position badalen, behatara angle len ya reset karen.",
       "agara Otho ko koi paasa ka Enemy Knockdown karta hai, to turnta teammates ko bataaen, taaki unhen pataa rahe ki attacker aur aas-paas ki team mark aur slow ho chuki hai."
     ],
     "strengthsEn": [
@@ -2733,8 +2733,8 @@
       "The self-knockdown trigger can also mark and slow the nearby attacker and their teammates."
     ],
     "strengthsHi": [
-      "Knockdown se down hue Enemy ke aas-paas maujuda teammates ki location pataa chala sakati hai, jisase squad agalaa phaisalaa le sakati hai.",
-      "25% Movement Speed Reduction kuchha samaya ke liye Enemy team ki repositioning bigaada sakati hai.",
+      "Knockdown se down hue Enemy ke aas-paas maujood teammates ki location pataa chala sakati hai, jisase squad agalaa phaisalaa le sakati hai.",
+      "25% Movement Speed Reduction kuchha samay ke liye Enemy team ki repositioning bigaada sakati hai.",
       "khuda Knockdown hone par bhi yaha paasa ke attacker aur usake teammates ko mark aur slow kara sakati hai."
     ],
     "limitationsEn": [
@@ -2861,7 +2861,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Active ability that activates an aurora effect, increases movement speed and periodically reveals enemies behind cover.",
-    "introHi": "ek Active Ability, jo Aurora Effect chaalu karti hai, Movement Speed badhti hai aur samaya-samaya par cover ke peeche maujuda Enemy ko reveal karti hai.",
+    "introHi": "ek Active Ability, jo Aurora Effect chaalu karti hai, Movement Speed badhti hai aur samay-samay par cover ke peeche maujood Enemy ko reveal karti hai.",
     "currentEn": [
       "Activates the Aurora power for 8 seconds and increases movement speed by 15%.",
       "Reveals enemies behind cover within 50m every 1 second; crouching or prone enemies cannot be detected.",
@@ -2869,7 +2869,7 @@
     ],
     "currentHi": [
       "8 seconds ke liye Aurora Power activate hoti hai aur Movement Speed 15% badha jaati hai.",
-      "har 1 second mein 50m ke andar cover ke peeche maujuda Enemy reveal hote hain; crouch ya prone Enemy detect nahi hote.",
+      "har 1 second mein 50m ke andar cover ke peeche maujood Enemy reveal hote hain; crouch ya prone Enemy detect nahi hote.",
       "Parachuting ke dauraana Field of View mein aane wali Enemy ki locations highlight hoti hain, lekina yaha Effect teammates ke saath share nahi hota."
     ],
     "rows": [
@@ -2970,7 +2970,7 @@
       "Can highlight visible enemy locations during parachuting for the user."
     ],
     "strengthsHi": [
-      "50m ke andar cover ke peeche maujuda Enemy ko samaya-samaya par reveal karti hai; crouching aur prone targets detect nahi hote.",
+      "50m ke andar cover ke peeche maujood Enemy ko samay-samay par reveal karti hai; crouching aur prone targets detect nahi hote.",
       "8-second Aurora Window ke dauraana 15% Movement Speed Bonus deti hai.",
       "Parachuting ke dauraana user ko visible enemy locations highlight kara sakati hai."
     ],
@@ -3068,16 +3068,16 @@
       "Track the 90-second cooldown and coordinate the next rescue window rather than assuming Vital Vibes is always available."
     ],
     "tacticalHi": [
-      "Teammate Knockdown hone par cover ke peeche surakshita Help-up ko priority den; Thiva ki 70% faster Help-up Speed se Rescue ke dauraana squad ko kama samaya tak exposed rahanaa padataa hai.",
+      "Teammate Knockdown hone par cover ke peeche surakshita Help-up ko priority den; Thiva ki 70% faster Help-up Speed se Rescue ke dauraana squad ko kam samay tak exposed rahanaa padataa hai.",
       "Successful Help-up ke baada rescued teammate ko squad ke saath rakhen, taaki use 3 seconds mein milne wali 60 HP Recovery ka fayda mila sake.",
-      "90-second Cooldown ka dhyaana rakhen aur agali Rescue Window coordinate karen; Vital Vibes ko har samaya available na maanen."
+      "90-second Cooldown ka dhyaana rakhen aur agali Rescue Window coordinate karen; Vital Vibes ko har samay available na maanen."
     ],
     "strengthsEn": [
       "Increases teammate help-up speed by 70%, reducing the time needed to complete a rescue.",
       "The successfully helped-up teammate receives 60 HP over 3 seconds."
     ],
     "strengthsHi": [
-      "Teammate Help-up Speed 70% badhti hai, jisase Rescue puraa karne mein kama samaya lagataa hai.",
+      "Teammate Help-up Speed 70% badhti hai, jisase Rescue puraa karne mein kam samay lagataa hai.",
       "saphalataapurvaka help up hue teammate ko 3 seconds mein 60 HP milti hai."
     ],
     "limitationsEn": [
@@ -3148,7 +3148,7 @@
     ],
     "notesHi": [
       "OB40 ke mutaabika Help-up Effect ko dusari Skills se badhaayaa jaa sakataa hai.",
-      "Self-recovery ke dauraana players move kara sakate hain aur unki HP kama nahi hoti (OB34).",
+      "Self-recovery ke dauraana players move kara sakate hain aur unki HP kam nahi hoti (OB34).",
       "ek Zone ke andar Self-recovery kitani baara activate ho sakataa hai, isaki maximum snkhyaa Garena publish nahi karta."
     ],
     "historyEn": [
@@ -3204,7 +3204,7 @@
     ],
     "tacticalHi": [
       "Regroup karne se pahale Healing Zone ki location call karen, taaki teammates ko usakaa Support Area pataa rahe.",
-      "agara Zone ke andar koi teammate Knockdown ho jaae, to bataaen ki usakaa Self-recovery apane aapa shuru ho sakataa hai; yaha na maanen ki vaha jagaha interruption se puri taraha safe hai."
+      "agara Zone ke andar koi teammate Knockdown ho jaae, to bataaen ki usakaa Self-recovery apane aapa shuru ho sakataa hai; yaha na maanen ki vaha jagaha interruption se poori tarah safe hai."
     ],
     "strengthsEn": [
       "Provides HP recovery to Dimitri and nearby allies during the active zone.",
@@ -3535,12 +3535,12 @@
     "lastChanged": "OB49 (21 May 2025)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that decelerates enemies and vehicles shot with rifles, freezing them and generating Gloo Walls upon knockdown.",
-    "introHi": "ek Passive Skill, jo Rifles se hit hue Enemy aur Vehicles ki Speed kama karti hai. Knockdown hone par Enemy freeze ho jaate hain aur extra Gloo Walls milti hain.",
+    "introHi": "ek Passive Skill, jo Rifles se hit hue Enemy aur Vehicles ki Speed kam karti hai. Knockdown hone par Enemy freeze ho jaate hain aur extra Gloo Walls milti hain.",
     "currentEn": [
       "When hitting enemies or vehicles with rifles or marksman rifles, reduces the enemies' movement speed by 10% or the vehicles' acceleration by 80% for 3 seconds. If the enemy is knocked down while decelerated, freezes them for up to 3 seconds and obtains 2 extra Gloo Walls."
     ],
     "currentHi": [
-      "Rifles ya Marksman Rifles se Enemy ya Vehicles ko hit karne par Enemy ki Movement Speed 10% ya Vehicles ki Acceleration 80% kama ho jaati hai. yaha Effect 3 seconds tak rehta hai. Slow hue Enemy ko Knockdown karne par vaha maximum 3 seconds ke liye freeze ho jata hai aur 2 extra Gloo Walls milti hain."
+      "Rifles ya Marksman Rifles se Enemy ya Vehicles ko hit karne par Enemy ki Movement Speed 10% ya Vehicles ki Acceleration 80% kam ho jaati hai. yaha Effect 3 seconds tak rehta hai. Slow hue Enemy ko Knockdown karne par vaha maximum 3 seconds ke liye freeze ho jata hai aur 2 extra Gloo Walls milti hain."
     ],
     "rows": [
       {
@@ -3631,7 +3631,7 @@
       "Use rifle hits to slow a moving enemy before your squad commits; a knock while slowed grants extra Gloo Walls for the next cover/rotation."
     ],
     "tacticalHi": [
-      "Squad ke commit karne se pahale moving Enemy par Rifle Hits lagaakara usaki Speed kama karen; Slow rahate hue Knockdown karne par agali cover ya rotation ke liye extra Gloo Walls milti hain."
+      "Squad ke commit karne se pahale moving Enemy par Rifle Hits lagaakara usaki Speed kam karen; Slow rahate hue Knockdown karne par agali cover ya rotation ke liye extra Gloo Walls milti hain."
     ],
     "strengthsEn": [
       "Repeated rifle hits can apply the slow without a cooldown; knockdown reward supports cover economy."
@@ -3657,12 +3657,12 @@
     "lastChanged": "OB54 (23 Jun 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that scales weapon damage based on the distance to the target and deals extra damage to marked enemies.",
-    "introHi": "ek Passive Skill, jo target se duri ke hisaaba se Weapon Damage badhti hai aur Mark hue Enemy ko extra Damage deti hai.",
+    "introHi": "ek Passive Skill, jo target se doori ke hisaaba se Weapon Damage badhti hai aur Mark hue Enemy ko extra Damage deti hai.",
     "currentEn": [
       "Damage increases with distance, up to a maximum of 20%. Damage to marked enemies increases by 5%."
     ],
     "currentHi": [
-      "duri badhane ke saath Damage badhta hai, maximum 20% tak. Mark hue Enemy ko 5% extra Damage milta hai."
+      "doori badhane ke saath Damage badhta hai, maximum 20% tak. Mark hue Enemy ko 5% extra Damage milta hai."
     ],
     "rows": [
       {
@@ -3717,7 +3717,7 @@
       "Pair with teammate information marks; maintain distance when the engagement allows to benefit from the distance-scaled bonus."
     ],
     "tacticalHi": [
-      "Teammate ke Information Marks ke saath ise use karen; fight mein maukaa mile to duri banaae rakhen, taaki distance-based Bonus ka fayda mile."
+      "Teammate ke Information Marks ke saath ise use karen; fight mein maukaa mile to doori banaae rakhen, taaki distance-based Bonus ka fayda mile."
     ],
     "strengthsEn": [
       "Combines distance scaling with a separate marked-target bonus; passive has no cooldown."
@@ -3729,7 +3729,7 @@
       "The maximum distance bonus scales with range and is not the full 20% at every distance; close-range fights reduce its value."
     ],
     "limitationsHi": [
-      "Maximum Distance Bonus duri ke saath badhta hai aur har Range par puraa 20% nahi milta; close-range fights mein iska fayda kama hota hai."
+      "Maximum Distance Bonus doori ke saath badhta hai aur har Range par puraa 20% nahi milta; close-range fights mein iska fayda kam hota hai."
     ],
     "abilityDisplayOnce": true
   },
@@ -3748,7 +3748,7 @@
       "When hit by an enemy from within 100m, the attacker is marked for 8 seconds. Intel is shared with teammates. The first shot on marked enemies has 100% additional armor penetration. Maximum of 4 markings active at once."
     ],
     "currentHi": [
-      "100m ke andar maujuda Enemy se Hit hone par attacker 8 seconds ke liye mark ho jata hai. yaha jaanakaari teammates ke saath share hoti hai. Mark hue Enemy par pahali Shot ko 100% extra Armor Penetration milti hai. ek samaya mein maximum 4 Marks active raha sakate hain."
+      "100m ke andar maujood Enemy se Hit hone par attacker 8 seconds ke liye mark ho jata hai. yaha jaanakaari teammates ke saath share hoti hai. Mark hue Enemy par pahali Shot ko 100% extra Armor Penetration milti hai. ek samay mein maximum 4 Marks active raha sakate hain."
     ],
     "rows": [
       {
@@ -3846,7 +3846,7 @@
       "Creates an impenetrable force field that blocks 1,000 damage. Unable to attack outside enemies from within the field. All effects last for 10 seconds."
     ],
     "currentHi": [
-      "aisaa Force Field banata hai jo 1,000 Damage block karta hai. Field ke andar se baahara maujuda Enemy par Attack nahi kara sakate. sabhi Effects 10 seconds tak rahate hain."
+      "aisaa Force Field banata hai jo 1,000 Damage block karta hai. Field ke andar se baahara maujood Enemy par Attack nahi kara sakate. sabhi Effects 10 seconds tak rahate hain."
     ],
     "rows": [
       {
@@ -3907,7 +3907,7 @@
       "Blocks up to 1,000 damage and provides a temporary defensive window."
     ],
     "strengthsHi": [
-      "Maximum 1,000 Damage block karta hai aur thode samaya ke liye Defensive Window deta hai."
+      "Maximum 1,000 Damage block karta hai aur thode samay ke liye Defensive Window deta hai."
     ],
     "limitationsEn": [
       "The field is static, enemies can enter, and outward attacks are disabled while inside."
@@ -3927,12 +3927,12 @@
     "lastChanged": "OB53 (02 Apr 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that rewards knockdowns with a rapidly decaying rate of fire and movement speed boost.",
-    "introHi": "ek Passive Skill, jo Knockdown ke baada Rate of Fire aur Movement Speed ka Boost deti hai, lekina yaha Boost teji se kama hota jata hai.",
+    "introHi": "ek Passive Skill, jo Knockdown ke baada Rate of Fire aur Movement Speed ka Boost deti hai, lekina yaha Boost tez se kam hota jata hai.",
     "currentEn": [
       "After knocking down an enemy, enter Highlight mode for 10 seconds. Increases rate of fire by 18% and movement speed by 12% (decays quickly). Consecutively knocking down enemies resets the countdown and further boosts rate of fire by 4% and movement speed by 3%."
     ],
     "currentHi": [
-      "Enemy ko Knockdown karne ke baada 10 seconds ke liye Highlight Mode shuru hota hai. Rate of Fire 18% aur Movement Speed 12% badha jaati hai (Boost teji se kama hota hai). lagaataara Knockdown karne par Countdown reset hota hai aur Rate of Fire 4% tathaa Movement Speed 3% aur badha jaati hai."
+      "Enemy ko Knockdown karne ke baada 10 seconds ke liye Highlight Mode shuru hota hai. Rate of Fire 18% aur Movement Speed 12% badha jaati hai (Boost tez se kam hota hai). lagaataara Knockdown karne par Countdown reset hota hai aur Rate of Fire 4% tathaa Movement Speed 3% aur badha jaati hai."
     ],
     "rows": [
       {
@@ -3976,7 +3976,7 @@
       "OB39 (Mar 2023): Skill entirely reworked to Highlight mode (18% RoF, 12% Spd, 6s duration). OB53 (02 Apr 2026): Duration buffed from 6s to 10s."
     ],
     "historyHi": [
-      "OB39 (Mar 2023): Skill ko puri taraha Highlight Mode mein rework kiya gayaa (18% RoF, 12% Speed, 6s Duration). OB53 (02 Apr 2026): Duration 6s se badha kar 10s ki gai."
+      "OB39 (Mar 2023): Skill ko poori tarah Highlight Mode mein rework kiya gayaa (18% RoF, 12% Speed, 6s Duration). OB53 (02 Apr 2026): Duration 6s se badha kar 10s ki gai."
     ],
     "source": [
       {
@@ -4017,7 +4017,7 @@
       "Highlight requires a knockdown to start; its bonuses decay quickly and movement speed remains subject to the global cap."
     ],
     "limitationsHi": [
-      "Highlight shuru karne ke liye Knockdown zaroori hai; iske Bonuses teji se kama hote hain aur Movement Speed global cap ke andar hi rehti hai."
+      "Highlight shuru karne ke liye Knockdown zaroori hai; iske Bonuses tez se kam hote hain aur Movement Speed global cap ke andar hi rehti hai."
     ],
     "abilityDisplayOnce": true
   },
@@ -4035,7 +4035,7 @@
       "While firing and moving at the same time, movement speed increases by 50% and accuracy increases by 60%."
     ],
     "currentHi": [
-      "ek hi samaya mein Move karte hue Fire karne par Movement Speed 50% aur Accuracy 60% badha jaati hai."
+      "ek hi samay mein Move karte hue Fire karne par Movement Speed 50% aur Accuracy 60% badha jaati hai."
     ],
     "rows": [
       {
@@ -4070,7 +4070,7 @@
       "No separate duration or cooldown is published in the official sources checked."
     ],
     "notesHi": [
-      "Bonus ke liye Move karna aur Fire karna ek hi samaya par zaroori hai; khade rahakara Fire karne se yaha Trigger puraa nahi hota.",
+      "Bonus ke liye Move karna aur Fire karna ek hi samay par zaroori hai; khade rahakara Fire karne se yaha Trigger puraa nahi hota.",
       "Official Character Page par chhotaa description diyaa gayaa hai; numeric values Garena ke OB46 Patch Notes mein darja hain.",
       "jaanche gae official sources mein alaga Duration ya Cooldown publish nahi kiya gayaa hai."
     ],
@@ -4111,7 +4111,7 @@
     ],
     "tacticalHi": [
       "Effect ke liye Move karna aur Fire karna ek saath zaroori hai; khade rehne par bataae gae Bonuses nahi milate.",
-      "Squad mein reposition karte samaya teammates ko call den, taaki unhen aapaki movement ki jaanakaari rahe."
+      "Squad mein reposition karte samay teammates ko call den, taaki unhen aapaki movement ki jaanakaari rahe."
     ],
     "strengthsEn": [
       "Provides two simultaneous passive bonuses under its stated trigger.",
@@ -4237,7 +4237,7 @@
     ],
     "strengthsHi": [
       "Bonus maximum tina Eliminations tak jamaa ho sakataa hai.",
-      "badhe hue maximum Shield Points Reset Condition na hone par Round ke baaki samaya bane rahate hain."
+      "badhe hue maximum Shield Points Reset Condition na hone par Round ke baaki samay bane rahate hain."
     ],
     "limitationsEn": [
       "The ability needs eliminations to build value; it does not grant the full bonus at the start.",
@@ -4382,12 +4382,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB47 (3 Dec 2024)",
     "introEn": "A passive ability that combines armor penetration and frontal damage reduction, with both effects scaling as maximum HP is lost.",
-    "introHi": "ek Passive Ability, jo Armor Penetration aur saamane se milne wale Damage Reduction ko jodati hai. Maximum HP kama hone ke saath donon Effects badhte hain.",
+    "introHi": "ek Passive Ability, jo Armor Penetration aur saamane se milne wale Damage Reduction ko jodati hai. Maximum HP kam hone ke saath donon Effects badhte hain.",
     "currentEn": [
       "For every 10% decrease in maximum HP, armor penetration increases by 3.5% and frontal damage taken decreases by 2%."
     ],
     "currentHi": [
-      "Maximum HP mein har 10% ki kami par Armor Penetration 3.5% badhti hai aur saamane se milne wala Damage 2% kama ho jata hai."
+      "Maximum HP mein har 10% ki kami par Armor Penetration 3.5% badhti hai aur saamane se milne wala Damage 2% kam ho jata hai."
     ],
     "rows": [
       {
@@ -4424,7 +4424,7 @@
     "notesHi": [
       "donon Effects ek hi Maximum-HP-Loss Condition ke aadhaara par badhte hain.",
       "Current Official Character Page mein Maximum HP ki har 10% kami par 2% Front-facing Damage Reduction saaf diyaa gayaa hai. Garena ke OB47 Patch Notes mein har 10% HP Loss par 3.5% Integrated Armor Penetration darja hai.",
-      "pahale ke Bushido / Art of Blades Values samaya ke saath badale gae; current Profile mein OB47 ki integrated value istemaala ki gai hai."
+      "pahale ke Bushido / Art of Blades Values samay ke saath badale gae; current Profile mein OB47 ki integrated value istemaala ki gai hai."
     ],
     "historyEn": [
       "OB35 (Jul 2022): Armor penetration was reduced from 10% to 7.5% per 10% maximum HP loss.",
@@ -4480,7 +4480,7 @@
       "The damage-reduction effect is specifically described as frontal."
     ],
     "limitationsHi": [
-      "Bonus, Maximum HP kama hone par nirbhara hai; yaha hameshaa milne wala fixed Bonus nahi hai.",
+      "Bonus, Maximum HP kam hone par nirbhara hai; yaha hameshaa milne wala fixed Bonus nahi hai.",
       "Damage Reduction ka Effect khaasa taura par saamane se aane wale Damage ke liye bataayaa gayaa hai."
     ],
     "status": "OB55 values reconciled 15 Nov 2026",
@@ -4495,7 +4495,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB53 (2 Apr 2026)",
     "introEn": "A passive information ability that marks enemies Moco hits and shares their location with the squad for a limited time.",
-    "introHi": "ek Passive Information Ability, jo Moco ke Hit kie gae Enemy ko mark karti hai aur kuchha samaya ke liye unki location Squad ke saath share karti hai.",
+    "introHi": "ek Passive Information Ability, jo Moco ke Hit kie gae Enemy ko mark karti hai aur kuchha samay ke liye unki location Squad ke saath share karti hai.",
     "currentEn": [
       "Marks an enemy hit by Moco, exposing the target's location in the field of view and on the minimap, and sharing it with teammates for 3 seconds. If the marked enemy is moving, the location remains exposed for up to 4 seconds."
     ],
@@ -4611,12 +4611,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB33 (23 Mar 2022)",
     "introEn": "Active that creates a protective graffiti area that blocks throwables, reduces bullet damage, and restores armor.",
-    "introHi": "ek Active Skill, jo Protective Graffiti Area banati hai. yaha Throwables ko rokti hai, Bullet Damage kama karti hai aur Armor Restore karti hai.",
+    "introHi": "ek Active Skill, jo Protective Graffiti Area banati hai. yaha Throwables ko rokti hai, Bullet Damage kam karti hai aur Armor Restore karti hai.",
     "currentEn": [
       "Creates a 4m area that completely blocks incoming throwables. Allies inside the area restore 10% armor durability every second, and ammunition damage taken from enemies is reduced by 20%. The effects do not stack."
     ],
     "currentHi": [
-      "4m ka Area banati hai, jo aane wale Throwables ko puri taraha block karta hai. Area ke andar allies har second 10% Armor Durability recover karte hain aur Enemy ki ammunition se milne wala Damage 20% kama ho jata hai. ye Effects stack nahi hote."
+      "4m ka Area banati hai, jo aane wale Throwables ko poori tarah block karta hai. Area ke andar allies har second 10% Armor Durability recover karte hain aur Enemy ki ammunition se milne wala Damage 20% kam ho jata hai. ye Effects stack nahi hote."
     ],
     "rows": [
       {
@@ -4689,12 +4689,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Passive that increases driving speed and reduces damage taken while making the user harder to target on mounts.",
-    "introHi": "ek Passive Skill, jo Driving Speed badhti hai aur Vehicles ke andar milne wala Damage kama karti hai. Vehicle chalaate ya ride karte samaya Enemy ke liye user ko target karna mushkila ho jata hai.",
+    "introHi": "ek Passive Skill, jo Driving Speed badhti hai aur Vehicles ke andar milne wala Damage kam karti hai. Vehicle chalaate ya ride karte samay Enemy Enemy ke liye user ko target karna mushkil ho jata hai.",
     "currentEn": [
       "Increases driving speed by 20% and reduces damage taken while inside vehicles by 30%. The user becomes harder to be targeted by enemy aim while driving or riding."
     ],
     "currentHi": [
-      "Driving Speed 20% badha jaati hai aur Vehicle ke andar rahate hue liyaa gayaa Damage 30% kama ho jata hai. Drive ya ride karte samaya Enemy ke Aim ke liye user ko target karna mushkila ho jata hai."
+      "Driving Speed 20% badh jaati hai aur Vehicle ke andar rehne par milne wala Damage 30% kam ho jata hai. Drive ya ride karte samay Enemy ke Aim Enemy ke liye user ko target karna mushkil ho jata hai."
     ],
     "rows": [
       {
@@ -4727,7 +4727,7 @@
       "The skill is fully compatible with organic mounts introduced in recent patches."
     ],
     "notesHi": [
-      "yaha Skill haala ke patches mein aae organic mounts ke saath puri taraha compatible hai."
+      "yaha Skill haala ke patches mein aae organic mounts ke saath poori tarah compatible hai."
     ],
     "historyEn": [
       "2018: Introduced.",
@@ -4736,7 +4736,7 @@
     ],
     "historyHi": [
       "2018: Introduce kiya gayaa.",
-      "OB27 (14 Apr 2021): Speed 12% se badha kar 20%; Damage Reduction 30% tak badhaai gai; Target karna mushkila hone wala Effect jodaa gayaa.",
+      "OB27 (14 Apr 2021): Speed 12% se badha kar 20%; Damage Reduction 30% tak badhaai gai; Target karna mushkil hone wala Effect jodaa gayaa.",
       "OB54 (23 Jun 2026): Skill ko Horses par bhi kaama karne ke liye expand kiya gayaa."
     ],
     "source": [
@@ -4768,12 +4768,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB34 (25 May 2022)",
     "introEn": "Passive that drastically reduces the animation time required to use healing items and eat mushrooms.",
-    "introHi": "ek Passive Skill, jo Healing Items istemaala karne aur Mushrooms khaane mein lagane wala Animation Time kaaphi kama karti hai.",
+    "introHi": "ek Passive Skill, jo Healing Items istemaala karne aur Mushrooms khaane mein lagane wala Animation Time kaafi kam karti hai.",
     "currentEn": [
       "Reduces the time required for eating mushrooms and using Med Kits by 25%."
     ],
     "currentHi": [
-      "Mushrooms khaane aur Med Kits istemaala karne mein lagane wala samaya 25% kama ho jata hai."
+      "Mushrooms khaane aur Med Kits istemaala karne mein lagane wala samay 25% kam ho jata hai."
     ],
     "rows": [
       {
@@ -4846,7 +4846,7 @@
       "When holding a shotgun, movement speed is dynamically increased to allow for greater agility and gap closing."
     ],
     "currentHi": [
-      "Shotgun haatha mein rakhane par Movement Speed dynamically badha jaati hai, jisase teji se move karna aur duri kama karna aasaana hota hai."
+      "Shotgun haath mein rakhane par Movement Speed dynamically badha jaati hai, jisase tez se move karna aur doori kam karna aasaana hota hai."
     ],
     "rows": [
       {
@@ -4877,7 +4877,7 @@
     ],
     "historyHi": [
       "2018: Introduce kiya gayaa.",
-      "OB33 (23 Mar 2022): Equipment Weight Algorithms ke mukaabale duri teji se kama karne ki kshamataa badhaane ke liye Movement Speed Bonuses badhaae gae."
+      "OB33 (23 Mar 2022): Equipment Weight Algorithms ke mukaabale doori tez se kam karne ki kshamataa badhaane ke liye Movement Speed Bonuses badhaae gae."
     ],
     "source": [
       {
@@ -4904,12 +4904,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB19 (11 Dec 2019)",
     "introEn": "Passive that acts as a mobile healing station, restoring health for all squadmates residing within a driven vehicle.",
-    "introHi": "ek Passive Skill, jo chalati hui Healing Station ki taraha kaama karti hai aur Vehicle mein maujuda sabhi Squadmates ko HP wapas deti hai.",
+    "introHi": "ek Passive Skill, jo chalati hui Healing Station ki taraha kaama karti hai aur Vehicle mein maujood sabhi Squadmates ko HP wapas deti hai.",
     "currentEn": [
       "When driving a vehicle, restores 5 HP every 2 seconds for the driver and all passengers on the vehicle. Multiple instances of this skill do not stack."
     ],
     "currentHi": [
-      "Vehicle chalaate samaya Driver aur sabhi Passengers ko har 2 seconds mein 5 HP wapas milti hai. is Skill ke kai instances stack nahi hote."
+      "Vehicle chalaate samay Driver aur sabhi Passengers ko har 2 seconds mein 5 HP wapas milti hai. is Skill ke kai instances stack nahi hote."
     ],
     "rows": [
       {
