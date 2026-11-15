@@ -2038,5 +2038,422 @@
         "url": "https://ff.garena.com/en/chars/"
       }
     ]
+  },
+  {
+    "id": "luna",
+    "name": "Luna",
+    "image": "",
+    "skill": "Fight-or-Flight",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB55 (10 Sep 2026)",
+    "introEn": "Passive that boosts rate of fire and converts part of it into movement speed after Luna lands a hit.",
+    "introHi": "Passive that boosts rate of fire and converts part of it into movement speed after Luna lands a hit.",
+    "currentEn": [
+      "Increases rate of fire by 5%. When Luna hits an enemy, up to 10% of her rate of fire converts into movement speed. The conversion resets when she survives combat."
+    ],
+    "currentHi": [
+      "Increases rate of fire by 5%. When Luna hits an enemy, up to 10% of her rate of fire converts into movement speed. The conversion resets when she survives combat."
+    ],
+    "rows": [
+      {
+        "en": "Rate of fire bonus",
+        "hi": "Rate of fire bonus",
+        "value": "+5%"
+      },
+      {
+        "en": "Movement-speed conversion",
+        "hi": "Movement-speed conversion",
+        "value": "Up to 10% of rate of fire"
+      },
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Landing a hit on an enemy"
+      },
+      {
+        "en": "Reset",
+        "hi": "Reset",
+        "value": "After surviving combat"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
+    ],
+    "notesHi": [
+      "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
+    ],
+    "historyEn": [
+      "OB36 (Sep 2022): Introduced.",
+      "Before OB49: rate of fire +8%, up to 15% converted to movement speed.",
+      "OB49 (21 May 2025): Maximum conversion 15% to 10%.",
+      "OB55 (10 Sep 2026): Rate of fire bonus 8% to 5%."
+    ],
+    "historyHi": [
+      "OB36 (Sep 2022): Introduced.",
+      "Before OB49: rate of fire +8%, up to 15% converted to movement speed.",
+      "OB49 (21 May 2025): Maximum conversion 15% to 10%.",
+      "OB55 (10 Sep 2026): Rate of fire bonus 8% to 5%."
+    ],
+    "source": [
+      {
+        "label": "OB55",
+        "url": "https://ff.garena.com/en/article/1712/"
+      },
+      {
+        "label": "OB54",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "OB49",
+        "url": "https://ff.garena.com/en/article/1473/"
+      },
+      {
+        "label": "Luna character page",
+        "url": "https://ff.garena.com/en/chars/614"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "iris",
+    "name": "Iris",
+    "image": "",
+    "skill": "Wall Brawl",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB43 (24 Jan 2024)",
+    "introEn": "Active skill that marks enemies behind Gloo Walls and lets Iris damage them through the walls.",
+    "introHi": "Active skill that marks enemies behind Gloo Walls and lets Iris damage them through the walls.",
+    "currentEn": [
+      "For 15 seconds, successfully firing at a Gloo Wall marks enemies within 7m of it and penetrates the Gloo Wall to damage the marked enemies, with lower damage than usual. Works on up to 3 Gloo Walls."
+    ],
+    "currentHi": [
+      "For 15 seconds, successfully firing at a Gloo Wall marks enemies within 7m of it and penetrates the Gloo Wall to damage the marked enemies, with lower damage than usual. Works on up to 3 Gloo Walls."
+    ],
+    "rows": [
+      {
+        "en": "Duration",
+        "hi": "Duration",
+        "value": "15 seconds"
+      },
+      {
+        "en": "Mark range",
+        "hi": "Mark range",
+        "value": "7m around the Gloo Wall"
+      },
+      {
+        "en": "Gloo Walls affected",
+        "hi": "Gloo Walls affected",
+        "value": "3 maximum"
+      },
+      {
+        "en": "Damage through walls",
+        "hi": "Damage through walls",
+        "value": "Lower than usual"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "60 seconds"
+      }
+    ],
+    "notesEn": [
+      "Garena does not publish the reduced damage value.",
+      "Attacks that penetrate Gloo Walls, like Iris's skill, show a clearer hit effect on the walls (OB49)."
+    ],
+    "notesHi": [
+      "Garena does not publish the reduced damage value.",
+      "Attacks that penetrate Gloo Walls, like Iris's skill, show a clearer hit effect on the walls (OB49)."
+    ],
+    "historyEn": [
+      "OB35 (2022): Introduced.",
+      "OB38 (Jan 2023): Skill duration increased.",
+      "OB40 (Jun 2023): Gloo Walls affected 5 to 3.",
+      "OB43 (24 Jan 2024): Fixed a damage bug when the skill penetrates Gloo Walls.",
+      "OB49 (21 May 2025): Clearer visual effect when hitting Gloo Walls."
+    ],
+    "historyHi": [
+      "OB35 (2022): Introduced.",
+      "OB38 (Jan 2023): Skill duration increased.",
+      "OB40 (Jun 2023): Gloo Walls affected 5 to 3.",
+      "OB43 (24 Jan 2024): Fixed a damage bug when the skill penetrates Gloo Walls.",
+      "OB49 (21 May 2025): Clearer visual effect when hitting Gloo Walls."
+    ],
+    "source": [
+      {
+        "label": "OB43",
+        "url": "https://ff.garena.com/en/article/1306/"
+      },
+      {
+        "label": "OB40",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "OB38",
+        "url": "https://ff.garena.com/en/article/968/"
+      },
+      {
+        "label": "OB49",
+        "url": "https://ff.garena.com/en/article/1473/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "jbiebs",
+    "name": "J.Biebs",
+    "image": "",
+    "skill": "Silent Sentinel",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB45 (Jun 2024)",
+    "introEn": "Passive that lets J.Biebs and nearby allies block damage using EP, with allies' EP flowing to J.Biebs.",
+    "introHi": "Passive that lets J.Biebs and nearby allies block damage using EP, with allies' EP flowing to J.Biebs.",
+    "currentEn": [
+      "J.Biebs and allies within 15m can block 8% of damage using EP. The EP deducted from allies is added to J.Biebs's EP."
+    ],
+    "currentHi": [
+      "J.Biebs and allies within 15m can block 8% of damage using EP. The EP deducted from allies is added to J.Biebs's EP."
+    ],
+    "rows": [
+      {
+        "en": "Range",
+        "hi": "Range",
+        "value": "15m"
+      },
+      {
+        "en": "Damage blocked using EP",
+        "hi": "Damage blocked using EP",
+        "value": "8%"
+      },
+      {
+        "en": "EP transfer",
+        "hi": "EP transfer",
+        "value": "Allies' deducted EP is added to J.Biebs's EP"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "notesEn": [
+      "The 15m range matches the support range of K and Olivia (OB46)."
+    ],
+    "notesHi": [
+      "The 15m range matches the support range of K and Olivia (OB46)."
+    ],
+    "historyEn": [
+      "OB38 (Jan 2023): Range fixed at 12m for all ranks (previously 6m to 12m); maximum damage block 15% to 12%.",
+      "OB45 (Jun 2024): Range 12m to 15m; damage blocked 12% to 8%."
+    ],
+    "historyHi": [
+      "OB38 (Jan 2023): Range fixed at 12m for all ranks (previously 6m to 12m); maximum damage block 15% to 12%.",
+      "OB45 (Jun 2024): Range 12m to 15m; damage blocked 12% to 8%."
+    ],
+    "source": [
+      {
+        "label": "OB45",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "OB46",
+        "url": "https://ff.garena.com/en-pk/article/1391/"
+      },
+      {
+        "label": "OB38",
+        "url": "https://ff.garena.com/en/article/968/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "homer",
+    "name": "Homer",
+    "image": "",
+    "skill": "Senses Shockwave",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB43 (24 Jan 2024)",
+    "introEn": "Active drone that locks onto the nearest enemy and slows them with a pulse explosion.",
+    "introHi": "Active drone that locks onto the nearest enemy and slows them with a pulse explosion.",
+    "currentEn": [
+      "Releases a drone toward the nearest enemy within 100m in front. It creates a 5m-diameter pulse explosion that reduces enemies' movement speed by 40% and rate of fire by 40% for 5 seconds, and deals 25 DMG."
+    ],
+    "currentHi": [
+      "Releases a drone toward the nearest enemy within 100m in front. It creates a 5m-diameter pulse explosion that reduces enemies' movement speed by 40% and rate of fire by 40% for 5 seconds, and deals 25 DMG."
+    ],
+    "rows": [
+      {
+        "en": "Lock range",
+        "hi": "Lock range",
+        "value": "100m, nearest enemy in front"
+      },
+      {
+        "en": "Pulse explosion",
+        "hi": "Pulse explosion",
+        "value": "5m diameter"
+      },
+      {
+        "en": "Movement-speed reduction",
+        "hi": "Movement-speed reduction",
+        "value": "40%"
+      },
+      {
+        "en": "Rate-of-fire reduction",
+        "hi": "Rate-of-fire reduction",
+        "value": "40%"
+      },
+      {
+        "en": "Effect duration",
+        "hi": "Effect duration",
+        "value": "5 seconds"
+      },
+      {
+        "en": "Damage",
+        "hi": "Damage",
+        "value": "25 DMG"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "60 seconds"
+      }
+    ],
+    "notesEn": [
+      "The drone triggers Moco's tagging skill (OB40).",
+      "Once the drone locks a target, obstacles do not block it (OB43).",
+      "Joseph is immune to Homer's drone (OB42).",
+      "A voice notification plays when no enemy is detected (OB49)."
+    ],
+    "notesHi": [
+      "The drone triggers Moco's tagging skill (OB40).",
+      "Once the drone locks a target, obstacles do not block it (OB43).",
+      "Joseph is immune to Homer's drone (OB42).",
+      "A voice notification plays when no enemy is detected (OB49)."
+    ],
+    "historyEn": [
+      "OB40 (Jun 2023): Explosion diameter 5m to 3m; drone now triggers Moco's tagging.",
+      "OB42 (Oct 2023): Diameter 3m to 4m.",
+      "OB43 (24 Jan 2024): Diameter 4m to 5m, movement-speed reduction 60% to 40%, rate-of-fire reduction 35% to 40%, cooldown 90s to 60s.",
+      "OB49 (21 May 2025): Voice notification added when no enemies are detected.",
+      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: UAV Shockwave (extra scan after the hit exposes nearby enemies on the minimap for 5s, 120m in BR and 30m in CS) and Super Drone (glide on the drone with a 15% speed boost for 15s)."
+    ],
+    "historyHi": [
+      "OB40 (Jun 2023): Explosion diameter 5m to 3m; drone now triggers Moco's tagging.",
+      "OB42 (Oct 2023): Diameter 3m to 4m.",
+      "OB43 (24 Jan 2024): Diameter 4m to 5m, movement-speed reduction 60% to 40%, rate-of-fire reduction 35% to 40%, cooldown 90s to 60s.",
+      "OB49 (21 May 2025): Voice notification added when no enemies are detected.",
+      "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: UAV Shockwave (extra scan after the hit exposes nearby enemies on the minimap for 5s, 120m in BR and 30m in CS) and Super Drone (glide on the drone with a 15% speed boost for 15s)."
+    ],
+    "source": [
+      {
+        "label": "OB43",
+        "url": "https://ff.garena.com/en/article/1306/"
+      },
+      {
+        "label": "OB42",
+        "url": "https://ff.garena.com/en/article/1266/"
+      },
+      {
+        "label": "OB40",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "OB49",
+        "url": "https://ff.garena.com/en/article/1473/"
+      },
+      {
+        "label": "OB54",
+        "url": "https://ff.garena.com/en/article/1673/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
+  },
+  {
+    "id": "kenta",
+    "name": "Kenta",
+    "image": "",
+    "skill": "Tempest Raid",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB55 (10 Sep 2026)",
+    "introEn": "Active skill that sends a tempest through Gloo Walls, then teleports Kenta to it with a short shield.",
+    "introHi": "Active skill that sends a tempest through Gloo Walls, then teleports Kenta to it with a short shield.",
+    "currentEn": [
+      "Unleashes a fast-moving, swirling tempest that passes through Gloo Walls and lasts 8 seconds, dealing 25 DMG to enemies hit. While the tempest is active, tap the skill again to teleport to its location and gain a shield for 5 seconds with 20% damage reduction. The tempest disappears after teleporting."
+    ],
+    "currentHi": [
+      "Unleashes a fast-moving, swirling tempest that passes through Gloo Walls and lasts 8 seconds, dealing 25 DMG to enemies hit. While the tempest is active, tap the skill again to teleport to its location and gain a shield for 5 seconds with 20% damage reduction. The tempest disappears after teleporting."
+    ],
+    "rows": [
+      {
+        "en": "Tempest duration",
+        "hi": "Tempest duration",
+        "value": "8 seconds"
+      },
+      {
+        "en": "Tempest damage",
+        "hi": "Tempest damage",
+        "value": "25 DMG"
+      },
+      {
+        "en": "Passes through",
+        "hi": "Passes through",
+        "value": "Gloo Walls"
+      },
+      {
+        "en": "Teleport",
+        "hi": "Teleport",
+        "value": "Tap the skill again to teleport to the tempest"
+      },
+      {
+        "en": "Shield after teleport",
+        "hi": "Shield after teleport",
+        "value": "5 seconds, 20% damage reduction"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "45 seconds"
+      }
+    ],
+    "notesEn": [
+      "OB55 replaced Kenta's original shield skill completely."
+    ],
+    "notesHi": [
+      "OB55 replaced Kenta's original shield skill completely."
+    ],
+    "historyEn": [
+      "OB33 (23 Mar 2022): Introduced with Swordsman's Wrath: 5m frontal shield, 50% weapon damage reduction, lasts 2-5s, cooldown 210-160s.",
+      "OB38 (Jan 2023): Shield can be picked back up after firing, 10% reduction while firing, cooldown 120-70s.",
+      "OB55 (10 Sep 2026): Complete rework into a tempest skill with teleport."
+    ],
+    "historyHi": [
+      "OB33 (23 Mar 2022): Introduced with Swordsman's Wrath: 5m frontal shield, 50% weapon damage reduction, lasts 2-5s, cooldown 210-160s.",
+      "OB38 (Jan 2023): Shield can be picked back up after firing, 10% reduction while firing, cooldown 120-70s.",
+      "OB55 (10 Sep 2026): Complete rework into a tempest skill with teleport."
+    ],
+    "source": [
+      {
+        "label": "OB55",
+        "url": "https://ff.garena.com/en/article/1712/"
+      },
+      {
+        "label": "OB38",
+        "url": "https://ff.garena.com/en/article/968/"
+      },
+      {
+        "label": "OB33",
+        "url": "https://ff.garena.com/en/article/674/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
   }
 ]
