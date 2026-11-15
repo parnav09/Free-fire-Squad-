@@ -4026,7 +4026,7 @@
     "skill": "Bullet Beats",
     "type": "Passive",
     "badge": "Official-source profile",
-    "lastChanged": "OB46 (1 Sep 2024)",
+    "lastChanged": "OB46 (3 Sep 2024)",
     "introEn": "A passive ability that boosts movement speed and accuracy while firing on the move.",
     "introHi": "Bullet Beats ek passive ability hai. Match mein move karte hue fire karne par movement speed aur accuracy dono boost hote hain.",
     "currentEn": [
@@ -4075,12 +4075,12 @@
     "historyEn": [
       "OB28 (Jun 2021): D-Bee introduced with Bullet Beats.",
       "OB35 (20 Jul 2022): Movement-speed bonus increased from 10% to 20%; accuracy increased from 20% to 45%.",
-      "OB46 (1 Sep 2024): Movement-speed bonus increased from 30% to 50%; accuracy set to 60%."
+      "OB46 (3 Sep 2024): Movement-speed bonus increased from 30% to 50%; accuracy set to 60%."
     ],
     "historyHi": [
       "OB28 (Jun 2021): D-Bee aur Bullet Beats introduce hue.",
       "OB35 (20 Jul 2022): Movement-speed bonus 10% se 20% aur accuracy 20% se 45% hui.",
-      "OB46 (1 Sep 2024): Movement-speed bonus 30% se 50% aur accuracy 60% ki gayi."
+      "OB46 (3 Sep 2024): Movement-speed bonus 30% se 50% aur accuracy 60% ki gayi."
     ],
     "source": [
       {
@@ -4094,6 +4094,10 @@
       {
         "label": "Garena — OB35 Patch Notes",
         "url": "https://ff.garena.com/en/article/735/"
+      },
+      {
+        "label": "Garena — D-Bee introduction / OB28",
+        "url": "https://ff.garena.com/vn/article/568/"
       }
     ],
     "abilityDisplayOnce": true,
@@ -4208,6 +4212,10 @@
       {
         "label": "Garena — OB48 Patch Notes",
         "url": "https://ff.garena.com/en/article/1456/"
+      },
+      {
+        "label": "Garena — OB46 Patch Notes (Shield Points conversion)",
+        "url": "https://ff.garena.com/en-pk/article/1391/"
       }
     ],
     "abilityDisplayOnce": true,
@@ -4247,7 +4255,7 @@
     "skill": "Deadly Velocity",
     "type": "Passive",
     "badge": "Official-source profile",
-    "lastChanged": "OB47 (2 Dec 2024)",
+    "lastChanged": "OB47 (3 Dec 2024)",
     "introEn": "A passive ability that increases sprinting speed and activates Deadly Velocity after a sustained sprint, empowering the first shot that hits a target during its active window.",
     "introHi": "Kelly ki passive ability sprinting speed increase karti hai. 4 seconds continuous sprint ke baad Deadly Velocity activate hoti hai, jisme active window ke dauran target par lagne wali pehli shot ko extra damage milta hai.",
     "currentEn": [
@@ -4370,7 +4378,7 @@
     "skill": "Art of Blades",
     "type": "Passive",
     "badge": "Official-source profile",
-    "lastChanged": "OB47 (2 Dec 2024)",
+    "lastChanged": "OB47 (3 Dec 2024)",
     "introEn": "A passive ability that combines armor penetration and frontal damage reduction, with both effects scaling as maximum HP is lost.",
     "introHi": "Art of Blades ek passive ability hai jo maximum HP kam hone ke saath armor penetration aur frontal damage reduction dono provide karti hai.",
     "currentEn": [
