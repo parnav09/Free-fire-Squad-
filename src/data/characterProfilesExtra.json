@@ -3101,7 +3101,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB42 (30 Oct 2023)",
     "introEn": "Active healing zone that restores HP to Dimitri and nearby allies, and automatically starts self-recovery for downed players inside it.",
-    "introHi": "Active healing zone jo Dimitri aur paas ke teammates ki HP recover karta hai, aur zone ke andar knockdown player ka self-recovery automatically start karta hai.",
+    "introHi": "एक Active Healing Zone, जो Dimitri और आसपास के allies को HP वापस देती है। इसके अंदर Knock हुए players का Self-recovery अपने आप शुरू हो जाता है।",
     "currentEn": [
       "Creates a healing zone with a 3.5m radius.",
       "Dimitri and allies inside the zone recover 10 HP per second.",
@@ -3109,30 +3109,30 @@
       "The zone lasts 12 seconds. Cooldown: 90 seconds."
     ],
     "currentHi": [
-      "3.5m radius ka healing zone banta hai.",
-      "Zone ke andar Dimitri aur teammates ko har second 10 HP recover hoti hai.",
-      "Zone ke andar Dimitri ya teammate knockdown ho, toh zaroorat padne par self-recovery automatically start hota hai.",
-      "Zone 12 seconds tak rehta hai. Cooldown: 90 seconds."
+      "3.5m Radius वाला Healing Zone बनाता है।",
+      "Zone के अंदर Dimitri और allies हर second 10 HP recover करते हैं।",
+      "Zone के अंदर Dimitri या कोई ally Knockdown हो जाए, तो जरूरत पड़ने पर Self-recovery अपने आप शुरू हो जाता है।",
+      "Zone 12 seconds तक रहता है। Cooldown: 90 seconds।"
     ],
     "rows": [
       {
         "en": "Healing-zone radius",
-        "hi": "Healing zone ka radius",
+        "hi": "Healing Zone Radius",
         "value": "3.5m"
       },
       {
         "en": "HP recovery",
-        "hi": "HP recovery",
+        "hi": "HP Recovery",
         "value": "10 HP/s"
       },
       {
         "en": "Zone duration",
-        "hi": "Zone duration",
+        "hi": "Zone Duration",
         "value": "12 seconds"
       },
       {
         "en": "Downed-player recovery",
-        "hi": "Knockdown ke baad recovery",
+        "hi": "Knocked Player Recovery",
         "value": "Automatic self-recovery"
       },
       {
@@ -3147,9 +3147,9 @@
       "Garena does not publish a separate maximum number of self-recovery activations within one zone."
     ],
     "notesHi": [
-      "OB40 ke mutabik, help-up effect ko doosri skills se enhance kiya ja sakta hai.",
-      "Self-recovery ke dauran player move kar sakta hai aur HP lose nahi hoti (OB34).",
-      "Garena ek zone ke andar self-recovery kitni baar activate ho sakta hai, iska maximum number publish nahi karta."
+      "OB40 के मुताबिक Help-up Effect को दूसरी Skills से बढ़ाया जा सकता है।",
+      "Self-recovery के दौरान players move कर सकते हैं और उनकी HP कम नहीं होती (OB34)।",
+      "एक Zone के अंदर Self-recovery कितनी बार activate हो सकता है, इसकी maximum संख्या Garena publish नहीं करता।"
     ],
     "historyEn": [
       "4th Anniversary (04 Aug 2021): Introduced Healing Heartbeat — 3.5m healing zone, 3 HP/s, up to 15s duration and 60s cooldown at maximum level; downed users and allies could self-recover.",
@@ -3159,11 +3159,11 @@
       "OB42 (30 Oct 2023): Cooldown increased from 60s to 90s."
     ],
     "historyHi": [
-      "4th Anniversary (04 Aug 2021): Healing Heartbeat introduce hua — 3.5m healing zone, 3 HP/s, maximum level par 15s duration aur 60s cooldown; knockdown Dimitri aur teammates self-recover kar sakte the.",
-      "OB34 (25 May 2022): Self-recovery update hua; ab player recovery ke dauran move kar sakta tha aur HP lose nahi hoti thi.",
-      "OB37 (21 Sep 2022): HP recovery 3 se 5 HP/s hui.",
-      "OB40 (30 May 2023): HP recovery 5 se 10 HP/s hui; zone ke andar knockdown players ka self-recovery zaroorat padne par automatically start hua; zone duration 12s aur cooldown 60s hua.",
-      "OB42 (30 Oct 2023): Cooldown 60s se 90s hua."
+      "4th Anniversary (04 Aug 2021): Healing Heartbeat introduce हुआ — 3.5m Healing Zone, 3 HP/s, maximum level पर 15s तक Duration और 60s Cooldown; Knock हुए users और allies खुद Self-recover कर सकते थे।",
+      "OB34 (25 May 2022): Self-recovery को बेहतर किया गया, ताकि इसके दौरान players बिना HP खोए move कर सकें।",
+      "OB37 (21 Sep 2022): HP Recovery 3 से बढ़ाकर 5 HP/s की गई।",
+      "OB40 (30 May 2023): HP Recovery 5 से बढ़ाकर 10 HP/s की गई; Zone के अंदर Knock हुए players का Self-recovery जरूरत पड़ने पर अपने आप शुरू होने लगा; Zone Duration 12s और Cooldown 60s हुआ।",
+      "OB42 (30 Oct 2023): Cooldown 60s से बढ़ाकर 90s किया गया।"
     ],
     "source": [
       {
@@ -3203,24 +3203,24 @@
       "If a teammate is downed inside the zone, communicate that self-recovery may start automatically; do not assume the area is safe from interruption."
     ],
     "tacticalHi": [
-      "Regroup karne se pehle healing zone ki location call karo, taaki teammates ko support area ka clear idea rahe.",
-      "Zone ke andar teammate knockdown ho, toh communicate karo ki self-recovery automatically start ho sakta hai; area ko automatically safe assume mat karo."
+      "Regroup करने से पहले Healing Zone की location call करें, ताकि teammates को उसका Support Area पता रहे।",
+      "अगर Zone के अंदर कोई teammate Knockdown हो जाए, तो बताएं कि उसका Self-recovery अपने आप शुरू हो सकता है; यह न मानें कि वह जगह interruption से पूरी तरह safe है।"
     ],
     "strengthsEn": [
       "Provides HP recovery to Dimitri and nearby allies during the active zone.",
       "Can automatically start self-recovery for downed players inside the zone."
     ],
     "strengthsHi": [
-      "Active zone ke dauran Dimitri aur nearby teammates ko HP recovery milti hai.",
-      "Zone ke andar downed player ka self-recovery automatically start ho sakta hai."
+      "Active Zone के दौरान Dimitri और आसपास के allies को HP Recovery मिलती है।",
+      "Zone के अंदर Knock हुए players का Self-recovery अपने आप शुरू कर सकता है।"
     ],
     "limitationsEn": [
       "The support area is limited to a 3.5m radius and lasts 12 seconds.",
       "The 90-second cooldown means the zone is not continuously available."
     ],
     "limitationsHi": [
-      "Support area ka radius 3.5m hai aur zone 12 seconds tak rehta hai.",
-      "90-second cooldown ki wajah se zone continuously available nahi hota."
+      "Support Area सिर्फ 3.5m Radius तक सीमित है और 12 seconds तक रहता है।",
+      "90-second Cooldown के कारण Zone लगातार available नहीं रहता।"
     ]
   },
   {
@@ -3233,7 +3233,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB55 (10 Sep 2026)",
     "introEn": "Active sonic-wave skill that damages Gloo Walls in an area and can store up to two charges.",
-    "introHi": "Active sonic-wave skill jo area mein Gloo Walls ko damage karti hai aur maximum 2 charges store kar sakti hai.",
+    "introHi": "एक Active Sonic-wave Skill, जो Area में Gloo Walls को Damage करती है और maximum दो Charges store कर सकती है।",
     "currentEn": [
       "Unleashes a sonic wave forward; OB55 states that the actual skill-effect range is over 100m, but does not publish an exact distance.",
       "When the wave hits an obstacle, it explodes and deals 500 DMG per second to Gloo Walls within a 4m radius.",
@@ -3241,30 +3241,30 @@
       "HP recovery is not included in the current base-skill values used here; the OB38 rework removed Skyler's healing effect."
     ],
     "currentHi": [
-      "Aage sonic wave release hoti hai; OB55 ke mutabik actual skill-effect range 100m se zyada hai, lekin exact distance publish nahi ki gayi.",
-      "Wave kisi obstacle se hit hone par explode hoti hai aur 4m radius ke andar Gloo Walls ko har second 500 DMG deti hai.",
-      "Damage effect 6 seconds tak rehta hai. Cooldown: 45 seconds. Maximum 2 skill charges store ho sakti hain.",
-      "Current base-skill values mein HP recovery include nahi hai; OB38 rework mein Skyler ka healing effect remove kiya gaya tha."
+      "आगे की तरफ Sonic Wave छोड़ता है; OB55 के मुताबिक Skill का actual effect range 100m से ज्यादा है, लेकिन exact distance publish नहीं की गई।",
+      "Wave किसी obstacle से टकराने पर explode होती है और 4m Radius के अंदर Gloo Walls को हर second 500 DMG देती है।",
+      "Damage Effect 6 seconds तक रहता है। Cooldown: 45 seconds। Maximum 2 Skill Charges store हो सकती हैं।",
+      "यहाँ इस्तेमाल किए गए current base-skill values में HP Recovery शामिल नहीं है; OB38 rework में Skyler का Healing Effect हटा दिया गया था।"
     ],
     "rows": [
       {
         "en": "Actual skill-effect range",
-        "hi": "Skill effect ki actual range",
+        "hi": "Actual Skill Effect Range",
         "value": "Over 100m (exact value not published)"
       },
       {
         "en": "Gloo Wall damage",
-        "hi": "Gloo Wall damage",
+        "hi": "Gloo Wall Damage",
         "value": "500 DMG/s"
       },
       {
         "en": "Damage radius",
-        "hi": "Damage radius",
+        "hi": "Damage Radius",
         "value": "4m"
       },
       {
         "en": "Damage duration",
-        "hi": "Damage duration",
+        "hi": "Damage Duration",
         "value": "6 seconds"
       },
       {
@@ -3274,7 +3274,7 @@
       },
       {
         "en": "Maximum charges",
-        "hi": "Maximum charges",
+        "hi": "Maximum Charges",
         "value": "2"
       }
     ],
@@ -3285,10 +3285,10 @@
       "OB47 added aim assistance toward Gloo Walls; OB49 added an obstacle indicator to the aiming line."
     ],
     "notesHi": [
-      "OB55 mein skill-effect ki visibility ko actual 100m se zyada range ke saath match kiya gaya. Garena exact range publish nahi karta.",
-      "OB54 mein 2 optional BR Skill Boosts aaye: Sticky Rhythm ek chhota area banata hai jo nearest enemy ko follow karta hai aur uske andar ki Gloo Walls ko damage karta hai; Split Rhythm 75m ke andar Gloo Walls search karta hai, target walls ko 15s lock karta hai aur maximum 3 walls ki taraf waves bhejta hai. In boosts ka exact damage Garena publish nahi karta.",
-      "Ek match mein is skill ke liye sirf ek Skill Boost option select kiya ja sakta hai.",
-      "OB47 mein Gloo Walls ki taraf aim assistance add hui; OB49 mein aiming line par obstacle indicator add hua."
+      "OB55 के मुताबिक Skill Effect की visibility को actual range यानी 100m से ज्यादा के अनुसार बढ़ाया गया। Garena exact range publish नहीं करता।",
+      "OB54 में दो optional BR Skill Boosts जोड़े गए: Sticky Rhythm एक छोटा Area बनाता है जो सबसे नजदीकी एनिमी के पीछे चलता है और उसके अंदर Gloo Walls को Damage करता है; Split Rhythm 75m के अंदर Gloo Walls खोजता है, 15s तक target walls को lock करता है और maximum 3 walls की तरफ waves भेजता है। इन boosts की exact Damage values publish नहीं की गईं।",
+      "एक match में Skill के लिए सिर्फ एक Skill Boost option चुना जा सकता है।",
+      "OB47 में Gloo Walls की तरफ Aim Assistance जोड़ी गई; OB49 में Aiming Line पर Obstacle Indicator जोड़ा गया।"
     ],
     "historyEn": [
       "OB34 (25 May 2022): At maximum level, cooldown increased from 40s to 60s; each deployed Gloo Wall granted HP recovery, up to 9 points, and recovery effects did not stack.",
@@ -3302,15 +3302,15 @@
       "OB55 (10 Sep 2026): Extended skill-effect visibility to match the actual range of over 100m; the exact range was not published."
     ],
     "historyHi": [
-      "OB34 (25 May 2022): Maximum level par cooldown 40s se 60s hua; har deployed Gloo Wall par maximum 9 points tak HP recovery milti thi aur recovery stack nahi hoti thi.",
-      "OB38 (11 Jan 2023): Skill ko area damage-over-time effect mein rework kiya gaya; maximum wave range 100m, 3.5m damage radius, 4s duration aur 50s cooldown hua. HP recovery remove hui.",
-      "OB40 (30 May 2023): Damage radius 3.5m se 4m, duration 4s se 5s aur cooldown 50s se 45s hua.",
-      "OB41 (08 Aug 2023): Duration 5s se 6s aur cooldown 45s se 40s hua.",
-      "OB45 (26 Jun 2024): Maximum 2 stored charges add hui; published values 4m ke andar 500 DMG/s, 6s duration, 45s cooldown aur maximum 100m wave range the.",
-      "OB47 (02 Dec 2024): Gloo Walls ki taraf aim assistance add hui.",
-      "OB49 (21 May 2025): Skill ki aiming line par obstacle indicator add hua.",
-      "OB54 (23 Jun 2026): Optional BR Skill Boosts Sticky Rhythm aur Split Rhythm add hue.",
-      "OB55 (10 Sep 2026): Skill-effect visibility ko actual 100m se zyada range ke saath match kiya gaya; exact range publish nahi hui."
+      "OB34 (25 May 2022): Maximum Level पर Cooldown 40s से बढ़ाकर 60s किया गया; हर deployed Gloo Wall से maximum 9 points तक HP Recovery मिलती थी और Recovery Effects stack नहीं होते थे।",
+      "OB38 (11 Jan 2023): Area Damage over Time में rework किया गया; maximum Wave Range 100m, Damage Radius 3.5m, Duration 4s और Cooldown 50s हुआ। HP Recovery हटा दी गई।",
+      "OB40 (30 May 2023): Damage Radius 3.5m से बढ़ाकर 4m; Duration 4s से बढ़ाकर 5s; Cooldown 50s से घटाकर 45s किया गया।",
+      "OB41 (08 Aug 2023): Duration 5s से बढ़ाकर 6s; Cooldown 45s से घटाकर 40s किया गया।",
+      "OB45 (26 Jun 2024): Maximum 2 Stored Charges जोड़ी गईं; published values 4m के अंदर 6s तक 500 DMG/s, 45s Cooldown और maximum 100m Wave Range थीं।",
+      "OB47 (02 Dec 2024): Gloo Walls की तरफ Aim Assistance जोड़ी गई।",
+      "OB49 (21 May 2025): Skill की Aiming Line पर Obstacle Indicator जोड़ा गया।",
+      "OB54 (23 Jun 2026): Optional BR Skill Boosts Sticky Rhythm और Split Rhythm जोड़े गए।",
+      "OB55 (10 Sep 2026): Skill Effect Visibility को 100m से ज्यादा actual range के अनुसार बढ़ाया गया; exact range publish नहीं की गई।"
     ],
     "source": [
       {
@@ -3370,24 +3370,24 @@
       "Treat the exact wave range as unpublished: OB55 confirms it is over 100m but gives no precise distance."
     ],
     "tacticalHi": [
-      "Gloo Wall interaction par rely karne se pehle intended route communicate karo; teammates ko pata hona chahiye ki kaunsa area affect ho raha hai.",
-      "Wave ki exact range ko unpublished hi samjho: OB55 100m se zyada confirm karta hai, lekin precise distance nahi deta."
+      "Gloo Wall interaction पर निर्भर होने से पहले intended route call करें, ताकि teammates को पता हो कि किस Area पर effect पड़ेगा।",
+      "Wave की exact Range को unpublished मानें: OB55 सिर्फ confirm करता है कि यह 100m से ज्यादा है, exact distance नहीं बताता।"
     ],
     "strengthsEn": [
       "The sonic-wave effect can affect Gloo Walls within a 4m radius for 6 seconds.",
       "The skill can store up to two charges."
     ],
     "strengthsHi": [
-      "Sonic-wave effect 4m radius ke andar Gloo Walls ko 6 seconds tak affect karta hai.",
-      "Skill maximum 2 charges store kar sakti hai."
+      "Sonic-wave Effect 4m Radius के अंदर Gloo Walls को 6 seconds तक प्रभावित कर सकता है।",
+      "Skill maximum दो Charges store कर सकती है।"
     ],
     "limitationsEn": [
       "The exact actual range above 100m is not published by Garena.",
       "The skill has a 45-second cooldown; stored charges do not make it continuously available."
     ],
     "limitationsHi": [
-      "100m se zyada actual range ka exact number Garena publish nahi karta.",
-      "Skill ka cooldown 45 seconds hai; stored charges ka matlab continuous availability nahi hai."
+      "100m से ज्यादा की exact actual Range Garena ने publish नहीं की है।",
+      "Skill का Cooldown 45 seconds है; Stored Charges होने का मतलब यह नहीं कि Skill लगातार available रहेगी।"
     ]
   },
   {
@@ -3400,16 +3400,16 @@
     "badge": "Official-source profile",
     "lastChanged": "OB52 (09 Jan 2026)",
     "introEn": "Active skill that grants temporary Shield Points, which refill and refresh the skill duration when Xayne knocks down an enemy.",
-    "introHi": "Active skill jo temporary Shield Points deti hai; Xayne enemy ko knockdown kare toh shield refill hota hai aur skill ka timer reset hota hai.",
+    "introHi": "एक Active Skill, जो temporary Shield Points देती है। Xayne के एनिमी को Knockdown करने पर Shield Points फिर भर जाते हैं और Skill Duration reset हो जाती है।",
     "currentEn": [
       "Enters the Xtreme state and instantly gains 70 temporary Shield Points for 15 seconds.",
       "Each enemy knockdown during the state restores the temporary Shield Points from this skill back to 70 and resets the state duration.",
       "When the state ends, the Shield Points gained through this skill are removed. Cooldown: 75 seconds."
     ],
     "currentHi": [
-      "Xtreme state activate hoti hai aur turant 70 temporary Shield Points milte hain, jo 15 seconds tak rehte hain.",
-      "State ke dauran har enemy knockdown par is skill ke temporary Shield Points wapas 70 ho jaate hain aur state ka timer reset hota hai.",
-      "State khatam hote hi is skill se mile Shield Points remove ho jaate hain. Cooldown: 75 seconds."
+      "Xtreme State activate होती है और तुरंत 15 seconds के लिए 70 temporary Shield Points मिलते हैं।",
+      "इस State के दौरान हर enemy Knockdown पर इस Skill के temporary Shield Points वापस 70 हो जाते हैं और State Duration reset हो जाती है।",
+      "State खत्म होने पर इस Skill से मिले Shield Points हट जाते हैं। Cooldown: 75 seconds।"
     ],
     "rows": [
       {
@@ -3419,17 +3419,17 @@
       },
       {
         "en": "State duration",
-        "hi": "State duration",
+        "hi": "State Duration",
         "value": "15 seconds"
       },
       {
         "en": "Shield refresh on knockdown",
-        "hi": "Knockdown par shield refresh",
+        "hi": "Knockdown पर Shield Refresh",
         "value": "Restores to 70 SP"
       },
       {
         "en": "Duration refresh",
-        "hi": "Duration refresh",
+        "hi": "Duration Refresh",
         "value": "Resets on each enemy knockdown"
       },
       {
@@ -3439,7 +3439,7 @@
       },
       {
         "en": "Maximum refresh count",
-        "hi": "Maximum refresh count",
+        "hi": "Maximum Refresh Count",
         "value": "Garena does not publish this value"
       }
     ],
@@ -3449,9 +3449,9 @@
       "Garena does not publish a maximum number of duration refreshes."
     ],
     "notesHi": [
-      "Xtreme Encounter ke temporary Shield Points state khatam hone par remove ho jaate hain; yeh permanent HP nahi hain.",
-      "Active state ke dauran har enemy knockdown par is skill ke temporary Shield Points 70 ho jaate hain aur duration reset hoti hai.",
-      "Garena duration kitni baar maximum refresh ho sakti hai, yeh publish nahi karta."
+      "Xtreme Encounter से मिले temporary Shield Points, State खत्म होने पर हट जाते हैं; ये permanent HP नहीं हैं।",
+      "Active State के दौरान हर enemy Knockdown पर इस Skill के temporary Shield Points वापस 70 हो जाते हैं और Duration reset होती है।",
+      "Duration कितनी बार maximum refresh हो सकती है, यह Garena publish नहीं करता।"
     ],
     "historyEn": [
       "Patch Note: World Series (14 Apr 2021): Introduced with 80 temporary HP, up to 100% increased damage to Gloo Walls and shields, 10s duration and 100s cooldown at maximum level.",
@@ -3462,12 +3462,12 @@
       "OB52 (09 Jan 2026): Temporary Shield Points increased from 50 to 70 and duration increased from 12s to 15s; cooldown remained 75s."
     ],
     "historyHi": [
-      "Patch Note: World Series (14 Apr 2021): 80 temporary HP, maximum level par Gloo Walls aur shields ko 100% extra damage, 10s duration aur 100s cooldown ke saath introduce hui.",
-      "Illuminate (19 Jan 2022): Maximum Gloo Wall/shield damage bonus 100% se 130% hua; duration 10s se 15s hui. Maximum cooldown 100s hi raha.",
-      "OB34 (25 May 2022): Temporary HP 80 se 120 hui; maximum Gloo Wall/shield damage bonus 130% se 200% hua; duration 15s se 6s hui.",
-      "OB46 (01 Sep 2024): Temporary HP ki jagah 12s ke liye 60 temporary Shield Points mile; har enemy knockdown par shield 60 tak refill hota aur duration reset hoti; cooldown 75s hua.",
-      "OB48 (19 Feb 2025): Temporary Shield Points 60 se 50 hue; duration 12s aur cooldown 75s hi rahe.",
-      "OB52 (09 Jan 2026): Temporary Shield Points 50 se 70 hue aur duration 12s se 15s hui; cooldown 75s hi raha."
+      "Patch Note: World Series (14 Apr 2021): 80 temporary HP, Gloo Walls और Shields पर maximum 100% extra Damage, 10s Duration और maximum level पर 100s Cooldown के साथ introduce किया गया।",
+      "Illuminate (19 Jan 2022): Maximum Gloo Wall/Shield Damage Bonus 100% से बढ़ाकर 130%; Duration 10s से बढ़ाकर 15s की गई। Maximum Cooldown 100s ही रहा।",
+      "OB34 (25 May 2022): Temporary HP 80 से बढ़ाकर 120; Maximum Gloo Wall/Shield Damage Bonus 130% से बढ़ाकर 200%; Duration 15s से घटाकर 6s की गई।",
+      "OB46 (01 Sep 2024): Temporary HP की जगह 12s के लिए 60 temporary Shield Points दिए गए; हर enemy Knockdown पर Shield 60 तक refill और Duration reset होती थी; Cooldown 75s हुआ।",
+      "OB48 (19 Feb 2025): Temporary Shield Points 60 से घटाकर 50 किए गए; Duration 12s और Cooldown 75s रहे।",
+      "OB52 (09 Jan 2026): Temporary Shield Points 50 से बढ़ाकर 70 और Duration 12s से बढ़ाकर 15s की गई; Cooldown 75s रहा।"
     ],
     "source": [
       {
@@ -3505,24 +3505,24 @@
       "A knockdown during the active state refreshes the Shield Points and duration; the profile does not assume a maximum refresh count."
     ],
     "tacticalHi": [
-      "Temporary Shield Point state kab start aur expire hoti hai, teammates ko communicate karo; ise permanent protection mat samjho.",
-      "Active state ke dauran knockdown hone par Shield Points aur duration refresh hote hain; profile koi maximum refresh count assume nahi karti."
+      "Teammates को बताएं कि temporary Shield Point State कब शुरू और खत्म होती है, ताकि वे इसे permanent Protection न समझें।",
+      "Active State के दौरान Knockdown होने पर Shield Points और Duration refresh होते हैं; profile किसी maximum refresh count का दावा नहीं करती।"
     ],
     "strengthsEn": [
       "Grants 70 temporary Shield Points for a 15-second state.",
       "Each enemy knockdown during the state restores the skill's Shield Points to 70 and resets the duration."
     ],
     "strengthsHi": [
-      "15-second state ke liye 70 temporary Shield Points milte hain.",
-      "State ke dauran har enemy knockdown par skill ke Shield Points 70 ho jaate hain aur duration reset hoti hai."
+      "15-second State के लिए 70 temporary Shield Points देती है।",
+      "State के दौरान हर enemy Knockdown पर Skill के Shield Points वापस 70 हो जाते हैं और Duration reset होती है।"
     ],
     "limitationsEn": [
       "Shield Points gained from the skill are removed when the state ends.",
       "The cooldown is 75 seconds, and Garena does not publish a maximum refresh count."
     ],
     "limitationsHi": [
-      "Skill se mile Shield Points state khatam hone par remove ho jaate hain.",
-      "Cooldown 75 seconds hai, aur Garena maximum refresh count publish nahi karta."
+      "State खत्म होने पर Skill से मिले Shield Points हट जाते हैं।",
+      "Cooldown 75 seconds है और maximum refresh count Garena publish नहीं करता।"
     ]
   },
   {
@@ -3535,37 +3535,37 @@
     "lastChanged": "OB49 (21 May 2025)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that decelerates enemies and vehicles shot with rifles, freezing them and generating Gloo Walls upon knockdown.",
-    "introHi": "Rifle aur marksman rifle se hit hue enemies ko slow karti hai. Slow enemy knock ho to freeze hota hai aur extra Gloo Walls milti hain.",
+    "introHi": "एक Passive Skill, जो Rifles से hit हुए एनिमी और Vehicles की Speed कम करती है। Knockdown होने पर एनिमी freeze हो जाते हैं और extra Gloo Walls मिलती हैं।",
     "currentEn": [
       "When hitting enemies or vehicles with rifles or marksman rifles, reduces the enemies' movement speed by 10% or the vehicles' acceleration by 80% for 3 seconds. If the enemy is knocked down while decelerated, freezes them for up to 3 seconds and obtains 2 extra Gloo Walls."
     ],
     "currentHi": [
-      "Rifle ya marksman rifle se enemy/vehicle hit karne par enemy ki movement speed 10% ya vehicle acceleration 80% tak 3 seconds reduce hoti hai. Slow state mein enemy knock ho, to woh up to 3 seconds freeze hota hai aur 2 extra Gloo Walls milti hain."
+      "Rifles या Marksman Rifles से एनिमी या Vehicles को hit करने पर एनिमी की Movement Speed 10% या Vehicles की Acceleration 80% कम हो जाती है। यह Effect 3 seconds तक रहता है। Slow हुए एनिमी को Knockdown करने पर वह maximum 3 seconds के लिए freeze हो जाता है और 2 extra Gloo Walls मिलती हैं।"
     ],
     "rows": [
       {
         "en": "Enemy movement speed reduction",
-        "hi": "Enemy movement speed reduction",
+        "hi": "Enemy Movement Speed में कमी",
         "value": "-10%"
       },
       {
         "en": "Vehicle acceleration reduction",
-        "hi": "Vehicle acceleration reduction",
+        "hi": "Vehicle Acceleration में कमी",
         "value": "-80%"
       },
       {
         "en": "Deceleration duration",
-        "hi": "Deceleration duration",
+        "hi": "Deceleration Duration",
         "value": "3 seconds"
       },
       {
         "en": "Freeze duration (on knockdown)",
-        "hi": "Freeze duration (on knockdown)",
+        "hi": "Knockdown पर Freeze Duration",
         "value": "Up to 3 seconds"
       },
       {
         "en": "Extra Gloo Walls obtained",
-        "hi": "Extra Gloo Walls obtained",
+        "hi": "मिलने वाली Extra Gloo Walls",
         "value": "+2"
       },
       {
@@ -3578,13 +3578,13 @@
       "The OB47 patch removed the original 10-second cooldown, making the skill continuously active upon landing successful rifle shots."
     ],
     "notesHi": [
-      "OB47 update ne original 10-second cooldown remove kar diya tha; successful rifle hits par ability continuously trigger ho sakti hai."
+      "OB47 Patch ने original 10-second Cooldown हटा दिया, इसलिए सफल Rifle Hits लगने पर Skill लगातार active रहती है।"
     ],
     "historyEn": [
       "OB46 (Aug 2024): Introduced. OB47 (Oct 2024): Vehicle decel 50% to 80%, removed 10s skill cooldown. OB49 (21 May 2025): Gloo Wall reward upon knock increased from 1 to 2."
     ],
     "historyHi": [
-      "OB46 (Aug 2024): Introduced. OB47 (Oct 2024): Vehicle deceleration 50% se 80%, 10s cooldown removed. OB49 (21 May 2025): Knock par Gloo Wall reward 1 se 2 hua."
+      "OB46 (Aug 2024): Introduce किया गया। OB47 (Oct 2024): Vehicle Deceleration 50% से बढ़ाकर 80%; 10s Skill Cooldown हटाया गया। OB49 (21 May 2025): Knock पर Gloo Wall Reward 1 से बढ़ाकर 2 किया गया।"
     ],
     "source": [
       {
@@ -3631,19 +3631,19 @@
       "Use rifle hits to slow a moving enemy before your squad commits; a knock while slowed grants extra Gloo Walls for the next cover/rotation."
     ],
     "tacticalHi": [
-      "Squad engage karne se pehle rifle hits se moving enemy ko slow karo; slow state mein knock milne par extra Gloo Walls next cover/rotation ke kaam aati hain."
+      "Squad के commit करने से पहले moving एनिमी पर Rifle Hits लगाकर उसकी Speed कम करें; Slow रहते हुए Knockdown करने पर अगली cover या rotation के लिए extra Gloo Walls मिलती हैं।"
     ],
     "strengthsEn": [
       "Repeated rifle hits can apply the slow without a cooldown; knockdown reward supports cover economy."
     ],
     "strengthsHi": [
-      "Rifle hits par slow repeat ho sakta hai aur cooldown nahi; knockdown reward cover ke liye Gloo Wall economy improve karta hai."
+      "Repeated Rifle Hits बिना Cooldown के Slow apply कर सकती हैं; Knockdown Reward से cover के options बढ़ते हैं।"
     ],
     "limitationsEn": [
       "The freeze and Gloo Wall reward require a knock while the target is decelerated; the slow alone does not guarantee either."
     ],
     "limitationsHi": [
-      "Freeze aur extra Gloo Wall ke liye target ko decelerated state mein knock karna zaroori hai; sirf slow se reward guaranteed nahi."
+      "Freeze और Gloo Wall Reward तभी मिलते हैं जब target Decelerated रहते हुए Knockdown हो; सिर्फ Slow लगने से इनमें से कोई Effect पक्का नहीं होता।"
     ],
     "abilityDisplayOnce": true
   },
@@ -3657,22 +3657,22 @@
     "lastChanged": "OB54 (23 Jun 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that scales weapon damage based on the distance to the target and deals extra damage to marked enemies.",
-    "introHi": "Target se distance badhne par weapon damage increase hota hai, aur marked enemies par extra damage milta hai.",
+    "introHi": "एक Passive Skill, जो target से दूरी के हिसाब से Weapon Damage बढ़ाती है और Mark हुए एनिमी को extra Damage देती है।",
     "currentEn": [
       "Damage increases with distance, up to a maximum of 20%. Damage to marked enemies increases by 5%."
     ],
     "currentHi": [
-      "Target se distance badhne par damage increase hota hai, maximum 20% tak. Marked enemies ko damage 5% increase hota hai."
+      "दूरी बढ़ने के साथ Damage बढ़ता है, maximum 20% तक। Mark हुए एनिमी को 5% extra Damage मिलता है।"
     ],
     "rows": [
       {
         "en": "Maximum distance damage bonus",
-        "hi": "Maximum distance damage bonus",
+        "hi": "Maximum Distance Damage Bonus",
         "value": "Up to +20%"
       },
       {
         "en": "Damage to marked enemies",
-        "hi": "Damage to marked enemies",
+        "hi": "Mark हुए एनिमी को Damage",
         "value": "+5%"
       },
       {
@@ -3685,13 +3685,13 @@
       "Highly synergistic with information-gathering characters like Moco and Shirou."
     ],
     "notesHi": [
-      "Moco aur Shirou jaise information-gathering characters ke saath strong synergy hai."
+      "Moco और Shirou जैसे Information देने वाले characters के साथ इसका अच्छा तालमेल है।"
     ],
     "historyEn": [
       "OB41 (Aug 2023): Damage to marked enemies increased from 3.5% to 5%. OB54 (23 Jun 2026): Maximum distance damage bonus nerfed from 25% to 20%."
     ],
     "historyHi": [
-      "OB41 (Aug 2023): Marked enemies par damage 3.5% se 5% hua. OB54 (23 Jun 2026): Maximum distance damage bonus 25% se 20% nerf hua."
+      "OB41 (Aug 2023): Mark हुए एनिमी को Damage 3.5% से बढ़ाकर 5% किया गया। OB54 (23 Jun 2026): Maximum Distance Damage Bonus 25% से घटाकर 20% किया गया।"
     ],
     "source": [
       {
@@ -3717,19 +3717,19 @@
       "Pair with teammate information marks; maintain distance when the engagement allows to benefit from the distance-scaled bonus."
     ],
     "tacticalHi": [
-      "Teammate ke enemy marks ke saath pair karo; engagement allow kare to distance maintain karke distance-based bonus ka benefit lo."
+      "Teammate के Information Marks के साथ इसे use करें; fight में मौका मिले तो दूरी बनाए रखें, ताकि distance-based Bonus का फायदा मिले।"
     ],
     "strengthsEn": [
       "Combines distance scaling with a separate marked-target bonus; passive has no cooldown."
     ],
     "strengthsHi": [
-      "Distance scaling ke saath marked target par separate bonus milta hai; passive ka cooldown nahi."
+      "Distance Scaling के साथ Mark हुए target पर अलग Bonus भी मिलता है; Passive का Cooldown नहीं है।"
     ],
     "limitationsEn": [
       "The maximum distance bonus scales with range and is not the full 20% at every distance; close-range fights reduce its value."
     ],
     "limitationsHi": [
-      "Distance bonus range ke saath scale hota hai; har distance par full 20% nahi milta. Close-range fights mein iska value kam hota hai."
+      "Maximum Distance Bonus दूरी के साथ बढ़ता है और हर Range पर पूरा 20% नहीं मिलता; close-range fights में इसका फायदा कम होता है।"
     ],
     "abilityDisplayOnce": true
   },
@@ -3743,32 +3743,32 @@
     "lastChanged": "OB53 (02 Apr 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that marks attackers who hit the user and grants massive armor penetration on the first retaliatory shot.",
-    "introHi": "Jo enemy tumhe hit karta hai usko mark karta hai aur marked enemy par first retaliatory shot ko extra armor penetration deta hai.",
+    "introHi": "एक Passive Skill, जो आपको hit करने वाले attackers को mark करती है और जवाबी पहली Shot पर बहुत ज्यादा Armor Penetration देती है।",
     "currentEn": [
       "When hit by an enemy from within 100m, the attacker is marked for 8 seconds. Intel is shared with teammates. The first shot on marked enemies has 100% additional armor penetration. Maximum of 4 markings active at once."
     ],
     "currentHi": [
-      "100m ke andar enemy hit kare to attacker 8 seconds ke liye mark hota hai. Mark ki intel teammates ke saath share hoti hai. Marked enemy par first shot ko 100% additional armor penetration milti hai. Ek waqt mein maximum 4 marks active ho sakte hain."
+      "100m के अंदर मौजूद एनिमी से Hit होने पर attacker 8 seconds के लिए mark हो जाता है। यह जानकारी teammates के साथ share होती है। Mark हुए एनिमी पर पहली Shot को 100% extra Armor Penetration मिलती है। एक समय में maximum 4 Marks active रह सकते हैं।"
     ],
     "rows": [
       {
         "en": "Marking duration",
-        "hi": "Marking duration",
+        "hi": "Marking Duration",
         "value": "8 seconds"
       },
       {
         "en": "Marking range",
-        "hi": "Marking range",
+        "hi": "Marking Range",
         "value": "100m"
       },
       {
         "en": "Maximum active markings",
-        "hi": "Maximum active markings",
+        "hi": "Maximum Active Marks",
         "value": "4"
       },
       {
         "en": "First shot armor penetration",
-        "hi": "First shot armor penetration",
+        "hi": "First Shot Armor Penetration",
         "value": "+100%"
       },
       {
@@ -3781,13 +3781,13 @@
       "The mark is universally visible to all teammates. Garena has not republished the cooldown value since it was reduced to 10 seconds in OB36."
     ],
     "notesHi": [
-      "Mark sab teammates ko visible hota hai. OB36 mein cooldown 10 seconds hua tha; Garena ne current cooldown ko recent profile par republish nahi kiya."
+      "Mark सभी teammates को दिखाई देता है। OB36 में Cooldown 10 seconds किए जाने के बाद Garena ने इसकी value दोबारा publish नहीं की है।"
     ],
     "historyEn": [
       "OB36 (Sep 2022): Range 80m to 100m, Armor pen to 100%, Cooldown 25s to 10s. OB53 (02 Apr 2026): Marking duration 10s to 8s, Max markings explicitly capped at 4."
     ],
     "historyHi": [
-      "OB36 (Sep 2022): Range 80m se 100m, armor penetration 100%, cooldown 25s se 10s. OB53 (02 Apr 2026): Mark duration 10s se 8s aur max active marks 4 cap."
+      "OB36 (Sep 2022): Range 80m से बढ़ाकर 100m, Armor Penetration 100% और Cooldown 25s से घटाकर 10s किया गया। OB53 (02 Apr 2026): Marking Duration 10s से घटाकर 8s; Maximum Marks की limit 4 तय की गई।"
     ],
     "source": [
       {
@@ -3815,19 +3815,19 @@
       "When your squad is hit, use the shared mark to call the attacker's location and coordinate a response; the first shot receives the penetration bonus."
     ],
     "tacticalHi": [
-      "Squad hit ho to shared mark se attacker ki location call karo aur response coordinate karo; first shot ko penetration bonus milta hai."
+      "Squad को Hit होने पर shared Mark से attacker की location call करें और जवाबी action coordinate करें; पहली Shot को Penetration Bonus मिलता है।"
     ],
     "strengthsEn": [
       "Attacker information is shared teamwide; the first retaliatory shot gains 100% additional armor penetration."
     ],
     "strengthsHi": [
-      "Attacker ki information teamwide share hoti hai; first retaliatory shot ko 100% additional armor penetration milti hai."
+      "Attacker की जानकारी पूरी team के साथ share होती है; जवाबी पहली Shot को 100% extra Armor Penetration मिलती है।"
     ],
     "limitationsEn": [
       "Marking requires Shirou to be hit by an enemy within range; it is reactive, not a proactive scan."
     ],
     "limitationsHi": [
-      "Mark trigger hone ke liye range ke andar enemy ka Shirou ko hit karna zaroori hai; yeh reactive ability hai, proactive scan nahi."
+      "Marking के लिए Shirou को Range के अंदर किसी एनिमी से Hit होना जरूरी है; यह reactive Skill है, पहले से Scan नहीं करती।"
     ],
     "abilityDisplayOnce": true
   },
@@ -3841,17 +3841,17 @@
     "lastChanged": "OB54 (23 Jun 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Active ability that creates an impenetrable static force field blocking incoming and outgoing damage.",
-    "introHi": "Active ability ek force field banati hai jo incoming aur outgoing damage block karta hai.",
+    "introHi": "एक Active Ability, जो मजबूत और स्थिर Force Field बनाती है। यह अंदर और बाहर से आने वाला Damage block करती है।",
     "currentEn": [
       "Creates an impenetrable force field that blocks 1,000 damage. Unable to attack outside enemies from within the field. All effects last for 10 seconds."
     ],
     "currentHi": [
-      "1,000 damage tak force field block karta hai. Field ke andar se bahar ke enemies par attack nahi kar sakte. Effects 10 seconds tak rehte hain."
+      "ऐसा Force Field बनाता है जो 1,000 Damage block करता है। Field के अंदर से बाहर मौजूद एनिमी पर Attack नहीं कर सकते। सभी Effects 10 seconds तक रहते हैं।"
     ],
     "rows": [
       {
         "en": "Force field HP",
-        "hi": "Force field HP",
+        "hi": "Force Field HP",
         "value": "1,000 damage"
       },
       {
@@ -3869,13 +3869,13 @@
       "The shield blocks damage from all sources, both inside and out. Enemies can enter the shield dome."
     ],
     "notesHi": [
-      "Shield dono taraf se sabhi sources ka damage block karta hai. Enemies dome ke andar enter kar sakte hain."
+      "Shield अंदर और बाहर, दोनों तरफ से आने वाले सभी sources के Damage को block करता है। एनिमी Shield Dome के अंदर आ सकते हैं।"
     ],
     "historyEn": [
       "OB31 (Dec 2021): Removed ability to shoot outward, duration 6s, cooldown 120s. OB45 (Jun 2024): Duration 6s to 8s. OB54 (23 Jun 2026): Cooldown 60s to 45s, Shield HP 800 to 1000, Duration 8s to 10s."
     ],
     "historyHi": [
-      "OB31 (Dec 2021): Bahar shoot karna remove hua, duration 6s aur cooldown 120s. OB45 (Jun 2024): Duration 6s se 8s. OB54 (23 Jun 2026): Cooldown 60s se 45s, shield HP 800 se 1000, duration 8s se 10s."
+      "OB31 (Dec 2021): बाहर की तरफ Shoot करने की Ability हटाई गई; Duration 6s और Cooldown 120s किया गया। OB45 (Jun 2024): Duration 6s से बढ़ाकर 8s। OB54 (23 Jun 2026): Cooldown 60s से घटाकर 45s, Shield HP 800 से बढ़ाकर 1,000 और Duration 8s से बढ़ाकर 10s की गई।"
     ],
     "source": [
       {
@@ -3901,19 +3901,19 @@
       "Use the field to create a temporary protected space for a reset or revive; remember enemies can enter the dome and you cannot shoot outward."
     ],
     "tacticalHi": [
-      "Reset ya revive ke liye temporary protected space banao; yaad rahe enemies dome ke andar aa sakte hain aur tum field se bahar shoot nahi kar sakte."
+      "Reset या Revive के लिए Force Field से थोड़ी देर का protected area बनाएं; याद रखें कि एनिमी Dome के अंदर आ सकते हैं और अंदर से बाहर Shoot नहीं कर सकते।"
     ],
     "strengthsEn": [
       "Blocks up to 1,000 damage and provides a temporary defensive window."
     ],
     "strengthsHi": [
-      "1,000 damage tak block karta hai aur temporary defensive window deta hai."
+      "Maximum 1,000 Damage block करता है और थोड़े समय के लिए Defensive Window देता है।"
     ],
     "limitationsEn": [
       "The field is static, enemies can enter, and outward attacks are disabled while inside."
     ],
     "limitationsHi": [
-      "Field static hai, enemies andar aa sakte hain, aur andar se bahar attack disabled hai."
+      "Field एक ही जगह रहता है, एनिमी अंदर आ सकते हैं और इसके अंदर रहते हुए बाहर की तरफ Attack नहीं कर सकते।"
     ],
     "abilityDisplayOnce": true
   },
@@ -3927,37 +3927,37 @@
     "lastChanged": "OB53 (02 Apr 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that rewards knockdowns with a rapidly decaying rate of fire and movement speed boost.",
-    "introHi": "Knockdown ke baad Highlight mode activate hota hai, jisme rate of fire aur movement speed boost milta hai jo time ke saath decay hota hai.",
+    "introHi": "एक Passive Skill, जो Knockdown के बाद Rate of Fire और Movement Speed का Boost देती है, लेकिन यह Boost तेजी से कम होता जाता है।",
     "currentEn": [
       "After knocking down an enemy, enter Highlight mode for 10 seconds. Increases rate of fire by 18% and movement speed by 12% (decays quickly). Consecutively knocking down enemies resets the countdown and further boosts rate of fire by 4% and movement speed by 3%."
     ],
     "currentHi": [
-      "Enemy knock karne ke baad 10 seconds ke Highlight mode mein enter hoti hai. Rate of fire 18% aur movement speed 12% increase hoti hai (jaldi decay hoti hai). Consecutive knockdowns countdown reset karte hain aur rate of fire +4%, movement speed +3% further boost karte hain."
+      "एनिमी को Knockdown करने के बाद 10 seconds के लिए Highlight Mode शुरू होता है। Rate of Fire 18% और Movement Speed 12% बढ़ जाती है (Boost तेजी से कम होता है)। लगातार Knockdown करने पर Countdown reset होता है और Rate of Fire 4% तथा Movement Speed 3% और बढ़ जाती है।"
     ],
     "rows": [
       {
         "en": "Highlight mode duration",
-        "hi": "Highlight mode duration",
+        "hi": "Highlight Mode Duration",
         "value": "10 seconds"
       },
       {
         "en": "Rate of fire base bonus",
-        "hi": "Rate of fire base bonus",
+        "hi": "Rate of Fire का Base Bonus",
         "value": "+18%"
       },
       {
         "en": "Movement speed base bonus",
-        "hi": "Movement speed base bonus",
+        "hi": "Movement Speed का Base Bonus",
         "value": "+12%"
       },
       {
         "en": "Streak bonus (Rate of Fire)",
-        "hi": "Streak bonus (Rate of Fire)",
+        "hi": "Streak Bonus (Rate of Fire)",
         "value": "+4% per subsequent knockdown"
       },
       {
         "en": "Streak bonus (Movement)",
-        "hi": "Streak bonus (Movement)",
+        "hi": "Streak Bonus (Movement)",
         "value": "+3% per subsequent knockdown"
       },
       {
@@ -3970,13 +3970,13 @@
       "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it."
     ],
     "notesHi": [
-      "Movement speed ka global maximum hai; skills, items aur event bonuses us cap se upar nahi ja sakte."
+      "Movement Speed की एक global maximum limit है; Skills, items और events से मिलने वाले bonuses इस limit को पार नहीं कर सकते।"
     ],
     "historyEn": [
       "OB39 (Mar 2023): Skill entirely reworked to Highlight mode (18% RoF, 12% Spd, 6s duration). OB53 (02 Apr 2026): Duration buffed from 6s to 10s."
     ],
     "historyHi": [
-      "OB39 (Mar 2023): Skill Highlight mode mein rework hui (18% RoF, 12% Spd, 6s duration). OB53 (02 Apr 2026): Duration 6s se 10s buff hui."
+      "OB39 (Mar 2023): Skill को पूरी तरह Highlight Mode में rework किया गया (18% RoF, 12% Speed, 6s Duration)। OB53 (02 Apr 2026): Duration 6s से बढ़ाकर 10s की गई।"
     ],
     "source": [
       {
@@ -4005,19 +4005,19 @@
       "After a knock, use the Highlight window to reposition or continue pressure; chained knockdowns refresh the timer and increase both bonuses."
     ],
     "tacticalHi": [
-      "Knock ke baad Highlight window mein reposition ya pressure continue karo; chain knockdowns timer refresh karte aur dono bonuses badhate hain."
+      "Knock के बाद Highlight Window का इस्तेमाल reposition करने या pressure जारी रखने के लिए करें; लगातार Knockdown करने पर Timer reset होता है और दोनों Bonuses बढ़ते हैं।"
     ],
     "strengthsEn": [
       "Knockdown-triggered momentum can be chained; no cooldown listed."
     ],
     "strengthsHi": [
-      "Knockdown ke baad momentum chain kiya ja sakta hai; cooldown listed nahi."
+      "Knockdown से मिलने वाला Momentum लगातार बनाए रखा जा सकता है; कोई Cooldown listed नहीं है।"
     ],
     "limitationsEn": [
       "Highlight requires a knockdown to start; its bonuses decay quickly and movement speed remains subject to the global cap."
     ],
     "limitationsHi": [
-      "Highlight start karne ke liye knockdown chahiye; bonuses jaldi decay hote hain aur movement speed global cap ke under rahti hai."
+      "Highlight शुरू करने के लिए Knockdown जरूरी है; इसके Bonuses तेजी से कम होते हैं और Movement Speed global cap के अंदर ही रहती है।"
     ],
     "abilityDisplayOnce": true
   },
@@ -4030,32 +4030,32 @@
     "badge": "Official-source profile",
     "lastChanged": "OB46 (3 Sep 2024)",
     "introEn": "A passive ability that boosts movement speed and accuracy while firing on the move.",
-    "introHi": "Bullet Beats ek passive ability hai. Match mein move karte hue fire karne par movement speed aur accuracy dono boost hote hain.",
+    "introHi": "एक Passive Ability, जो चलते हुए Fire करने पर Movement Speed और Accuracy बढ़ाती है।",
     "currentEn": [
       "While firing and moving at the same time, movement speed increases by 50% and accuracy increases by 60%."
     ],
     "currentHi": [
-      "Jab character move karte hue fire karta hai, movement speed 50% increase hoti hai aur accuracy 60% increase hoti hai."
+      "एक ही समय में Move करते हुए Fire करने पर Movement Speed 50% और Accuracy 60% बढ़ जाती है।"
     ],
     "rows": [
       {
         "en": "Movement-speed bonus",
-        "hi": "Movement speed bonus",
+        "hi": "Movement Speed Bonus",
         "value": "+50%"
       },
       {
         "en": "Accuracy bonus",
-        "hi": "Accuracy bonus",
+        "hi": "Accuracy Bonus",
         "value": "+60%"
       },
       {
         "en": "Activation condition",
-        "hi": "Trigger condition",
+        "hi": "Activation Condition",
         "value": "Firing while moving"
       },
       {
         "en": "Ability type",
-        "hi": "Ability type",
+        "hi": "Ability Type",
         "value": "Passive"
       },
       {
@@ -4070,9 +4070,9 @@
       "No separate duration or cooldown is published in the official sources checked."
     ],
     "notesHi": [
-      "Bonus tabhi apply hota hai jab movement aur firing ek saath ho; sirf khade hokar fire karne se stated trigger complete nahi hota.",
-      "Official character page short description deta hai; exact numerical values Garena ke OB46 patch notes mein documented hain.",
-      "Checked official sources mein separate duration ya cooldown publish nahi kiya gaya."
+      "Bonus के लिए Move करना और Fire करना एक ही समय पर जरूरी है; खड़े रहकर Fire करने से यह Trigger पूरा नहीं होता।",
+      "Official Character Page पर छोटा description दिया गया है; numeric values Garena के OB46 Patch Notes में दर्ज हैं।",
+      "जाँचे गए official sources में अलग Duration या Cooldown publish नहीं किया गया है।"
     ],
     "historyEn": [
       "OB28 (Jun 2021): D-Bee introduced with Bullet Beats.",
@@ -4080,9 +4080,9 @@
       "OB46 (3 Sep 2024): Movement-speed bonus increased from 30% to 50%; accuracy set to 60%."
     ],
     "historyHi": [
-      "OB28 (Jun 2021): D-Bee aur Bullet Beats introduce hue.",
-      "OB35 (20 Jul 2022): Movement-speed bonus 10% se 20% aur accuracy 20% se 45% hui.",
-      "OB46 (3 Sep 2024): Movement-speed bonus 30% se 50% aur accuracy 60% ki gayi."
+      "OB28 (Jun 2021): D-Bee को Bullet Beats के साथ introduce किया गया।",
+      "OB35 (20 Jul 2022): Movement Speed Bonus 10% से बढ़ाकर 20%; Accuracy 20% से बढ़ाकर 45% की गई।",
+      "OB46 (3 Sep 2024): Movement Speed Bonus 30% से बढ़ाकर 50%; Accuracy 60% तय की गई।"
     ],
     "source": [
       {
@@ -4110,24 +4110,24 @@
       "In squad play, communicate when you are repositioning so teammates can maintain shared awareness of your movement."
     ],
     "tacticalHi": [
-      "Is ability ka bonus tabhi milta hai jab movement aur firing saath ho; stationary rehne par stated bonus apply nahi hota.",
-      "Squad play mein reposition karte waqt teammates ko call do, taaki sabko tumhari movement aur spacing ka clear idea rahe."
+      "Effect के लिए Move करना और Fire करना एक साथ जरूरी है; खड़े रहने पर बताए गए Bonuses नहीं मिलते।",
+      "Squad में reposition करते समय teammates को call दें, ताकि उन्हें आपकी movement की जानकारी रहे।"
     ],
     "strengthsEn": [
       "Provides two simultaneous passive bonuses under its stated trigger.",
       "No active-skill activation input is required."
     ],
     "strengthsHi": [
-      "Stated trigger complete hone par do passive bonuses ek saath milte hain.",
-      "Iske liye alag se active-skill button press nahi karna padta."
+      "बताए गए Trigger के दौरान एक साथ दो Passive Bonuses मिलते हैं।",
+      "Active Skill को manually activate करने की जरूरत नहीं है।"
     ],
     "limitationsEn": [
       "The effect is conditional and does not apply when the character is stationary.",
       "The official sources checked do not specify a separate duration or cooldown."
     ],
     "limitationsHi": [
-      "Effect conditional hai; character stationary ho toh yeh apply nahi hota.",
-      "Checked official sources separate duration ya cooldown specify nahi karte."
+      "यह Effect condition पर निर्भर है और stationary रहने पर लागू नहीं होता।",
+      "जाँचे गए official sources में अलग Duration या Cooldown नहीं दिया गया है।"
     ],
     "status": "OB55 values reconciled 15 Nov 2026",
     "artworkMode": "official-fullbody"
