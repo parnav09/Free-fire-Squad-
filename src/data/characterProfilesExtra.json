@@ -3088,5 +3088,367 @@
       "60 HP tabhi milti hai jab teammate ka revive successfully complete ho.",
       "Jab koi teammate down nahi hai, tab is ability se direct benefit nahi milta."
     ]
+  },
+  {
+    "id": "dimitri",
+    "name": "Dimitri",
+    "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/20229/024c98913571304db2cba9d257e7291a.png",
+    "artworkMode": "cutout",
+    "skill": "Healing Heartbeat",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB42 (30 Oct 2023)",
+    "introEn": "Active healing zone that restores HP to Dimitri and nearby allies, and automatically starts self-recovery for downed players inside it.",
+    "introHi": "Active healing zone jo Dimitri aur paas ke teammates ki HP recover karta hai, aur zone ke andar knockdown player ka self-recovery automatically start karta hai.",
+    "currentEn": [
+      "Creates a healing zone with a 3.5m radius.",
+      "Dimitri and allies inside the zone recover 10 HP per second.",
+      "When Dimitri or an ally is downed inside the zone, self-recovery automatically starts when needed.",
+      "The zone lasts 12 seconds. Cooldown: 90 seconds."
+    ],
+    "currentHi": [
+      "3.5m radius ka healing zone banta hai.",
+      "Zone ke andar Dimitri aur teammates ko har second 10 HP recover hoti hai.",
+      "Zone ke andar Dimitri ya teammate knockdown ho, toh zaroorat padne par self-recovery automatically start hota hai.",
+      "Zone 12 seconds tak rehta hai. Cooldown: 90 seconds."
+    ],
+    "rows": [
+      {
+        "en": "Healing-zone radius",
+        "hi": "Healing zone ka radius",
+        "value": "3.5m"
+      },
+      {
+        "en": "HP recovery",
+        "hi": "HP recovery",
+        "value": "10 HP/s"
+      },
+      {
+        "en": "Zone duration",
+        "hi": "Zone duration",
+        "value": "12 seconds"
+      },
+      {
+        "en": "Downed-player recovery",
+        "hi": "Knockdown ke baad recovery",
+        "value": "Automatic self-recovery"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "90 seconds"
+      }
+    ],
+    "notesEn": [
+      "OB40 states that the help-up effect can be enhanced by other skills.",
+      "During self-recovery, players can move and no longer lose HP (OB34).",
+      "Garena does not publish a separate maximum number of self-recovery activations within one zone."
+    ],
+    "notesHi": [
+      "OB40 ke mutabik, help-up effect ko doosri skills se enhance kiya ja sakta hai.",
+      "Self-recovery ke dauran player move kar sakta hai aur HP lose nahi hoti (OB34).",
+      "Garena ek zone ke andar self-recovery kitni baar activate ho sakta hai, iska maximum number publish nahi karta."
+    ],
+    "historyEn": [
+      "4th Anniversary (04 Aug 2021): Introduced Healing Heartbeat — 3.5m healing zone, 3 HP/s, up to 15s duration and 60s cooldown at maximum level; downed users and allies could self-recover.",
+      "OB34 (25 May 2022): Self-recovery was improved so players could move during it without losing HP.",
+      "OB37 (21 Sep 2022): HP recovery increased from 3 to 5 HP/s.",
+      "OB40 (30 May 2023): HP recovery increased from 5 to 10 HP/s; downed players inside the zone automatically began self-recovery when needed; zone duration became 12s and cooldown was 60s.",
+      "OB42 (30 Oct 2023): Cooldown increased from 60s to 90s."
+    ],
+    "historyHi": [
+      "4th Anniversary (04 Aug 2021): Healing Heartbeat introduce hua — 3.5m healing zone, 3 HP/s, maximum level par 15s duration aur 60s cooldown; knockdown Dimitri aur teammates self-recover kar sakte the.",
+      "OB34 (25 May 2022): Self-recovery update hua; ab player recovery ke dauran move kar sakta tha aur HP lose nahi hoti thi.",
+      "OB37 (21 Sep 2022): HP recovery 3 se 5 HP/s hui.",
+      "OB40 (30 May 2023): HP recovery 5 se 10 HP/s hui; zone ke andar knockdown players ka self-recovery zaroorat padne par automatically start hua; zone duration 12s aur cooldown 60s hua.",
+      "OB42 (30 Oct 2023): Cooldown 60s se 90s hua."
+    ],
+    "source": [
+      {
+        "label": "Garena — Dimitri character profile",
+        "url": "https://ff.garena.com/en/chars/485"
+      },
+      {
+        "label": "Garena — 4th Anniversary",
+        "url": "https://ff.garena.com/en/article/485/"
+      },
+      {
+        "label": "Garena — OB34 Patch Notes",
+        "url": "https://ff.garena.com/en/article/764/"
+      },
+      {
+        "label": "Garena — OB37 Patch Notes",
+        "url": "https://ff.garena.com/en/article/931/"
+      },
+      {
+        "label": "Garena — OB40 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "Garena — OB42 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1266/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "hiddenMechanics": [
+      {
+        "text": "While self-recovering, the player can move and no longer loses HP (OB34).",
+        "status": "official"
+      }
+    ]
+  },
+  {
+    "id": "skyler",
+    "name": "Skyler",
+    "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/547dea01d82886891297443e8e9d270f.png",
+    "artworkMode": "cutout",
+    "skill": "Riptide Rhythm",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB55 (10 Sep 2026)",
+    "introEn": "Active sonic-wave skill that damages Gloo Walls in an area and can store up to two charges.",
+    "introHi": "Active sonic-wave skill jo area mein Gloo Walls ko damage karti hai aur maximum 2 charges store kar sakti hai.",
+    "currentEn": [
+      "Unleashes a sonic wave forward; OB55 states that the actual skill-effect range is over 100m, but does not publish an exact distance.",
+      "When the wave hits an obstacle, it explodes and deals 500 DMG per second to Gloo Walls within a 4m radius.",
+      "The damage effect lasts 6 seconds. Cooldown: 45 seconds. Up to 2 skill charges can be stored.",
+      "HP recovery is not included in the current base-skill values used here; the OB38 rework removed Skyler's healing effect."
+    ],
+    "currentHi": [
+      "Aage sonic wave release hoti hai; OB55 ke mutabik actual skill-effect range 100m se zyada hai, lekin exact distance publish nahi ki gayi.",
+      "Wave kisi obstacle se hit hone par explode hoti hai aur 4m radius ke andar Gloo Walls ko har second 500 DMG deti hai.",
+      "Damage effect 6 seconds tak rehta hai. Cooldown: 45 seconds. Maximum 2 skill charges store ho sakti hain.",
+      "Current base-skill values mein HP recovery include nahi hai; OB38 rework mein Skyler ka healing effect remove kiya gaya tha."
+    ],
+    "rows": [
+      {
+        "en": "Actual skill-effect range",
+        "hi": "Skill effect ki actual range",
+        "value": "Over 100m (exact value not published)"
+      },
+      {
+        "en": "Gloo Wall damage",
+        "hi": "Gloo Wall damage",
+        "value": "500 DMG/s"
+      },
+      {
+        "en": "Damage radius",
+        "hi": "Damage radius",
+        "value": "4m"
+      },
+      {
+        "en": "Damage duration",
+        "hi": "Damage duration",
+        "value": "6 seconds"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "45 seconds"
+      },
+      {
+        "en": "Maximum charges",
+        "hi": "Maximum charges",
+        "value": "2"
+      }
+    ],
+    "notesEn": [
+      "OB55 says the skill-effect visibility was extended to match the actual range of over 100m. Garena does not publish the exact range.",
+      "OB54 introduced two optional BR Skill Boosts: Sticky Rhythm creates a small area that follows the nearest enemy and damages Gloo Walls inside it; Split Rhythm searches for Gloo Walls within 75m, locks onto target walls for 15s and sends waves toward up to 3 walls. Exact damage values for these boosts are not published.",
+      "Only one Skill Boost option can be selected for the skill in a match.",
+      "OB47 added aim assistance toward Gloo Walls; OB49 added an obstacle indicator to the aiming line."
+    ],
+    "notesHi": [
+      "OB55 mein skill-effect ki visibility ko actual 100m se zyada range ke saath match kiya gaya. Garena exact range publish nahi karta.",
+      "OB54 mein 2 optional BR Skill Boosts aaye: Sticky Rhythm ek chhota area banata hai jo nearest enemy ko follow karta hai aur uske andar ki Gloo Walls ko damage karta hai; Split Rhythm 75m ke andar Gloo Walls search karta hai, target walls ko 15s lock karta hai aur maximum 3 walls ki taraf waves bhejta hai. In boosts ka exact damage Garena publish nahi karta.",
+      "Ek match mein is skill ke liye sirf ek Skill Boost option select kiya ja sakta hai.",
+      "OB47 mein Gloo Walls ki taraf aim assistance add hui; OB49 mein aiming line par obstacle indicator add hua."
+    ],
+    "historyEn": [
+      "OB34 (25 May 2022): At maximum level, cooldown increased from 40s to 60s; each deployed Gloo Wall granted HP recovery, up to 9 points, and recovery effects did not stack.",
+      "OB38 (11 Jan 2023): Reworked into area damage over time; maximum wave range 100m, 3.5m damage radius, 4s duration and 50s cooldown. HP recovery was removed.",
+      "OB40 (30 May 2023): Damage radius increased from 3.5m to 4m; duration increased from 4s to 5s; cooldown reduced from 50s to 45s.",
+      "OB41 (08 Aug 2023): Duration increased from 5s to 6s; cooldown reduced from 45s to 40s.",
+      "OB45 (26 Jun 2024): Added up to 2 stored charges; published values were 500 DMG/s within 4m for 6s, with a 45s cooldown and up to 100m wave range.",
+      "OB47 (02 Dec 2024): Added aim assistance toward Gloo Walls.",
+      "OB49 (21 May 2025): Added an obstacle indicator to the skill's aiming line.",
+      "OB54 (23 Jun 2026): Added optional BR Skill Boosts Sticky Rhythm and Split Rhythm.",
+      "OB55 (10 Sep 2026): Extended skill-effect visibility to match the actual range of over 100m; the exact range was not published."
+    ],
+    "historyHi": [
+      "OB34 (25 May 2022): Maximum level par cooldown 40s se 60s hua; har deployed Gloo Wall par maximum 9 points tak HP recovery milti thi aur recovery stack nahi hoti thi.",
+      "OB38 (11 Jan 2023): Skill ko area damage-over-time effect mein rework kiya gaya; maximum wave range 100m, 3.5m damage radius, 4s duration aur 50s cooldown hua. HP recovery remove hui.",
+      "OB40 (30 May 2023): Damage radius 3.5m se 4m, duration 4s se 5s aur cooldown 50s se 45s hua.",
+      "OB41 (08 Aug 2023): Duration 5s se 6s aur cooldown 45s se 40s hua.",
+      "OB45 (26 Jun 2024): Maximum 2 stored charges add hui; published values 4m ke andar 500 DMG/s, 6s duration, 45s cooldown aur maximum 100m wave range the.",
+      "OB47 (02 Dec 2024): Gloo Walls ki taraf aim assistance add hui.",
+      "OB49 (21 May 2025): Skill ki aiming line par obstacle indicator add hua.",
+      "OB54 (23 Jun 2026): Optional BR Skill Boosts Sticky Rhythm aur Split Rhythm add hue.",
+      "OB55 (10 Sep 2026): Skill-effect visibility ko actual 100m se zyada range ke saath match kiya gaya; exact range publish nahi hui."
+    ],
+    "source": [
+      {
+        "label": "Garena — Skyler character profile",
+        "url": "https://ff.garena.com/en/chars/462"
+      },
+      {
+        "label": "Garena — OB34 Patch Notes",
+        "url": "https://ff.garena.com/en/article/764/"
+      },
+      {
+        "label": "Garena — Patch Notes (11 Jan 2023)",
+        "url": "https://ff.garena.com/en/article/968/"
+      },
+      {
+        "label": "Garena — OB40 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1170/"
+      },
+      {
+        "label": "Garena — OB41 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1213/"
+      },
+      {
+        "label": "Garena — OB45 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1357/"
+      },
+      {
+        "label": "Garena — OB47 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1424/"
+      },
+      {
+        "label": "Garena — OB49 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1473/"
+      },
+      {
+        "label": "Garena — OB54 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1673/"
+      },
+      {
+        "label": "Garena — OB55 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1712/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "hiddenMechanics": [
+      {
+        "text": "Riptide Rhythm receives aim assistance toward Gloo Walls (OB47).",
+        "status": "official"
+      },
+      {
+        "text": "An obstacle indicator appears on the aiming line (OB49).",
+        "status": "official"
+      }
+    ]
+  },
+  {
+    "id": "xayne",
+    "name": "Xayne",
+    "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20229/ea05dd27c4f4faf3267679d5f90cdaec.png",
+    "artworkMode": "cutout",
+    "skill": "Xtreme Encounter",
+    "type": "Active",
+    "badge": "Official-source profile",
+    "lastChanged": "OB52 (09 Jan 2026)",
+    "introEn": "Active skill that grants temporary Shield Points, which refill and refresh the skill duration when Xayne knocks down an enemy.",
+    "introHi": "Active skill jo temporary Shield Points deti hai; Xayne enemy ko knockdown kare toh shield refill hota hai aur skill ka timer reset hota hai.",
+    "currentEn": [
+      "Enters the Xtreme state and instantly gains 70 temporary Shield Points for 15 seconds.",
+      "Each enemy knockdown during the state restores the temporary Shield Points from this skill back to 70 and resets the state duration.",
+      "When the state ends, the Shield Points gained through this skill are removed. Cooldown: 75 seconds."
+    ],
+    "currentHi": [
+      "Xtreme state activate hoti hai aur turant 70 temporary Shield Points milte hain, jo 15 seconds tak rehte hain.",
+      "State ke dauran har enemy knockdown par is skill ke temporary Shield Points wapas 70 ho jaate hain aur state ka timer reset hota hai.",
+      "State khatam hote hi is skill se mile Shield Points remove ho jaate hain. Cooldown: 75 seconds."
+    ],
+    "rows": [
+      {
+        "en": "Temporary Shield Points",
+        "hi": "Temporary Shield Points",
+        "value": "70"
+      },
+      {
+        "en": "State duration",
+        "hi": "State duration",
+        "value": "15 seconds"
+      },
+      {
+        "en": "Shield refresh on knockdown",
+        "hi": "Knockdown par shield refresh",
+        "value": "Restores to 70 SP"
+      },
+      {
+        "en": "Duration refresh",
+        "hi": "Duration refresh",
+        "value": "Resets on each enemy knockdown"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "75 seconds"
+      },
+      {
+        "en": "Maximum refresh count",
+        "hi": "Maximum refresh count",
+        "value": "Garena does not publish this value"
+      }
+    ],
+    "notesEn": [
+      "The temporary Shield Points from Xtreme Encounter are removed when the state ends; they are not permanent HP.",
+      "Each enemy knockdown during the active state restores this skill's temporary Shield Points to 70 and resets the duration.",
+      "Garena does not publish a maximum number of duration refreshes."
+    ],
+    "notesHi": [
+      "Xtreme Encounter ke temporary Shield Points state khatam hone par remove ho jaate hain; yeh permanent HP nahi hain.",
+      "Active state ke dauran har enemy knockdown par is skill ke temporary Shield Points 70 ho jaate hain aur duration reset hoti hai.",
+      "Garena duration kitni baar maximum refresh ho sakti hai, yeh publish nahi karta."
+    ],
+    "historyEn": [
+      "Patch Note: World Series (14 Apr 2021): Introduced with 80 temporary HP, up to 100% increased damage to Gloo Walls and shields, 10s duration and 100s cooldown at maximum level.",
+      "Illuminate (19 Jan 2022): Maximum Gloo Wall/shield damage bonus increased from 100% to 130%; duration increased from 10s to 15s. Maximum cooldown remained 100s.",
+      "OB34 (25 May 2022): Temporary HP increased from 80 to 120; maximum Gloo Wall/shield damage bonus increased from 130% to 200%; duration reduced from 15s to 6s.",
+      "OB46 (01 Sep 2024): Reworked from temporary HP to 60 temporary Shield Points for 12s; each enemy knockdown restored the shield to 60 and reset duration; cooldown became 75s.",
+      "OB48 (19 Feb 2025): Temporary Shield Points reduced from 60 to 50; duration remained 12s and cooldown remained 75s.",
+      "OB52 (09 Jan 2026): Temporary Shield Points increased from 50 to 70 and duration increased from 12s to 15s; cooldown remained 75s."
+    ],
+    "historyHi": [
+      "Patch Note: World Series (14 Apr 2021): 80 temporary HP, maximum level par Gloo Walls aur shields ko 100% extra damage, 10s duration aur 100s cooldown ke saath introduce hui.",
+      "Illuminate (19 Jan 2022): Maximum Gloo Wall/shield damage bonus 100% se 130% hua; duration 10s se 15s hui. Maximum cooldown 100s hi raha.",
+      "OB34 (25 May 2022): Temporary HP 80 se 120 hui; maximum Gloo Wall/shield damage bonus 130% se 200% hua; duration 15s se 6s hui.",
+      "OB46 (01 Sep 2024): Temporary HP ki jagah 12s ke liye 60 temporary Shield Points mile; har enemy knockdown par shield 60 tak refill hota aur duration reset hoti; cooldown 75s hua.",
+      "OB48 (19 Feb 2025): Temporary Shield Points 60 se 50 hue; duration 12s aur cooldown 75s hi rahe.",
+      "OB52 (09 Jan 2026): Temporary Shield Points 50 se 70 hue aur duration 12s se 15s hui; cooldown 75s hi raha."
+    ],
+    "source": [
+      {
+        "label": "Garena — Xayne character profile",
+        "url": "https://ff.garena.com/en/chars/446"
+      },
+      {
+        "label": "Garena — Patch Note: World Series",
+        "url": "https://ff.garena.com/en/article/428/"
+      },
+      {
+        "label": "Garena — Illuminate",
+        "url": "https://ff.garena.com/en/article/598/"
+      },
+      {
+        "label": "Garena — OB34 Patch Notes",
+        "url": "https://ff.garena.com/en/article/764/"
+      },
+      {
+        "label": "Garena — OB46 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1385/"
+      },
+      {
+        "label": "Garena — OB48 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1456/"
+      },
+      {
+        "label": "Garena — OB52 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1595/"
+      }
+    ],
+    "status": "OB55 values reconciled · 15 Nov 2026"
   }
 ]
