@@ -1425,27 +1425,27 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Passive that boosts healing and shares single-target healing with nearby teammates.",
-    "introHi": "Passive jo healing boost karta hai aur single-target healing paas ke teammates ke saath share karta hai.",
+    "introHi": "एक Passive Skill, जो Healing बढ़ाती है और एक target को मिलने वाली Healing का हिस्सा आसपास के teammates में बाँटती है।",
     "currentEn": [
       "Increases healing effects by 30% and spreads 90% of the user's single-target healing amount to teammates within 20m."
     ],
     "currentHi": [
-      "Healing effects 30% badhata hai aur user ki single-target healing ka 90% 20m ke andar teammates ko share karta hai."
+      "Healing Effects 30% बढ़ जाते हैं और user को मिलने वाली single-target Healing का 90% हिस्सा 20m के अंदर teammates में share होता है।"
     ],
     "rows": [
       {
         "en": "Healing-effect bonus",
-        "hi": "Healing-effect bonus",
+        "hi": "Healing Effect Bonus",
         "value": "+30%"
       },
       {
         "en": "Shared healing",
-        "hi": "Shared healing",
+        "hi": "Share होने वाली Healing",
         "value": "90% of single-target healing"
       },
       {
         "en": "Share range",
-        "hi": "Share range",
+        "hi": "Share Range",
         "value": "20m"
       },
       {
@@ -1458,7 +1458,7 @@
       "Built as a team healer to support nearby teammates."
     ],
     "notesHi": [
-      "Nearby teammates ko support karne ke liye team-healer role mein designed."
+      "यह Skill आसपास के teammates को support करने वाले team healer के तौर पर बनाई गई है।"
     ],
     "historyEn": [
       "OB27 (Apr 2021): Revive bonus HP raised, maximum 40 to 70.",
@@ -1468,11 +1468,11 @@
       "OB54 (23 Jun 2026): Shared healing 80% to 90%, range 15m to 20m."
     ],
     "historyHi": [
-      "OB27 (Apr 2021): Revive bonus HP maximum 40 se 70 hua.",
-      "Jan 2022 (Illuminate): Revive bonus HP maximum 70 se 80 hua.",
-      "OB40 (Jun 2023): Rework—single-target healing ka 80% 10m ke teammates ko share; revive role Thiva ko mila.",
-      "OB45 (26 Jun 2024): +30% healing effects add; share range 10m se 15m.",
-      "OB54 (23 Jun 2026): Shared healing 80% se 90%, range 15m se 20m."
+      "OB27 (Apr 2021): Revive Bonus HP की maximum value 40 से बढ़ाकर 70 की गई।",
+      "Jan 2022 (Illuminate): Revive Bonus HP की maximum value 70 से बढ़ाकर 80 की गई।",
+      "OB40 (Jun 2023): Rework किया गया: single-target Healing का 80% हिस्सा 10m के अंदर teammates में share होने लगा; Revive की भूमिका Thiva को दी गई।",
+      "OB45 (26 Jun 2024): +30% Healing Effects जोड़े गए; Share Range 10m से बढ़ाकर 15m की गई।",
+      "OB54 (23 Jun 2026): Shared Healing 80% से बढ़ाकर 90% और Range 15m से बढ़ाकर 20m की गई।"
     ],
     "source": [
       {
@@ -1512,12 +1512,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB53 (2 Apr 2026)",
     "introEn": "Passive that gives Shield Points to Shani and nearby teammates whenever she uses an active skill.",
-    "introHi": "Passive jo Shani ke active skill use karne par use aur nearby teammates ko Shield Points deta hai.",
+    "introHi": "एक Passive Skill, जो Shani के Active Skill इस्तेमाल करने पर उसे और आसपास के teammates को Shield Points देती है।",
     "currentEn": [
       "When using an active skill, gives 30 Shield Points to self and teammates within 10m. The Shield Points decay after 10 seconds, after which players can obtain the effect again."
     ],
     "currentHi": [
-      "Active skill use karne par khud ko aur 10m ke andar teammates ko 30 Shield Points milte hain. 10 seconds baad Shield Points decay ho jaate hain, phir effect dobara mil sakta hai."
+      "Active Skill इस्तेमाल करने पर Shani और 10m के अंदर मौजूद teammates को 30 Shield Points मिलते हैं। ये Shield Points 10 seconds बाद धीरे-धीरे खत्म हो जाते हैं; इसके बाद players दोबारा यह Effect पा सकते हैं।"
     ],
     "rows": [
       {
@@ -1537,7 +1537,7 @@
       },
       {
         "en": "Shield decay",
-        "hi": "Shield decay",
+        "hi": "Shield खत्म होने का समय",
         "value": "10 seconds"
       },
       {
@@ -1550,7 +1550,7 @@
       "Shield Points are deducted before HP. Shield Points ignore armor damage-reduction buffs. Shield Points do not protect against Danger Zone, fall or bleeding damage."
     ],
     "notesHi": [
-      "Shield Points HP se pehle deduct hote hain. Ye armor damage-reduction buffs ko ignore karte hain. Danger Zone, fall ya bleeding damage se protection nahi dete."
+      "HP से पहले Shield Points कम होते हैं। Shield Points पर Armor Damage Reduction के buffs लागू नहीं होते। Shield Points, Danger Zone, गिरने या bleeding से होने वाले Damage से नहीं बचाते।"
     ],
     "historyEn": [
       "OB41 (Aug 2023): Reworked: 50 Shield Points, decay after 5s, cooldown 10s.",
@@ -1559,10 +1559,10 @@
       "OB53 (2 Apr 2026): Decay time 5s to 10s."
     ],
     "historyHi": [
-      "OB41 (Aug 2023): Rework—50 Shield Points, 5s baad decay, cooldown 10s.",
-      "OB45 (26 Jun 2024): Shield Points 50 se 40 hue.",
-      "OB48 (19 Feb 2025): Shield Points 40 se 30 hue.",
-      "OB53 (2 Apr 2026): Decay time 5s se 10s hua."
+      "OB41 (Aug 2023): Rework किया गया: 50 Shield Points, 5s बाद खत्म होते थे और Cooldown 10s था।",
+      "OB45 (26 Jun 2024): Shield Points 50 से घटाकर 40 किए गए।",
+      "OB48 (19 Feb 2025): Shield Points 40 से घटाकर 30 किए गए।",
+      "OB53 (2 Apr 2026): Shield खत्म होने का समय 5s से बढ़ाकर 10s किया गया।"
     ],
     "source": [
       {
@@ -1594,12 +1594,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB51 (Oct 2025)",
     "introEn": "Passive that restores HP over time after Ford takes damage.",
-    "introHi": "Passive jo Ford ko damage lene ke baad time ke saath HP restore karta hai.",
+    "introHi": "एक Passive Skill, जो Ford को Damage लगने के बाद समय के साथ HP वापस देती है।",
     "currentEn": [
       "Gains 10 HP/s for 3 seconds when taking damage. The skill resets immediately after Ford releases an active skill."
     ],
     "currentHi": [
-      "Damage lene par 3 seconds tak 10 HP/s milta hai. Ford active skill release karte hi skill turant reset ho jata hai."
+      "Damage लगने पर 3 seconds तक हर second 10 HP मिलती है। Ford के Active Skill छोड़ते ही Skill तुरंत reset हो जाती है।"
     ],
     "rows": [
       {
@@ -1609,7 +1609,7 @@
       },
       {
         "en": "HP recovery",
-        "hi": "HP recovery",
+        "hi": "HP Recovery",
         "value": "10 HP/s"
       },
       {
@@ -1619,7 +1619,7 @@
       },
       {
         "en": "Total HP recovery",
-        "hi": "Total HP recovery",
+        "hi": "कुल HP Recovery",
         "value": "30 HP"
       },
       {
@@ -1632,7 +1632,7 @@
       "Cooldown 20 seconds between triggers."
     ],
     "notesHi": [
-      "Har trigger ke beech 20 seconds ka cooldown."
+      "हर Trigger के बीच 20 seconds का Cooldown होता है।"
     ],
     "historyEn": [
       "OB39 (Mar 2023): Reworked to restore HP when taking damage, 10 HP/s for 3s, cooldown 20s; Danger Zone survivability reduced.",
@@ -1640,9 +1640,9 @@
       "OB51 (Oct 2025): Duration 4s to 3s."
     ],
     "historyHi": [
-      "OB39 (Mar 2023): Damage lene par HP restore rework—3s ke liye 10 HP/s, cooldown 20s; Danger Zone survivability kam hui.",
-      "OB45 (26 Jun 2024): Duration 3s se 4s hua.",
-      "OB51 (Oct 2025): Duration 4s se 3s hua."
+      "OB39 (Mar 2023): Damage लगने पर 3s तक 10 HP/s Recovery और 20s Cooldown के साथ Skill को rework किया गया; Danger Zone में Survivability कम की गई।",
+      "OB45 (26 Jun 2024): Duration 3s से बढ़ाकर 4s की गई।",
+      "OB51 (Oct 2025): Duration 4s से घटाकर 3s की गई।"
     ],
     "source": [
       {
@@ -1672,42 +1672,42 @@
     "status": "OB55 values reconciled · 15 Nov 2026",
     "lastChanged": "OB46 (4 Sep 2024)",
     "introEn": "Active skill that switches between EP-conversion support and personal EP recovery modes.",
-    "introHi": "Active skill jo EP-conversion support aur khud EP recover karne ke modes ke beech switch karta hai.",
+    "introHi": "एक Active Skill, जो EP-conversion support और खुद EP recover करने वाले modes के बीच switch करती है।",
     "currentEn": [
       "Master of All increases Max EP by 50. Jiu-jitsu Mode boosts EP conversion for allies within 15m by 600%. Psychology Mode restores 3 EP every 1s, up to 250 EP."
     ],
     "currentHi": [
-      "Master of All Max EP ko 50 badhata hai. Jiu-jitsu Mode mein 15m ke andar allies ka EP conversion 600% badhta hai. Psychology Mode mein har 1s par 3 EP recover hota hai, maximum 250 EP tak."
+      "Master of All से Max EP 50 बढ़ता है। Jiu-jitsu Mode में 15m के अंदर allies का EP Conversion 600% बढ़ जाता है। Psychology Mode में हर 1s पर 3 EP वापस मिलते हैं, maximum 250 EP तक।"
     ],
     "rows": [
       {
         "en": "Max EP bonus",
-        "hi": "Max EP bonus",
+        "hi": "Max EP Bonus",
         "value": "+50 EP"
       },
       {
         "en": "Jiu-jitsu ally range",
-        "hi": "Jiu-jitsu ally range",
+        "hi": "Jiu-jitsu में Ally Range",
         "value": "15m"
       },
       {
         "en": "EP conversion increase",
-        "hi": "EP conversion increase",
+        "hi": "EP Conversion में बढ़ोतरी",
         "value": "600%"
       },
       {
         "en": "Psychology recovery",
-        "hi": "Psychology recovery",
+        "hi": "Psychology Recovery",
         "value": "3 EP every 1 second"
       },
       {
         "en": "Psychology cap",
-        "hi": "Psychology cap",
+        "hi": "Psychology की Maximum Limit",
         "value": "250 EP"
       },
       {
         "en": "Mode switch cooldown",
-        "hi": "Mode switch cooldown",
+        "hi": "Mode Switch Cooldown",
         "value": "6 seconds"
       }
     ],
@@ -1715,13 +1715,13 @@
       "Garena does not publish a separate numeric EP-conversion rate beyond the stated 600% increase."
     ],
     "notesHi": [
-      "Garena 600% increase ke alawa EP-conversion rate ka alag numeric value publish nahi karta."
+      "Garena, बताए गए 600% increase के अलावा EP-conversion rate की कोई अलग numeric value publish नहीं करता।"
     ],
     "historyEn": [
       "OB46 (4 Sep 2024): Jiu-jitsu ally range 6m → 15m; Psychology recovery interval 2s → 1s; mode-switch cooldown 3s → 6s. Max EP 50; conversion boost 600%; recovery cap 250 EP."
     ],
     "historyHi": [
-      "OB46 (4 Sep 2024): Jiu-jitsu ally range 6m se 15m; Psychology recovery interval 2s se 1s; mode-switch cooldown 3s se 6s hua. Max EP +50, conversion boost 600%, recovery cap 250 EP."
+      "OB46 (4 Sep 2024): Jiu-jitsu Ally Range 6m से बढ़ाकर 15m; Psychology Recovery Interval 2s से घटाकर 1s; Mode-switch Cooldown 3s से बढ़ाकर 6s किया गया। Max EP 50, Conversion Boost 600% और Recovery Limit 250 EP रखी गई।"
     ],
     "source": [
       {
@@ -1745,12 +1745,12 @@
     "status": "OB55 values reconciled · 15 Nov 2026",
     "lastChanged": "OB50 (30 Jul 2025)",
     "introEn": "Passive survival skill that briefly protects Sonia after fatal damage, then requires a knockdown before its shield expires.",
-    "introHi": "Passive survival skill jo fatal damage ke baad Sonia ko thodi der protect karta hai; shield khatam hone se pehle knockdown zaroori hai.",
+    "introHi": "एक Passive Survival Skill, जो fatal Damage लगने के बाद Sonia को थोड़ी देर बचाती है। इसके बाद Shield खत्म होने से पहले Knockdown करना जरूरी होता है।",
     "currentEn": [
       "After fatal damage, Sonia enters an invulnerable and immobile state for 0.4s, then gains a 1 HP shield for 2s. Sonia is eliminated when the shield disappears."
     ],
     "currentHi": [
-      "Fatal damage ke baad Sonia 0.4s invulnerable aur immobile hoti hai, phir 2s ke liye 1 HP shield milta hai. Shield khatam hote hi Sonia eliminate ho jaati hai."
+      "Fatal Damage लगने के बाद Sonia 0.4s के लिए invulnerable और immobile state में चली जाती है, फिर उसे 2s के लिए 1 HP Shield मिलता है। Shield खत्म होते ही Sonia eliminate हो जाती है।"
     ],
     "rows": [
       {
@@ -1770,7 +1770,7 @@
       },
       {
         "en": "Shield duration",
-        "hi": "Shield duration",
+        "hi": "Shield Duration",
         "value": "2 seconds"
       },
       {
@@ -1783,7 +1783,7 @@
       "The OB50 notes specify elimination when the shield disappears; no successful knockdown rescue condition remains in the current profile. Garena does not publish a different outcome if the shield is depleted early."
     ],
     "notesHi": [
-      "OB50 notes ke mutabik shield disappear hote hi elimination hota hai; current profile mein knockdown se bachne wali condition nahi hai. Shield jaldi deplete ho toh exact outcome Garena publish nahi karta."
+      "OB50 के notes के मुताबिक Shield खत्म होने पर Sonia eliminate हो जाती है; current profile में Knockdown करके बचने की condition नहीं है। Shield समय से पहले पूरी तरह खत्म हो जाए तो क्या होता है, इसकी अलग जानकारी Garena publish नहीं करता।"
     ],
     "historyEn": [
       "OB45 (26 Jun 2024): Shield reduced 150 HP → 100 HP.",
@@ -1791,9 +1791,9 @@
       "OB50 (30 Jul 2025): Shield 50 HP → 1 HP; user is eliminated when shield disappears."
     ],
     "historyHi": [
-      "OB45 (26 Jun 2024): Shield 150 HP se 100 HP hua.",
-      "OB48 (19 Feb 2025): Revival feature remove; invulnerability 0.5s se 0.4s, shield duration 3s se 2s aur shield 100 HP se 50 HP hua.",
-      "OB50 (30 Jul 2025): Shield 50 HP se 1 HP; shield disappear hote hi elimination."
+      "OB45 (26 Jun 2024): Shield 150 HP से घटाकर 100 HP किया गया।",
+      "OB48 (19 Feb 2025): Revival Feature हटाया गया; Invulnerability 0.5s से घटाकर 0.4s और Shield Duration 3s से घटाकर 2s की गई; Shield 100 HP से घटाकर 50 HP किया गया।",
+      "OB50 (30 Jul 2025): Shield 50 HP से घटाकर 1 HP किया गया; Shield खत्म होने पर user eliminate हो जाता है।"
     ],
     "source": [
       {
@@ -1825,12 +1825,12 @@
     "status": "OB55 values reconciled · 15 Nov 2026",
     "lastChanged": "OB46 (4 Sep 2024)",
     "introEn": "Active defensive skill that consumes Crimson Energy to grant temporary protection and drain nearby enemies' HP.",
-    "introHi": "Active defensive skill jo Crimson Energy consume karke temporary protection deta hai aur paas ke enemies ki HP absorb karta hai.",
+    "introHi": "एक Active Defensive Skill, जो Crimson Energy खर्च करके थोड़े समय की Protection देती है और आसपास के एनिमी की HP absorb करती है।",
     "currentEn": [
       "Replaces EP with 300 Crimson Energy. Consumes 200 energy to activate protection for 3s; Orion cannot take damage or attack and absorbs 10 HP (ignoring enemy Shield Points) from enemies within 5m. Movement speed is reduced by 10%. Cooldown: 3s."
     ],
     "currentHi": [
-      "EP ki jagah 300 Crimson Energy milti hai. 200 energy consume karke 3s protection activate hota hai; Orion damage nahi le sakta aur attack nahi kar sakta, aur 5m ke enemies se 10 HP absorb karta hai (enemy Shield Points ignore). Movement speed 10% kam hoti hai. Cooldown 3s."
+      "EP की जगह 300 Crimson Energy मिलती है। Protection activate करने के लिए 200 Energy खर्च होती है और यह 3s तक रहती है; इस दौरान Orion को Damage नहीं लगता और वह Attack नहीं कर सकता। 5m के अंदर मौजूद एनिमी से 10 HP absorb होती है (एनिमी के Shield Points को ignore करके)। Movement Speed 10% कम हो जाती है। Cooldown: 3s।"
     ],
     "rows": [
       {
@@ -1840,27 +1840,27 @@
       },
       {
         "en": "Activation cost",
-        "hi": "Activation cost",
+        "hi": "Activation Cost",
         "value": "200 energy"
       },
       {
         "en": "Protection duration",
-        "hi": "Protection duration",
+        "hi": "Protection Duration",
         "value": "3 seconds"
       },
       {
         "en": "HP absorption",
-        "hi": "HP absorption",
+        "hi": "HP Absorption",
         "value": "10 HP"
       },
       {
         "en": "Absorption radius",
-        "hi": "Absorption radius",
+        "hi": "Absorption Radius",
         "value": "5m"
       },
       {
         "en": "Movement speed penalty",
-        "hi": "Movement speed penalty",
+        "hi": "Movement Speed Penalty",
         "value": "-10%"
       },
       {
@@ -1873,13 +1873,13 @@
       "Protection prevents damage and attacking while active. HP absorption ignores enemy Shield Points."
     ],
     "notesHi": [
-      "Protection active hone par damage aur attacking dono unavailable hote hain. HP absorption enemy Shield Points ko ignore karta hai."
+      "Protection active रहने पर Damage नहीं लगता और Attack नहीं कर सकते। HP Absorption एनिमी के Shield Points को ignore करती है।"
     ],
     "historyEn": [
       "OB46 (4 Sep 2024): Movement-speed penalty reduced 20% → 10%."
     ],
     "historyHi": [
-      "OB46 (4 Sep 2024): Movement-speed penalty 20% se 10% hui."
+      "OB46 (4 Sep 2024): Movement Speed Penalty 20% से घटाकर 10% की गई।"
     ],
     "source": [
       {
@@ -1902,12 +1902,12 @@
     "status": "OB55 values reconciled · 15 Nov 2026",
     "lastChanged": "OB55 (10 Sep 2026)",
     "introEn": "Active mobility skill that deploys a moving mannequin and allows limited position swaps with it.",
-    "introHi": "Active mobility skill jo moving mannequin deploy karta hai aur uske saath limited position swap allow karta hai.",
+    "introHi": "एक Active Mobility Skill, जो एक moving Mannequin deploy करती है और उसके साथ सीमित बार Position Swap करने देती है।",
     "currentEn": [
       "Spawns a 200 HP mannequin that moves autonomously for 25s. When within 90m, use the skill again to swap positions; up to 2 swaps, with only one swap allowed within 3s. The player who destroys the mannequin is marked for 5s. Teleport is prohibited if mannequin is 10m higher than Santino. Cooldown: 60s."
     ],
     "currentHi": [
-      "200 HP mannequin 25s tak khud move karta hai. 90m ke andar ho toh skill dobara use karke position swap kar sakte hain; total 2 swaps, aur 3s ke andar sirf ek swap. Mannequin destroy karne wala player 5s mark hota hai. Mannequin Santino se 10m zyada upar ho toh teleport allowed nahi. Cooldown 60s."
+      "200 HP वाला Mannequin spawn होता है, जो 25s तक अपने आप move करता है। 90m के अंदर रहते हुए Skill दोबारा इस्तेमाल करके Position Swap कर सकते हैं; maximum 2 swaps, और हर 3s में सिर्फ 1 swap allowed है। Mannequin destroy करने वाला player 5s के लिए mark हो जाता है। अगर Mannequin, Santino से 10m ज्यादा ऊँचाई पर है तो Teleport नहीं कर सकते। Cooldown: 60s।"
     ],
     "rows": [
       {
@@ -1917,32 +1917,32 @@
       },
       {
         "en": "Mannequin duration",
-        "hi": "Mannequin duration",
+        "hi": "Mannequin Duration",
         "value": "25 seconds"
       },
       {
         "en": "Swap range",
-        "hi": "Swap range",
+        "hi": "Swap Range",
         "value": "90m"
       },
       {
         "en": "Maximum swaps",
-        "hi": "Maximum swaps",
+        "hi": "Maximum Swaps",
         "value": "2"
       },
       {
         "en": "Swap interval restriction",
-        "hi": "Swap interval restriction",
+        "hi": "Swap के बीच का समय",
         "value": "1 swap per 3 seconds"
       },
       {
         "en": "Destroyer mark",
-        "hi": "Destroyer mark",
+        "hi": "Destroyer Mark",
         "value": "5 seconds"
       },
       {
         "en": "Vertical restriction",
-        "hi": "Vertical restriction",
+        "hi": "ऊँचाई की Limit",
         "value": "No teleport if mannequin is 10m higher"
       },
       {
@@ -1955,7 +1955,7 @@
       "OB50 added the 10m vertical restriction. Garena does not publish a separate exact movement speed for the mannequin."
     ],
     "notesHi": [
-      "OB50 mein 10m vertical restriction add hui. Mannequin ki exact movement speed Garena publish nahi karta."
+      "OB50 में 10m की vertical restriction जोड़ी गई। Mannequin की exact Movement Speed Garena publish नहीं करता।"
     ],
     "historyEn": [
       "OB39 (Mar 2023): Mannequin changed from stationary to autonomous movement; cooldown 80s.",
@@ -1964,10 +1964,10 @@
       "OB55 (10 Sep 2026): Fixed a small mannequin collision volume that could let players enter unintended areas, get stuck, or exploit glitches (bug fix; no skill stat changed)."
     ],
     "historyHi": [
-      "OB39 (Mar 2023): Mannequin stationary se autonomous movement hua; cooldown 80s.",
-      "OB44 (16 Apr 2024): Duration 12s se 25s; cooldown 75s se 60s; 2 swaps/3s spacing aur destroyer mark 5s.",
-      "OB50 (30 Jul 2025): Mannequin range 60m se 90m; 10m higher hone par teleport restriction add.",
-      "OB55 (10 Sep 2026): Mannequin ke small collision volume ka bug fix hua, jisse players unintended areas mein ja sakte, stuck ho sakte ya glitch exploit kar sakte the (bug fix; skill stat change nahi)."
+      "OB39 (Mar 2023): Mannequin को stationary से autonomous movement में बदला गया; Cooldown 80s किया गया।",
+      "OB44 (16 Apr 2024): Mannequin Duration 12s से बढ़ाकर 25s; Cooldown 75s से घटाकर 60s; Swap Limit 2 और swaps के बीच 3s का gap किया गया; Mannequin destroy करने वाले को 5s के लिए mark किया गया।",
+      "OB50 (30 Jul 2025): Mannequin Range 60m से बढ़ाकर 90m की गई; vertical restriction जोड़ी गई (Mannequin 10m ऊँचा होने पर Teleport नहीं कर सकते)।",
+      "OB55 (10 Sep 2026): Mannequin के collision volume की छोटी समस्या ठीक की गई, जिससे players अनचाही जगहों में जा सकते थे, फँस सकते थे या glitches का फायदा उठा सकते थे (bug fix; Skill के stats नहीं बदले)।"
     ],
     "source": [
       {
@@ -1995,32 +1995,32 @@
     "status": "OB55 values reconciled · 15 Nov 2026",
     "lastChanged": "OB52 (9 Jan 2026)",
     "introEn": "Active mobility skill that dashes forward and refreshes its cooldown after a timely knockdown.",
-    "introHi": "Active mobility skill jo forward dash karta hai aur timely knockdown par cooldown reset hota hai.",
+    "introHi": "एक Active Mobility Skill, जो आगे की तरफ Dash करती है और सही समय पर Knockdown करने पर अपना Cooldown reset कर देती है।",
     "currentEn": [
       "Rushes forward quickly for 0.3s. Knocking down an enemy within 10s after skill release resets Rebel Rush's cooldown. If no qualifying knockdown occurs, cooldown is 90s."
     ],
     "currentHi": [
-      "0.3s ke liye rapid forward dash karta hai. Skill release ke 10s ke andar enemy knock karne par Rebel Rush ka cooldown reset hota hai. Qualifying knockdown na ho toh cooldown 90s."
+      "0.3s के लिए तेजी से आगे Dash करता है। Skill छोड़ने के 10s के अंदर किसी एनिमी को Knockdown करने पर Rebel Rush का Cooldown reset हो जाता है। अगर इस समय में Knockdown नहीं होता, तो Cooldown 90s रहता है।"
     ],
     "rows": [
       {
         "en": "Dash duration",
-        "hi": "Dash duration",
+        "hi": "Dash Duration",
         "value": "0.3 seconds"
       },
       {
         "en": "Knockdown reset window",
-        "hi": "Knockdown reset window",
+        "hi": "Knockdown Reset Window",
         "value": "10 seconds after skill release"
       },
       {
         "en": "Cooldown on successful knockdown",
-        "hi": "Successful knockdown par cooldown",
+        "hi": "Successful Knockdown पर Cooldown",
         "value": "Resets"
       },
       {
         "en": "Base cooldown",
-        "hi": "Base cooldown",
+        "hi": "Base Cooldown",
         "value": "90 seconds"
       }
     ],
@@ -2028,7 +2028,7 @@
       "Cooldown reset is conditional, not an automatic reset on every knockdown: the knockdown must occur within 10s after releasing the skill. Garena does not publish a limit on repeated qualifying resets during a match."
     ],
     "notesHi": [
-      "Cooldown har knockdown par automatically reset nahi hota: skill release ke 10s ke andar knockdown hona zaroori hai. Match mein repeated qualifying resets ki limit Garena publish nahi karta."
+      "Cooldown Reset हर Knockdown पर अपने आप नहीं होता। Knockdown, Skill छोड़ने के 10s के अंदर होना चाहिए। एक match में कितनी बार यह reset हो सकता है, इसकी limit Garena publish नहीं करता।"
     ],
     "historyEn": [
       "OB43 (19 Feb 2024): Stored charges 3 → 2 (older mechanic).",
@@ -2037,10 +2037,10 @@
       "OB52 (9 Jan 2026): Reset changed from any knockdown to a knockdown within 10s after skill release; base cooldown 120s → 90s."
     ],
     "historyHi": [
-      "OB43 (19 Feb 2024): Stored charges 3 se 2 (old mechanic).",
-      "OB44 (16 Apr 2024): Dash replenishment 45s se 60s (old mechanic).",
-      "OB47 (2 Dec 2024): Uses ke beech cooldown 1s se 5s (old mechanic).",
-      "OB52 (9 Jan 2026): Har knockdown par reset se badal kar skill release ke 10s ke andar knockdown par reset; base cooldown 120s se 90s."
+      "OB43 (19 Feb 2024): Stored Charges 3 से घटाकर 2 किए गए (पुराना mechanic)।",
+      "OB44 (16 Apr 2024): Dash Replenishment 45s से बढ़ाकर 60s किया गया (पुराना mechanic)।",
+      "OB47 (2 Dec 2024): Uses के बीच Cooldown 1s से बढ़ाकर 5s किया गया (पुराना mechanic)।",
+      "OB52 (9 Jan 2026): Reset को किसी भी Knockdown से बदलकर Skill छोड़ने के 10s के अंदर हुए Knockdown तक सीमित किया गया; Base Cooldown 120s से घटाकर 90s किया गया।"
     ],
     "source": [
       {
@@ -2075,22 +2075,22 @@
     "badge": "Official-source profile",
     "lastChanged": "OB55 (10 Sep 2026)",
     "introEn": "Passive that boosts rate of fire and converts part of it into movement speed after Luna lands a hit.",
-    "introHi": "Luna ki Passive Skill, enemy ko hit lagne ke baad Rate of Fire ka kuch hissa Movement Speed mein convert kar deti hai.",
+    "introHi": "एक Passive Skill, जो Rate of Fire बढ़ाती है और Luna के Hit लगाने के बाद उसके एक हिस्से को Movement Speed में बदल देती है।",
     "currentEn": [
       "Increases rate of fire by 5%. When Luna hits an enemy, up to 10% of her rate of fire converts into movement speed. The conversion resets when she survives combat."
     ],
     "currentHi": [
-      "Rate of Fire 5% badh jata hai. Luna jab kisi enemy ko hit karti hai, toh uske Rate of Fire ka maximum 10% Movement Speed mein convert ho jata hai. Combat se bachkar nikalne par yeh conversion reset ho jata hai."
+      "Rate of Fire 5% बढ़ जाती है। Luna जब किसी एनिमी को hit करती है, तो उसके Rate of Fire का maximum 10% हिस्सा Movement Speed में convert हो जाता है। Combat से बचने पर यह conversion reset हो जाता है।"
     ],
     "rows": [
       {
         "en": "Rate of fire bonus",
-        "hi": "Rate of Fire bonus",
+        "hi": "Rate of Fire Bonus",
         "value": "+5%"
       },
       {
         "en": "Movement-speed conversion",
-        "hi": "Movement Speed mein conversion",
+        "hi": "Movement Speed Conversion",
         "value": "Up to 10% of rate of fire"
       },
       {
@@ -2113,7 +2113,7 @@
       "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
     ],
     "notesHi": [
-      "Movement Speed ki ek global maximum limit hoti hai. Skills, items aur events se milne wale bonuses is limit ko cross nahi kar sakte (OB54)."
+      "Movement Speed की एक global maximum limit है; Skills, items और events के bonuses इस limit को पार नहीं कर सकते (OB54)।"
     ],
     "historyEn": [
       "OB36 (Sep 2022): Introduced.",
@@ -2122,10 +2122,10 @@
       "OB55 (10 Sep 2026): Rate of fire bonus 8% to 5%."
     ],
     "historyHi": [
-      "OB36 (Sep 2022): Skill introduce hui.",
-      "OB49 se pehle: Rate of Fire +8% tha aur maximum 15% Movement Speed mein convert hota tha.",
-      "OB49 (21 May 2025): Maximum conversion 15% se 10% kar diya gaya.",
-      "OB55 (10 Sep 2026): Rate of Fire bonus 8% se 5% kar diya gaya."
+      "OB36 (Sep 2022): Introduce किया गया।",
+      "OB49 से पहले: Rate of Fire +8%, और maximum 15% Movement Speed में convert होती थी।",
+      "OB49 (21 May 2025): Maximum Conversion 15% से घटाकर 10% की गई।",
+      "OB55 (10 Sep 2026): Rate of Fire Bonus 8% से घटाकर 5% किया गया।"
     ],
     "source": [
       {
