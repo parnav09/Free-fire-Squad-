@@ -8,7 +8,7 @@ type DetailRow = { en: string; hi: string; value: string };
 type CharacterProfile = {
   id: string;
   image: string;
-  artworkMode?: "cutout" | "contained";
+  artworkMode?: "cutout" | "contained" | "official-fullbody";
   abilityDisplayOnce?: boolean;
   name: string;
   skill: string;
@@ -24,6 +24,8 @@ type CharacterProfile = {
   historyHi: string[];
   source: { label: string; url: string }[];
   status: string;
+  subtitle?: string;
+  subtitleHi?: string;
   badge?: string;
   lastChanged?: string;
   hiddenMechanics?: { text: string; status: "official" | "tested" }[];
@@ -533,8 +535,7 @@ const profiles: CharacterProfile[] = [...baseProfiles, ...(extraProfiles as Char
 // The 19 remaining ability-character entries plus the two default characters.
 // These are searchable name-only entries; no unverified ability/profile data is fabricated.
 const pendingCharacterNames = [
-  "D-Bee", "Luqueta", "Kelly", "Hayato", "Moco", "Steffie", "Misha",
-  "Maxim", "Caroline", "Notora", "Kla", "Primis", "Nulla",
+  "Steffie", "Misha", "Maxim", "Caroline", "Notora", "Kla", "Primis", "Nulla",
 ];
 
 type CharacterArtworkProps = { profile: CharacterProfile; variant: "card" | "profile" };
@@ -549,6 +550,7 @@ function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
   </div>;
   if (!profile.image || failed) return monogram;
   return <img
+    className={profile.artworkMode === "official-fullbody" ? "character-art-image--official-fullbody" : undefined}
     src={profile.image}
     alt={profile.name}
     loading={variant === "card" ? "lazy" : "eager"}
@@ -727,11 +729,11 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     </div>
     <article className="character-profile">
       <header className="character-profile-identity">
-        <div className={`character-profile-art ${shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
+        <div className={`character-profile-art ${shownProfile.artworkMode === "official-fullbody" ? "character-profile-art--official-fullbody" : shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
         <div className="character-profile-heading">
           <h2>{shownProfile.name}</h2>
           <span className="character-confirmed">{shownProfile.badge || "Official-source profile"}</span>
-          <p className="character-profile-subtitle">{shownProfile.status}</p>
+          <p className="character-profile-subtitle">{isHindi ? (shownProfile.subtitleHi || shownProfile.subtitle || shownProfile.status) : (shownProfile.subtitle || shownProfile.status)}</p>
           {shownProfile.lastChanged && <p className="character-last-changed">Last changed in <b>{shownProfile.lastChanged}</b></p>}
           <p className="character-skill-name">{shownProfile.abilityDisplayOnce ? `${shownProfile.skill.replace(/\\s*\\((?:Active|Passive)\\)$/i, "")} ${shownProfile.type.split(" · ")[0]}` : <><b>Ability:</b> {shownProfile.skill.replace(/\\s*\\((?:Active|Passive)\\)$/i, "")} · {shownProfile.type.split(" · ")[0]}</>}</p>
           <p className="character-profile-summary">{isHindi ? shownProfile.introHi : shownProfile.introEn}</p>
