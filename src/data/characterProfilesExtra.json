@@ -1875,7 +1875,7 @@
     "type": "Active",
     "badge": "Official-source profile",
     "status": "OB55 values reconciled · 15 Nov 2026",
-    "lastChanged": "OB50 (30 Jul 2025)",
+    "lastChanged": "OB55 (10 Sep 2026)",
     "introEn": "Active mobility skill that deploys a moving mannequin and allows limited position swaps with it.",
     "introHi": "Active mobility skill jo moving mannequin deploy karta hai aur uske saath limited position swap allow karta hai.",
     "currentEn": [
@@ -1935,12 +1935,14 @@
     "historyEn": [
       "OB39 (Mar 2023): Mannequin changed from stationary to autonomous movement; cooldown 80s.",
       "OB44 (16 Apr 2024): Mannequin duration 12s → 25s; cooldown 75s → 60s; swap limit set to 2 and 3s spacing; mark destroyer for 5s.",
-      "OB50 (30 Jul 2025): Mannequin range 60m → 90m; vertical restriction added (no teleport if mannequin is 10m higher)."
+      "OB50 (30 Jul 2025): Mannequin range 60m → 90m; vertical restriction added (no teleport if mannequin is 10m higher).",
+      "OB55 (10 Sep 2026): Fixed a small mannequin collision volume that could let players enter unintended areas, get stuck, or exploit glitches (bug fix; no skill stat changed)."
     ],
     "historyHi": [
       "OB39 (Mar 2023): Mannequin stationary se autonomous movement hua; cooldown 80s.",
       "OB44 (16 Apr 2024): Duration 12s se 25s; cooldown 75s se 60s; 2 swaps/3s spacing aur destroyer mark 5s.",
-      "OB50 (30 Jul 2025): Mannequin range 60m se 90m; 10m higher hone par teleport restriction add."
+      "OB50 (30 Jul 2025): Mannequin range 60m se 90m; 10m higher hone par teleport restriction add.",
+      "OB55 (10 Sep 2026): Mannequin ke small collision volume ka bug fix hua, jisse players unintended areas mein ja sakte, stuck ho sakte ya glitch exploit kar sakte the (bug fix; skill stat change nahi)."
     ],
     "source": [
       {
@@ -1965,14 +1967,14 @@
     "type": "Active",
     "badge": "Official-source profile",
     "status": "OB55 values reconciled · 15 Nov 2026",
-    "lastChanged": "OB47 (2 Dec 2024)",
-    "introEn": "Active mobility skill that rapidly dashes forward and stores up to two charges.",
-    "introHi": "Active mobility skill jo rapid forward dash karta hai aur maximum do charges store karta hai.",
+    "lastChanged": "OB52 (9 Jan 2026)",
+    "introEn": "Active mobility skill that dashes forward and refreshes its cooldown after a timely knockdown.",
+    "introHi": "Active mobility skill jo forward dash karta hai aur timely knockdown par cooldown reset hota hai.",
     "currentEn": [
-      "Dashes forward rapidly for 0.3s. Stores up to 2 uses, with a 5s cooldown between uses. Dash replenishment time: 60s."
+      "Rushes forward quickly for 0.3s. Knocking down an enemy within 10s after skill release resets Rebel Rush's cooldown. If no qualifying knockdown occurs, cooldown is 90s."
     ],
     "currentHi": [
-      "0.3s ke liye rapid forward dash karta hai. Maximum 2 uses store hote hain, aur uses ke beech 5s cooldown hai. Dash replenish time 60s."
+      "0.3s ke liye rapid forward dash karta hai. Skill release ke 10s ke andar enemy knock karne par Rebel Rush ka cooldown reset hota hai. Qualifying knockdown na ho toh cooldown 90s."
     ],
     "rows": [
       {
@@ -1981,49 +1983,55 @@
         "value": "0.3 seconds"
       },
       {
-        "en": "Stored uses",
-        "hi": "Stored uses",
-        "value": "2"
+        "en": "Knockdown reset window",
+        "hi": "Knockdown reset window",
+        "value": "10 seconds after skill release"
       },
       {
-        "en": "Cooldown between uses",
-        "hi": "Cooldown between uses",
-        "value": "5 seconds"
+        "en": "Cooldown on successful knockdown",
+        "hi": "Successful knockdown par cooldown",
+        "value": "Resets"
       },
       {
-        "en": "Dash replenishment",
-        "hi": "Dash replenishment",
-        "value": "60 seconds"
+        "en": "Base cooldown",
+        "hi": "Base cooldown",
+        "value": "90 seconds"
       }
     ],
     "notesEn": [
-      "Garena does not publish the dash distance or exact dash speed."
+      "Cooldown reset is conditional, not an automatic reset on every knockdown: the knockdown must occur within 10s after releasing the skill. Garena does not publish a limit on repeated qualifying resets during a match."
     ],
     "notesHi": [
-      "Garena dash distance ya exact dash speed publish nahi karta."
+      "Cooldown har knockdown par automatically reset nahi hota: skill release ke 10s ke andar knockdown hona zaroori hai. Match mein repeated qualifying resets ki limit Garena publish nahi karta."
     ],
     "historyEn": [
-      "OB43 (19 Feb 2024): Stored charges 3 → 2.",
-      "OB44 (16 Apr 2024): Dash replenishment 45s → 60s.",
-      "OB47 (2 Dec 2024): Cooldown between uses 1s → 5s."
+      "OB43 (19 Feb 2024): Stored charges 3 → 2 (older mechanic).",
+      "OB44 (16 Apr 2024): Dash replenishment 45s → 60s (older mechanic).",
+      "OB47 (2 Dec 2024): Cooldown between uses 1s → 5s (older mechanic).",
+      "OB52 (9 Jan 2026): Reset changed from any knockdown to a knockdown within 10s after skill release; base cooldown 120s → 90s."
     ],
     "historyHi": [
-      "OB43 (19 Feb 2024): Stored charges 3 se 2.",
-      "OB44 (16 Apr 2024): Dash replenishment 45s se 60s.",
-      "OB47 (2 Dec 2024): Uses ke beech cooldown 1s se 5s."
+      "OB43 (19 Feb 2024): Stored charges 3 se 2 (old mechanic).",
+      "OB44 (16 Apr 2024): Dash replenishment 45s se 60s (old mechanic).",
+      "OB47 (2 Dec 2024): Uses ke beech cooldown 1s se 5s (old mechanic).",
+      "OB52 (9 Jan 2026): Har knockdown par reset se badal kar skill release ke 10s ke andar knockdown par reset; base cooldown 120s se 90s."
     ],
     "source": [
+      {
+        "label": "Garena – OB52 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1595/"
+      },
       {
         "label": "Garena – OB47 Patch Notes",
         "url": "https://ff.garena.com/en/article/1424/"
       },
       {
         "label": "Garena – OB44 Patch Notes",
-        "url": "https://ff.garena.com/en-pk/article/1339/"
+        "url": "https://ff.garena.com/en/article/1332/"
       },
       {
         "label": "Garena – OB43 Patch Notes",
-        "url": "https://ff.garena.com/en-pk/article/1317/"
+        "url": "https://ff.garena.com/en/article/1317/"
       },
       {
         "label": "Garena – Tatsuya character page",
