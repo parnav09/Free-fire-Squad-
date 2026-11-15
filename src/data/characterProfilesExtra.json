@@ -3526,19 +3526,19 @@
   {
     "id": "lila",
     "name": "Lila",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20249/b09e7f93ec7c7a47dccbd704d8e4d879.png",
     "skill": "Gloo Strike",
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB49 (21 May 2025)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that decelerates enemies and vehicles shot with rifles, freezing them and generating Gloo Walls upon knockdown.",
-    "introHi": "Passive that decelerates enemies and vehicles shot with rifles, freezing them and generating Gloo Walls upon knockdown.",
+    "introHi": "Rifle aur marksman rifle se hit hue enemies ko slow karti hai. Slow enemy knock ho to freeze hota hai aur extra Gloo Walls milti hain.",
     "currentEn": [
       "When hitting enemies or vehicles with rifles or marksman rifles, reduces the enemies' movement speed by 10% or the vehicles' acceleration by 80% for 3 seconds. If the enemy is knocked down while decelerated, freezes them for up to 3 seconds and obtains 2 extra Gloo Walls."
     ],
     "currentHi": [
-      "When hitting enemies or vehicles with rifles or marksman rifles, reduces the enemies' movement speed by 10% or the vehicles' acceleration by 80% for 3 seconds. If the enemy is knocked down while decelerated, freezes them for up to 3 seconds and obtains 2 extra Gloo Walls."
+      "Rifle ya marksman rifle se enemy/vehicle hit karne par enemy ki movement speed 10% ya vehicle acceleration 80% tak 3 seconds reduce hoti hai. Slow state mein enemy knock ho, to woh up to 3 seconds freeze hota hai aur 2 extra Gloo Walls milti hain."
     ],
     "rows": [
       {
@@ -3576,41 +3576,91 @@
       "The OB47 patch removed the original 10-second cooldown, making the skill continuously active upon landing successful rifle shots."
     ],
     "notesHi": [
-      "The OB47 patch removed the original 10-second cooldown, making the skill continuously active upon landing successful rifle shots."
+      "OB47 update ne original 10-second cooldown remove kar diya tha; successful rifle hits par ability continuously trigger ho sakti hai."
     ],
     "historyEn": [
       "OB46 (Aug 2024): Introduced. OB47 (Oct 2024): Vehicle decel 50% to 80%, removed 10s skill cooldown. OB49 (21 May 2025): Gloo Wall reward upon knock increased from 1 to 2."
     ],
     "historyHi": [
-      "OB46 (Aug 2024): Introduced. OB47 (Oct 2024): Vehicle decel 50% to 80%, removed 10s skill cooldown. OB49 (21 May 2025): Gloo Wall reward upon knock increased from 1 to 2."
+      "OB46 (Aug 2024): Introduced. OB47 (Oct 2024): Vehicle deceleration 50% se 80%, 10s cooldown removed. OB49 (21 May 2025): Knock par Gloo Wall reward 1 se 2 hua."
     ],
     "source": [
       {
-        "label": "OB49",
+        "label": "Garena — Lila character profile",
+        "url": "https://ff.garena.com/en/chars/737"
+      },
+      {
+        "label": "Garena — OB49 Patch Notes",
         "url": "https://ff.garena.com/en/article/1473/"
       },
       {
-        "label": "OB47",
+        "label": "Garena — OB47 Patch Notes",
         "url": "https://ff.garena.com/id/article/1418/"
       }
-    ]
+    ],
+    "artworkMode": "cutout",
+    "rowsHi": [
+      {
+        "hi": "Enemy movement speed reduction",
+        "en": "Enemy movement speed reduction"
+      },
+      {
+        "hi": "Vehicle acceleration reduction",
+        "en": "Vehicle acceleration reduction"
+      },
+      {
+        "hi": "Deceleration duration",
+        "en": "Deceleration duration"
+      },
+      {
+        "hi": "Freeze duration (knockdown par)",
+        "en": "Freeze duration (on knockdown)"
+      },
+      {
+        "hi": "Extra Gloo Walls",
+        "en": "Extra Gloo Walls obtained"
+      },
+      {
+        "hi": "Cooldown",
+        "en": "Cooldown"
+      }
+    ],
+    "tacticalEn": [
+      "Use rifle hits to slow a moving enemy before your squad commits; a knock while slowed grants extra Gloo Walls for the next cover/rotation."
+    ],
+    "tacticalHi": [
+      "Squad engage karne se pehle rifle hits se moving enemy ko slow karo; slow state mein knock milne par extra Gloo Walls next cover/rotation ke kaam aati hain."
+    ],
+    "strengthsEn": [
+      "Repeated rifle hits can apply the slow without a cooldown; knockdown reward supports cover economy."
+    ],
+    "strengthsHi": [
+      "Rifle hits par slow repeat ho sakta hai aur cooldown nahi; knockdown reward cover ke liye Gloo Wall economy improve karta hai."
+    ],
+    "limitationsEn": [
+      "The freeze and Gloo Wall reward require a knock while the target is decelerated; the slow alone does not guarantee either."
+    ],
+    "limitationsHi": [
+      "Freeze aur extra Gloo Wall ke liye target ko decelerated state mein knock karna zaroori hai; sirf slow se reward guaranteed nahi."
+    ],
+    "abilityDisplayOnce": true
   },
   {
     "id": "maro",
     "name": "Maro",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/8af9a328d62a330a76221b79670daf37.png",
     "skill": "Falcon Fervor",
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that scales weapon damage based on the distance to the target and deals extra damage to marked enemies.",
-    "introHi": "Passive that scales weapon damage based on the distance to the target and deals extra damage to marked enemies.",
+    "introHi": "Target se distance badhne par weapon damage increase hota hai, aur marked enemies par extra damage milta hai.",
     "currentEn": [
       "Damage increases with distance, up to a maximum of 20%. Damage to marked enemies increases by 5%."
     ],
     "currentHi": [
-      "Damage increases with distance, up to a maximum of 20%. Damage to marked enemies increases by 5%."
+      "Target se distance badhne par damage increase hota hai, maximum 20% tak. Marked enemies ko damage 5% increase hota hai."
     ],
     "rows": [
       {
@@ -3633,45 +3683,70 @@
       "Highly synergistic with information-gathering characters like Moco and Shirou."
     ],
     "notesHi": [
-      "Highly synergistic with information-gathering characters like Moco and Shirou."
+      "Moco aur Shirou jaise information-gathering characters ke saath strong synergy hai."
     ],
     "historyEn": [
       "OB41 (Aug 2023): Damage to marked enemies increased from 3.5% to 5%. OB54 (23 Jun 2026): Maximum distance damage bonus nerfed from 25% to 20%."
     ],
     "historyHi": [
-      "OB41 (Aug 2023): Damage to marked enemies increased from 3.5% to 5%. OB54 (23 Jun 2026): Maximum distance damage bonus nerfed from 25% to 20%."
+      "OB41 (Aug 2023): Marked enemies par damage 3.5% se 5% hua. OB54 (23 Jun 2026): Maximum distance damage bonus 25% se 20% nerf hua."
     ],
     "source": [
       {
-        "label": "OB54",
+        "label": "Garena — Maro character profile",
+        "url": "https://ff.garena.com/en/chars/447"
+      },
+      {
+        "label": "Garena — OB54 Patch Notes",
         "url": "https://ff.garena.com/en/article/1673/"
       },
       {
-        "label": "OB41",
+        "label": "Garena — OB41 Patch Notes",
         "url": "https://ff.garena.com/en/article/1385/"
-      },
-      {
-        "label": "Maro character page",
-        "url": "https://ff.garena.com/en/chars/446"
       }
-    ]
+    ],
+    "artworkMode": "cutout",
+    "rowsHi": [
+      "Maximum distance damage bonus",
+      "Marked enemies par damage",
+      "Cooldown"
+    ],
+    "tacticalEn": [
+      "Pair with teammate information marks; maintain distance when the engagement allows to benefit from the distance-scaled bonus."
+    ],
+    "tacticalHi": [
+      "Teammate ke enemy marks ke saath pair karo; engagement allow kare to distance maintain karke distance-based bonus ka benefit lo."
+    ],
+    "strengthsEn": [
+      "Combines distance scaling with a separate marked-target bonus; passive has no cooldown."
+    ],
+    "strengthsHi": [
+      "Distance scaling ke saath marked target par separate bonus milta hai; passive ka cooldown nahi."
+    ],
+    "limitationsEn": [
+      "The maximum distance bonus scales with range and is not the full 20% at every distance; close-range fights reduce its value."
+    ],
+    "limitationsHi": [
+      "Distance bonus range ke saath scale hota hai; har distance par full 20% nahi milta. Close-range fights mein iska value kam hota hai."
+    ],
+    "abilityDisplayOnce": true
   },
   {
     "id": "shirou",
     "name": "Shirou",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/dbe25891f13c5752e84ad7daf57106cc.png",
     "skill": "Damage Delivered",
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB53 (02 Apr 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that marks attackers who hit the user and grants massive armor penetration on the first retaliatory shot.",
-    "introHi": "Passive that marks attackers who hit the user and grants massive armor penetration on the first retaliatory shot.",
+    "introHi": "Jo enemy tumhe hit karta hai usko mark karta hai aur marked enemy par first retaliatory shot ko extra armor penetration deta hai.",
     "currentEn": [
       "When hit by an enemy from within 100m, the attacker is marked for 8 seconds. Intel is shared with teammates. The first shot on marked enemies has 100% additional armor penetration. Maximum of 4 markings active at once."
     ],
     "currentHi": [
-      "When hit by an enemy from within 100m, the attacker is marked for 8 seconds. Intel is shared with teammates. The first shot on marked enemies has 100% additional armor penetration. Maximum of 4 markings active at once."
+      "100m ke andar enemy hit kare to attacker 8 seconds ke liye mark hota hai. Mark ki intel teammates ke saath share hoti hai. Marked enemy par first shot ko 100% additional armor penetration milti hai. Ek waqt mein maximum 4 marks active ho sakte hain."
     ],
     "rows": [
       {
@@ -3704,45 +3779,72 @@
       "The mark is universally visible to all teammates. Garena has not republished the cooldown value since it was reduced to 10 seconds in OB36."
     ],
     "notesHi": [
-      "The mark is universally visible to all teammates. Garena has not republished the cooldown value since it was reduced to 10 seconds in OB36."
+      "Mark sab teammates ko visible hota hai. OB36 mein cooldown 10 seconds hua tha; Garena ne current cooldown ko recent profile par republish nahi kiya."
     ],
     "historyEn": [
       "OB36 (Sep 2022): Range 80m to 100m, Armor pen to 100%, Cooldown 25s to 10s. OB53 (02 Apr 2026): Marking duration 10s to 8s, Max markings explicitly capped at 4."
     ],
     "historyHi": [
-      "OB36 (Sep 2022): Range 80m to 100m, Armor pen to 100%, Cooldown 25s to 10s. OB53 (02 Apr 2026): Marking duration 10s to 8s, Max markings explicitly capped at 4."
+      "OB36 (Sep 2022): Range 80m se 100m, armor penetration 100%, cooldown 25s se 10s. OB53 (02 Apr 2026): Mark duration 10s se 8s aur max active marks 4 cap."
     ],
     "source": [
       {
-        "label": "OB53",
+        "label": "Garena — Shirou character profile",
+        "url": "https://ff.garena.com/en/chars/443"
+      },
+      {
+        "label": "Garena — OB53 Patch Notes",
         "url": "https://ff.garena.com/en/article/1640/"
       },
       {
-        "label": "OB36",
+        "label": "Garena — OB36 Patch Notes",
         "url": "https://ff.garena.com/en-pk/article/931/"
-      },
-      {
-        "label": "Shirou character page",
-        "url": "https://ff.garena.com/en/chars/299"
       }
-    ]
+    ],
+    "artworkMode": "cutout",
+    "rowsHi": [
+      "Mark duration",
+      "Mark range",
+      "Maximum active marks",
+      "First shot armor penetration",
+      "Cooldown"
+    ],
+    "tacticalEn": [
+      "When your squad is hit, use the shared mark to call the attacker's location and coordinate a response; the first shot receives the penetration bonus."
+    ],
+    "tacticalHi": [
+      "Squad hit ho to shared mark se attacker ki location call karo aur response coordinate karo; first shot ko penetration bonus milta hai."
+    ],
+    "strengthsEn": [
+      "Attacker information is shared teamwide; the first retaliatory shot gains 100% additional armor penetration."
+    ],
+    "strengthsHi": [
+      "Attacker ki information teamwide share hoti hai; first retaliatory shot ko 100% additional armor penetration milti hai."
+    ],
+    "limitationsEn": [
+      "Marking requires Shirou to be hit by an enemy within range; it is reactive, not a proactive scan."
+    ],
+    "limitationsHi": [
+      "Mark trigger hone ke liye range ke andar enemy ka Shirou ko hit karna zaroori hai; yeh reactive ability hai, proactive scan nahi."
+    ],
+    "abilityDisplayOnce": true
   },
   {
     "id": "chrono",
     "name": "Chrono",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20255/6c2bdfaa7f07939c8e2cfa6578b3bb9a.png",
     "skill": "Time Turner",
     "type": "Active",
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Active ability that creates an impenetrable static force field blocking incoming and outgoing damage.",
-    "introHi": "Active ability that creates an impenetrable static force field blocking incoming and outgoing damage.",
+    "introHi": "Active ability ek force field banati hai jo incoming aur outgoing damage block karta hai.",
     "currentEn": [
       "Creates an impenetrable force field that blocks 1,000 damage. Unable to attack outside enemies from within the field. All effects last for 10 seconds."
     ],
     "currentHi": [
-      "Creates an impenetrable force field that blocks 1,000 damage. Unable to attack outside enemies from within the field. All effects last for 10 seconds."
+      "1,000 damage tak force field block karta hai. Field ke andar se bahar ke enemies par attack nahi kar sakte. Effects 10 seconds tak rehte hain."
     ],
     "rows": [
       {
@@ -3765,45 +3867,70 @@
       "The shield blocks damage from all sources, both inside and out. Enemies can enter the shield dome."
     ],
     "notesHi": [
-      "The shield blocks damage from all sources, both inside and out. Enemies can enter the shield dome."
+      "Shield dono taraf se sabhi sources ka damage block karta hai. Enemies dome ke andar enter kar sakte hain."
     ],
     "historyEn": [
       "OB31 (Dec 2021): Removed ability to shoot outward, duration 6s, cooldown 120s. OB45 (Jun 2024): Duration 6s to 8s. OB54 (23 Jun 2026): Cooldown 60s to 45s, Shield HP 800 to 1000, Duration 8s to 10s."
     ],
     "historyHi": [
-      "OB31 (Dec 2021): Removed ability to shoot outward, duration 6s, cooldown 120s. OB45 (Jun 2024): Duration 6s to 8s. OB54 (23 Jun 2026): Cooldown 60s to 45s, Shield HP 800 to 1000, Duration 8s to 10s."
+      "OB31 (Dec 2021): Bahar shoot karna remove hua, duration 6s aur cooldown 120s. OB45 (Jun 2024): Duration 6s se 8s. OB54 (23 Jun 2026): Cooldown 60s se 45s, shield HP 800 se 1000, duration 8s se 10s."
     ],
     "source": [
       {
-        "label": "OB54",
+        "label": "Garena — Chrono character profile",
+        "url": "https://ff.garena.com/en/chars/299"
+      },
+      {
+        "label": "Garena — OB54 Patch Notes",
         "url": "https://ff.garena.com/en/article/1673/"
       },
       {
-        "label": "OB45",
+        "label": "Garena — OB45 Patch Notes",
         "url": "https://ff.garena.com/en/article/1357/"
-      },
-      {
-        "label": "Chrono character page",
-        "url": "https://ff.garena.com/en/chars/299"
       }
-    ]
+    ],
+    "artworkMode": "cutout",
+    "rowsHi": [
+      "Force field HP",
+      "Duration",
+      "Cooldown"
+    ],
+    "tacticalEn": [
+      "Use the field to create a temporary protected space for a reset or revive; remember enemies can enter the dome and you cannot shoot outward."
+    ],
+    "tacticalHi": [
+      "Reset ya revive ke liye temporary protected space banao; yaad rahe enemies dome ke andar aa sakte hain aur tum field se bahar shoot nahi kar sakte."
+    ],
+    "strengthsEn": [
+      "Blocks up to 1,000 damage and provides a temporary defensive window."
+    ],
+    "strengthsHi": [
+      "1,000 damage tak block karta hai aur temporary defensive window deta hai."
+    ],
+    "limitationsEn": [
+      "The field is static, enemies can enter, and outward attacks are disabled while inside."
+    ],
+    "limitationsHi": [
+      "Field static hai, enemies andar aa sakte hain, aur andar se bahar attack disabled hai."
+    ],
+    "abilityDisplayOnce": true
   },
   {
     "id": "dasha",
     "name": "Dasha",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202210/8d2bc4db79fe889ab6541ae2dd7cd2cb.png",
     "skill": "Partying On",
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB53 (02 Apr 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that rewards knockdowns with a rapidly decaying rate of fire and movement speed boost.",
-    "introHi": "Passive that rewards knockdowns with a rapidly decaying rate of fire and movement speed boost.",
+    "introHi": "Knockdown ke baad Highlight mode activate hota hai, jisme rate of fire aur movement speed boost milta hai jo time ke saath decay hota hai.",
     "currentEn": [
       "After knocking down an enemy, enter Highlight mode for 10 seconds. Increases rate of fire by 18% and movement speed by 12% (decays quickly). Consecutively knocking down enemies resets the countdown and further boosts rate of fire by 4% and movement speed by 3%."
     ],
     "currentHi": [
-      "After knocking down an enemy, enter Highlight mode for 10 seconds. Increases rate of fire by 18% and movement speed by 12% (decays quickly). Consecutively knocking down enemies resets the countdown and further boosts rate of fire by 4% and movement speed by 3%."
+      "Enemy knock karne ke baad 10 seconds ke Highlight mode mein enter hoti hai. Rate of fire 18% aur movement speed 12% increase hoti hai (jaldi decay hoti hai). Consecutive knockdowns countdown reset karte hain aur rate of fire +4%, movement speed +3% further boost karte hain."
     ],
     "rows": [
       {
@@ -3841,23 +3968,55 @@
       "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it."
     ],
     "notesHi": [
-      "Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it."
+      "Movement speed ka global maximum hai; skills, items aur event bonuses us cap se upar nahi ja sakte."
     ],
     "historyEn": [
       "OB39 (Mar 2023): Skill entirely reworked to Highlight mode (18% RoF, 12% Spd, 6s duration). OB53 (02 Apr 2026): Duration buffed from 6s to 10s."
     ],
     "historyHi": [
-      "OB39 (Mar 2023): Skill entirely reworked to Highlight mode (18% RoF, 12% Spd, 6s duration). OB53 (02 Apr 2026): Duration buffed from 6s to 10s."
+      "OB39 (Mar 2023): Skill Highlight mode mein rework hui (18% RoF, 12% Spd, 6s duration). OB53 (02 Apr 2026): Duration 6s se 10s buff hui."
     ],
     "source": [
       {
-        "label": "OB53",
+        "label": "Garena — Dasha character profile",
+        "url": "https://ff.garena.com/en/chars/411"
+      },
+      {
+        "label": "Garena — OB53 Patch Notes",
         "url": "https://ff.garena.com/en/article/1640/"
       },
       {
-        "label": "OB39",
+        "label": "Garena — OB39 Patch Notes",
         "url": "https://ff.garena.com/en/article/1120/"
       }
-    ]
+    ],
+    "artworkMode": "cutout",
+    "rowsHi": [
+      "Highlight mode duration",
+      "Base rate of fire bonus",
+      "Base movement speed bonus",
+      "Streak bonus (Rate of Fire)",
+      "Streak bonus (Movement)",
+      "Cooldown"
+    ],
+    "tacticalEn": [
+      "After a knock, use the Highlight window to reposition or continue pressure; chained knockdowns refresh the timer and increase both bonuses."
+    ],
+    "tacticalHi": [
+      "Knock ke baad Highlight window mein reposition ya pressure continue karo; chain knockdowns timer refresh karte aur dono bonuses badhate hain."
+    ],
+    "strengthsEn": [
+      "Knockdown-triggered momentum can be chained; no cooldown listed."
+    ],
+    "strengthsHi": [
+      "Knockdown ke baad momentum chain kiya ja sakta hai; cooldown listed nahi."
+    ],
+    "limitationsEn": [
+      "Highlight requires a knockdown to start; its bonuses decay quickly and movement speed remains subject to the global cap."
+    ],
+    "limitationsHi": [
+      "Highlight start karne ke liye knockdown chahiye; bonuses jaldi decay hote hain aur movement speed global cap ke under rahti hai."
+    ],
+    "abilityDisplayOnce": true
   }
 ]
