@@ -532,7 +532,7 @@ const profiles: CharacterProfile[] = [...baseProfiles, ...(extraProfiles as Char
 // The 19 remaining ability-character entries plus the two default characters.
 // These are searchable name-only entries; no unverified ability/profile data is fabricated.
 const pendingCharacterNames = [
-  "Dimitri", "D-Bee", "Maro", "Skyler", "Xayne", "Shirou", "Chrono",
+  "D-Bee", "Maro", "Shirou", "Chrono",
   "Dasha", "Luqueta", "Kelly", "Hayato", "Moco", "Steffie", "Misha",
   "Maxim", "Lila", "Caroline", "Notora", "Kla", "Primis", "Nulla",
 ];
@@ -624,7 +624,11 @@ const profileSearchScore = (profile: CharacterProfile, query: string) => {
   const content = normalizeSearchText([
     profile.type, profile.introEn, profile.introHi,
     ...profile.currentEn, ...profile.currentHi, ...profile.notesEn, ...profile.notesHi,
-    ...profile.historyEn, ...profile.historyHi, ...profile.rows.flatMap(row => [row.en, row.hi, row.value]),
+    ...profile.historyEn, ...profile.historyHi,
+    ...(profile.tacticalEn || []), ...(profile.tacticalHi || []),
+    ...(profile.strengthsEn || []), ...(profile.strengthsHi || []),
+    ...(profile.limitationsEn || []), ...(profile.limitationsHi || []),
+    ...profile.rows.flatMap(row => [row.en, row.hi, row.value]),
   ].join(" "));
 
   const scoreTerm = (term: string) => {
