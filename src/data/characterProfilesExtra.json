@@ -2165,12 +2165,12 @@
       "Official character page par [Active]/[Passive] tag nahi hai; type unverified hai."
     ],
     "historyEn": [
-      "OB37 (11 Jan 2023): Skill window extended to 15s; marks enemies within 7m; affects up to 3/3/4/4/5/5 Gloo Walls by old rank values; cooldown old rank values 85/80/75/70/65/60s.",
+      "OB37 (11 Jan 2023): Skill window extended to 15s; marks enemies within 7m; maximum 5 Gloo Walls affected; maximum cooldown 60s.",
       "OB42 (30 Oct 2023): Maximum Gloo Walls affected increased 3 → 5; 15s duration, 7m marking radius and 60s cooldown retained.",
       "OB43 (24 Jan 2024): Fixed a damage bug when Iris's skill penetrated Gloo Walls."
     ],
     "historyHi": [
-      "OB37 (11 Jan 2023): Skill window 15s hua; 7m ke enemies mark hote hain; maximum 5 Gloo Walls; cooldown 60s tha.",
+      "OB37 (11 Jan 2023): Skill window 15s hua; 7m ke andar enemies mark hote hain; maximum 5 Gloo Walls affect hoti hain; maximum cooldown 60s.",
       "OB42 (30 Oct 2023): Maximum Gloo Walls 3 se 5 hui; 15s duration, 7m radius aur 60s cooldown same rahe.",
       "OB43 (24 Jan 2024): Gloo Wall penetration par Iris skill damage bug fix hua."
     ],
