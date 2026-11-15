@@ -8,17 +8,17 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Active aura that heals Alok and nearby allies, boosts their movement speed and drops music notes.",
-    "introHi": "Ek Active aur banata hai, jo Alok aur aas-paas ke teammates ko heal karta hai, unki Movement Speed badhata hai aur Music Notes girata hai.",
+    "introHi": "Ek Active Aura banata hai, jo Alok Aura aas-paas ke teammates ko heal karta hai, unki Movement Speed badhata hai aur Music Notes girata hai.",
     "currentEn": [
       "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
     ],
     "currentHi": [
-      "5m ka aur banataa hai, jo 10 seconds tak Movement Speed 15% badhata hai aur har second 5 HP wapas deta hai. Aur active rehne par har 2 seconds mein Alok se 2m peeche Ek Music Note girataa hai, jo 5 seconds tak rehta hai. Note uthane wale teammates ko 10 seconds tak 15% Movement Speed aur 5 HP/s milta hai. Drop the Beat ke kai aur ek-dusare ke saath stack nahi hote."
+      "5m ka Aura banataa hai, jo 10 seconds tak Movement Speed 15% badhata hai Aura har second 5 HP wapas deta hai. Aura active rehne par har 2 seconds mein Alok se 2m peeche Ek Music Note girataa hai, jo 5 seconds tak rehta hai. Note uthane wale teammates ko 10 seconds tak 15% Movement Speed aur 5 HP/s milta hai. Drop the Beat ke kai Aura ek-dusare ke saath stack nahi hote."
     ],
     "rows": [
       {
         "en": "Aura radius",
-        "hi": "aur ki Radius",
+        "hi": "Aura ki Radius",
         "value": "5m"
       },
       {
@@ -66,7 +66,7 @@
       "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54). Since OB47 the awakened skill replaces the original for all players; both appearances remain available."
     ],
     "notesHi": [
-      "Alok ki apni Skill active hone par teammates ke Alok aur se use koi fayda nahi milta (OB53). Movement Speed ki Ek global maximum limit hai; Skills, items aur events se milne wale bonuses is limit ko paar nahi kara sakate (OB54). OB47 se sabhi players ke liye Awakened Skill ne original Skill ki jagah le li hai; donon appearances ab bhi available hain."
+      "Alok ki apni Skill active hone par teammates ke Alok Aura se use koi fayda nahi milta (OB53). Movement Speed ki Ek global maximum limit hai; Skills, items aur events se milne wale bonuses is limit ko paar nahi kara sakate (OB54). OB47 se sabhi players ke liye Awakened Skill ne original Skill ki jagah le li hai; donon appearances ab bhi available hain."
     ],
     "historyEn": [
       "OB39 (Mar 2023): HP recovery 5 to 3 HP/s, cooldown 50s to 45s.",
@@ -83,8 +83,8 @@
       "OB45 (26 Jun 2024): HP Recovery 3 se badha kar 5 HP/s, Movement Speed 15% aur Duration 10s ki gayi; Music Note uthane par Healing 3 se badha kar 5 HP/s ki gayi.",
       "OB47 (2 Dec 2024): sabhi players ke liye Awakened Skill ne original Skill ki jagah le li.",
       "OB52 (9 Jan 2026): Skill ki range aur visual range mein antara hone aur Speed Boost kabhi-kabhi apply na hone ki problem theek ki gayi.",
-      "OB53 (2 Apr 2026): Alok ki apni Skill active hone par use teammates ke Alok aur se fayda milanaa band hua.",
-      "OB54 (23 Jun 2026): 9th Anniversary event mein Skill Boosts jode gaye: Speed Remix (10m aur, teammates ko +16% Speed) aur Heal Remix (active rehne par 20 HP/s). Global Movement Speed cap jodi gayi."
+      "OB53 (2 Apr 2026): Alok ki apni Skill active hone par use teammates ke Alok Aura se fayda milanaa band hua.",
+      "OB54 (23 Jun 2026): 9th Anniversary event mein Skill Boosts jode gaye: Speed Remix (10m Aura, teammates ko +16% Speed) aur Heal Remix (active rehne par 20 HP/s). Global Movement Speed cap jodi gayi."
     ],
     "source": [
       {
@@ -4359,7 +4359,7 @@
       "The ability is passive and does not require a separate activation button."
     ],
     "strengthsHi": [
-      "Garena ki current Profile mein Trigger aur active Window saapha bataae gaye hain.",
+      "Garena ki current Profile mein Trigger Aura active Window saapha bataae gaye hain.",
       "ye Passive Ability hai aur iske liye alaga Activation Button ki jarurata nahi hoti."
     ],
     "limitationsEn": [
