@@ -4603,7 +4603,7 @@
   {
     "id": "steffie",
     "name": "STEFFIE",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/809499ee33234f1c72c6a3ab120e85dd.png",
     "skill": "Painted Refuge",
     "type": "Active",
     "badge": "Official-source profile",
@@ -4668,19 +4668,20 @@
         "url": "https://ff.garena.com/en/article/735/"
       },
       {
-        "label": "Steffie character page",
-        "url": "https://ff.garena.com/en/chars/159"
+        "label": "Official Garena full-body artwork",
+        "url": "https://ff.garena.com/en/chars/150"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
     "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
-    "status": "OB55 values reconciled · 16 Nov 2026"
+    "status": "OB55 values reconciled · 16 Nov 2026",
+    "artworkMode": "official-fullbody"
   },
   {
     "id": "misha",
     "name": "MISHA",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202210/33110529f97da7fc1bf681e61a1de2bb.png",
     "skill": "Afterburner",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -4746,19 +4747,20 @@
         "url": "https://ff.garena.com/en/article/428/"
       },
       {
-        "label": "Misha character page",
-        "url": "https://ff.garena.com/en/chars/9"
+        "label": "Official Garena full-body artwork",
+        "url": "https://ff.garena.com/en/chars/396"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
     "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
-    "status": "OB55 values reconciled · 16 Nov 2026"
+    "status": "OB55 values reconciled · 16 Nov 2026",
+    "artworkMode": "official-fullbody"
   },
   {
     "id": "maxim",
     "name": "MAXIM",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202210/59dc42433e877fa0cc3bb69b74dbf2c8.png",
     "skill": "Gluttony",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -4818,19 +4820,20 @@
         "url": "https://ff.garena.com/en/article/541/"
       },
       {
-        "label": "Maxim character page",
-        "url": "https://ff.garena.com/en/chars/15"
+        "label": "Official Garena full-body artwork",
+        "url": "https://ff.garena.com/en/chars/428"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
     "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
-    "status": "OB55 values reconciled · 16 Nov 2026"
+    "status": "OB55 values reconciled · 16 Nov 2026",
+    "artworkMode": "official-fullbody"
   },
   {
     "id": "caroline",
     "name": "CAROLINE",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202210/aa43b9f99d6a367a5123dbae9f6cd5c6.png",
     "skill": "Agility",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -4880,19 +4883,20 @@
         "url": "https://ff.garena.com/en/article/674/"
       },
       {
-        "label": "Caroline character page",
-        "url": "https://ff.garena.com/en/chars/11"
+        "label": "Official Garena full-body artwork",
+        "url": "https://ff.garena.com/en/chars/432"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
     "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
-    "status": "OB55 values reconciled · 16 Nov 2026"
+    "status": "OB55 values reconciled · 16 Nov 2026",
+    "artworkMode": "official-fullbody"
   },
   {
     "id": "notora",
     "name": "NOTORA",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/fab6aa1cb1c6ce92652a3f184d265b76.png",
     "skill": "Racer's Blessing",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -4955,13 +4959,14 @@
         "url": "https://ff.garena.com/en/article/106/"
       },
       {
-        "label": "Notora character page",
+        "label": "Official Garena full-body artwork",
         "url": "https://ff.garena.com/en/chars/147"
       }
     ],
     "abilityDisplayOnce": true,
     "subtitle": "OB55 values reconciled · 16 Nov 2026",
     "subtitleHi": "OB55 values reconciled · 16 Nov 2026",
-    "status": "OB55 values reconciled · 16 Nov 2026"
+    "status": "OB55 values reconciled · 16 Nov 2026",
+    "artworkMode": "official-fullbody"
   }
 ]
