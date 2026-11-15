@@ -71,7 +71,7 @@
     "historyEn": [
       "OB39 (Mar 2023): HP recovery 5 to 3 HP/s, cooldown 50s to 45s.",
       "OB40 (Jun 2023): Awakened Alok introduced.",
-      "OB45 (24 Jun 2024): HP recovery 3 to 5 HP/s, movement speed 15%, duration 10s; music-note pickup healing 3 to 5 HP/s.",
+      "OB45 (26 Jun 2024): HP recovery 3 to 5 HP/s, movement speed 15%, duration 10s; music-note pickup healing 3 to 5 HP/s.",
       "OB47 (2 Dec 2024): Awakened skill replaced the original for all players.",
       "OB52 (9 Jan 2026): Fixed skill range not matching the visual range, and speed boost sometimes failing to apply.",
       "OB53 (2 Apr 2026): Alok users no longer gain from teammates' Alok auras while their own skill is active.",
@@ -80,7 +80,7 @@
     "historyHi": [
       "OB39 (Mar 2023): HP recovery 5 se 3 HP/s; cooldown 50s se 45s hua.",
       "OB40 (Jun 2023): Awakened Alok introduce hua.",
-      "OB45 (24 Jun 2024): HP recovery 3 se 5 HP/s, movement speed 15%, duration 10s; music-note pickup healing 3 se 5 HP/s hui.",
+      "OB45 (26 Jun 2024): HP recovery 3 se 5 HP/s, movement speed 15%, duration 10s; music-note pickup healing 3 se 5 HP/s hui.",
       "OB47 (2 Dec 2024): Awakened skill sab players ke liye original ki jagah aaya.",
       "OB52 (9 Jan 2026): Skill range aur visual range match na hone, aur speed boost kabhi apply na hone ka issue fix hua.",
       "OB53 (2 Apr 2026): Apna skill active hone par Alok users ko teammates ke Alok aura se benefit nahi milta.",
@@ -238,14 +238,14 @@
     "historyEn": [
       "OB40 (Jun 2023): Armor durability loss reduction 20% to 25%.",
       "OB41 (Aug 2023): Armor damage reduction 20% to 15%, teammate bonus 10% to 5%.",
-      "OB45 (24 Jun 2024): Armor durability loss reduction 25% to 40%; armor damage reduction 15% to 5%, +5% per teammate carrying the skill.",
+      "OB45 (26 Jun 2024): Armor durability loss reduction 25% to 40%; armor damage reduction 15% to 5%, +5% per teammate carrying the skill.",
       "OB46 (Sep 2024): Now +4%, +1% per teammate within 15m.",
       "OB47 (2 Dec 2024): Awakened skill replaced the original for all players."
     ],
     "historyHi": [
       "OB40 (Jun 2023): Armor durability loss reduction 20% se 25% hua.",
       "OB41 (Aug 2023): Armor damage reduction 20% se 15%, teammate bonus 10% se 5% hua.",
-      "OB45 (24 Jun 2024): Armor durability loss reduction 25% se 40%; armor damage reduction 15% se 5%, aur skill carry karne wale har teammate par +5%.",
+      "OB45 (26 Jun 2024): Armor durability loss reduction 25% se 40%; armor damage reduction 15% se 5%, aur skill carry karne wale har teammate par +5%.",
       "OB46 (Sep 2024): Ab +4%, aur 15m ke andar har teammate par +1%.",
       "OB47 (2 Dec 2024): Awakened skill sab players ke liye original ki jagah aaya."
     ],
@@ -326,13 +326,13 @@
     "historyEn": [
       "OB41 (Aug 2023): 40 extra HP converted to 40 Shield Points.",
       "OB43 (Jan 2024): 40 to 30.",
-      "2024: recovery speed 10 to 5 SP/s.",
+      "OB46 (Sep 2024): Shield Points recovery speed 10 to 5 SP/s",
       "OB48 (19 Feb 2025): 30 to 20."
     ],
     "historyHi": [
       "OB41 (Aug 2023): 40 extra HP ko 40 Shield Points mein convert kiya gaya.",
       "OB43 (Jan 2024): 40 se 30 hue.",
-      "2024: Recovery speed 10 se 5 SP/s hui.",
+      "OB46 (Sep 2024): Shield Points recovery speed 10 se 5 SP/s hui.",
       "OB48 (19 Feb 2025): 30 se 20 hue."
     ],
     "source": [
@@ -696,7 +696,7 @@
     "type": "Active",
     "badge": "Official-source profile",
     "status": "OB55 values reconciled · 14 Nov 2026",
-    "lastChanged": "OB45 (24 Jun 2024)",
+    "lastChanged": "OB45 (26 Jun 2024)",
     "introEn": "Active scan that reveals enemy positions and shares them with the squad.",
     "introHi": "Active scan jo enemy ki location reveal karta hai aur squad ke saath share karta hai.",
     "rows": [
@@ -743,13 +743,13 @@
       "OB34 (25 May 2022): Duration 5-7.5s to 5-10s, cooldown 75-60s to 75-50s by level.",
       "OB37 (Nov 2022): Maximum scan range 75m to 65m.",
       "OB40 (Jun 2023): Cooldown 50s to 45s; scanned enemies now get a notification.",
-      "OB45 (24 Jun 2024): Scan range 65m to 80m."
+      "OB45 (26 Jun 2024): Scan range 65m to 80m."
     ],
     "historyHi": [
       "OB34 (25 May 2022): Duration 5–7.5s se 5–10s; cooldown 75–60s se level ke hisaab se 75–50s hua.",
       "OB37 (Nov 2022): Maximum scan range 75m se 65m hui.",
       "OB40 (Jun 2023): Cooldown 50s se 45s hua; scanned enemies ko notification milne laga.",
-      "OB45 (24 Jun 2024): Scan range 65m se 80m hui."
+      "OB45 (26 Jun 2024): Scan range 65m se 80m hui."
     ],
     "source": [
       {
@@ -1163,7 +1163,7 @@
     "skill": "Remedy Rounds",
     "type": "Passive",
     "badge": "Official-source profile",
-    "lastChanged": "OB45 (24 Jun 2024)",
+    "lastChanged": "OB45 (26 Jun 2024)",
     "introEn": "Passive that lets any weapon heal teammates and boosts Heal Pistol healing.",
     "introHi": "Passive skill jisse kisi bhi weapon se teammates ko heal kar sakte hain aur Heal Pistol ki healing bhi badhti hai.",
     "status": "OB55 values reconciled · 14 Nov 2026",
@@ -1200,13 +1200,13 @@
       "OB21 (Apr 2020): Introduced with Healing Song.",
       "OB40 (Jun 2023): Healing Song reworked: 80 HP shield and 10% speed boost on help-up, downed teammates bleed 35% slower.",
       "OB44 (Apr 2024): Help-up speed boost 10% to 80%.",
-      "OB45 (24 Jun 2024): Reworked into Remedy Rounds."
+      "OB45 (26 Jun 2024): Reworked into Remedy Rounds."
     ],
     "historyHi": [
       "OB21 (Apr 2020): Healing Song ke saath introduce hui.",
       "OB40 (Jun 2023): Healing Song rework—help-up par 80 HP shield aur 10% speed boost; downed teammates 35% dheere bleed karte hain.",
       "OB44 (Apr 2024): Help-up speed boost 10% se 80% hui.",
-      "OB45 (24 Jun 2024): Remedy Rounds mein rework hui."
+      "OB45 (26 Jun 2024): Remedy Rounds mein rework hui."
     ],
     "source": [
       {
@@ -1356,7 +1356,7 @@
       "OB34 (25 May 2022): Speed reduction 20% to 10%.",
       "OB42 (Oct 2023): Speed reduction 10% to 5%, cooldown 200s.",
       "OB43 (24 Jan 2024): Speed reduction removed.",
-      "OB45 (24 Jun 2024): Cooldown 200s to 75s.",
+      "OB45 (26 Jun 2024): Cooldown 200s to 75s.",
       "OB47 (2 Dec 2024): Cooldown 75s to 90s; interactions allowed without breaking Camouflage.",
       "OB52 (9 Jan 2026): 10% speed reduction added, duration 15s to 10s, cooldown 120s to 90s, cooldown reset limited to takedowns within 10s of release.",
       "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: Camo Decoy (leaves a moving decoy that disappears after 10 DMG, 10s or when Wukong returns to human form) and Cloned Camo (two extra bushes, lasting 10s).",
@@ -1367,7 +1367,7 @@
       "OB34 (25 May 2022): Speed reduction 20% se 10% hua.",
       "OB42 (Oct 2023): Speed reduction 10% se 5%, cooldown 200s.",
       "OB43 (24 Jan 2024): Speed reduction hata di gayi.",
-      "OB45 (24 Jun 2024): Cooldown 200s se 75s hua.",
+      "OB45 (26 Jun 2024): Cooldown 200s se 75s hua.",
       "OB47 (2 Dec 2024): Cooldown 75s se 90s; interactions se Camouflage break hona band hua.",
       "OB52 (9 Jan 2026): 10% speed reduction add; duration 15s se 10s, cooldown 120s se 90s; cooldown reset release ke 10s ke andar takedown tak limited.",
       "OB54 (23 Jun 2026): 9th Anniversary Skill Boosts—Camo Decoy (moving decoy, 10 DMG/10s ya human form par disappear) aur Cloned Camo (2 extra bushes, 10s).",
@@ -1462,14 +1462,14 @@
       "OB27 (Apr 2021): Revive bonus HP raised, maximum 40 to 70.",
       "Jan 2022 (Illuminate): Revive bonus HP maximum 70 to 80.",
       "OB40 (Jun 2023): Reworked: spreads 80% of single-target healing to teammates within 10m; revive role passed to Thiva.",
-      "OB45 (24 Jun 2024): Added +30% healing effects; spread range 10m to 15m.",
+      "OB45 (26 Jun 2024): Added +30% healing effects; spread range 10m to 15m.",
       "OB54 (23 Jun 2026): Shared healing 80% to 90%, range 15m to 20m."
     ],
     "historyHi": [
       "OB27 (Apr 2021): Revive bonus HP maximum 40 se 70 hua.",
       "Jan 2022 (Illuminate): Revive bonus HP maximum 70 se 80 hua.",
       "OB40 (Jun 2023): Rework—single-target healing ka 80% 10m ke teammates ko share; revive role Thiva ko mila.",
-      "OB45 (24 Jun 2024): +30% healing effects add; share range 10m se 15m.",
+      "OB45 (26 Jun 2024): +30% healing effects add; share range 10m se 15m.",
       "OB54 (23 Jun 2026): Shared healing 80% se 90%, range 15m se 20m."
     ],
     "source": [
@@ -1552,13 +1552,13 @@
     ],
     "historyEn": [
       "OB41 (Aug 2023): Reworked: 50 Shield Points, decay after 5s, cooldown 10s.",
-      "OB45 (24 Jun 2024): 50 to 40 Shield Points.",
+      "OB45 (26 Jun 2024): 50 to 40 Shield Points.",
       "OB48 (19 Feb 2025): 40 to 30 Shield Points.",
       "OB53 (2 Apr 2026): Decay time 5s to 10s."
     ],
     "historyHi": [
       "OB41 (Aug 2023): Rework—50 Shield Points, 5s baad decay, cooldown 10s.",
-      "OB45 (24 Jun 2024): Shield Points 50 se 40 hue.",
+      "OB45 (26 Jun 2024): Shield Points 50 se 40 hue.",
       "OB48 (19 Feb 2025): Shield Points 40 se 30 hue.",
       "OB53 (2 Apr 2026): Decay time 5s se 10s hua."
     ],
@@ -1634,12 +1634,12 @@
     ],
     "historyEn": [
       "OB39 (Mar 2023): Reworked to restore HP when taking damage, 10 HP/s for 3s, cooldown 20s; Danger Zone survivability reduced.",
-      "OB45 (24 Jun 2024): Duration 3s to 4s.",
+      "OB45 (26 Jun 2024): Duration 3s to 4s.",
       "OB51 (Oct 2025): Duration 4s to 3s."
     ],
     "historyHi": [
       "OB39 (Mar 2023): Damage lene par HP restore rework—3s ke liye 10 HP/s, cooldown 20s; Danger Zone survivability kam hui.",
-      "OB45 (24 Jun 2024): Duration 3s se 4s hua.",
+      "OB45 (26 Jun 2024): Duration 3s se 4s hua.",
       "OB51 (Oct 2025): Duration 4s se 3s hua."
     ],
     "source": [
@@ -2547,7 +2547,7 @@
       "OB36 (21 Sep 2022): Gloo Wall durability restoration increased from 20/22/24/26/28/30% to 40/42/44/46/48/50% of current durability every 1s.",
       "OB41 (08 Aug 2023): Ice Iron documented as restoring 250 durability/s to deployed Gloo Walls when hit; teammates within 5m recovered 20 HP/s, with a 40 HP per-teammate cap per wall.",
       "OB42 (30 Oct 2023): Gloo Wall durability restoration reduced from 250 to 150 per second.",
-      "OB45 (24 Jun 2024): Durability restoration increased from 150 to 160 per second; teammate recovery changed from 20 to 10 HP/s, within 3s after deployment.",
+      "OB45 (26 Jun 2024): Durability restoration increased from 150 to 160 per second; teammate recovery changed from 20 to 10 HP/s, within 3s after deployment.",
       "OB47 (02 Dec 2024): The post-deployment effect window changed from 3s to 2s.",
       "OB50 (30 Jul 2025): The effect window changed from 2s to 1.5s and teammate recovery changed from 10 to 5 HP/s."
     ],
@@ -2555,7 +2555,7 @@
       "OB36 (21 Sep 2022): Har second Gloo Wall ki durability wapas badhne ki speed, current durability ke 20/22/24/26/28/30% se badhkar 40/42/44/46/48/50% hui.",
       "OB41 (08 Aug 2023): Ice Iron ke mutabik hit hone par lagayi hui Gloo Wall 250 durability/s ki speed se repair hoti thi; 5m ke andar teammates ko 20 HP/s milti thi. Har wall par ek teammate ke liye 40 HP ki limit thi.",
       "OB42 (30 Oct 2023): Gloo Wall ki repair speed 250 se 150 durability per second hui.",
-      "OB45 (24 Jun 2024): Repair speed 150 se 160 durability per second hui; teammate HP 20 se 10 HP/s hui aur Gloo Wall lagane ke baad 3s tak milti thi.",
+      "OB45 (26 Jun 2024): Repair speed 150 se 160 durability per second hui; teammate HP 20 se 10 HP/s hui aur Gloo Wall lagane ke baad 3s tak milti thi.",
       "OB47 (02 Dec 2024): Gloo Wall lagane ke baad effect ka time 3s se 2s hua.",
       "OB50 (30 Jul 2025): Effect ka time 2s se 1.5s hua aur teammate HP 10 se 5 HP/s hui."
     ],
@@ -4427,13 +4427,13 @@
     "historyEn": [
       "OB35 (Jul 2022): Armor penetration was reduced from 10% to 7.5% per 10% maximum HP loss.",
       "OB39 (Mar 2023): Armor penetration was adjusted to 5% per 13% maximum HP loss.",
-      "OB45 (24 Jun 2024): Awakened frontal damage reduction was reduced from 3% to 2% per 10% maximum HP loss.",
+      "OB45 (26 Jun 2024): Awakened frontal damage reduction was reduced from 3% to 2% per 10% maximum HP loss.",
       "OB47 (2 Dec 2024): Original and awakened skills were integrated; Art of Blades listed +3.5% armor penetration and 2% less frontal damage taken per 10% HP lost."
     ],
     "historyHi": [
       "OB35 (Jul 2022): Armor penetration 10% se 7.5% per 10% maximum HP loss hui.",
       "OB39 (Mar 2023): Armor penetration 5% per 13% maximum HP loss adjust hui.",
-      "OB45 (24 Jun 2024): Awakened frontal damage reduction 3% se 2% per 10% maximum HP loss hui.",
+      "OB45 (26 Jun 2024): Awakened frontal damage reduction 3% se 2% per 10% maximum HP loss hui.",
       "OB47 (2 Dec 2024): Original aur awakened skills integrate hue; Art of Blades ne har 10% HP loss par +3.5% armor penetration aur 2% frontal damage reduction list ki."
     ],
     "source": [
