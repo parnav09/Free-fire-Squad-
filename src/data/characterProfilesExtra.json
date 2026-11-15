@@ -4970,5 +4970,66 @@
     "subtitleHi": "OB55 Values ka milaana · 16 Nov 2026",
     "status": "OB55 values reconciled · 16 Nov 2026",
     "artworkMode": "official-fullbody"
+  },
+  {
+    "id": "kla",
+    "name": "Kla",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/1655985bf74931458766921ee6bb6e0a.png",
+    "artworkMode": "cutout",
+    "abilityDisplayOnce": true,
+    "skill": "Muay Thai",
+    "type": "Passive",
+    "badge": "Official-source profile",
+    "lastChanged": "OB8 (28 Jun 2018)",
+    "subtitle": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "introEn": "Passive that drastically amplifies the damage output of unarmed melee attacks.",
+    "introHi": "Passive that drastically amplifies the damage output of unarmed melee attacks.",
+    "rows": [
+      {
+        "en": "Fist damage bonus",
+        "hi": "Fist damage bonus",
+        "value": "+400%"
+      },
+      {
+        "en": "Trigger",
+        "hi": "Trigger",
+        "value": "Unarmed melee attacks"
+      },
+      {
+        "en": "Cooldown",
+        "hi": "Cooldown",
+        "value": "No cooldown"
+      }
+    ],
+    "currentEn": [
+      "Increases fist and unarmed melee damage by 400%."
+    ],
+    "currentHi": [
+      "Increases fist and unarmed melee damage by 400%."
+    ],
+    "notesEn": [
+      "Modern official patch archives omit the exact numerical ceiling, but direct in-game skill verification establishes the current permanent maximum at 400%."
+    ],
+    "notesHi": [
+      "Modern official patch archives omit the exact numerical ceiling, but direct in-game skill verification establishes the current permanent maximum at 400%."
+    ],
+    "historyEn": [
+      "OB8 (28 Jun 2018): Introduced.",
+      "OB39 (Mar 2023): Character system overhaul permanently unlocked maximum level values (400%) for all players."
+    ],
+    "historyHi": [
+      "OB8 (28 Jun 2018): Introduced.",
+      "OB39 (Mar 2023): Character system overhaul permanently unlocked maximum level values (400%) for all players."
+    ],
+    "source": [
+      {
+        "label": "In-game screenshot verification (21170.png)"
+      },
+      {
+        "label": "Kla character page",
+        "url": "https://ff.garena.com/en/chars/8"
+      }
+    ]
   }
 ]
