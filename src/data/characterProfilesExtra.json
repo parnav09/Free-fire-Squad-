@@ -1221,11 +1221,11 @@
     "id": "joseph",
     "name": "Joseph",
     "skill": "Silver Spoon",
-    "type": "Active",
+    "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB44 (Apr 2024)",
-    "introEn": "Active skill that grants immunity to disruptive effects and a short movement-speed boost.",
-    "introHi": "Active skill jo disruptive effects se immunity aur short movement-speed boost deta hai.",
+    "introEn": "Passive that grants immunity to disruptive effects and a short movement-speed boost.",
+    "introHi": "Passive jo disruptive effects se immunity aur short movement-speed boost deta hai.",
     "currentEn": [
       "Become immune to disruptive effects (slowdown, marking, skill-silencing) and gain a 10% movement-speed boost for 5 seconds."
     ],
@@ -1255,10 +1255,10 @@
       }
     ],
     "notesEn": [
-      "Immune to Moco's marking, Homer's drone and A124's nano interference. Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
+      "Immune to Moco's marking, Homer's drone and A124's nano interference. Garena does not publish the exact trigger condition. Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54)."
     ],
     "notesHi": [
-      "Moco ki marking, Homer ke drone aur A124 ke nano interference se immune. Movement speed ki global maximum limit hai; skills, items aur events ke bonuses usse exceed nahi kar sakte (OB54)."
+      "Moco ki marking, Homer ke drone aur A124 ke nano interference se immune. Garena exact trigger condition publish nahi karta. Movement speed ki global maximum limit hai; skills, items aur events ke bonuses usse exceed nahi kar sakte (OB54)."
     ],
     "historyEn": [
       "OB35 (Jul 2022): Original skill Nutty Movement had its speed boost lowered.",
@@ -1282,6 +1282,10 @@
       {
         "label": "Garena – OB35",
         "url": "https://ff.garena.com/en/article/811/"
+      },
+      {
+        "label": "Garena – Joseph character page",
+        "url": "https://ff.garena.com/chars/intro/en/149/"
       }
     ],
     "status": "OB55 values reconciled · 14 Nov 2026"
