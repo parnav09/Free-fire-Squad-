@@ -3531,7 +3531,7 @@
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB49 (21 May 2025)",
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that decelerates enemies and vehicles shot with rifles, freezing them and generating Gloo Walls upon knockdown.",
     "introHi": "Passive that decelerates enemies and vehicles shot with rifles, freezing them and generating Gloo Walls upon knockdown.",
     "currentEn": [
@@ -3603,7 +3603,7 @@
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that scales weapon damage based on the distance to the target and deals extra damage to marked enemies.",
     "introHi": "Passive that scales weapon damage based on the distance to the target and deals extra damage to marked enemies.",
     "currentEn": [
@@ -3664,7 +3664,7 @@
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB53 (02 Apr 2026)",
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that marks attackers who hit the user and grants massive armor penetration on the first retaliatory shot.",
     "introHi": "Passive that marks attackers who hit the user and grants massive armor penetration on the first retaliatory shot.",
     "currentEn": [
@@ -3735,7 +3735,7 @@
     "type": "Active",
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Active ability that creates an impenetrable static force field blocking incoming and outgoing damage.",
     "introHi": "Active ability that creates an impenetrable static force field blocking incoming and outgoing damage.",
     "currentEn": [
@@ -3796,7 +3796,7 @@
     "type": "Passive",
     "badge": "Official-source profile",
     "lastChanged": "OB53 (02 Apr 2026)",
-    "status": "OB55 values reconciled · 15 Nov 2026",
+    "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that rewards knockdowns with a rapidly decaying rate of fire and movement speed boost.",
     "introHi": "Passive that rewards knockdowns with a rapidly decaying rate of fire and movement speed boost.",
     "currentEn": [
