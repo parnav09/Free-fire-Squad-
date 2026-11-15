@@ -545,39 +545,65 @@ function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
 
 const cardAbilityLabel = (profile: CharacterProfile) => `${profile.skill.replace(/\s*\((?:Active|Passive)\)$/i, "")} · ${profile.type.split(" · ")[0]}`;
 
-const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
+// Optimal-string-alignment distance handles substitutions, missing/extra letters,
+// and adjacent swaps such as "irse" -> "iris".
 const editDistanceWithin = (a: string, b: string, limit: number) => {
-  if (Math.abs(a.length - b.length) > limit) return false;
+  if (Math.abs(a.length - b.length) > limit) return limit + 1;
+  let previousPrevious: number[] | null = null;
   let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
   for (let i = 1; i <= a.length; i++) {
     const current = [i];
     let rowMin = i;
     for (let j = 1; j <= b.length; j++) {
       const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      current[j] = Math.min(current[j - 1] + 1, previous[j] + 1, previous[j - 1] + cost);
-      rowMin = Math.min(rowMin, current[j]);
+      let distance = Math.min(current[j - 1] + 1, previous[j] + 1, previous[j - 1] + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1] && previousPrevious) {
+        distance = Math.min(distance, previousPrevious[j - 2] + 1);
+      }
+      current[j] = distance;
+      rowMin = Math.min(rowMin, distance);
     }
-    if (rowMin > limit) return false;
+    if (rowMin > limit) return limit + 1;
+    previousPrevious = previous;
     previous = current;
   }
-  return previous[b.length] <= limit;
+  return previous[b.length];
 };
 
-const profileMatchesSearch = (profile: CharacterProfile, query: string) => {
-  const haystack = normalizeSearchText([
-    profile.name, profile.skill, profile.type, profile.introEn, profile.introHi,
+const typoLimitFor = (term: string) => term.length >= 9 ? 2 : term.length >= 4 ? 1 : 0;
+
+const profileSearchScore = (profile: CharacterProfile, query: string) => {
+  const terms = normalizeSearchText(query).split(" ").filter(Boolean);
+  if (!terms.length) return 0;
+
+  const name = normalizeSearchText(profile.name);
+  const nameWords = name.split(" ").filter(Boolean);
+  const skill = normalizeSearchText(profile.skill);
+  const skillWords = skill.split(" ").filter(Boolean);
+  const content = normalizeSearchText([
+    profile.type, profile.introEn, profile.introHi,
     ...profile.currentEn, ...profile.currentHi, ...profile.notesEn, ...profile.notesHi,
     ...profile.historyEn, ...profile.historyHi, ...profile.rows.flatMap(row => [row.en, row.hi, row.value]),
   ].join(" "));
-  const terms = normalizeSearchText(query).split(" ").filter(Boolean);
-  if (!terms.length) return true;
-  const words = haystack.split(" ");
-  return terms.every(term => {
-    if (haystack.includes(term)) return true;
-    const maxDistance = term.length >= 9 ? 2 : term.length >= 5 ? 1 : 0;
-    return maxDistance > 0 && words.some(word => editDistanceWithin(term, word, maxDistance));
-  });
+
+  const scoreTerm = (term: string) => {
+    if (name === term) return 140;
+    if (name.startsWith(term) || nameWords.some(word => word.startsWith(term))) return 125;
+    if (name.includes(term)) return 115;
+    const limit = typoLimitFor(term);
+    const nameDistance = limit ? Math.min(...nameWords.map(word => editDistanceWithin(term, word, limit)), limit + 1) : limit + 1;
+    if (nameDistance <= limit) return 105 - nameDistance * 12;
+    if (skill.includes(term)) return 75;
+    const skillDistance = limit ? Math.min(...skillWords.map(word => editDistanceWithin(term, word, limit)), limit + 1) : limit + 1;
+    if (skillDistance <= limit) return 62 - skillDistance * 8;
+    if (content.includes(term)) return 35;
+    return 0;
+  };
+
+  const scores = terms.map(scoreTerm);
+  return scores.every(score => score > 0) ? scores.reduce((total, score) => total + score, 0) : -1;
 };
 
 export default function CharactersDatabase({ language, onLanguageChange, onBack }: Props) {
@@ -591,8 +617,10 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
   const selected = profiles.find(profile => profile.id === selectedId);
   const shownProfile = selected;
   const matches = useMemo(() => profiles
-    .filter(profile => profileMatchesSearch(profile, query))
-    .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" })), [query]);
+    .map(profile => ({ profile, score: profileSearchScore(profile, query) }))
+    .filter(result => result.score >= 0)
+    .sort((a, b) => b.score - a.score || a.profile.name.localeCompare(b.profile.name, undefined, { sensitivity: "base" }))
+    .map(result => result.profile), [query]);
   const suggestions = matches.slice(0, 6);
   const chooseSuggestion = (profile: CharacterProfile) => {
     setQuery(profile.name);
