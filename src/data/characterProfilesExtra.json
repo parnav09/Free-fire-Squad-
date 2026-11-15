@@ -414,7 +414,7 @@
   {
     "id": "paloma",
     "name": "Paloma",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Paloma.jpg",
     "skill": "Shatterburst (Passive)",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -471,12 +471,13 @@
         "label": "Garena – Paloma character page",
         "url": "https://ff.garena.com/en/chars/12/"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "laura",
     "name": "Laura",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Laura.jpg",
     "skill": "Sharp Shooter",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -540,12 +541,13 @@
         "label": "Laura character page",
         "url": "https://ff.garena.com/en/chars/438"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "rafael",
     "name": "Rafael",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Rafael.jpg",
     "skill": "Dead Silent",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -616,12 +618,13 @@
         "label": "Rafael character page",
         "url": "https://ff.garena.com/en/chars/14"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "jota",
     "name": "Jota",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Jota.jpg",
     "skill": "Sustained Raids",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -682,12 +685,13 @@
         "label": "Jota character page",
         "url": "https://ff.garena.com/en/chars/178"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "clu",
     "name": "Clu",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/officialwebsite/character/Clu/Clu1.jpg",
     "skill": "Tracing Steps",
     "type": "Active",
     "badge": "Official-source profile",
@@ -768,12 +772,13 @@
         "label": "Clu character page",
         "url": "https://ff.garena.com/en/chars/209"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "wolfrahh",
     "name": "Wolfrahh",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/officialwebsite/character/Wolfrahh/Wolfrah.jpg",
     "skill": "Limelight",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -857,12 +862,13 @@
         "label": "Wolfrahh character page",
         "url": "https://ff.garena.com/en/chars/210"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "jai",
     "name": "Jai",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/officialwebsite/character/Jai/Jai.jpg",
     "skill": "Raging Reload",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -921,12 +927,13 @@
         "label": "Booyah Day patch",
         "url": "https://ff.garena.com/en/article/322/"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "alvaro",
     "name": "Alvaro",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/officialwebsite/character/list_img/Alvaro.jpg",
     "skill": "Split Blitz",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -1000,12 +1007,13 @@
         "label": "Alvaro character page",
         "url": "https://ff.garena.com/en-pk/chars/424"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "miguel",
     "name": "Miguel",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Miguel.jpg",
     "skill": "Crazy Slayer",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -1059,12 +1067,13 @@
         "label": "OB35",
         "url": "https://ff.garena.com/en/article/811/"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "nikita",
     "name": "Nikita",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Nikita.jpg",
     "skill": "Firearms Expert",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -1144,12 +1153,13 @@
         "label": "Nikita character page",
         "url": "https://ff.garena.com/en/chars/16"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "kapella",
     "name": "Kapella",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Kapella.jpg",
     "skill": "Remedy Rounds",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -1215,7 +1225,8 @@
         "label": "OB21",
         "url": "https://ff.garena.com/en/article/223/"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "joseph",
@@ -1288,7 +1299,9 @@
         "url": "https://ff.garena.com/chars/intro/en/149/"
       }
     ],
-    "status": "OB55 values reconciled · 14 Nov 2026"
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Joseph.jpg",
+    "artworkMode": "contained"
   },
   {
     "id": "wukong",
@@ -1398,7 +1411,9 @@
         "url": "https://ff.garena.com/en/article/505/"
       }
     ],
-    "status": "OB55 values reconciled · 14 Nov 2026"
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Wukong.jpg",
+    "artworkMode": "contained"
   },
   {
     "id": "olivia",
@@ -1483,7 +1498,9 @@
         "url": "https://ff.garena.com/en/chars/18"
       }
     ],
-    "status": "OB55 values reconciled · 14 Nov 2026"
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Olivia.jpg",
+    "artworkMode": "contained"
   },
   {
     "id": "shani",
@@ -1563,7 +1580,9 @@
         "url": "https://ff.garena.com/en/article/1213/"
       }
     ],
-    "status": "OB55 values reconciled · 14 Nov 2026"
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Shani.jpg",
+    "artworkMode": "contained"
   },
   {
     "id": "ford",
@@ -1637,12 +1656,14 @@
         "url": "https://ff.garena.com/en/article/1120/"
       }
     ],
-    "status": "OB55 values reconciled · 14 Nov 2026"
+    "status": "OB55 values reconciled · 14 Nov 2026",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/new/Ford.jpg",
+    "artworkMode": "contained"
   },
   {
     "id": "k",
     "name": "K",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/officialwebsite/character/Kshmr/K_cover.jpg",
     "skill": "Master of All",
     "type": "Active",
     "badge": "Official-source profile",
@@ -1709,12 +1730,13 @@
         "label": "Garena – K character page",
         "url": "https://ff.garena.com/en/chars/"
       }
-    ]
+    ],
+    "artworkMode": "contained"
   },
   {
     "id": "sonia",
     "name": "Sonia",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20238/eb88f6c810588f2a04386a994156dbcb.png",
     "skill": "Nano Lifeshield",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -1788,7 +1810,8 @@
         "label": "Garena – Sonia character page",
         "url": "https://ff.garena.com/en/chars/"
       }
-    ]
+    ],
+    "artworkMode": "cutout"
   },
   {
     "id": "orion",
@@ -1870,7 +1893,7 @@
   {
     "id": "santino",
     "name": "Santino",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20233/1dc716d45363e490602aaec9adf672c6.png",
     "skill": "Shape Splitter",
     "type": "Active",
     "badge": "Official-source profile",
@@ -1957,12 +1980,13 @@
         "label": "Garena – Santino character page",
         "url": "https://ff.garena.com/en/chars/673"
       }
-    ]
+    ],
+    "artworkMode": "cutout"
   },
   {
     "id": "tatsuya",
     "name": "Tatsuya",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20229/69fca3d1dfbf52b8fe709c82355d2bfd.png",
     "skill": "Rebel Rush",
     "type": "Active",
     "badge": "Official-source profile",
@@ -2037,12 +2061,13 @@
         "label": "Garena – Tatsuya character page",
         "url": "https://ff.garena.com/en/chars/"
       }
-    ]
+    ],
+    "artworkMode": "cutout"
   },
   {
     "id": "luna",
     "name": "Luna",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202211/6cc73730ae5cfd7aa9b480e571cfa7cb.png",
     "skill": "Fight-or-Flight",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -2118,12 +2143,13 @@
         "url": "https://ff.garena.com/en/chars/614"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   },
   {
     "id": "iris",
     "name": "Iris",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/5f7e6744cefcf5660aab2025c50600ce.png",
     "skill": "Wall Brawl",
     "type": "Active",
     "badge": "Official-source profile",
@@ -2203,12 +2229,13 @@
         "url": "https://ff.garena.com/en/article/1473/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   },
   {
     "id": "jbiebs",
     "name": "J.Biebs",
-    "image": "",
+    "image": "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202310/03b53294da92cae6aa5c436fb407c932.png",
     "skill": "Silent Sentinel",
     "type": "Passive",
     "badge": "Official-source profile",
@@ -2271,12 +2298,13 @@
         "url": "https://ff.garena.com/en/article/968/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   },
   {
     "id": "homer",
     "name": "Homer",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/3ca8416427448fd6b44be066d3de07a6.png",
     "skill": "Senses Shockwave",
     "type": "Active",
     "badge": "Official-source profile",
@@ -2374,12 +2402,13 @@
         "url": "https://ff.garena.com/en/article/1673/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   },
   {
     "id": "kenta",
     "name": "Kenta",
-    "image": "",
+    "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/e4fdf70a8788ed3d7687e1a6876e655b.png",
     "skill": "Tempest Raid",
     "type": "Active",
     "badge": "Official-source profile",
@@ -2454,6 +2483,7 @@
         "url": "https://ff.garena.com/en/article/674/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "artworkMode": "cutout"
   }
 ]

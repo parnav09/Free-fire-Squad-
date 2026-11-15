@@ -226,3 +226,64 @@
 
 /* Profile metadata order: official badge, reconciliation subtitle, then last-changed patch. */
 .character-profile-subtitle{margin:7px 0 0;color:#9fc5df;font-size:11px;font-weight:800;letter-spacing:.035em;line-height:1.45}
+
+
+/* Character artwork polish: clear backdrop, balanced lighting and restrained zoom. */
+.character-result-art,
+.character-profile-art {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 28%, rgba(92, 190, 239, .25), transparent 57%),
+    radial-gradient(ellipse at 50% 100%, rgba(56, 103, 194, .16), transparent 58%),
+    linear-gradient(145deg, #111d31 0%, #0b1425 58%, #17172e 100%);
+}
+.character-result-art::before,
+.character-profile-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 32%, rgba(174, 231, 255, .11), transparent 48%),
+    linear-gradient(180deg, rgba(4, 10, 20, .02) 48%, rgba(3, 8, 18, .24) 100%);
+}
+.character-result-art img,
+.character-profile-art img {
+  position: relative;
+  z-index: 0;
+  filter: brightness(1.16) contrast(1.09) saturate(1.12)
+    drop-shadow(0 12px 18px rgba(0, 0, 0, .28));
+  transform: scale(1.055);
+  transform-origin: center 46%;
+  transition: transform .32s cubic-bezier(.2,.7,.2,1), filter .28s ease;
+  backface-visibility: hidden;
+}
+.character-result-card:hover .character-result-art img {
+  transform: scale(1.095);
+  filter: brightness(1.23) contrast(1.1) saturate(1.15)
+    drop-shadow(0 15px 22px rgba(0, 0, 0, .34));
+}
+.character-profile-page .character-profile-art:hover img {
+  transform: scale(1.085);
+  filter: brightness(1.24) contrast(1.1) saturate(1.15)
+    drop-shadow(0 18px 24px rgba(0, 0, 0, .34));
+}
+.character-result-monogram,
+.character-profile-monogram {
+  position: relative;
+  z-index: 2;
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(80, 177, 225, .2), transparent 60%),
+    linear-gradient(145deg, #14233b, #0b1425 72%, #17172e);
+}
+@media (max-width: 640px) {
+  .character-result-card:hover .character-result-art img { transform: scale(1.055); }
+  .character-profile-page .character-profile-art:hover img { transform: scale(1.045); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .character-result-art img,
+  .character-profile-art img { transition: none; transform: none; }
+}
