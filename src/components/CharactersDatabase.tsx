@@ -27,6 +27,12 @@ type CharacterProfile = {
   lastChanged?: string;
   hiddenMechanics?: { text: string; status: "official" | "tested" }[];
   needsRecheck?: string[];
+  tacticalEn?: string[];
+  tacticalHi?: string[];
+  strengthsEn?: string[];
+  strengthsHi?: string[];
+  limitationsEn?: string[];
+  limitationsHi?: string[];
   awakened?: {
     label: string;
     name?: string;
@@ -523,13 +529,12 @@ const baseProfiles: CharacterProfile[] = [
 ];
 const profiles: CharacterProfile[] = [...baseProfiles, ...(extraProfiles as CharacterProfile[])];
 
-// The 24 remaining ability-character entries plus the two default characters.
+// The 19 remaining ability-character entries plus the two default characters.
 // These are searchable name-only entries; no unverified ability/profile data is fabricated.
 const pendingCharacterNames = [
-  "Nairi", "Otho", "Leon", "Koda", "Thiva", "Dimitri", "D-Bee", "Maro",
-  "Skyler", "Xayne", "Shirou", "Chrono", "Dasha", "Luqueta", "Kelly",
-  "Hayato", "Moco", "Steffie", "Misha", "Maxim", "Lila", "Caroline",
-  "Notora", "Kla", "Primis", "Nulla",
+  "Dimitri", "D-Bee", "Maro", "Skyler", "Xayne", "Shirou", "Chrono",
+  "Dasha", "Luqueta", "Kelly", "Hayato", "Moco", "Steffie", "Misha",
+  "Maxim", "Lila", "Caroline", "Notora", "Kla", "Primis", "Nulla",
 ];
 
 type CharacterArtworkProps = { profile: CharacterProfile; variant: "card" | "profile" };
@@ -554,7 +559,7 @@ function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
 
 const cardAbilityLabel = (profile: CharacterProfile) => `${profile.skill.replace(/\s*\((?:Active|Passive)\)$/i, "")} · ${profile.type.split(" · ")[0]}`;
 
-const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const normalizeSearchText = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
 // Optimal-string-alignment distance handles substitutions, missing/extra letters,
 // and adjacent swaps such as "irse" -> "iris".
@@ -743,6 +748,18 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
           <h3>{sectionTitle("Additional Mechanics & Notes", "Additional Mechanics & Notes")}</h3>
           {list(isHindi ? shownProfile.notesHi : shownProfile.notesEn)}
         </section>
+        {shownProfile.tacticalEn?.length ? <section className="character-detail-block">
+          <h3>{sectionTitle("Tactical Applications", "Tactical Applications")}</h3>
+          {list(isHindi ? (shownProfile.tacticalHi || shownProfile.tacticalEn) : shownProfile.tacticalEn)}
+        </section> : null}
+        {shownProfile.strengthsEn?.length ? <section className="character-detail-block">
+          <h3>{sectionTitle("Strengths", "Strengths")}</h3>
+          {list(isHindi ? (shownProfile.strengthsHi || shownProfile.strengthsEn) : shownProfile.strengthsEn)}
+        </section> : null}
+        {shownProfile.limitationsEn?.length ? <section className="character-detail-block">
+          <h3>{sectionTitle("Limitations", "Limitations")}</h3>
+          {list(isHindi ? (shownProfile.limitationsHi || shownProfile.limitationsEn) : shownProfile.limitationsEn)}
+        </section> : null}
         {shownProfile.hiddenMechanics?.length ? <section className="character-detail-block">
           <h3>{sectionTitle("Hidden Mechanics", "Hidden Mechanics")}</h3>
           <ul>{shownProfile.hiddenMechanics.map((item, index) => <li key={index}>{item.text} <b className="character-mechanic-status">{item.status}</b></li>)}</ul>
