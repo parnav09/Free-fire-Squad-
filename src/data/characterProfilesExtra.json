@@ -2344,14 +2344,14 @@
       "Official character page par [Active]/[Passive] tag nahi hai; type unverified hai."
     ],
     "historyEn": [
-      "OB41 (10 Aug 2023): Pulse diameter reduced 5m → 3m; skill interaction with Moco's tagging was enabled.",
+      "OB40 (30 May 2023): Pulse diameter reduced 5m → 3m; skill interaction with Moco's tagging was enabled.",
       "OB42 (30 Oct 2023): Pulse diameter increased 3m → 4m.",
       "OB43 (24 Jan 2024): Pulse diameter increased 4m → 5m; movement-speed reduction 60% → 40%; firing-speed reduction 35% → 40%; cooldown 90s → 60s. Drone targeting through obstacles was also fixed.",
       "OB47 (3 Dec 2024): Target priority changed to prefer living enemies over downed enemies.",
       "OB54 (23 Jun 2026): Added BR Skill Boost options UAV Shockwave and Super Drone."
     ],
     "historyHi": [
-      "OB41 (10 Aug 2023): Pulse diameter 5m se 3m hua; Moco tagging ke saath skill interaction enable hua.",
+      "OB40 (30 May 2023): Pulse diameter 5m se 3m hua; Moco tagging ke saath skill interaction enable hua.",
       "OB42 (30 Oct 2023): Pulse diameter 3m se 4m hua.",
       "OB43 (24 Jan 2024): Pulse diameter 4m se 5m; movement-speed reduction 60% se 40%; firing-speed reduction 35% se 40%; cooldown 90s se 60s hua. Obstacles ke through drone targeting bug bhi fix hua.",
       "OB47 (3 Dec 2024): Target priority downed enemies ke bajay living enemies ko prefer karne lagi.",
@@ -2375,8 +2375,8 @@
         "url": "https://ff.garena.com/en/article/1266/"
       },
       {
-        "label": "Garena — OB41 Patch Notes",
-        "url": "https://ff.garena.com/en/article/1213/"
+        "label": "Garena — OB40 Patch Notes",
+        "url": "https://ff.garena.com/en/article/1170/"
       },
       {
         "label": "Garena — Homer character page",
@@ -2445,13 +2445,13 @@
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Kenta released with Swordsman's Wrath, a 5m frontal shield reducing incoming frontal weapon damage by 50%; old maximum duration 5s and old maximum cooldown 160s.",
-      "OB35 (2022): Shield damage reduction increased 50% → 65%; duration standardized to 5s; cooldown reduced to 120/110/100/90/80/70s.",
+      "OB34 (25 May 2022): Shield damage reduction increased 50% → 65%; duration standardized to 5s; cooldown reduced to 120/110/100/90/80/70s.",
       "OB39 (21 Mar 2023): Frontal damage reduction increased 50% → 60%; while firing, reduction increased 10% → 20%; duration 5s and cooldown 70s.",
       "OB55 (10 Sep 2026): Complete rework to Tempest Raid — 8s tempest, 25 DMG, 5s shield with 20% damage reduction, 45s cooldown."
     ],
     "historyHi": [
       "OB33 (23 Mar 2022): Kenta Swordsman's Wrath ke saath release hua: 5m frontal shield 50% incoming frontal weapon damage reduce karta tha; old max duration 5s aur max cooldown 160s tha.",
-      "OB35 (2022): Shield damage reduction 50% se 65%; duration fixed 5s; cooldown 120/110/100/90/80/70s hua.",
+      "OB34 (25 May 2022): Shield damage reduction 50% se 65%; duration fixed 5s; cooldown 120/110/100/90/80/70s hua.",
       "OB39 (21 Mar 2023): Frontal damage reduction 50% se 60%; firing ke dauran reduction 10% se 20%; duration 5s aur cooldown 70s hua.",
       "OB55 (10 Sep 2026): Tempest Raid mein complete rework — 8s tempest, 25 DMG, 5s shield with 20% damage reduction, 45s cooldown."
     ],
