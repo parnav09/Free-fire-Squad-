@@ -3195,6 +3195,30 @@
         "text": "While self-recovering, the player can move and no longer loses HP (OB34).",
         "status": "official"
       }
+    ],
+    "tacticalEn": [
+      "Call the healing zone before regrouping so nearby teammates know where its support area is centered.",
+      "If a teammate is downed inside the zone, communicate that self-recovery may start automatically; do not assume the area is safe from interruption."
+    ],
+    "tacticalHi": [
+      "Regroup karne se pehle healing zone ki location call karo, taaki teammates ko support area ka clear idea rahe.",
+      "Zone ke andar teammate knockdown ho, toh communicate karo ki self-recovery automatically start ho sakta hai; area ko automatically safe assume mat karo."
+    ],
+    "strengthsEn": [
+      "Provides HP recovery to Dimitri and nearby allies during the active zone.",
+      "Can automatically start self-recovery for downed players inside the zone."
+    ],
+    "strengthsHi": [
+      "Active zone ke dauran Dimitri aur nearby teammates ko HP recovery milti hai.",
+      "Zone ke andar downed player ka self-recovery automatically start ho sakta hai."
+    ],
+    "limitationsEn": [
+      "The support area is limited to a 3.5m radius and lasts 12 seconds.",
+      "The 90-second cooldown means the zone is not continuously available."
+    ],
+    "limitationsHi": [
+      "Support area ka radius 3.5m hai aur zone 12 seconds tak rehta hai.",
+      "90-second cooldown ki wajah se zone continuously available nahi hota."
     ]
   },
   {
@@ -3338,6 +3362,30 @@
         "text": "An obstacle indicator appears on the aiming line (OB49).",
         "status": "official"
       }
+    ],
+    "tacticalEn": [
+      "Communicate the intended route before relying on a Gloo Wall interaction; teammates should know which area is being affected.",
+      "Treat the exact wave range as unpublished: OB55 confirms it is over 100m but gives no precise distance."
+    ],
+    "tacticalHi": [
+      "Gloo Wall interaction par rely karne se pehle intended route communicate karo; teammates ko pata hona chahiye ki kaunsa area affect ho raha hai.",
+      "Wave ki exact range ko unpublished hi samjho: OB55 100m se zyada confirm karta hai, lekin precise distance nahi deta."
+    ],
+    "strengthsEn": [
+      "The sonic-wave effect can affect Gloo Walls within a 4m radius for 6 seconds.",
+      "The skill can store up to two charges."
+    ],
+    "strengthsHi": [
+      "Sonic-wave effect 4m radius ke andar Gloo Walls ko 6 seconds tak affect karta hai.",
+      "Skill maximum 2 charges store kar sakti hai."
+    ],
+    "limitationsEn": [
+      "The exact actual range above 100m is not published by Garena.",
+      "The skill has a 45-second cooldown; stored charges do not make it continuously available."
+    ],
+    "limitationsHi": [
+      "100m se zyada actual range ka exact number Garena publish nahi karta.",
+      "Skill ka cooldown 45 seconds hai; stored charges ka matlab continuous availability nahi hai."
     ]
   },
   {
@@ -3449,6 +3497,30 @@
         "url": "https://ff.garena.com/en/article/1595/"
       }
     ],
-    "status": "OB55 values reconciled · 15 Nov 2026"
+    "status": "OB55 values reconciled · 15 Nov 2026",
+    "tacticalEn": [
+      "Tell teammates when the temporary Shield Point state begins and when it expires so they do not mistake it for permanent protection.",
+      "A knockdown during the active state refreshes the Shield Points and duration; the profile does not assume a maximum refresh count."
+    ],
+    "tacticalHi": [
+      "Temporary Shield Point state kab start aur expire hoti hai, teammates ko communicate karo; ise permanent protection mat samjho.",
+      "Active state ke dauran knockdown hone par Shield Points aur duration refresh hote hain; profile koi maximum refresh count assume nahi karti."
+    ],
+    "strengthsEn": [
+      "Grants 70 temporary Shield Points for a 15-second state.",
+      "Each enemy knockdown during the state restores the skill's Shield Points to 70 and resets the duration."
+    ],
+    "strengthsHi": [
+      "15-second state ke liye 70 temporary Shield Points milte hain.",
+      "State ke dauran har enemy knockdown par skill ke Shield Points 70 ho jaate hain aur duration reset hoti hai."
+    ],
+    "limitationsEn": [
+      "Shield Points gained from the skill are removed when the state ends.",
+      "The cooldown is 75 seconds, and Garena does not publish a maximum refresh count."
+    ],
+    "limitationsHi": [
+      "Skill se mile Shield Points state khatam hone par remove ho jaate hain.",
+      "Cooldown 75 seconds hai, aur Garena maximum refresh count publish nahi karta."
+    ]
   }
 ]
