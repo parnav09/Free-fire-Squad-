@@ -102,7 +102,7 @@ const baseProfiles: CharacterProfile[] = [
       "Morse cannot fire while Stealth is active; exiting Stealth has a 0.5-second delay.",
       "Aim assist can trigger when enemies are within 12m.",
     ],
-    currentHi: ["Stealth mein jaane par 12m se dur maujood Enemy ke liye Morse ko dekhanaa mushkil hota hai aur Enemy Detection use detect nahi kar pata.","20% Movement Speed Bonus aur 25 Temporary Shield Points milate hain.","Maximum Stealth Duration 13 seconds hai.","Stealth active rahane par Morse Fire nahi kar sakataa; Stealth se baahar aane mein 0.5-second Delay hota hai.","12m ke andar Enemy hone par Aim Assist Trigger ho sakataa hai."],
+    currentHi: ["Stealth mein jaane par 12m se dur maujood Enemy ke liye Morse ko dekhanaa mushkil hota hai aur Enemy Detection use detect nahi kar pata.","20% Movement Speed Bonus aur 25 Temporary Shield Points milate hain.","Maximum Stealth Duration 13 seconds hai.","Stealth active rehne par Morse Fire nahi kar sakta; Stealth se baahar aane mein 0.5-second Delay hota hai.","12m ke andar Enemy hone par Aim Assist Trigger ho sakataa hai."],
     rows: [
       { en: "Maximum Stealth duration", hi: "Maximum Stealth Duration", value: "13 seconds" },
       { en: "Movement-speed bonus", hi: "Movement Speed Bonus", value: "20%" },
@@ -210,14 +210,14 @@ const baseProfiles: CharacterProfile[] = [
     notesEn: [
       "The cooldown was raised in OB54 because the short cooldown made Oscar strong in too many situations. The skill indicator adjusts to slopes (OB50)."
     ],
-    notesHi: ["OB54 mein Cooldown badhaayaa gaya kyonki kam Cooldown ki vajah se Oscar bahut jyaadaa Situations mein majabut ho rahaa thaa. Skill Indicator dhalaan ke hisaab se Adjust hota hai (OB50)."],
+    notesHi: ["OB54 mein Cooldown badhaayaa gaya kyonki kam Cooldown ki vajah se Oscar bahut zyada Situations mein majabut ho rahaa thaa. Skill Indicator dhalaan ke hisaab se Adjust hota hai (OB50)."],
     historyEn: [
       "OB48 (19 Feb 2025): Introduced with a 60s cooldown.",
       "OB49 (21 May 2025): Skill Card added.",
       "OB50 (30 Jul 2025): Skill indicator adjusts to slope inclines.",
       "OB54 (23 Jun 2026): Cooldown 45s to 60s; 9th Anniversary event Skill Boosts: Phantom Dash (longer dash range) and Sustained Dash (8s dash with speed rising over time)."
     ],
-    historyHi: ["OB48 (19 Feb 2025): 60s Cooldown ke saath Introduce kiya gaya.","OB49 (21 May 2025): Skill Card jodaa gaya.","OB50 (30 Jul 2025): Skill Indicator dhalaan ke hisaab se Adjust hone lagaa.","OB54 (23 Jun 2026): Cooldown 45s se badhaakar 60s kiya gaya; 9th Anniversary Event Skill Boosts: Phantom Dash (jyaadaa Dash Range) aur Sustained Dash (8s Dash, jisamen Speed samay ke saath badhati hai)."],
+    historyHi: ["OB48 (19 Feb 2025): 60s Cooldown ke saath Introduce kiya gaya.","OB49 (21 May 2025): Skill Card jodaa gaya.","OB50 (30 Jul 2025): Skill Indicator dhalaan ke hisaab se Adjust hone lagaa.","OB54 (23 Jun 2026): Cooldown 45s se badhaakar 60s kiya gaya; 9th Anniversary Event Skill Boosts: Phantom Dash (zyada Dash Range) aur Sustained Dash (8s Dash, jisamen Speed samay ke saath badhati hai)."],
     source: [
       { label: "Garena — OB54", url: "https://ff.garena.com/en/article/1673/" },
       { label: "Garena — OB50", url: "https://ff.garena.com/en/article/1511/" },
@@ -237,7 +237,7 @@ const baseProfiles: CharacterProfile[] = [
       "When the target's HP is below 50, the skill auto-releases; the automatic heal is 50% of the manual amount.",
       "The official profile lists a 60-second cooldown for Focused Therapy; Basic Therapy has no cooldown."
     ],
-    currentHi: ["Basic Therapy ek Teammate ke saath Healing Bond banati hai aur Kassie aur us Teammate, donon ko 3 HP/s vaapas deti hai; yah Effect Stack nahi hota.","Maximum Bonding Range 20m hai. isase jyaadaa duri hone par Bond apane aap tut jata hai aur ise Manually bhi Cancel kiya jaa sakataa hai.","Skill dobaaraa istemaal karne par Focused Therapy Trigger hoti hai aur Target ko 100 HP vaapas deti hai.","Target ki HP 50 se kam hone par Skill apane aap Release hoti hai; Automatic Heal, Manual Amount ka 50% hota hai.","Official Profile mein Focused Therapy ka Cooldown 60 seconds diya gaya hai; Basic Therapy ka koi Cooldown nahi hai."],
+    currentHi: ["Basic Therapy ek Teammate ke saath Healing Bond banati hai aur Kassie aur us Teammate, donon ko 3 HP/s vaapas deti hai; yah Effect Stack nahi hota.","Maximum Bonding Range 20m hai. isase zyada duri hone par Bond apane aap tut jata hai aur ise Manually bhi Cancel kiya jaa sakataa hai.","Skill dobaaraa istemaal karne par Focused Therapy Trigger hoti hai aur Target ko 100 HP vaapas deti hai.","Target ki HP 50 se kam hone par Skill apane aap Release hoti hai; Automatic Heal, Manual Amount ka 50% hota hai.","Official Profile mein Focused Therapy ka Cooldown 60 seconds diya gaya hai; Basic Therapy ka koi Cooldown nahi hai."],
     rows: [
       { en: "Basic Therapy recovery", hi: "Basic Therapy Recovery", value: "3 HP/s · self + teammate" },
       { en: "Bond range", hi: "Bond Range", value: "20m maximum" },
@@ -253,7 +253,7 @@ const baseProfiles: CharacterProfile[] = [
       "The automatic release condition and manual reactivation are separate details in Garena's description.",
       "No additional verified hidden mechanics are stated on the current official page."
     ],
-    notesHi: ["Healing Bond ke baare mein saaf taur par bataayaa gaya hai ki yah Stack nahi hota.","20m ki Range Bond banaae rakhane ki Limit hai; isase jyaadaa duri hone par Link tut jata hai.","Automatic Release Condition aur Manual Reactivation, Garena ke Description mein alag-alag Details hain.","Current Official Page par koi atirikt Verified Hidden Mechanics nahi di gayi hain."],
+    notesHi: ["Healing Bond ke baare mein saaf taur par bataayaa gaya hai ki yah Stack nahi hota.","20m ki Range Bond banaae rakhane ki Limit hai; isase zyada duri hone par Link tut jata hai.","Automatic Release Condition aur Manual Reactivation, Garena ke Description mein alag-alag Details hain.","Current Official Page par koi atirikt Verified Hidden Mechanics nahi di gayi hain."],
     historyEn: [
       "Kassie's introduction notes document Basic Therapy at 3 HP/s for both linked players, a 20m maximum bond range, and Focused Therapy at 100 HP with a 60s cooldown.",
       "The current official character profile retains those same listed values; no later official numeric balance change was confirmed in the sources checked for this phase."
@@ -276,7 +276,7 @@ const baseProfiles: CharacterProfile[] = [
       "The official page describes an additional reduction to Shield Points or Armor Durability equal to 120 of the damage inflicted on shielded or armored targets.",
       "When EP reaches 0, the ability returns to Defense Mode."
     ],
-    currentHi: ["Defense Mode mein EP Full hone tak har second apane aap 2 EP vaapas milta hai.","EP Full hone par aur Skill User ke Shielded yaa Armored Target ko pahali baar Hit karne par Breaker Mode Activate hota hai.","Breaker Mode Active rahane par har second 5 EP kharch hota hai.","Official Page ke mutaabik Shielded yaa Armored Target par die gaye Damage ke 120 ke baraabar atirikt Shield Points yaa Armor Durability kam hoti hai.","EP 0 hone par Ability vaapas Defense Mode mein aa jati hai."],
+    currentHi: ["Defense Mode mein EP Full hone tak har second apane aap 2 EP vaapas milta hai.","EP Full hone par aur Skill User ke Shielded yaa Armored Target ko pahali baar Hit karne par Breaker Mode Activate hota hai.","Breaker Mode Active rehne par har second 5 EP kharch hota hai.","Official Page ke mutaabik Shielded yaa Armored Target par die gaye Damage ke 120 ke baraabar atirikt Shield Points yaa Armor Durability kam hoti hai.","EP 0 hone par Ability vaapas Defense Mode mein aa jati hai."],
     rows: [
       { en: "Defense Mode recovery", hi: "Defense Mode Recovery", value: "2 EP/s" },
       { en: "Breaker Mode EP cost", hi: "Breaker Mode EP Cost", value: "5 EP/s" },
@@ -354,7 +354,7 @@ const baseProfiles: CharacterProfile[] = [
       "The current profile lists a 60-second cooldown.",
       "The page describes contact effects on opponents and Gloo Walls; detailed numerical effects are preserved in the current official profile's source reference."
     ],
-    currentHi: ["Current Official Profile mein 12m chaudi aur 10 seconds tak rahane vaali Flaming Screen di gayi hai.","Maximum Deployment Distance 15m di gayi hai.","Current Profile mein Cooldown 60 seconds hai.","Page Opponents aur Gloo Walls par Contact Effects bataataa hai; Detailed Numeric Effects Current Official Profile ke Source Reference mein die gaye hain."],
+    currentHi: ["Current Official Profile mein 12m chaudi aur 10 seconds tak rehne vaali Flaming Screen di gayi hai.","Maximum Deployment Distance 15m di gayi hai.","Current Profile mein Cooldown 60 seconds hai.","Page Opponents aur Gloo Walls par Contact Effects bataataa hai; Detailed Numeric Effects Current Official Profile ke Source Reference mein die gaye hain."],
     rows: [
       { en: "Screen width", hi: "Screen Width", value: "12m" },
       { en: "Duration", hi: "Duration", value: "10 seconds" },
