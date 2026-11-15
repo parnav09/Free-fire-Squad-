@@ -8,27 +8,27 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Active aura that heals Alok and nearby allies, boosts their movement speed and drops music notes.",
-    "introHi": "Alok ka active aura, jo Alok aur paas ke teammates ko heal karta hai, movement speed badhata hai aur music notes drop karta hai.",
+    "introHi": "एक Active Aura बनाता है, जो Alok और आसपास के teammates को heal करता है, उनकी Movement Speed बढ़ाता है और Music Notes गिराता है।",
     "currentEn": [
       "Creates a 5m aura that increases movement speed by 15% and restores 5 HP/s for 10 seconds. While the aura is active, a music note drops 2m behind Alok every 2 seconds and lasts 5 seconds. Teammates who pick up a note gain 15% movement speed and 5 HP/s for 10 seconds. Multiple Drop the Beat auras do not stack."
     ],
     "currentHi": [
-      "5m ka aura banta hai, jo movement speed 15% badhata hai aur 10 seconds tak 5 HP/s restore karta hai. Aura active hone par har 2 seconds mein Alok ke 2m peeche ek music note drop hota hai, jo 5 seconds rehta hai. Note pick karne wale teammate ko 10 seconds ke liye 15% movement speed aur 5 HP/s milta hai. Drop the Beat ke multiple auras stack nahi hote."
+      "5m का Aura बनता है, जो 10 seconds तक Movement Speed 15% बढ़ाता है और हर second 5 HP वापस देता है। Aura active रहने पर हर 2 seconds में Alok से 2m पीछे एक Music Note गिरता है, जो 5 seconds तक रहता है। Note उठाने वाले teammates को 10 seconds तक 15% Movement Speed और 5 HP/s मिलता है। Drop the Beat के कई Aura एक-दूसरे के साथ stack नहीं होते।"
     ],
     "rows": [
       {
         "en": "Aura radius",
-        "hi": "Aura ka radius",
+        "hi": "Aura की Radius",
         "value": "5m"
       },
       {
         "en": "Movement-speed bonus",
-        "hi": "Movement speed bonus",
+        "hi": "Movement Speed Bonus",
         "value": "15%"
       },
       {
         "en": "HP recovery",
-        "hi": "HP recovery",
+        "hi": "HP Recovery",
         "value": "5 HP/s"
       },
       {
@@ -38,22 +38,22 @@
       },
       {
         "en": "Total HP recovery",
-        "hi": "Total HP recovery",
+        "hi": "कुल HP Recovery",
         "value": "50 HP"
       },
       {
         "en": "Music note drop",
-        "hi": "Music note drop",
+        "hi": "Music Note गिरने का समय और जगह",
         "value": "Every 2 seconds, 2m behind Alok"
       },
       {
         "en": "Music note lifetime",
-        "hi": "Music note kitni der rehta hai",
+        "hi": "Music Note कितनी देर रहता है",
         "value": "5 seconds"
       },
       {
         "en": "Note pickup bonus",
-        "hi": "Note pick karne ka bonus",
+        "hi": "Note उठाने पर मिलने वाला Bonus",
         "value": "15% speed and 5 HP/s for 10 seconds"
       },
       {
@@ -66,7 +66,7 @@
       "While Alok's own skill is active, teammates' Alok auras give no benefit (OB53). Movement speed has a global maximum; bonuses from skills, items and events cannot exceed it (OB54). Since OB47 the awakened skill replaces the original for all players; both appearances remain available."
     ],
     "notesHi": [
-      "Alok ka apna skill active ho, toh teammates ke Alok aura se use koi benefit nahi milta (OB53). Movement speed ki global limit hai; skills, items aur events ke bonuses is limit se upar nahi ja sakte (OB54). OB47 se awakened skill sab players ke liye original skill ki jagah aa gaya; dono appearances available hain."
+      "Alok की अपनी Skill active होने पर teammates के Alok Aura से उसे कोई फायदा नहीं मिलता (OB53)। Movement Speed की एक global maximum limit है; Skills, items और events से मिलने वाले bonuses इस limit को पार नहीं कर सकते (OB54)। OB47 से सभी players के लिए Awakened Skill ने original Skill की जगह ले ली है; दोनों appearances अब भी available हैं।"
     ],
     "historyEn": [
       "OB39 (Mar 2023): HP recovery 5 to 3 HP/s, cooldown 50s to 45s.",
@@ -78,13 +78,13 @@
       "OB54 (23 Jun 2026): 9th Anniversary event Skill Boosts: Speed Remix (10m aura, teammates +16% speed) and Heal Remix (20 HP/s while active). Global movement-speed cap added."
     ],
     "historyHi": [
-      "OB39 (Mar 2023): HP recovery 5 se 3 HP/s; cooldown 50s se 45s hua.",
-      "OB40 (Jun 2023): Awakened Alok introduce hua.",
-      "OB45 (26 Jun 2024): HP recovery 3 se 5 HP/s, movement speed 15%, duration 10s; music-note pickup healing 3 se 5 HP/s hui.",
-      "OB47 (2 Dec 2024): Awakened skill sab players ke liye original ki jagah aaya.",
-      "OB52 (9 Jan 2026): Skill range aur visual range match na hone, aur speed boost kabhi apply na hone ka issue fix hua.",
-      "OB53 (2 Apr 2026): Apna skill active hone par Alok users ko teammates ke Alok aura se benefit nahi milta.",
-      "OB54 (23 Jun 2026): 9th Anniversary Skill Boosts—Speed Remix (10m aura, teammates ko +16% speed) aur Heal Remix (active rehte 20 HP/s). Global movement-speed cap add hua."
+      "OB39 (Mar 2023): HP Recovery 5 से घटाकर 3 HP/s और Cooldown 50s से घटाकर 45s किया गया।",
+      "OB40 (Jun 2023): Awakened Alok introduce किया गया।",
+      "OB45 (26 Jun 2024): HP Recovery 3 से बढ़ाकर 5 HP/s, Movement Speed 15% और Duration 10s की गई; Music Note उठाने पर Healing 3 से बढ़ाकर 5 HP/s की गई।",
+      "OB47 (2 Dec 2024): सभी players के लिए Awakened Skill ने original Skill की जगह ले ली।",
+      "OB52 (9 Jan 2026): Skill की range और visual range में अंतर होने तथा Speed Boost कभी-कभी apply न होने की समस्या ठीक की गई।",
+      "OB53 (2 Apr 2026): Alok की अपनी Skill active होने पर उसे teammates के Alok Aura से फायदा मिलना बंद हुआ।",
+      "OB54 (23 Jun 2026): 9th Anniversary event में Skill Boosts जोड़े गए: Speed Remix (10m Aura, teammates को +16% Speed) और Heal Remix (active रहने पर 20 HP/s)। Global Movement Speed cap जोड़ी गई।"
     ],
     "source": [
       {
@@ -120,17 +120,17 @@
     "badge": "Official-source profile",
     "lastChanged": "OB42 (Oct 2023)",
     "introEn": "Electromagnetic wave that blocks enemy skills, deals damage and interrupts interactions.",
-    "introHi": "A124 ki electromagnetic wave enemy skills block karti hai, damage deti hai aur interactions ko interrupt karti hai.",
+    "introHi": "एक Electromagnetic Wave छोड़ता है, जो एनिमी की Skills block करती है, Damage देती है और उनकी चल रही interactions को रोकती है।",
     "currentEn": [
       "Unleashes an 8m electromagnetic wave. Enemies inside cannot activate skills, take 25 DMG, and have their interaction countdowns (such as reviving) interrupted."
     ],
     "currentHi": [
-      "A124 ek electromagnetic wave release karta hai, jo enemy skills ko disable karti hai, damage deti hai aur interactions rok deti hai."
+      "8m की Electromagnetic Wave छोड़ता है। इसके अंदर मौजूद एनिमी अपनी Skills activate नहीं कर पाएँगे, उन्हें 25 DMG मिलता है और उनकी interactions का countdown (जैसे revive करना) रुक जाता है।"
     ],
     "rows": [
       {
         "en": "Wave size",
-        "hi": "Wave ka size",
+        "hi": "Wave का Size",
         "value": "8m"
       },
       {
@@ -140,12 +140,12 @@
       },
       {
         "en": "Enemy skills",
-        "hi": "Enemy skills",
+        "hi": "एनिमी की Skills",
         "value": "Activation disabled"
       },
       {
         "en": "Enemy interactions",
-        "hi": "Enemy interactions",
+        "hi": "एनिमी की Interactions",
         "value": "Countdown interrupted"
       },
       {
@@ -163,15 +163,15 @@
       "Skill can be cancelled while aiming. Joseph is immune to A124's interference."
     ],
     "notesHi": [
-      "Aim karte waqt skill cancel ki ja sakti hai. Joseph A124 ke interference se immune hai."
+      "Aim करते समय Skill cancel की जा सकती है। Joseph, A124 के interference से immune है।"
     ],
     "historyEn": [
       "OB33 (23 Mar 2022): Reworked into an 8m wave that disables enemy skills.",
       "OB42 (Oct 2023): Added 25 DMG, duration 30s to 20s, cooldown 75s to 50s, cancel while aiming."
     ],
     "historyHi": [
-      "OB33 (23 Mar 2022): 8m wave mein rework hui, jo enemy skills disable karti hai.",
-      "OB42 (Oct 2023): 25 DMG add hua; duration 30s se 20s aur cooldown 75s se 50s hua; aim karte waqt cancel karna add hua."
+      "OB33 (23 Mar 2022): Skill को बदलकर 8m की Wave बनाया गया, जो एनिमी की Skills disable करती है।",
+      "OB42 (Oct 2023): 25 DMG जोड़ा गया; Duration 30s से घटाकर 20s और Cooldown 75s से घटाकर 50s किया गया; Aim करते समय Skill cancel करने का option जोड़ा गया।"
     ],
     "source": [
       {
@@ -195,32 +195,32 @@
     "badge": "Official-source profile",
     "lastChanged": "OB46 (Sep 2024)",
     "introEn": "Passive that slows armor durability loss and adds armor damage reduction, boosted by nearby teammates.",
-    "introHi": "Passive skill jo armor ki durability loss slow karta hai aur armor damage reduction deta hai; paas ke teammates se bonus badhta hai.",
+    "introHi": "एक Passive Skill, जो Armor की Durability कम होने की Speed घटाती है और Armor Damage Reduction देती है। आसपास के teammates से इसका bonus बढ़ता है।",
     "currentEn": [
       "Armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
     ],
     "currentHi": [
-      "Armor ki durability 40% dheere khatam hoti hai. Wolf Pack 4% armor damage reduction deta hai, aur 15m ke andar har teammate par 1% extra milta hai."
+      "Armor की Durability 40% धीमी Speed से कम होती है। Wolf Pack से 4% Armor Damage Reduction मिलता है, साथ ही 15m के अंदर मौजूद हर teammate के लिए 1% extra मिलता है।"
     ],
     "rows": [
       {
         "en": "Armor durability loss",
-        "hi": "Armor durability loss",
+        "hi": "Armor Durability में कमी",
         "value": "-40%"
       },
       {
         "en": "Armor damage reduction",
-        "hi": "Armor damage reduction",
+        "hi": "Armor Damage Reduction",
         "value": "+4%"
       },
       {
         "en": "Teammate bonus",
-        "hi": "Teammate bonus",
+        "hi": "Teammate Bonus",
         "value": "+1% per teammate within 15m"
       },
       {
         "en": "Full squad bonus",
-        "hi": "Full squad bonus",
+        "hi": "पूरी Squad का Bonus",
         "value": "+7% total (4% + 3%)"
       },
       {
@@ -233,7 +233,7 @@
       "Shield Points ignore armor damage-reduction buffs, so Wolf Pack does not reduce damage taken by Shield Points. The OB46 notes do not state whether teammates must also carry Wolf Pack. Since OB47 the awakened skill replaces the original for all players."
     ],
     "notesHi": [
-      "Shield Points armor damage-reduction buffs ko ignore karte hain, isliye Wolf Pack Shield Points se hone wale damage ko kam nahi karta. OB46 notes mein clear nahi hai ki teammates ke paas bhi Wolf Pack hona zaroori hai ya nahi. OB47 se awakened skill sab players ke liye original ki jagah aa gaya."
+      "Shield Points पर Armor Damage Reduction के buffs लागू नहीं होते, इसलिए Wolf Pack Shield Points से होने वाले Damage को कम नहीं करता। OB46 के notes में यह नहीं बताया गया कि teammates के पास भी Wolf Pack होना जरूरी है या नहीं। OB47 से सभी players के लिए Awakened Skill ने original Skill की जगह ले ली है।"
     ],
     "historyEn": [
       "OB40 (Jun 2023): Armor durability loss reduction 20% to 25%.",
@@ -243,11 +243,11 @@
       "OB47 (2 Dec 2024): Awakened skill replaced the original for all players."
     ],
     "historyHi": [
-      "OB40 (Jun 2023): Armor durability loss reduction 20% se 25% hua.",
-      "OB41 (Aug 2023): Armor damage reduction 20% se 15%, teammate bonus 10% se 5% hua.",
-      "OB45 (26 Jun 2024): Armor durability loss reduction 25% se 40%; armor damage reduction 15% se 5%, aur skill carry karne wale har teammate par +5%.",
-      "OB46 (Sep 2024): Ab +4%, aur 15m ke andar har teammate par +1%.",
-      "OB47 (2 Dec 2024): Awakened skill sab players ke liye original ki jagah aaya."
+      "OB40 (Jun 2023): Armor Durability में कमी का reduction 20% से बढ़ाकर 25% किया गया।",
+      "OB41 (Aug 2023): Armor Damage Reduction 20% से घटाकर 15% और Teammate Bonus 10% से घटाकर 5% किया गया।",
+      "OB45 (26 Jun 2024): Armor Durability में कमी का reduction 25% से बढ़ाकर 40% किया गया; Armor Damage Reduction 15% से घटाकर 5% और Skill रखने वाले हर teammate के लिए +5% किया गया।",
+      "OB46 (Sep 2024): Bonus बदलकर +4% और 15m के अंदर हर teammate के लिए +1% किया गया।",
+      "OB47 (2 Dec 2024): सभी players के लिए Awakened Skill ने original Skill की जगह ले ली।"
     ],
     "source": [
       {
@@ -283,32 +283,32 @@
     "badge": "Official-source profile",
     "lastChanged": "OB48 (19 Feb 2025)",
     "introEn": "Passive that starts the match with extra Shield Points that recover after combat.",
-    "introHi": "Passive skill jo match start par extra Shield Points deta hai; combat ke baad ye recover hote hain.",
+    "introHi": "एक Passive Skill, जो match की शुरुआत में extra Shield Points देती है। Combat से बचने के बाद ये Shield Points recover होते हैं।",
     "currentEn": [
       "Starts the match with 20 extra Shield Points. Shield Points recover after surviving combat."
     ],
     "currentHi": [
-      "Antonio match ki shuruaat extra Shield Points ke saath karta hai, jo combat ke baad recover hote hain."
+      "Match की शुरुआत में 20 extra Shield Points मिलते हैं। Combat से बचने के बाद Shield Points recover होते हैं।"
     ],
     "rows": [
       {
         "en": "Starting Shield Points",
-        "hi": "Starting Shield Points",
+        "hi": "शुरुआत में मिलने वाले Shield Points",
         "value": "20"
       },
       {
         "en": "Shield recovery",
-        "hi": "Shield recovery",
+        "hi": "Shield Recovery",
         "value": "After surviving combat"
       },
       {
         "en": "Recovery speed",
-        "hi": "Recovery speed",
+        "hi": "Recovery Speed",
         "value": "5 SP/s"
       },
       {
         "en": "Armor damage reduction on Shield Points",
-        "hi": "Shield Points par armor damage reduction",
+        "hi": "Shield Points पर Armor Damage Reduction",
         "value": "None"
       },
       {
@@ -321,7 +321,7 @@
       "Shield Points are removed before HP. Shield Points ignore armor damage-reduction buffs. Shield Points do not protect against Danger Zone, fall or bleeding damage."
     ],
     "notesHi": [
-      "HP se pehle Shield Points consume hote hain. Shield Points armor damage-reduction buffs ko ignore karte hain. Danger Zone, fall ya bleeding damage se Shield Points protection nahi dete."
+      "HP से पहले Shield Points कम होते हैं। Shield Points पर Armor Damage Reduction के buffs लागू नहीं होते। Shield Points, Danger Zone, गिरने या bleeding से होने वाले Damage से नहीं बचाते।"
     ],
     "historyEn": [
       "OB41 (Aug 2023): 40 extra HP converted to 40 Shield Points.",
@@ -330,10 +330,10 @@
       "OB48 (19 Feb 2025): 30 to 20."
     ],
     "historyHi": [
-      "OB41 (Aug 2023): 40 extra HP ko 40 Shield Points mein convert kiya gaya.",
-      "OB43 (Jan 2024): 40 se 30 hue.",
-      "OB46 (Sep 2024): Shield Points recovery speed 10 se 5 SP/s hui.",
-      "OB48 (19 Feb 2025): 30 se 20 hue."
+      "OB41 (Aug 2023): 40 extra HP को बदलकर 40 Shield Points किया गया।",
+      "OB43 (Jan 2024): 40 से घटाकर 30 किया गया।",
+      "OB46 (Sep 2024): Shield Points की Recovery Speed 10 से घटाकर 5 SP/s की गई।",
+      "OB48 (19 Feb 2025): 30 से घटाकर 20 किया गया।"
     ],
     "source": [
       {
@@ -365,27 +365,27 @@
     "badge": "Official-source profile",
     "lastChanged": "No balance changes since release (OB34, May 2022)",
     "introEn": "Utility character with an exclusive extra skill slot; no personal combat skill.",
-    "introHi": "Utility character jiske paas ek extra exclusive skill slot hai; iska apna combat skill nahi hai.",
+    "introHi": "एक Utility character, जिसके पास एक exclusive extra Skill Slot है; इसकी अपनी कोई Combat Skill नहीं है।",
     "currentEn": [
       "Adds one extra skill slot that can hold any skill owned on the account."
     ],
     "currentHi": [
-      "A-Patroa ek extra exclusive skill slot deta hai; iska personal combat skill nahi hai."
+      "एक extra Skill Slot मिलता है, जिसमें account पर owned कोई भी Skill रखी जा सकती है।"
     ],
     "rows": [
       {
         "en": "Personal combat skill",
-        "hi": "Personal combat skill",
+        "hi": "अपनी Combat Skill",
         "value": "None"
       },
       {
         "en": "Extra slot",
-        "hi": "Extra slot",
+        "hi": "Extra Slot",
         "value": "1 exclusive slot, any owned skill"
       },
       {
         "en": "Other slots",
-        "hi": "Other slots",
+        "hi": "दूसरे Slots",
         "value": "Unlock automatically"
       },
       {
@@ -400,7 +400,7 @@
       "OB34 (May 2022): Released."
     ],
     "historyHi": [
-      "OB34 (May 2022): Release hua."
+      "OB34 (May 2022): Release किया गया।"
     ],
     "source": [
       {
@@ -421,12 +421,12 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB49 (21 May 2025)",
     "introEn": "Passive that boosts weapon accuracy after she destroys a Gloo Wall.",
-    "introHi": "Passive skill jo Gloo Wall destroy karne ke baad weapon accuracy badhata hai.",
+    "introHi": "एक Passive Skill, जो Gloo Wall destroy करने के बाद Weapon Accuracy बढ़ाती है।",
     "currentEn": [
       "Destroying a Gloo Wall increases weapon accuracy for 10 seconds."
     ],
     "currentHi": [
-      "Paloma Gloo Wall destroy karne ke baad weapon accuracy boost karti hai."
+      "Gloo Wall destroy करने पर 10 seconds के लिए Weapon Accuracy बढ़ जाती है।"
     ],
     "rows": [
       {
@@ -454,13 +454,13 @@
       "Garena does not publish the accuracy bonus value. Designed to break enemy cover and finish players hiding behind Gloo Walls."
     ],
     "notesHi": [
-      "Garena accuracy bonus ki exact value publish nahi karta. Ye enemy cover todne aur Gloo Wall ke peeche chhupe players ko finish karne ke liye useful hai."
+      "Garena, Accuracy Bonus की exact value publish नहीं करता। यह Skill एनिमी के cover को तोड़ने और Gloo Wall के पीछे छिपे players को खत्म करने के लिए बनाई गई है।"
     ],
     "historyEn": [
       "OB49 (21 May 2025): Reworked. Her extra-ammo skill was replaced by Shatterburst."
     ],
     "historyHi": [
-      "OB49 (21 May 2025): Rework hua; extra-ammo skill ki jagah Shatterburst aaya."
+      "OB49 (21 May 2025): Skill को rework किया गया। Extra-ammo Skill की जगह Shatterburst ने ली।"
     ],
     "source": [
       {
@@ -484,7 +484,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB50 (30 Jul 2025)",
     "introEn": "Passive that increases accuracy while Laura is scoped in.",
-    "introHi": "Passive skill jo scope mein rehkar aim karne par Laura ki accuracy badhata hai.",
+    "introHi": "एक Passive Skill, जो Scope में aim करते समय Accuracy बढ़ाती है।",
     "rows": [
       {
         "en": "Condition",
@@ -493,7 +493,7 @@
       },
       {
         "en": "Accuracy bonus",
-        "hi": "Accuracy bonus",
+        "hi": "Accuracy Bonus",
         "value": "+60%"
       },
       {
@@ -506,13 +506,13 @@
       "Accuracy increases by 60% while scoped in."
     ],
     "currentHi": [
-      "Laura scope mein ho toh uski accuracy increase hoti hai."
+      "Scope में रहते समय Accuracy 60% बढ़ जाती है।"
     ],
     "notesEn": [
       "Built to help long-range shooters land shots."
     ],
     "notesHi": [
-      "Long-range players ko shots connect karne mein help karta hai."
+      "यह Skill long-range shooters को निशाना लगाने में मदद करने के लिए बनाई गई है।"
     ],
     "historyEn": [
       "OB28 (Jun 2021): Accuracy bonus raised, maximum 30% to 35%.",
@@ -520,9 +520,9 @@
       "OB50 (30 Jul 2025): 50% to 60%."
     ],
     "historyHi": [
-      "OB28 (Jun 2021): Accuracy bonus ka maximum 30% se 35% hua.",
-      "OB36 (Sep 2022): Maximum 35% se 50% hua.",
-      "OB50 (30 Jul 2025): Maximum 50% se 60% hua."
+      "OB28 (Jun 2021): Accuracy Bonus की maximum value 30% से बढ़ाकर 35% की गई।",
+      "OB36 (Sep 2022): Maximum value 35% से बढ़ाकर 50% की गई।",
+      "OB50 (30 Jul 2025): 50% से बढ़ाकर 60% की गई।"
     ],
     "source": [
       {
@@ -554,7 +554,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB40 (Jun 2023)",
     "introEn": "Passive that silences sniper and marksman fire and speeds up bleeding on knocked-down enemies.",
-    "introHi": "Passive skill jo sniper aur marksman fire ko silent karta hai, aur knocked-down enemies ki bleed speed badhata hai.",
+    "introHi": "एक Passive Skill, जो Sniper और Marksman Rifles की firing sound को silent करती है और knock हुए एनिमी की bleeding Speed बढ़ाती है।",
     "rows": [
       {
         "en": "Weapons",
@@ -563,12 +563,12 @@
       },
       {
         "en": "Firing sound",
-        "hi": "Firing sound",
+        "hi": "Firing Sound",
         "value": "Silenced"
       },
       {
         "en": "Knocked-down enemy bleed speed",
-        "hi": "Knocked enemy ki bleed speed",
+        "hi": "Knock हुए एनिमी की Bleeding Speed",
         "value": "+85%"
       },
       {
@@ -581,13 +581,13 @@
       "With Sniper Rifles and Marksman Rifles, firing sound is silenced and enemies knocked down by Rafael bleed 85% faster."
     ],
     "currentHi": [
-      "Sniper aur Marksman Rifles se fire karte waqt sound silent rehta hai, aur knocked-down enemies ki bleed speed fast hoti hai."
+      "Sniper Rifles और Marksman Rifles से fire करने पर firing sound silent रहती है। Rafael द्वारा knock किए गए एनिमी की bleeding Speed 85% बढ़ जाती है।"
     ],
     "notesEn": [
       "Works while using Sniper Rifles or Marksman Rifles."
     ],
     "notesHi": [
-      "Sniper Rifles ya Marksman Rifles use karte waqt kaam karta hai."
+      "यह Skill Sniper Rifles या Marksman Rifles इस्तेमाल करते समय काम करती है।"
     ],
     "historyEn": [
       "OB27 (Apr 2021): Became a passive skill that silences sniper and marksman fire.",
@@ -596,10 +596,10 @@
       "OB40 (Jun 2023): 90% to 85%."
     ],
     "historyHi": [
-      "OB27 (Apr 2021): Passive skill bana, sniper aur marksman fire silent hua.",
-      "OB33 (23 Mar 2022): Sniper aur Marksman Rifles tak limit hua; bleed speed bonus maximum 45% se 90% hua.",
-      "OB39 (Mar 2023): Skill description ko actual effect ke hisaab se correct kiya gaya.",
-      "OB40 (Jun 2023): 90% se 85% hua."
+      "OB27 (Apr 2021): Passive Skill बनाई गई, जो Sniper और Marksman fire को silent करती है।",
+      "OB33 (23 Mar 2022): Skill को Sniper और Marksman Rifles तक सीमित किया गया; Bleed Speed Bonus की maximum value 45% से बढ़ाकर 90% की गई।",
+      "OB39 (Mar 2023): Skill का description actual effect के अनुसार ठीक किया गया।",
+      "OB40 (Jun 2023): 90% से घटाकर 85% किया गया।"
     ],
     "source": [
       {
@@ -631,16 +631,16 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB53 (2 Apr 2026)",
     "introEn": "Passive that restores HP when Jota hits and knocks down enemies.",
-    "introHi": "Passive skill jo Jota ke hit karne aur enemy ko knock karne par HP restore karta hai.",
+    "introHi": "एक Passive Skill, जो Jota के एनिमी को hit करने और knock करने पर HP वापस देती है।",
     "rows": [
       {
         "en": "Gun hit",
-        "hi": "Gun hit",
+        "hi": "Gun से Hit",
         "value": "Restores some HP"
       },
       {
         "en": "Knockdown (any type)",
-        "hi": "Knockdown (kisi bhi type ka)",
+        "hi": "Knockdown (किसी भी तरीके से)",
         "value": "Restores 20% HP"
       },
       {
@@ -653,14 +653,15 @@
       "Hitting an enemy with guns restores some HP. Knocking down an enemy in any way restores 20% HP."
     ],
     "currentHi": [
-      "Jota hit karne aur enemy ko knockdown karne par HP restore karta hai."
+      "Gun से एनिमी को hit करने पर कुछ HP वापस मिलती है। किसी भी तरीके से एनिमी को knock करने पर 20% HP वापस मिलती है।"
     ],
     "notesEn": [
       "Garena does not publish the HP restored per gun hit.",
       "Before OB53, only knockdowns scored with guns triggered the recovery."
     ],
     "notesHi": [
-      "Garena har gun hit par restore hone wali HP ki exact value publish nahi karta. OB53 se pehle sirf gun se kiye knockdown par recovery trigger hoti thi."
+      "Garena, हर Gun Hit पर वापस मिलने वाली HP की exact value publish नहीं करता।",
+      "OB53 से पहले Recovery सिर्फ Gun से किए गए Knockdown पर trigger होती थी।"
     ],
     "historyEn": [
       "Before OB29: SMG or Shotgun kills restored HP, 5-second cooldown.",
@@ -668,9 +669,9 @@
       "OB53 (2 Apr 2026): Any type of knockdown now triggers the recovery."
     ],
     "historyHi": [
-      "OB29 se pehle: SMG ya Shotgun kills par HP restore hota tha, 5-second cooldown ke saath.",
-      "OB29 (Aug 2021): Rework hua—gun hits par HP restore, knockdown par max HP ka 20% tak restore.",
-      "OB53 (2 Apr 2026): Ab kisi bhi type ka knockdown recovery trigger karta hai."
+      "OB29 से पहले: SMG या Shotgun से kill करने पर HP वापस मिलती थी और 5-second Cooldown था।",
+      "OB29 (Aug 2021): Skill को rework किया गया, ताकि Gun Hits पर HP वापस मिले और Knockdown पर maximum HP का 20% तक recover हो।",
+      "OB53 (2 Apr 2026): अब किसी भी तरह का Knockdown Recovery trigger करता है।"
     ],
     "source": [
       {
