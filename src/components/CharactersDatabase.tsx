@@ -559,19 +559,22 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
   useEffect(() => {
     let cancelled = false;
     if (!supabase) return;
-    void supabase.from("character_profiles").select("id, data").then(({ data, error }) => {
-      if (cancelled || error || !data?.length) return;
-      const remoteById = new Map(data.map(row => [row.id, row.data as CharacterProfile]));
-      const refreshed = profiles.map(localProfile => {
-        const remoteProfile = remoteById.get(localProfile.id);
-        if (!remoteProfile || remoteProfile.id !== localProfile.id || remoteProfile.name !== localProfile.name
-          || typeof remoteProfile.image !== "string" || !Array.isArray(remoteProfile.rows)) return localProfile;
-        return { ...localProfile, ...remoteProfile, id: localProfile.id };
-      });
-      if (!cancelled) setCharacterProfiles(refreshed);
-    }).catch(() => {
-      // Keep the static catalogue if the request fails.
-    });
+    void (async () => {
+      try {
+        const { data, error } = await supabase.from("character_profiles").select("id, data");
+        if (cancelled || error || !data?.length) return;
+        const remoteById = new Map(data.map(row => [row.id, row.data as CharacterProfile]));
+        const refreshed = profiles.map(localProfile => {
+          const remoteProfile = remoteById.get(localProfile.id);
+          if (!remoteProfile || remoteProfile.id !== localProfile.id || remoteProfile.name !== localProfile.name
+            || typeof remoteProfile.image !== "string" || !Array.isArray(remoteProfile.rows)) return localProfile;
+          return { ...localProfile, ...remoteProfile, id: localProfile.id };
+        });
+        if (!cancelled) setCharacterProfiles(refreshed);
+      } catch {
+        // Keep the static catalogue if the request fails.
+      }
+    })();
     return () => { cancelled = true; };
   }, []);
   const [query, setQuery] = useState("");
