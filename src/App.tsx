@@ -132,6 +132,8 @@ export default function App() {
   const [selectedRosterMember,setSelectedRosterMember]=useState<{id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;user_id:string}|null>(null);
   const [characterLoadoutDraft,setCharacterLoadoutDraft]=useState<{active:string;passives:string[];notes:string}>({active:"",passives:["","",""],notes:""});
   const [characterLoadoutBusy,setCharacterLoadoutBusy]=useState(false);
+  const characterSelectOptions=(characterCatalogue as Array<{id:string;name:string;skill:string;type:string}>).map(character=><option key={character.id} value={character.id}>{character.name} · {character.skill} ({character.type})</option>);
+
   const [characterLoadoutMessage,setCharacterLoadoutMessage]=useState("");
 
   const [combatNexusView,setCombatNexusView]=useState<"characters"|"pets"|"loadouts"|null>(null);
@@ -1007,7 +1009,7 @@ export default function App() {
             <AnalyticsSection totalMatches={totalMatches} points={points} analyticsMatches={analyticsMatches} rosterSize={players.length}/>
           </Suspense>}
           {selectedRosterMember&&<div className="roster-profile-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setSelectedRosterMember(null);}}><section className="roster-profile-modal" role="dialog" aria-modal="true" aria-label={selectedRosterMember.display_name+" character profile"}><button type="button" className="roster-profile-close" aria-label="Close profile" onClick={()=>setSelectedRosterMember(null)}>×</button><div className="eyebrow">PLAYER CHARACTER PROFILE</div><span className="roster-profile-slot">{selectedRosterMember.player_number?"P"+selectedRosterMember.player_number:"PLAYER"}</span><h3>{selectedRosterMember.display_name}</h3><p>{selectedRosterMember.assigned_role||"Role not assigned"} · {selectedRosterMember.membership_role}</p><div className="roster-character-loadout">
-  <div className="loadout-slot-group"><label>Active character</label><select value={characterLoadoutDraft.active} onChange={e=>setCharacterLoadoutDraft(d=>({...d,active:e.target.value}))} disabled={characterLoadoutBusy}>{options}</select></div>
+  <div className="loadout-slot-group"><label>Active character</label><select value={characterLoadoutDraft.active} onChange={e=>setCharacterLoadoutDraft(d=>({...d,active:e.target.value}))} disabled={characterLoadoutBusy}><option value="">Choose character…</option>{characterSelectOptions}</select></div>
   <div className="loadout-slot-group"><label>Passive skill 1</label><select value={characterLoadoutDraft.passives[0]} onChange={e=>setCharacterLoadoutDraft(d=>({...d,passives:d.passives.map((v,i)=>i===0?e.target.value:v)}))} disabled={characterLoadoutBusy}>{options}</select></div>
   <div className="loadout-slot-group"><label>Passive skill 2</label><select value={characterLoadoutDraft.passives[1]} onChange={e=>setCharacterLoadoutDraft(d=>({...d,passives:d.passives.map((v,i)=>i===1?e.target.value:v)}))} disabled={characterLoadoutBusy}>{options}</select></div>
   <div className="loadout-slot-group"><label>Passive skill 3</label><select value={characterLoadoutDraft.passives[2]} onChange={e=>setCharacterLoadoutDraft(d=>({...d,passives:d.passives.map((v,i)=>i===2?e.target.value:v)}))} disabled={characterLoadoutBusy}>{options}</select></div>
