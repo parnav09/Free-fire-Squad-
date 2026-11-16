@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";\nimport characterCatalogue from "./data/characterProfiles.json";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import characterCatalogue from "./data/characterProfiles.json";
 
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 const PlanningTrainingCenter = lazy(() => import("./components/PlanningTrainingCenter"));
