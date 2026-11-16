@@ -421,11 +421,9 @@ const baseProfiles: CharacterProfile[] = [
 ];
 const profiles: CharacterProfile[] = [...baseProfiles, ...(extraProfiles as CharacterProfile[])];
 
-// The 19 remaining ability-character entries plus the two default characters.
-// These are searchable name-only entries; no unverified ability/profile data is fabricated.
-const pendingCharacterNames = [
-  "Steffie", "Misha", "Maxim", "Caroline", "Notora", "Primis", "Nulla",
-];
+// Only characters without a complete profile remain in the name-only index.
+// Never index a name twice when its full profile already exists.
+const pendingCharacterNames = ["Primis", "Nulla"];
 
 type CharacterArtworkProps = { profile: CharacterProfile; variant: "card" | "profile" };
 function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {

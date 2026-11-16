@@ -4975,7 +4975,7 @@
     "id": "kla",
     "name": "Kla",
     "image": "https://freefiremobile-a.akamaihd.net/common/web_event/official2.ff.garena.all/img/20228/1655985bf74931458766921ee6bb6e0a.png",
-    "artworkMode": "cutout",
+    "artworkMode": "official-fullbody",
     "abilityDisplayOnce": true,
     "skill": "Muay Thai",
     "type": "Passive",
@@ -4984,7 +4984,7 @@
     "subtitle": "OB55 values reconciled · 15 Nov 2026",
     "status": "OB55 values reconciled · 15 Nov 2026",
     "introEn": "Passive that drastically amplifies the damage output of unarmed melee attacks.",
-    "introHi": "Passive that drastically amplifies the damage output of unarmed melee attacks.",
+    "introHi": "Ye Passive Skill, unarmed Fist attacks ka damage 400% badhaati hai.",
     "rows": [
       {
         "en": "Fist damage bonus",
@@ -5006,13 +5006,13 @@
       "Increases fist and unarmed melee damage by 400%."
     ],
     "currentHi": [
-      "Increases fist and unarmed melee damage by 400%."
+      "Fist aur unarmed melee attacks ka damage 400% badh jaata hai."
     ],
     "notesEn": [
       "Modern official patch archives omit the exact numerical ceiling, but direct in-game skill verification establishes the current permanent maximum at 400%."
     ],
     "notesHi": [
-      "Modern official patch archives omit the exact numerical ceiling, but direct in-game skill verification establishes the current permanent maximum at 400%."
+      "Modern Official Patch Archives mein exact numerical ceiling nahi diya gaya hai, lekin direct in-game skill verification current permanent maximum 400% establish karti hai."
     ],
     "historyEn": [
       "OB8 (28 Jun 2018): Introduced.",
@@ -5020,7 +5020,7 @@
     ],
     "historyHi": [
       "OB8 (28 Jun 2018): Introduced.",
-      "OB39 (Mar 2023): Character system overhaul permanently unlocked maximum level values (400%) for all players."
+      "OB39 (Mar 2023): Character System Overhaul ke baad sabhi players ke liye maximum level values (400%) permanently unlock ho gayin."
     ],
     "source": [
       {
