@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";\nimport characterCatalogue from "./data/characterProfiles.json";
 
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
 const PlanningTrainingCenter = lazy(() => import("./components/PlanningTrainingCenter"));
@@ -129,7 +129,45 @@ export default function App() {
   const [ownerPowerEnabled,setOwnerPowerEnabled]=useState(true);
   const [rosterEditEnabled,setRosterEditEnabled]=useState(()=>localStorage.getItem("squad-os-roster-edit:"+localStorage.getItem("squad-os-active-team"))==="on");
   const [selectedRosterMember,setSelectedRosterMember]=useState<{id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;user_id:string}|null>(null);
+  const [characterLoadoutDraft,setCharacterLoadoutDraft]=useState<{active:string;passives:string[];notes:string}>({active:"",passives:["","",""],notes:""});
+  const [characterLoadoutBusy,setCharacterLoadoutBusy]=useState(false);
+  const [characterLoadoutMessage,setCharacterLoadoutMessage]=useState("");
+
   const [combatNexusView,setCombatNexusView]=useState<"characters"|"pets"|"loadouts"|null>(null);
+  useEffect(()=>{
+    let cancelled=false;
+    setCharacterLoadoutDraft({active:"",passives:["","",""],notes:""});
+    setCharacterLoadoutMessage("");
+    if(!selectedRosterMember||!supabase||!team)return;
+    void (async()=>{
+      try{
+        const {data,error}=await supabase.from("player_character_loadouts").select("active_character_id,passive_character_ids,notes").eq("team_member_id",selectedRosterMember.id).maybeSingle();
+        if(error)throw error;
+        if(cancelled)return;
+        if(data)setCharacterLoadoutDraft({active:data.active_character_id||"",passives:[...(data.passive_character_ids||[]),"" ,""].slice(0,3),notes:data.notes||""});
+      }catch(e){if(!cancelled)setCharacterLoadoutMessage(e instanceof Error?e.message:"Could not load character loadout.");}
+    })();
+    return()=>{cancelled=true;};
+  },[selectedRosterMember?.id,supabase,team?.id]);
+  const saveCharacterLoadout=async()=>{
+    if(!selectedRosterMember||!team||!supabase)return;
+    const passives=characterLoadoutDraft.passives.filter(Boolean);
+    if(!characterLoadoutDraft.active){setCharacterLoadoutMessage("Select an active character first.");return;}
+    if(passives.length!==3){setCharacterLoadoutMessage("Select all three passive character slots.");return;}
+    if(new Set([characterLoadoutDraft.active,...passives]).size!==4){setCharacterLoadoutMessage("A character cannot be used in more than one slot.");return;}
+    setCharacterLoadoutBusy(true);setCharacterLoadoutMessage("");
+    try{
+      const {error}=await supabase.from("player_character_loadouts").upsert({
+        team_id:team.id,team_member_id:selectedRosterMember.id,user_id:selectedRosterMember.user_id,
+        active_character_id:characterLoadoutDraft.active,passive_character_ids:passives,
+        notes:characterLoadoutDraft.notes.trim()||null,updated_by:sessionUserId
+      },{onConflict:"team_member_id"});
+      if(error)throw error;
+      setCharacterLoadoutMessage("Character & skill loadout saved.");
+    }catch(e){setCharacterLoadoutMessage(e instanceof Error?e.message:"Could not save character loadout.");}
+    finally{setCharacterLoadoutBusy(false);}
+  };
+
   const [customRoleDrafts,setCustomRoleDrafts]=useState<Record<string,string>>({});
   const ownerPowerActive=team?.membership_role==="owner"&&ownerPowerEnabled;
   const [cloudTraining, setCloudTraining] = useState<Record<string, boolean>>({});
@@ -967,7 +1005,16 @@ export default function App() {
           {section==="Analytics" && <Suspense fallback={<section className="connection-panel" role="status">Loading analytics…</section>}>
             <AnalyticsSection totalMatches={totalMatches} points={points} analyticsMatches={analyticsMatches} rosterSize={players.length}/>
           </Suspense>}
-          {selectedRosterMember&&<div className="roster-profile-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setSelectedRosterMember(null);}}><section className="roster-profile-modal" role="dialog" aria-modal="true" aria-label={selectedRosterMember.display_name+" character profile"}><button type="button" className="roster-profile-close" aria-label="Close profile" onClick={()=>setSelectedRosterMember(null)}>×</button><div className="eyebrow">PLAYER CHARACTER PROFILE</div><span className="roster-profile-slot">{selectedRosterMember.player_number?"P"+selectedRosterMember.player_number:"PLAYER"}</span><h3>{selectedRosterMember.display_name}</h3><p>{selectedRosterMember.assigned_role||"Role not assigned"} · {selectedRosterMember.membership_role}</p><div className="roster-character-placeholder"><span>✦</span><strong>Character & Skill Loadout</strong><small>This profile section is reserved for the player’s selected character, skill combination and loadout. Character assignment controls are not enabled yet.</small><em>COMING IN A FUTURE BUILD</em></div><button type="button" className="secondary-button" onClick={()=>setSelectedRosterMember(null)}>Close</button></section></div>}{confirmAction&&<div className="confirm-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setConfirmAction(null);}}>
+          {selectedRosterMember&&<div className="roster-profile-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setSelectedRosterMember(null);}}><section className="roster-profile-modal" role="dialog" aria-modal="true" aria-label={selectedRosterMember.display_name+" character profile"}><button type="button" className="roster-profile-close" aria-label="Close profile" onClick={()=>setSelectedRosterMember(null)}>×</button><div className="eyebrow">PLAYER CHARACTER PROFILE</div><span className="roster-profile-slot">{selectedRosterMember.player_number?"P"+selectedRosterMember.player_number:"PLAYER"}</span><h3>{selectedRosterMember.display_name}</h3><p>{selectedRosterMember.assigned_role||"Role not assigned"} · {selectedRosterMember.membership_role}</p><div className="roster-character-loadout">
+  <div className="loadout-slot-group"><label>Active character</label><select value={characterLoadoutDraft.active} onChange={e=>setCharacterLoadoutDraft(d=>({...d,active:e.target.value}))} disabled={characterLoadoutBusy}>{options}</select></div>
+  <div className="loadout-slot-group"><label>Passive skill 1</label><select value={characterLoadoutDraft.passives[0]} onChange={e=>setCharacterLoadoutDraft(d=>({...d,passives:d.passives.map((v,i)=>i===0?e.target.value:v)}))} disabled={characterLoadoutBusy}>{options}</select></div>
+  <div className="loadout-slot-group"><label>Passive skill 2</label><select value={characterLoadoutDraft.passives[1]} onChange={e=>setCharacterLoadoutDraft(d=>({...d,passives:d.passives.map((v,i)=>i===1?e.target.value:v)}))} disabled={characterLoadoutBusy}>{options}</select></div>
+  <div className="loadout-slot-group"><label>Passive skill 3</label><select value={characterLoadoutDraft.passives[2]} onChange={e=>setCharacterLoadoutDraft(d=>({...d,passives:d.passives.map((v,i)=>i===2?e.target.value:v)}))} disabled={characterLoadoutBusy}>{options}</select></div>
+  <label className="loadout-slot-group"><span>Notes (optional)</span><textarea rows={2} maxLength={500} value={characterLoadoutDraft.notes} onChange={e=>setCharacterLoadoutDraft(d=>({...d,notes:e.target.value}))} placeholder="Synergy, role fit, or patch notes…" disabled={characterLoadoutBusy}/></label>
+  <small>One active + three passive characters. The same character cannot occupy multiple slots.</small>
+  {characterLoadoutMessage&&<p className="loadout-status" role="status">{characterLoadoutMessage}</p>}
+  <button type="button" className="primary-button" onClick={()=>void saveCharacterLoadout()} disabled={characterLoadoutBusy}>{characterLoadoutBusy?"Saving…":"Save character loadout"}</button>
+</div><button type="button" className="secondary-button" onClick={()=>setSelectedRosterMember(null)}>Close</button></section></div>}{confirmAction&&<div className="confirm-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setConfirmAction(null);}}>
             <section className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
               <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?<UiIcon name="log-out" size={19}/>:confirmAction==="leave"?<UiIcon name="external-link" size={19}/>:<UiIcon name="download" size={19}/>}</div>
               <div className="eyebrow">{confirmAction==="logout"?"ACCOUNT SESSION":confirmAction==="leave"?"TEAM MEMBERSHIP":"DATA RESTORE"}</div>
