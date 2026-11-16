@@ -318,3 +318,42 @@
     padding: 3px 4px !important;
   }
 }
+
+
+/* Primis + Nulla: full character visible, centered, no edge-cropping.
+   Isolated from Alok's existing cutout rules so his artwork remains unchanged. */
+.character-result-card--centered-cutout .character-result-art {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(91,160,205,.18), transparent 68%),
+    linear-gradient(145deg,#101a2d,#0d1729 68%,#17172e);
+}
+.character-result-card--centered-cutout .character-result-art img,
+.character-profile-art--centered-cutout img.character-art-image--centered-cutout {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center center !important;
+  padding: 5px 7px !important;
+  filter: brightness(1.04) contrast(1.04) drop-shadow(0 9px 14px rgba(0,0,0,.32));
+  transform: none !important;
+}
+.character-profile-art--centered-cutout {
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(91,160,205,.18), transparent 66%),
+    linear-gradient(145deg,#101a2d,#0d1729 68%,#17172e) !important;
+}
+.character-profile-art--centered-cutout img {
+  display: block;
+  position: relative;
+  inset: auto;
+}
+@media(max-width:640px) {
+  .character-result-card--centered-cutout .character-result-art img,
+  .character-profile-art--centered-cutout img.character-art-image--centered-cutout {
+    padding: 3px 4px !important;
+  }
+}

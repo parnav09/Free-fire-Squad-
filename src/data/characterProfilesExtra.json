@@ -5035,8 +5035,8 @@
   {
     "id": "primis",
     "name": "Primis",
-    "image": "https://www.freefiremania.com.br/images/noticias/primis-ff-free-fire.jpg",
-    "artworkMode": "contained",
+    "image": "https://www.freefiremania.com.br/images/noticias/primus-free-fire.jpg",
+    "artworkMode": "centered-cutout",
     "abilityDisplayOnce": true,
     "skill": "No Skill",
     "type": "None · Default Character",
@@ -5114,8 +5114,8 @@
   {
     "id": "nulla",
     "name": "Nulla",
-    "image": "https://www.freefiremania.com.br/prints/nulla-e-primis-free-fire-garena-altera-o-nome-dos-personagens-adam-e-eve.jpg",
-    "artworkMode": "contained",
+    "image": "https://www.freefiremania.com.br/images/noticias/nulla-free-fire.jpg",
+    "artworkMode": "centered-cutout",
     "abilityDisplayOnce": true,
     "skill": "No Skill",
     "type": "None · Default Character",
