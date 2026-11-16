@@ -361,8 +361,8 @@
 
 /* Alok-style cutout treatment shared by Primis and Nulla:
    centered transparent-art framing, controlled zoom, clean edge lighting and depth. */
-.character-result-card--cutout .character-result-art,
-.character-profile-art--cutout {
+.character-result-card--alok-match-cutout .character-result-art,
+.character-profile-art--alok-match-cutout {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -372,8 +372,8 @@
     radial-gradient(ellipse at 50% 100%, rgba(51,100,190,.16), transparent 58%),
     linear-gradient(145deg,#142139 0%,#0d1729 62%,#17172e 100%) !important;
 }
-.character-result-card--cutout .character-result-art::before,
-.character-profile-art--cutout::before {
+.character-result-card--alok-match-cutout .character-result-art::before,
+.character-profile-art--alok-match-cutout::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -384,8 +384,8 @@
     linear-gradient(180deg,transparent 55%,rgba(3,7,15,.24)) !important;
   opacity: 1 !important;
 }
-.character-result-card--cutout .character-result-art img.character-art-image--cutout,
-.character-profile-art--cutout img.character-art-image--cutout {
+.character-result-card--alok-match-cutout .character-result-art img.character-art-image--alok-match-cutout,
+.character-profile-art--alok-match-cutout img.character-art-image--alok-match-cutout {
   position: relative;
   z-index: 0;
   inset: auto;
@@ -403,27 +403,27 @@
   transform-origin: center bottom;
   transition: transform .3s cubic-bezier(.2,.7,.2,1),filter .25s ease;
 }
-.character-result-card--cutout:hover .character-result-art img.character-art-image--cutout,
-.character-result-card--cutout:focus-visible .character-result-art img.character-art-image--cutout,
-.character-profile-page .character-profile-art--cutout:hover img.character-art-image--cutout {
+.character-result-card--alok-match-cutout:hover .character-result-art img.character-art-image--alok-match-cutout,
+.character-result-card--alok-match-cutout:focus-visible .character-result-art img.character-art-image--alok-match-cutout,
+.character-profile-page .character-profile-art--alok-match-cutout:hover img.character-art-image--alok-match-cutout {
   filter: brightness(1.22) contrast(1.1) saturate(1.14)
     drop-shadow(0 16px 22px rgba(0,0,0,.4)) !important;
   transform: scale(1.085) !important;
 }
 @media(max-width:640px) {
-  .character-result-card--cutout .character-result-art img.character-art-image--cutout,
-  .character-profile-art--cutout img.character-art-image--cutout {
+  .character-result-card--alok-match-cutout .character-result-art img.character-art-image--alok-match-cutout,
+  .character-profile-art--alok-match-cutout img.character-art-image--alok-match-cutout {
     padding: 2px 4px 0 !important;
     transform: scale(1.025) !important;
   }
-  .character-result-card--cutout:hover .character-result-art img.character-art-image--cutout,
-  .character-profile-page .character-profile-art--cutout:hover img.character-art-image--cutout {
+  .character-result-card--alok-match-cutout:hover .character-result-art img.character-art-image--alok-match-cutout,
+  .character-profile-page .character-profile-art--alok-match-cutout:hover img.character-art-image--alok-match-cutout {
     transform: scale(1.035) !important;
   }
 }
 @media(prefers-reduced-motion:reduce) {
-  .character-result-card--cutout .character-result-art img.character-art-image--cutout,
-  .character-profile-art--cutout img.character-art-image--cutout {
+  .character-result-card--alok-match-cutout .character-result-art img.character-art-image--alok-match-cutout,
+  .character-profile-art--alok-match-cutout img.character-art-image--alok-match-cutout {
     transition:none;
     transform:none !important;
   }
