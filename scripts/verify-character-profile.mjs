@@ -5,7 +5,7 @@ import test from "node:test";
 import ts from "typescript";
 
 const [profilesText, component, css] = await Promise.all([
-  readFile(new URL("../src/data/characterProfilesExtra.json", import.meta.url), "utf8"),
+  readFile(new URL("../src/data/characterProfiles.json", import.meta.url), "utf8"),
   readFile(new URL("../src/components/CharactersDatabase.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/CharactersDatabase.css", import.meta.url), "utf8"),
 ]);
@@ -21,6 +21,34 @@ const searchContext = {};
 const helperJavaScript = ts.transpile(helperSource, { target: ts.ScriptTarget.ES2022 });
 runInNewContext(`${helperJavaScript}\nglobalThis.__characterSearch = { normalizeSearchText, editDistanceWithin, characterNameTermScore, profileSearchScore };`, searchContext);
 const { normalizeSearchText, characterNameTermScore, profileSearchScore } = searchContext.__characterSearch;
+
+test("Central catalogue contains exactly 67 unique character records with artwork and ability/source metadata", () => {
+  assert.equal(profiles.length, 67);
+  assert.equal(new Set(profiles.map(profile => profile.id)).size, 67);
+  for (const profile of profiles) {
+    assert.ok(profile.id && profile.name && profile.image, `identity/artwork missing: ${profile.id}`);
+    assert.ok(profile.artworkMode, `artworkMode missing: ${profile.id}`);
+    assert.ok(profile.skill && profile.type, `ability metadata missing: ${profile.id}`);
+    assert.ok(Array.isArray(profile.rows) && profile.rows.length > 0, `ability rows missing: ${profile.id}`);
+    assert.ok(Array.isArray(profile.source) && profile.source.length > 0, `source references missing: ${profile.id}`);
+  }
+});
+
+test("All 10 base profiles and 57 additional profiles are represented in the single catalogue", () => {
+  for (const id of ["ray", "morse", "nero", "rin", "oscar", "kassie", "kairos", "ryden", "ignis", "suzy"]) {
+    assert.ok(profiles.some(profile => profile.id === id), `base profile missing: ${id}`);
+  }
+  assert.ok(profiles.some(profile => profile.id === "alok"));
+  assert.ok(profiles.some(profile => profile.id === "primis"));
+  assert.ok(profiles.some(profile => profile.id === "nulla"));
+});
+
+test("Character component imports one centralized catalogue instead of split base and extra sources", () => {
+  assert.match(component, /import characterCatalogue from "\.\.\/data\/characterProfiles\.json"/);
+  assert.match(component, /const profiles: CharacterProfile\[\] = characterCatalogue as CharacterProfile\[\]/);
+  assert.doesNotMatch(component, /const baseProfiles: CharacterProfile\[\]\s*=/);
+  assert.doesNotMatch(component, /characterProfilesExtra\.json/);
+});
 
 test("Kla profile has one ability label, official artwork and the required profile metadata", () => {
   assert.equal(kla.skill, "Muay Thai");
