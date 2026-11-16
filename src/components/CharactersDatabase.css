@@ -428,3 +428,11 @@
     transform:none !important;
   }
 }
+
+
+/* Nulla-only framing correction: center the existing artwork in both card and profile views. */
+.character-result-card--alok-match-cutout .character-result-art img.character-art-image--alok-match-cutout,
+.character-profile-art--alok-match-cutout img.character-art-image--alok-match-cutout {
+  object-fit: contain !important;
+  object-position: center center !important;
+}
