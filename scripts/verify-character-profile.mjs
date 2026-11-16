@@ -66,3 +66,17 @@ test("Kla official full-body artwork has dedicated non-cropping styles across re
   assert.match(css, /@media\s*\(max-width:\s*760px\)/);
   assert.match(css, /@media\s*\(max-width:\s*420px\)/);
 });
+
+
+test("Character database keeps static profiles as fallback and refreshes from the public Supabase catalogue", () => {
+  assert.match(component, /useState<CharacterProfile\[\]>\(profiles\)/);
+  assert.match(component, /supabase\.from\("character_profiles"\)\.select\("id, data"\)/);
+  assert.match(component, /remoteProfile\.id !== localProfile\.id/);
+  assert.match(component, /if \(!supabase\) return/);
+  assert.match(component, /if \(cancelled \|\| error \|\| !data\?\.length\) return/);
+});
+
+test("Shared-current artwork metadata adds no CSS overrides that alter existing artwork appearance", () => {
+  assert.doesNotMatch(css, /character-art-image--shared-current|character-profile-art--shared-current|character-result-card--shared-current/);
+  assert.doesNotMatch(css, /Explicit artwork modes for the 54 profiles/);
+});
