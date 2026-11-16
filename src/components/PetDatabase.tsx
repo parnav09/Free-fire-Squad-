@@ -1,4 +1,3 @@
-import React from "react";
 import "./PetDatabase.css";
 
 type Props={onBack:()=>void};
