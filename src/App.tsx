@@ -7,6 +7,7 @@ const PlayerWeeklyInsights = lazy(() => import("./components/PlayerWeeklyInsight
 import "./components/PlayerWeeklyInsights.css";
 const ScrimsSection = lazy(() => import("./components/ScrimsSection"));
 const CharactersDatabase = lazy(() => import("./components/CharactersDatabase"));
+const PetDatabase = lazy(() => import("./components/PetDatabase"));
 import "./components/MatchesSectionTabs.css";
 
 
@@ -696,12 +697,15 @@ export default function App() {
   const onboarding=!signedIn||!team;
   if (combatNexusView && !onboarding) {
     const isCharacters = combatNexusView === "characters";
+    const isPets = combatNexusView === "pets";
     const pageTitle = combatNexusView === "pets" ? "Pet Database" : "Loadout";
     return (
       <main className="combat-nexus-route">
         <div className="combat-nexus-route-shell">
           {isCharacters ? (
             <Suspense fallback={<div className="pt-loading">Opening character database…</div>}> <CharactersDatabase language={drillLanguage} onLanguageChange={changeDrillLanguage} onBack={() => setCombatNexusView(null)} /> </Suspense>
+          ) : isPets ? (
+            <Suspense fallback={<div className="pt-loading">Opening pet database…</div>}> <PetDatabase onBack={() => setCombatNexusView(null)} /> </Suspense>
           ) : (
             <section className="combat-nexus-subpage">
               <header className="combat-nexus-subpage-top">
