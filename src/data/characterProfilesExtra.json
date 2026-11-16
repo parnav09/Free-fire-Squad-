@@ -5035,8 +5035,8 @@
   {
     "id": "primis",
     "name": "Primis",
-    "image": "",
-    "artworkMode": "blackout-silhouette",
+    "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/20229/024c98913571304db2cba9d257e7291a.png",
+    "artworkMode": "blackout-image",
     "abilityDisplayOnce": true,
     "skill": "No Skill",
     "type": "None · Default Character",
@@ -5114,8 +5114,8 @@
   {
     "id": "nulla",
     "name": "Nulla",
-    "image": "",
-    "artworkMode": "blackout-silhouette",
+    "image": "https://cdn.wildflamestudio.com/common/web_event/official2.ff.garena.all/img/20228/f5a466acec3ed5bd7cdd149e26288ad1.png",
+    "artworkMode": "blackout-image",
     "abilityDisplayOnce": true,
     "skill": "No Skill",
     "type": "None · Default Character",
