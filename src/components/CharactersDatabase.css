@@ -449,3 +449,50 @@
 .character-result-card--blackout-silhouette .character-result-art{min-height:145px;}
 .character-profile-art--blackout-silhouette{padding:0!important;}
 @media(max-width:640px){.character-result-card--blackout-silhouette .character-result-art{min-height:124px}.character-blackout-silhouette--card{min-height:124px}.character-blackout-silhouette--profile{max-height:164px}}
+
+
+/* Source-art blackout treatment: reuse the existing A-Patroa and Dimitri full-body renders
+   for Nulla and Primis, preserving each source silhouette while matching the shared dark stage. */
+.character-result-card--blackout-image .character-result-art,
+.character-profile-art--blackout-image {
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  isolation:isolate;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 42%,rgba(70,82,101,.22),transparent 58%),
+    linear-gradient(145deg,#151923,#080a10 72%,#171923)!important;
+}
+.character-result-card--blackout-image .character-result-art::before,
+.character-profile-art--blackout-image::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.035),transparent 34%,transparent 70%,rgba(255,255,255,.025));
+}
+.character-result-card--blackout-image .character-result-art img.character-art-image--blackout,
+.character-profile-art--blackout-image img.character-art-image--blackout {
+  position:relative;
+  z-index:0;
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  padding:0!important;
+  filter:brightness(0) saturate(100%)
+    drop-shadow(0 0 1.25px rgba(91,105,127,.58))
+    drop-shadow(0 10px 15px rgba(0,0,0,.88))!important;
+  transform:none!important;
+  transform-origin:center bottom;
+}
+.character-result-card--blackout-image .character-result-art {min-height:145px;}
+.character-profile-art--blackout-image {padding:0!important;}
+.character-result-card--blackout-image .character-result-art::after {background:linear-gradient(180deg,transparent 55%,rgba(3,7,15,.2) 100%);}
+@media(max-width:640px) {
+  .character-result-card--blackout-image .character-result-art {min-height:124px;}
+}
