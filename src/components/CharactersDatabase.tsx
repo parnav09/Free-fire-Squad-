@@ -8,7 +8,7 @@ type DetailRow = { en: string; hi: string; value: string };
 type CharacterProfile = {
   id: string;
   image: string;
-  artworkMode?: "cutout" | "contained" | "official-fullbody" | "centered-cutout" | "alok-match-cutout";
+  artworkMode?: "cutout" | "contained" | "official-fullbody" | "centered-cutout" | "alok-match-cutout" | "blackout-silhouette";
   abilityDisplayOnce?: boolean;
   name: string;
   skill: string;
@@ -435,6 +435,20 @@ function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
     <span>{profile.name.split(/[- ]/).map(part => part[0]).join("").slice(0,2).toUpperCase()}</span>
     <small>{variant === "card" ? "PROFILE" : "CHARACTER PROFILE"}</small>
   </div>;
+  if (profile.artworkMode === "blackout-silhouette") {
+    const female = profile.id === "nulla";
+    return <svg className={`character-blackout-silhouette character-blackout-silhouette--${variant} ${female ? "is-female" : "is-male"}`} viewBox="0 0 240 420" role="img" aria-label={`${profile.name} full-body black silhouette`} focusable="false">
+      <defs><linearGradient id={`silhouette-edge-${profile.id}-${variant}`} x1="0" x2="1" y1="0" y2="1"><stop offset="0" stopColor="#20242c"/><stop offset=".5" stopColor="#050608"/><stop offset="1" stopColor="#171a20"/></linearGradient></defs>
+      {female ? <g fill={`url(#silhouette-edge-${profile.id}-${variant})`} stroke="#30343c" strokeWidth="1.2" strokeLinejoin="round">
+        <path d="M120 28c-29 0-44 22-43 51 1 18 6 29 13 39-4 12-18 20-31 29-12 13-17 33-20 57l-8 102 27 3 15-86 5 79-7 93h34l15-93 15 93h34l-7-93 5-79 15 86 27-3-8-102c-3-24-8-44-20-57-13-9-27-17-31-29 7-10 12-21 13-39 1-29-14-51-43-51z"/>
+        <path d="M78 48c-18 13-22 37-17 60l10 31-18 25 13 12 23-26-8-45 7-49zm84 0c18 13 22 37 17 60l-10 31 18 25-13 12-23-26 8-45-7-49z" />
+      </g> : <g fill={`url(#silhouette-edge-${profile.id}-${variant})`} stroke="#30343c" strokeWidth="1.2" strokeLinejoin="round">
+        <path d="M120 27c-27 0-43 19-43 47 0 24 9 39 21 50l-2 15-40 17c-16 7-24 22-27 43l-10 94 30 4 18-79 5 91-8 88h37l19-89 19 89h37l-8-88 5-91 18 79 30-4-10-94c-3-21-11-36-27-43l-40-17-2-15c12-11 21-26 21-50 0-28-16-47-43-47z"/>
+        <path d="M78 51c-12 7-18 20-17 36l4 25 15-9 6-40zm84 0c12 7 18 20 17 36l-4 25-15-9-6-40z"/>
+      </g>}
+      <ellipse cx="120" cy="405" rx="67" ry="8" fill="#000" opacity=".72"/>
+    </svg>;
+  }
   if (!profile.image || failed) return monogram;
   return <img
     className={profile.artworkMode === "official-fullbody" ? "character-art-image--official-fullbody" : profile.artworkMode === "alok-match-cutout" ? "character-art-image--alok-match-cutout" : profile.artworkMode === "cutout" ? "character-art-image--cutout" : profile.artworkMode === "centered-cutout" ? "character-art-image--centered-cutout" : undefined}
@@ -616,7 +630,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     </div>
     <article className="character-profile">
       <header className="character-profile-identity">
-        <div className={`character-profile-art ${shownProfile.artworkMode === "official-fullbody" ? "character-profile-art--official-fullbody" : shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : shownProfile.artworkMode === "centered-cutout" ? "character-profile-art--centered-cutout" : shownProfile.artworkMode === "alok-match-cutout" ? "character-profile-art--alok-match-cutout" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
+        <div className={`character-profile-art ${shownProfile.artworkMode === "official-fullbody" ? "character-profile-art--official-fullbody" : shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : shownProfile.artworkMode === "centered-cutout" ? "character-profile-art--centered-cutout" : shownProfile.artworkMode === "alok-match-cutout" ? "character-profile-art--alok-match-cutout" : shownProfile.artworkMode === "blackout-silhouette" ? "character-profile-art--blackout-silhouette" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
         <div className="character-profile-heading">
           <h2>{shownProfile.name}</h2>
           <span className="character-confirmed">{shownProfile.badge || "Official-source profile"}</span>
@@ -684,7 +698,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "Character profiles with shared profile layout, source notes and patch history." : "Character profiles with shared profile layout, source notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
     <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((suggestion, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={suggestion.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(suggestion)}><span className="character-suggestion-name">{suggestion.name}</span><span className="character-suggestion-meta">{suggestion.meta}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{totalMatchCount} {isHindi ? "matches found" : "matches found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
-    {totalMatchCount ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className={`character-result-card ${profile.artworkMode === "cutout" ? "character-result-card--cutout" : profile.artworkMode === "contained" ? "character-result-card--contained" : profile.artworkMode === "centered-cutout" ? "character-result-card--centered-cutout" : profile.artworkMode === "alok-match-cutout" ? "character-result-card--alok-match-cutout" : ""}`} key={profile.id} onClick={() => setSelectedId(profile.id)}>
+    {totalMatchCount ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className={`character-result-card ${profile.artworkMode === "cutout" ? "character-result-card--cutout" : profile.artworkMode === "contained" ? "character-result-card--contained" : profile.artworkMode === "centered-cutout" ? "character-result-card--centered-cutout" : profile.artworkMode === "alok-match-cutout" ? "character-result-card--alok-match-cutout" : profile.artworkMode === "blackout-silhouette" ? "character-result-card--blackout-silhouette" : ""}`} key={profile.id} onClick={() => setSelectedId(profile.id)}>
       <div className="character-result-art"><CharacterArtwork profile={profile} variant="card" /></div>
       <div className="character-result-copy"><span className="character-result-status">{profile.badge || "OFFICIAL-SOURCE PROFILE"}</span><h2>{profile.name}</h2><b>{cardAbilityLabel(profile)}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
       <span className="character-result-chevron" aria-hidden="true">↗</span>
