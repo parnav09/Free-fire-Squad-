@@ -496,3 +496,50 @@
 @media(max-width:640px) {
   .character-result-card--blackout-image .character-result-art {min-height:124px;}
 }
+
+
+/* Explicit artwork modes for the 54 profiles that retain their existing shared render.
+   These selectors intentionally mirror the already-active gallery defaults exactly:
+   no image URL, crop, scale, brightness, contrast, saturation, shadow or background change. */
+.character-result-card--cutout .character-result-art,
+.character-profile-art--cutout,
+.character-result-card--contained .character-result-art,
+.character-profile-art--contained,
+.character-result-card--shared-current .character-result-art,
+.character-profile-art--shared-current {
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(74, 148, 196, .16), transparent 68%),
+    linear-gradient(145deg, #101a2c, #0c1424 72%, #14152a);
+}
+.character-result-art img.character-art-image--cutout,
+.character-profile-art img.character-art-image--cutout,
+.character-result-art img.character-art-image--contained-current,
+.character-profile-art img.character-art-image--contained-current,
+.character-result-art img.character-art-image--shared-current,
+.character-profile-art img.character-art-image--shared-current {
+  position: relative;
+  inset: auto;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain !important;
+  object-position: center center !important;
+  padding: 5px !important;
+  filter: brightness(1.07) contrast(1.1) saturate(1.08)
+    drop-shadow(0 10px 16px rgba(0, 0, 0, .36)) !important;
+  transform: none !important;
+}
+.character-result-card--cutout:hover .character-result-art img,
+.character-result-card--cutout:focus-visible .character-result-art img,
+.character-result-card--contained:hover .character-result-art img,
+.character-result-card--contained:focus-visible .character-result-art img,
+.character-result-card--shared-current:hover .character-result-art img,
+.character-result-card--shared-current:focus-visible .character-result-art img,
+.character-profile-page .character-profile-art--cutout:hover img,
+.character-profile-page .character-profile-art--contained:hover img,
+.character-profile-page .character-profile-art--shared-current:hover img {
+  filter: brightness(1.1) contrast(1.12) saturate(1.1)
+    drop-shadow(0 12px 18px rgba(0, 0, 0, .4)) !important;
+  transform: none !important;
+}
