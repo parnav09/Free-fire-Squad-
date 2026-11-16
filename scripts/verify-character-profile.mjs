@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { runInNewContext } from "node:vm";
 import test from "node:test";
+import ts from "typescript";
 
 const [profilesText, component, css] = await Promise.all([
   readFile(new URL("../src/data/characterProfilesExtra.json", import.meta.url), "utf8"),
@@ -17,7 +18,8 @@ const helperEnd = component.indexOf("export default function CharactersDatabase"
 assert.ok(helperStart >= 0 && helperEnd > helperStart, "Search helpers must remain available in the character component");
 const helperSource = component.slice(helperStart, helperEnd);
 const searchContext = {};
-runInNewContext(`${helperSource}\nglobalThis.__characterSearch = { normalizeSearchText, editDistanceWithin, characterNameTermScore, profileSearchScore };`, searchContext);
+const helperJavaScript = ts.transpile(helperSource, { target: ts.ScriptTarget.ES2022 });
+runInNewContext(`${helperJavaScript}\nglobalThis.__characterSearch = { normalizeSearchText, editDistanceWithin, characterNameTermScore, profileSearchScore };`, searchContext);
 const { normalizeSearchText, characterNameTermScore, profileSearchScore } = searchContext.__characterSearch;
 
 test("Kla profile has one ability label, official artwork and the required profile metadata", () => {
