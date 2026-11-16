@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import extraProfiles from "../data/characterProfilesExtra.json";
+import { supabase } from "../lib/supabase/client";
 import "./CharactersDatabase.css";
 
 type Language = "en" | "hi-en";
@@ -552,16 +553,37 @@ const profileSearchScore = (profile: CharacterProfile, query: string) => {
 };
 
 export default function CharactersDatabase({ language, onLanguageChange, onBack }: Props) {
+  // Render version-controlled profiles immediately; refresh from Supabase in the background.
+  // The static catalogue remains available offline or whenever the network/database is unavailable.
+  const [characterProfiles, setCharacterProfiles] = useState<CharacterProfile[]>(profiles);
+  useEffect(() => {
+    let cancelled = false;
+    if (!supabase) return;
+    void supabase.from("character_profiles").select("id, data").then(({ data, error }) => {
+      if (cancelled || error || !data?.length) return;
+      const remoteById = new Map(data.map(row => [row.id, row.data as CharacterProfile]));
+      const refreshed = profiles.map(localProfile => {
+        const remoteProfile = remoteById.get(localProfile.id);
+        if (!remoteProfile || remoteProfile.id !== localProfile.id || remoteProfile.name !== localProfile.name
+          || typeof remoteProfile.image !== "string" || !Array.isArray(remoteProfile.rows)) return localProfile;
+        return { ...localProfile, ...remoteProfile, id: localProfile.id };
+      });
+      if (!cancelled) setCharacterProfiles(refreshed);
+    }).catch(() => {
+      // Keep the static catalogue if the request fails.
+    });
+    return () => { cancelled = true; };
+  }, []);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(profiles.length);
+  const [visibleCount, setVisibleCount] = useState(characterProfiles.length);
   const [batchSize, setBatchSize] = useState(4);
   const isHindi = language === "hi-en";
-  const selected = profiles.find(profile => profile.id === selectedId);
+  const selected = characterProfiles.find(profile => profile.id === selectedId);
   const shownProfile = selected;
-  const matches = useMemo(() => profiles
+  const matches = useMemo(() => characterProfiles
     .map(profile => ({ profile, score: profileSearchScore(profile, query) }))
     .filter(result => result.score >= 0)
     .sort((a, b) => b.score - a.score || a.profile.name.localeCompare(b.profile.name, undefined, { sensitivity: "base" }))
@@ -598,7 +620,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     setQuery("");
     setShowSuggestions(false);
     setActiveSuggestionIndex(0);
-    setVisibleCount(profiles.length);
+    setVisibleCount(characterProfiles.length);
     window.scrollTo({ top: 0, behavior: "auto" });
   };
 
@@ -695,7 +717,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
         <button type="button" className={language === "hi-en" ? "active" : ""} onClick={() => onLanguageChange("hi-en")}>HI+EN</button>
       </div>
     </div>
-    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "Character profiles with shared profile layout, source notes and patch history." : "Character profiles with shared profile layout, source notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
+    <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "Character profiles with shared profile layout, source notes and patch history." : "Character profiles with shared profile layout, source notes and patch history."}</p></div><div className="character-db-count"><b>{characterProfiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
     <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((suggestion, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={suggestion.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(suggestion)}><span className="character-suggestion-name">{suggestion.name}</span><span className="character-suggestion-meta">{suggestion.meta}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{totalMatchCount} {isHindi ? "matches found" : "matches found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
     {totalMatchCount ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className={`character-result-card ${profile.artworkMode === "cutout" ? "character-result-card--cutout" : profile.artworkMode === "shared-current" ? "character-result-card--shared-current" : profile.artworkMode === "contained" ? "character-result-card--contained" : profile.artworkMode === "centered-cutout" ? "character-result-card--centered-cutout" : profile.artworkMode === "alok-match-cutout" ? "character-result-card--alok-match-cutout" : profile.artworkMode === "blackout-silhouette" ? "character-result-card--blackout-silhouette" : profile.artworkMode === "blackout-image" ? "character-result-card--blackout-image" : ""}`} key={profile.id} onClick={() => setSelectedId(profile.id)}>
