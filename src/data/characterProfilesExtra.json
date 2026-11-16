@@ -1890,7 +1890,8 @@
         "label": "Garena – Orion character page",
         "url": "https://ff.garena.com/en/chars/"
       }
-    ]
+    ],
+    "artworkMode": "shared-current"
   },
   {
     "id": "santino",
