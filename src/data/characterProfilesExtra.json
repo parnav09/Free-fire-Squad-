@@ -5031,5 +5031,163 @@
         "url": "https://ff.garena.com/en/chars/8"
       }
     ]
+  },
+  {
+    "id": "primis",
+    "name": "Primis",
+    "image": "https://www.freefiremania.com.br/images/noticias/primis-ff-free-fire.jpg",
+    "artworkMode": "contained",
+    "abilityDisplayOnce": true,
+    "skill": "No Skill",
+    "type": "None · Default Character",
+    "badge": "Verified no-ability profile",
+    "lastChanged": "Character System · Verified 16 Nov 2026",
+    "subtitle": "OB55 values reconciled · 16 Nov 2026",
+    "status": "No-ability profile · Verified 16 Nov 2026",
+    "introEn": "Primis is Free Fire's original male default character. He has no innate active or passive ability and no character skill slot.",
+    "introHi": "Primis Free Fire ka original male default character hai. Iske paas koi innate Active ya Passive Ability nahi hai aur character skill slot bhi nahi hai.",
+    "rows": [
+      {
+        "en": "Innate ability",
+        "hi": "Innate Ability",
+        "value": "None"
+      },
+      {
+        "en": "Skill type",
+        "hi": "Skill Type",
+        "value": "No Skill"
+      },
+      {
+        "en": "Character skill slots",
+        "hi": "Character Skill Slots",
+        "value": "None"
+      },
+      {
+        "en": "Customization",
+        "hi": "Customization",
+        "value": "Skin colour can be adjusted"
+      }
+    ],
+    "currentEn": [
+      "No active or passive character ability is assigned to Primis.",
+      "Primis has no character skill slot; equipping other characters' skills through Primis is not supported.",
+      "The character's skin colour can be customized."
+    ],
+    "currentHi": [
+      "Primis ko koi Active ya Passive Character Ability assign nahi hai.",
+      "Primis mein Character Skill Slot nahi hai; Primis ke through doosre characters ki skills equip karna supported nahi hai.",
+      "Is character ka skin colour customize kiya ja sakta hai."
+    ],
+    "notesEn": [
+      "Primis is a cosmetic/default avatar, not an ability-bearing character. Do not invent a skill, cooldown, level scaling, or combat effect.",
+      "Skin-colour customization is a character-specific customization feature, not a combat ability.",
+      "The profile intentionally records 'None' for ability values; no numerical ability table applies."
+    ],
+    "notesHi": [
+      "Primis ek cosmetic/default avatar hai, ability wala character nahi. Iske liye Skill, Cooldown, Level Scaling ya combat effect invent nahi kiya gaya hai.",
+      "Skin-colour customization character-specific customization feature hai, combat ability nahi.",
+      "Ability values mein jaan-bujhkar 'None' record kiya gaya hai; numerical ability table applicable nahi hai."
+    ],
+    "historyEn": [
+      "Original Free Fire default character was known as Adam before the Primis name.",
+      "Character system era: remains a no-skill default character."
+    ],
+    "historyHi": [
+      "Free Fire ke original default character ko Primis naam se pehle Adam kaha jaata tha.",
+      "Character System era: ab bhi no-skill default character hai."
+    ],
+    "source": [
+      {
+        "label": "Free Fire Mania — Primis character / original artwork",
+        "url": "https://www.freefiremania.com.br/noticia/primis-free-fire.html"
+      },
+      {
+        "label": "Free Fire Wiki — Primis (ability listed as None)",
+        "url": "https://garenafreefire.fandom.com/wiki/Primis"
+      },
+      {
+        "label": "Garena Free Fire — character skill slots exception (Primis/Nulla)",
+        "url": "https://dl.dir.freefiremobile.com/common/web_event/aswqooiwd/123ec07d.html?lang=en"
+      }
+    ]
+  },
+  {
+    "id": "nulla",
+    "name": "Nulla",
+    "image": "https://www.freefiremania.com.br/prints/nulla-e-primis-free-fire-garena-altera-o-nome-dos-personagens-adam-e-eve.jpg",
+    "artworkMode": "contained",
+    "abilityDisplayOnce": true,
+    "skill": "No Skill",
+    "type": "None · Default Character",
+    "badge": "Verified no-ability profile",
+    "lastChanged": "Character System · Verified 16 Nov 2026",
+    "subtitle": "OB55 values reconciled · 16 Nov 2026",
+    "status": "No-ability profile · Verified 16 Nov 2026",
+    "introEn": "Nulla is Free Fire's original female default character. She has no innate active or passive ability and no character skill slot.",
+    "introHi": "Nulla Free Fire ki original female default character hai. Iske paas koi innate Active ya Passive Ability nahi hai aur character skill slot bhi nahi hai.",
+    "rows": [
+      {
+        "en": "Innate ability",
+        "hi": "Innate Ability",
+        "value": "None"
+      },
+      {
+        "en": "Skill type",
+        "hi": "Skill Type",
+        "value": "No Skill"
+      },
+      {
+        "en": "Character skill slots",
+        "hi": "Character Skill Slots",
+        "value": "None"
+      },
+      {
+        "en": "Customization",
+        "hi": "Customization",
+        "value": "Skin colour can be adjusted"
+      }
+    ],
+    "currentEn": [
+      "No active or passive character ability is assigned to Nulla.",
+      "Nulla has no character skill slot; equipping other characters' skills through Nulla is not supported.",
+      "The character's skin colour can be customized."
+    ],
+    "currentHi": [
+      "Nulla ko koi Active ya Passive Character Ability assign nahi hai.",
+      "Nulla mein Character Skill Slot nahi hai; Nulla ke through doosre characters ki skills equip karna supported nahi hai.",
+      "Is character ka skin colour customize kiya ja sakta hai."
+    ],
+    "notesEn": [
+      "Nulla is a cosmetic/default avatar, not an ability-bearing character. Do not invent a skill, cooldown, level scaling, or combat effect.",
+      "Skin-colour customization is a character-specific customization feature, not a combat ability.",
+      "The profile intentionally records 'None' for ability values; no numerical ability table applies."
+    ],
+    "notesHi": [
+      "Nulla ek cosmetic/default avatar hai, ability wala character nahi. Iske liye Skill, Cooldown, Level Scaling ya combat effect invent nahi kiya gaya hai.",
+      "Skin-colour customization character-specific customization feature hai, combat ability nahi.",
+      "Ability values mein jaan-bujhkar 'None' record kiya gaya hai; numerical ability table applicable nahi hai."
+    ],
+    "historyEn": [
+      "Original Free Fire default character was known as Eve before the Nulla name.",
+      "Character system era: remains a no-skill default character."
+    ],
+    "historyHi": [
+      "Free Fire ke original default character ko Nulla naam se pehle Eve kaha jaata tha.",
+      "Character System era: ab bhi no-skill default character hai."
+    ],
+    "source": [
+      {
+        "label": "Free Fire Mania — Nulla & Primis original character selection artwork",
+        "url": "https://www.freefiremania.com.br/noticia/nulla-e-primis-free-fire-garena-altera-o-nome-dos-personagens-adam-e-eve.html"
+      },
+      {
+        "label": "Free Fire Wiki — Nulla (ability listed as None)",
+        "url": "https://garenafreefire.fandom.com/wiki/Nulla"
+      },
+      {
+        "label": "Garena Free Fire — character skill slots exception (Primis/Nulla)",
+        "url": "https://dl.dir.freefiremobile.com/common/web_event/aswqooiwd/123ec07d.html?lang=en"
+      }
+    ]
   }
 ]
