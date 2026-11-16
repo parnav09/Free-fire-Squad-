@@ -437,7 +437,7 @@ function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
   </div>;
   if (!profile.image || failed) return monogram;
   return <img
-    className={profile.artworkMode === "official-fullbody" ? "character-art-image--official-fullbody" : profile.artworkMode === "centered-cutout" ? "character-art-image--centered-cutout" : undefined}
+    className={profile.artworkMode === "official-fullbody" ? "character-art-image--official-fullbody" : profile.artworkMode === "cutout" ? "character-art-image--cutout" : profile.artworkMode === "centered-cutout" ? "character-art-image--centered-cutout" : undefined}
     src={profile.image}
     alt={profile.name}
     loading={variant === "card" ? "lazy" : "eager"}
