@@ -1263,3 +1263,14 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
 .combat-nexus-loadouts .combat-nexus-square-count i{color:#9dcce8!important}
 .combat-nexus-square-arrow,
 .combat-nexus-loadouts .combat-nexus-square-arrow{color:#a8eaff!important}
+
+
+/* Player character loadout — compact, touch-safe selectors. */
+.roster-character-loadout{display:grid;gap:13px;margin:22px 0;padding:18px;border:1px solid rgba(112,180,220,.24);border-radius:16px;background:rgba(8,14,27,.72)}
+.loadout-slot-group{display:grid;gap:7px;min-width:0;color:#c8d7ef;font-size:12px;font-weight:750}
+.loadout-slot-group select,.loadout-slot-group textarea{width:100%;min-width:0;min-height:44px;padding:11px 12px;border:1px solid rgba(116,154,198,.3);border-radius:10px;background:#0b1425;color:#eef4ff;font:inherit;font-weight:500}
+.loadout-slot-group textarea{resize:vertical;line-height:1.5}
+.roster-character-loadout>small{color:#93a8c7;font-size:11px;line-height:1.55}
+.loadout-status{margin:0;color:#8ee7c2;font-size:12px;line-height:1.5}
+.roster-character-loadout .primary-button{min-height:44px;width:100%}
+.roster-character-loadout select:focus-visible,.roster-character-loadout textarea:focus-visible{outline:2px solid #70d8ed;outline-offset:2px}

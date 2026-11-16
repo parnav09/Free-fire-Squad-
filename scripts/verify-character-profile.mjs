@@ -108,3 +108,15 @@ test("Shared-current artwork metadata adds no CSS overrides that alter existing 
   assert.doesNotMatch(css, /character-art-image--shared-current|character-profile-art--shared-current|character-result-card--shared-current/);
   assert.doesNotMatch(css, /Explicit artwork modes for the 54 profiles/);
 });
+
+
+test("Player profile assignment UI uses the centralized character catalogue and validates four unique slots", async () => {
+  const app = await readFile(new URL("../src/App.tsx", import.meta.url), "utf8");
+  assert.match(app, /player_character_loadouts/);
+  assert.match(app, /active_character_id/);
+  assert.match(app, /passive_character_ids/);
+  assert.match(app, /Select all three passive character slots/);
+  assert.match(app, /new Set\(\[characterLoadoutDraft\.active,\.\.\.passives\]\)\.size!==4/);
+  assert.match(app, /characterCatalogue as Array<\{id:string;name:string;skill:string;type:string\}>/);
+  assert.doesNotMatch(app, /COMING IN A FUTURE BUILD/);
+});
