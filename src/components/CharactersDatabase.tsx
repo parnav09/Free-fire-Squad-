@@ -8,7 +8,7 @@ type DetailRow = { en: string; hi: string; value: string };
 type CharacterProfile = {
   id: string;
   image: string;
-  artworkMode?: "cutout" | "contained" | "official-fullbody" | "centered-cutout" | "alok-match-cutout" | "blackout-silhouette" | "blackout-image";
+  artworkMode?: "cutout" | "contained" | "shared-current" | "official-fullbody" | "centered-cutout" | "alok-match-cutout" | "blackout-silhouette" | "blackout-image";
   abilityDisplayOnce?: boolean;
   name: string;
   skill: string;
@@ -59,7 +59,7 @@ type CharacterProfile = {
 
 const baseProfiles: CharacterProfile[] = [
   {
-    id: "ray", name: "Ray", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20264/1a2c81cd893f6ea43a527cb3b7b2f897.png", skill: "Bond of Eclipse", type: "Active · Tag / Link",
+    id: "ray", name: "Ray", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20264/1a2c81cd893f6ea43a527cb3b7b2f897.png", artworkMode: "shared-current", skill: "Bond of Eclipse", type: "Active · Tag / Link",
     introEn: "A survival ability profile based on Garena's current official character page.",
     introHi: "Ye Profile Garena ke current Official Character Page par di gayi information par based hai.",
     currentEn: [
@@ -92,7 +92,7 @@ const baseProfiles: CharacterProfile[] = [
     status: "Current profile checked · 14 Nov 2026",
   },
   {
-    id: "morse", name: "Morse", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20261/87b0db20d90350d22979b03d8b65a567.png", skill: "Stealth Bytes", type: "Active · Stealth",
+    id: "morse", name: "Morse", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20261/87b0db20d90350d22979b03d8b65a567.png", artworkMode: "shared-current", skill: "Stealth Bytes", type: "Active · Stealth",
     introEn: "A stealth-focused ability. Current OB55 adjustments supersede older OB52 values.",
     introHi: "Ye Stealth-focused Ability hai. OB55 ke current changes, purane OB52 values ki jagah apply hote hain.",
     currentEn: [
@@ -127,7 +127,7 @@ const baseProfiles: CharacterProfile[] = [
     status: "OB55 values reconciled · 14 Nov 2026",
   },
   {
-    id: "nero", name: "Nero", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202510/5d937a0ac5fe4e67c97fb8fb8e43455e.png", skill: "Cryo Mind", type: "Active · Plushie / Area",
+    id: "nero", name: "Nero", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/202510/5d937a0ac5fe4e67c97fb8fb8e43455e.png", artworkMode: "shared-current", skill: "Cryo Mind", type: "Active · Plushie / Area",
     introEn: "The current official character profile and older patch notes contain conflicting plushie and damage values; the conflict is explicitly flagged below.",
     introHi: "Current Official Character Profile aur purane Patch Notes mein Plushie aur Damage ki Values alag hain. Is difference ko neeche clearly flag kiya gaya hai.",
     currentEn: [
@@ -164,7 +164,7 @@ const baseProfiles: CharacterProfile[] = [
     status: "Source discrepancy flagged · 14 Nov 2026",
   },
   {
-    id: "rin", name: "Rin", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20257/9aa96a782fab8633cbb57f9229e7a5e6.png", skill: "Gale of Kunai", type: "Passive · Stored charges",
+    id: "rin", name: "Rin", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20257/9aa96a782fab8633cbb57f9229e7a5e6.png", artworkMode: "shared-current", skill: "Gale of Kunai", type: "Passive · Stored charges",
     introEn: "A passive character ability listed by Garena. Weapon-specific mechanics are intentionally not detailed in this profile.",
     introHi: "Garena ne Rin ki is Passive Character Ability ko list kiya hai. Is Profile mein Weapon-specific Mechanics ki details jaanbujhkar nahi di gayi hain.",
     currentEn: [
@@ -192,7 +192,7 @@ const baseProfiles: CharacterProfile[] = [
     status: "OB55 balance note checked · 14 Nov 2026",
   },
   {
-    id: "oscar", name: "Oscar", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20252/d5d04e40eb00900e96a28828decdaff0.png", skill: "Valiant Dash", type: "Active",
+    id: "oscar", name: "Oscar", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20252/d5d04e40eb00900e96a28828decdaff0.png", artworkMode: "shared-current", skill: "Valiant Dash", type: "Active",
     badge: "Official-source profile", lastChanged: "OB54 (23 Jun 2026)",
     introEn: "Active dash that destroys Gloo Walls and knocks back enemies.",
     introHi: "Oscar ki Active Dash Skill Gloo Walls destroy karti hai aur saamne aane wale Enemies ko Knockback deti hai.",
@@ -227,7 +227,7 @@ const baseProfiles: CharacterProfile[] = [
     status: "OB55 values reconciled · 15 Nov 2026",
   },
   {
-    id: "kassie", name: "Kassie", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/8d87fe1959e300741eda601e800c0f40.png", skill: "Electro Therapy", type: "Active · Healing / Link",
+    id: "kassie", name: "Kassie", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/8d87fe1959e300741eda601e800c0f40.png", artworkMode: "shared-current", skill: "Electro Therapy", type: "Active · Healing / Link",
     introEn: "A support-focused character profile. Garena's current English page provides the complete healing values and link conditions.",
     introHi: "Ye Support-focused Character Profile hai. Garena ka current English Page Healing Values aur Link Conditions ki complete details deta hai.",
     currentEn: [
@@ -266,7 +266,7 @@ const baseProfiles: CharacterProfile[] = [
     status: "Current English profile + introduction notes cross-checked · 14 Nov 2026"
   },
   {
-    id: "kairos", name: "Kairos", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/ed1e34b6c47b37675eae84daffdf63b1.png", skill: "Defense Breaker", type: "Passive · EP modes",
+    id: "kairos", name: "Kairos", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/ed1e34b6c47b37675eae84daffdf63b1.png", artworkMode: "shared-current", skill: "Defense Breaker", type: "Passive · EP modes",
     introEn: "A two-state passive ability driven by EP. Current English profile values are recorded separately from older short-form localized summaries.",
     introHi: "Ye EP se chalne wali two-mode Passive Ability hai. Current English Profile ki Values ko purane short-form localized summaries se alag rakha gaya hai.",
     currentEn: [
@@ -305,7 +305,7 @@ const baseProfiles: CharacterProfile[] = [
     status: "Current English profile checked; wording ambiguity explicitly retained · 14 Nov 2026"
   },
   {
-    id: "ryden", name: "Ryden", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20241/fb808bb7cfc4820384c7a52fee3201ea.png", skill: "Spider Trap", type: "Active · Deployable device",
+    id: "ryden", name: "Ryden", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20241/fb808bb7cfc4820384c7a52fee3201ea.png", artworkMode: "shared-current", skill: "Spider Trap", type: "Active · Deployable device",
     introEn: "An inventor character whose official skill entry describes a deployable spider device. The detailed values are cross-checked against Garena's localized character page.",
     introHi: "Ryden ek Inventor Character hai. Uski Official Skill ek deployable Spider Device describe karti hai. Detailed Values ko Garena ke localized character page se cross-check kiya gaya hai.",
     currentEn: [
@@ -345,7 +345,7 @@ const baseProfiles: CharacterProfile[] = [
     status: "English summary + detailed official localized page reconciled · 14 Nov 2026"
   },
   {
-    id: "ignis", name: "Ignis", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20241/a393f95f57bdaa3d2031a052b6acef24.png", skill: "Untamed Flame", type: "Active · Moving screen",
+    id: "ignis", name: "Ignis", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20241/a393f95f57bdaa3d2031a052b6acef24.png", artworkMode: "shared-current", skill: "Untamed Flame", type: "Active · Moving screen",
     introEn: "Ignis's current English character page uses the name Untamed Flame. Older patch notes use Flame Mirage for the earlier version of the ability.",
     introHi: "Ignis ke current English Character Page par Skill ka naam Untamed Flame hai. Purane Patch Notes mein Ability ke earlier version ko Flame Mirage kaha gaya tha.",
     currentEn: [
@@ -384,7 +384,7 @@ const baseProfiles: CharacterProfile[] = [
     status: "Current profile reconciled against OB42 + rework history · 14 Nov 2026"
   },
   {
-    id: "suzy", name: "Suzy", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/2cdde4e7d5010be2a35971e19f2285e4.png", skill: "Money Mark", type: "Passive · In-match currency",
+    id: "suzy", name: "Suzy", image: "https://dl.dir.freefiremobile.com/common/web_event/official2.ff.garena.all/20246/2cdde4e7d5010be2a35971e19f2285e4.png", artworkMode: "shared-current", skill: "Money Mark", type: "Passive · In-match currency",
     introEn: "A bounty-themed passive ability whose official profile describes an in-match currency reward connected to marked opponents.",
     introHi: "Ye Bounty-themed Passive Ability hai. Official Profile ke mutabik marked Opponents se In-match Currency Reward milta hai.",
     currentEn: [
@@ -451,7 +451,7 @@ function CharacterArtwork({ profile, variant }: CharacterArtworkProps) {
   }
   if (!profile.image || failed) return monogram;
   return <img
-    className={profile.artworkMode === "blackout-image" ? "character-art-image--blackout" : profile.artworkMode === "official-fullbody" ? "character-art-image--official-fullbody" : profile.artworkMode === "alok-match-cutout" ? "character-art-image--alok-match-cutout" : profile.artworkMode === "cutout" ? "character-art-image--cutout" : profile.artworkMode === "centered-cutout" ? "character-art-image--centered-cutout" : undefined}
+    className={profile.artworkMode === "blackout-image" ? "character-art-image--blackout" : profile.artworkMode === "official-fullbody" ? "character-art-image--official-fullbody" : profile.artworkMode === "alok-match-cutout" ? "character-art-image--alok-match-cutout" : profile.artworkMode === "cutout" ? "character-art-image--cutout" : profile.artworkMode === "contained" ? "character-art-image--contained-current" : profile.artworkMode === "shared-current" ? "character-art-image--shared-current" : profile.artworkMode === "centered-cutout" ? "character-art-image--centered-cutout" : undefined}
     src={profile.image}
     alt={profile.name}
     loading={variant === "card" ? "lazy" : "eager"}
@@ -630,7 +630,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     </div>
     <article className="character-profile">
       <header className="character-profile-identity">
-        <div className={`character-profile-art ${shownProfile.artworkMode === "official-fullbody" ? "character-profile-art--official-fullbody" : shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : shownProfile.artworkMode === "centered-cutout" ? "character-profile-art--centered-cutout" : shownProfile.artworkMode === "alok-match-cutout" ? "character-profile-art--alok-match-cutout" : shownProfile.artworkMode === "blackout-silhouette" ? "character-profile-art--blackout-silhouette" : shownProfile.artworkMode === "blackout-image" ? "character-profile-art--blackout-image" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
+        <div className={`character-profile-art ${shownProfile.artworkMode === "official-fullbody" ? "character-profile-art--official-fullbody" : shownProfile.artworkMode === "cutout" ? "character-profile-art--cutout" : shownProfile.artworkMode === "shared-current" ? "character-profile-art--shared-current" : shownProfile.artworkMode === "contained" ? "character-profile-art--contained" : shownProfile.artworkMode === "centered-cutout" ? "character-profile-art--centered-cutout" : shownProfile.artworkMode === "alok-match-cutout" ? "character-profile-art--alok-match-cutout" : shownProfile.artworkMode === "blackout-silhouette" ? "character-profile-art--blackout-silhouette" : shownProfile.artworkMode === "blackout-image" ? "character-profile-art--blackout-image" : ""}`}><CharacterArtwork profile={shownProfile} variant="profile" /></div>
         <div className="character-profile-heading">
           <h2>{shownProfile.name}</h2>
           <span className="character-confirmed">{shownProfile.badge || "Official-source profile"}</span>
@@ -698,7 +698,7 @@ export default function CharactersDatabase({ language, onLanguageChange, onBack 
     <header className="character-db-heading"><div><div className="character-db-eyebrow">OPERATIVE DATABASE · PHASE 1 + 2</div><h1>{isHindi ? "Character Database" : "Character Database"}</h1><p>{isHindi ? "Character profiles with shared profile layout, source notes and patch history." : "Character profiles with shared profile layout, source notes and patch history."}</p></div><div className="character-db-count"><b>{profiles.length}</b><span>{isHindi ? "PROFILES" : "PROFILES"}<small> / 67 target</small></span></div></header>
     <div className="character-search-wrap"><label className="character-search" role="search"><span aria-hidden="true">⌕</span><input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))} onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }} onKeyDown={event => { if (event.key === "Escape") setShowSuggestions(false); if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); } if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); } if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex] || suggestions[0]); } }} placeholder={isHindi ? "Character ya ability search karein…" : "Search character or ability…"} aria-label="Search characters" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="character-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search"/>{query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}</label>{showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="character-search-suggestions" role="listbox" aria-label="Matching characters">{suggestions.map((suggestion, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={suggestion.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(suggestion)}><span className="character-suggestion-name">{suggestion.name}</span><span className="character-suggestion-meta">{suggestion.meta}</span><span aria-hidden="true">↗</span></button>)}</div>}</div>
     <div className="character-results-head"><div><b>{isHindi ? "CHARACTER PROFILES" : "CHARACTER PROFILES"}</b><span>{totalMatchCount} {isHindi ? "matches found" : "matches found"}</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
-    {totalMatchCount ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className={`character-result-card ${profile.artworkMode === "cutout" ? "character-result-card--cutout" : profile.artworkMode === "contained" ? "character-result-card--contained" : profile.artworkMode === "centered-cutout" ? "character-result-card--centered-cutout" : profile.artworkMode === "alok-match-cutout" ? "character-result-card--alok-match-cutout" : profile.artworkMode === "blackout-silhouette" ? "character-result-card--blackout-silhouette" : profile.artworkMode === "blackout-image" ? "character-result-card--blackout-image" : ""}`} key={profile.id} onClick={() => setSelectedId(profile.id)}>
+    {totalMatchCount ? <div className="character-profile-grid">{(query.trim() ? matches : matches.slice(0, visibleCount)).map(profile => <button type="button" className={`character-result-card ${profile.artworkMode === "cutout" ? "character-result-card--cutout" : profile.artworkMode === "shared-current" ? "character-result-card--shared-current" : profile.artworkMode === "contained" ? "character-result-card--contained" : profile.artworkMode === "centered-cutout" ? "character-result-card--centered-cutout" : profile.artworkMode === "alok-match-cutout" ? "character-result-card--alok-match-cutout" : profile.artworkMode === "blackout-silhouette" ? "character-result-card--blackout-silhouette" : profile.artworkMode === "blackout-image" ? "character-result-card--blackout-image" : ""}`} key={profile.id} onClick={() => setSelectedId(profile.id)}>
       <div className="character-result-art"><CharacterArtwork profile={profile} variant="card" /></div>
       <div className="character-result-copy"><span className="character-result-status">{profile.badge || "OFFICIAL-SOURCE PROFILE"}</span><h2>{profile.name}</h2><b>{cardAbilityLabel(profile)}</b><p>{isHindi ? profile.introHi : profile.introEn}</p><span className="character-result-open">{isHindi ? "Open full profile" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
       <span className="character-result-chevron" aria-hidden="true">↗</span>
