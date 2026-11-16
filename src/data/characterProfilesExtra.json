@@ -5035,7 +5035,8 @@
   {
     "id": "primis",
     "name": "Primis",
-    "image": "https://www.freefiremania.com.br/images/noticias/primus-free-fire.jpg",
+    "image": "",
+    "artworkMode": "blackout-silhouette",
     "abilityDisplayOnce": true,
     "skill": "No Skill",
     "type": "None · Default Character",
@@ -5113,8 +5114,8 @@
   {
     "id": "nulla",
     "name": "Nulla",
-    "image": "https://www.freefiremania.com.br/images/noticias/nulla-free-fire.jpg",
-    "artworkMode": "alok-match-cutout",
+    "image": "",
+    "artworkMode": "blackout-silhouette",
     "abilityDisplayOnce": true,
     "skill": "No Skill",
     "type": "None · Default Character",
