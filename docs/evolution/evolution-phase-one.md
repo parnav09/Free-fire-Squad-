@@ -1,6 +1,6 @@
 # Evolution Phase One — Identity, Membership, Timezone
 
-**Status:** IN PROGRESS — E Phase One.1 and E Phase One.2 implemented and current-head CI verified; E Phase One.3 implemented and current-head CI verified; E Phase One.4 onward and the server-side timezone migration/final acceptance checks remain open.  
+**Status:** IN PROGRESS — E Phase One.1 and E Phase One.2 implemented and current-head CI verified; E Phase One.3 implemented and current-head CI verified; E Phase One.4 implementation added; current-head CI verification pending. E Phase One.5 and the server-side timezone migration/final acceptance checks remain open.  
 **Parent:** Evolution Phase Zero — Legacy Fixes (branch chore/evolution-phase-zero-one-naming, PR #114).  
 **Branch:** feat/evolution-phase-one-identity-timezone  
 **Scope:** stable Auth UUID, team membership identity, active membership selection, team timezone validation/date boundaries, session eligibility primitives, and permission-test helpers. Authorization/RLS/grants remain in the separate Security workstream.
@@ -107,3 +107,13 @@ Phase One is not complete until:
 - PR #115 remains open and draft, based on `chore/evolution-phase-zero-one-naming`; no merge, production deployment, Supabase migration, or security-policy change was made.
 - **E Phase One.2 status: IMPLEMENTED + CI VERIFIED.**
 - Next implementation slice: **E Phase One.4 — session-eligibility primitives and focused permission-test helpers**. Do not start Phase Two.
+
+
+### E Phase One.4 — Session eligibility and UI capability test helpers
+
+- Added a pure session eligibility resolver that requires a valid Auth UUID, exact active membership UUID, matching Auth user UUID, matching team UUID, and a non-empty membership role.
+- The resolver returns explicit fail-closed reasons for unauthenticated, malformed, missing, inactive, user-mismatched, or team-mismatched membership.
+- Integrated the resolver into the selected-team load path after the membership re-fetch and before setting the active team.
+- Added UI-only capability helpers for team settings and assignment management. They are not server authorization and do not replace RLS/RPC policy enforcement.
+- Added focused tests for eligible/ineligible sessions, role capability combinations, and app integration.
+- Status: implementation added; current-head CI verification pending.
