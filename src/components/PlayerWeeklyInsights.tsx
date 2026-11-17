@@ -1,5 +1,3 @@
-import React from "react";
-
 type Member={user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;status:string};
 type Assignment={id:string;player_id:string;drill_title:string;due_date:string;status:string;drill_description:string|null};
 type Evaluation={id:string;player_id:string;score_date:string;created_at?:string;communication:number|null;coordination:number|null;decision_making:number|null;role_execution:number|null;map_awareness:number|null;total:number|null;improvement_target:string|null;notes:string|null};
