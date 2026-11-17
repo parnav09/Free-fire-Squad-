@@ -134,3 +134,12 @@ Use this file when continuing in a new ChatGPT conversation.
 - No new exact SQL-to-ledger mappings were established. The previously documented 18 timestamp mismatches, 34 live names without same-name checked-in files, 3 unmatched checked-in files, duplicate live migration name, and unresolved direct-application records remain blockers. Existing Scrims filename replacement conclusions remain unchanged; do not replay old files.
 - No Supabase schema, data, trigger, RLS/policy, grant, function, or migration-history changes were made. No migration was created or applied. Destructive retention remains paused; Security remains separate; Phase Two has not started.
 - **E Phase One.5 remains IN PROGRESS.** The next required evidence is the original SQL and application record for each unresolved live migration (including direct Supabase operations). Do not reverse-engineer missing source SQL from current schema, approve a timezone migration, or apply any database change until provenance and rollback are reviewed.
+
+
+## E Phase One.5 — documentation checkpoint CI verification (18 Nov 2026)
+
+- The continuation checkpoint was recorded in two documentation-only commits: `71930753024a900b40e316dc7c0650b5c989c02c` (handoff) and `654f0efe91e03dbf10cc03316849ff482b4c480b` (Phase One ledger).
+- PR #115 remained open/draft and stacked on PR #114 at head `654f0efe91e03dbf10cc03316849ff482b4c480b`; no merge, retarget, production deployment, or database change occurred.
+- GitHub Actions run #104 (`44190256268`) for that exact head completed successfully. The single job and all steps passed, including typecheck, configured verification suites, and Vite production build.
+- The separate Vercel status remains rate-limited; no full-app preview or device QA was accessed or claimed.
+- The provenance blocker is unchanged: the live migration ledger exposes only version/name metadata, and original SQL/application records for unresolved entries remain unavailable. E Phase One.5 stays IN PROGRESS.
