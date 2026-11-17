@@ -28,6 +28,19 @@ function UiIcon({ name, size = 16 }: { name: UiIconName; size?: number }) {
 }
 
 type Section = "Overview" | "Tournament" | "StratForge" | "Training Legacy" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Weekly Review" | "Player Trends" | "Evolution" | "Profile" | "Settings";
+function readLocalRecord<T extends Record<string, unknown>>(key: string, fallback: T): T {
+  const raw = safeStorageGetItem(key);
+  if (raw === null) return fallback;
+  try {
+    const value: unknown = JSON.parse(raw);
+    return value !== null && typeof value === "object" && !Array.isArray(value)
+      ? value as T
+      : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 function localDateISO(date = new Date()): string { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`; }
 
 
@@ -47,9 +60,9 @@ export default function App() {
   const [mobileMore, setMobileMore] = useState(false);
   const [players, setPlayers] = useState<Player[]>(readPlayers);
   const [week, setWeek] = useState(() => safeStorageGetItem("squad-os-week") || currentISOWeekKey());
-  const [day, setDay] = useState(() => Number(safeStorageGetItem("squad-os-day") || 1));
+  const [day, setDay] = useState(() => { const value=Number(safeStorageGetItem("squad-os-day")||1); return Number.isInteger(value)&&value>=1&&value<=7?value:1; });
   const [scoreboardExpanded, setScoreboardExpanded] = useState(false);
-  const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>(() => { try { return JSON.parse(safeStorageGetItem("squad-os-matches") || "{}"); } catch { return {}; } });
+  const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>(() => readLocalRecord("squad-os-matches", {}));
   const [killDrafts, setKillDrafts] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState("");
   useEffect(() => { if (!notice) return; const timer = window.setTimeout(() => setNotice(""), 7000); return () => window.clearTimeout(timer); }, [notice]);
@@ -70,8 +83,8 @@ export default function App() {
   const [signedIn, setSignedIn] = useState(false);
   const [sessionUserId, setSessionUserId] = useState("");
 
-  const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(safeStorageGetItem("squad-os-drills") || "{}"); } catch { return {}; } });
-  const [notes, setNotes] = useState<Record<string, string>>(() => { try { return JSON.parse(safeStorageGetItem("squad-os-notes") || "{}"); } catch { return {}; } });
+  const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => readLocalRecord("squad-os-drills", {}));
+  const [notes, setNotes] = useState<Record<string, string>>(() => readLocalRecord("squad-os-notes", {}));
   const [displayName, setDisplayName] = useState("");
   const [teamName, setTeamName] = useState("");
   const [teamCode, setTeamCode] = useState("");
