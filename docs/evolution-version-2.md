@@ -660,3 +660,181 @@ This is the **Evolution Version 2 blueprint only**. It has not implemented these
 The prior reviews provide a consolidated set of ten known problem groups above. The exact original numbered 1–10 text from every older chat was not fully recoverable, so this document does not falsely claim those are verbatim historical labels. It includes all recoverable Evolution issues and the additional requirements from the current request.
 
 **Next implementation order:** Phase 0 audit → Phase 1 canonical rubric → Phase 2 atomic evaluation → Phase 3 session integration → Phase 4 unified tasks → Phase 5–7 analytics → Phase 8–10 reliability and rollout.
+
+
+---
+
+## 16. Addendum — Anonymous Peer Evaluation Inbox in Tasks
+
+**This is an additive requirement. The document name remains “Evolution Version 2”; do not rename or replace the blueprint.** This addendum extends Daily Evolution, Tasks, Feedback, privacy, database, Realtime, UI, and QA requirements.
+
+### 16.1 Product behavior
+
+The existing Tasks area already has the concept of feedback sent by a player and feedback received by a player. Version 2 must add a dedicated **Daily Peer Evaluation** card type to the recipient's **Feedback Received** area. It must be connected to the canonical Daily Evaluation record, not copied into an unrelated task or manually re-entered.
+
+The recipient's Tasks screen should have clear tabs/filters:
+- **Feedback Received** — daily peer evaluation cards and other feedback addressed to the signed-in player.
+- **Feedback Sent** — the signed-in player's own submissions and status. Only the sender can see their own submitted content here.
+- **Improvement Tasks** — tasks created from evaluation feedback, weekly review, or coach assignment.
+
+Do not mix a received anonymous review with a task assignment. They are related records but different card types.
+
+### 16.2 Daily evaluation eligibility and no self-rating
+
+- A player can evaluate only another eligible player in the same team and the relevant daily evaluation cohort/session.
+- The evaluator must never see themselves as an option in the target-player selector. Filter the authenticated player's own UUID out of the selector before rendering.
+- This is not merely a frontend rule: the database transaction/RPC must independently reject `auth.uid() = target_player_id`. Direct API calls, stale clients, and modified requests must not bypass it.
+- Validate team membership, active roster status, and session participation/eligibility on the server.
+- Never use roster labels such as P1/P2 as identity. Use Auth UUIDs internally and display names only where the product is allowed to show them.
+- A roster with N eligible participating players expects N−1 peer reviews per recipient. Do not hard-code four. If the active eligible cohort has five players, each player can receive four reviews; if it has four, each can receive three.
+- A player cannot submit more than one final daily review for the same recipient and team-local date/cohort unless an explicitly audited correction flow is used.
+- If a player was absent, inactive, or not eligible for the relevant session, mark them “Not eligible / Excused” rather than counting them as a missed reviewer.
+- The date is assigned by the server using the team's configured timezone (Asia/Kolkata by default). No evaluator date picker and no client-supplied backdating. The date is visible as read-only context.
+
+### 16.3 Strict recipient anonymity
+
+The recipient must never see who submitted a review:
+- No evaluator name, IGN, avatar, roster slot, role, player code, UUID, email, or stable pseudonym.
+- No evaluator identity in the card title, detail screen, notification, export, Realtime payload, analytics, or player-facing API response.
+- No exact submission timestamp. Show the team-local evaluation date only.
+- Do not expose stable ordering that could let players track one reviewer across days. Randomize the order of anonymous review cards for each recipient/date, or use a non-persistent ordinal such as “Anonymous review 1” within that one daily batch.
+- Do not include evaluator metadata in client-readable tables/views. Keep the minimum identity mapping needed for self-rating prevention, duplicate prevention, and security audit in a protected server-only structure with no player-facing read policy.
+- Normal coach/IGL/player screens must not reveal evaluator identity. If a narrowly scoped security audit is ever legally/operationally required, it must be a separate break-glass process, not a normal product feature or a way to resolve team arguments.
+
+**Important anonymity limitation:** in a small five-player squad, people may guess an evaluator from writing style, timing, or a specific incident mentioned in free text. The system can hide account identity and metadata, but cannot mathematically guarantee that a reviewer cannot be guessed from their words. The UI should warn reviewers not to identify themselves or name other teammates in notes, strip metadata, and avoid showing exact timestamps. If strict anonymity is more important than unrestricted notes, provide structured feedback prompts and a moderation/redaction step before release. Do not promise impossible anonymity.
+
+### 16.4 What the recipient sees in Tasks
+
+Add one premium card for each daily evaluation batch:
+
+**Card front**
+- Title: “Daily Peer Evaluation”
+- Date: server-assigned team-local date, e.g. “17 Nov 2026”
+- Status: “New”, “Partially received”, or “Complete”
+- Progress: “3 of 4 anonymous reviews received” (only where the recipient is authorized to see their own received-review progress)
+- Small summary: “Your feedback is ready” or “Reviews are still coming in”
+- No evaluator identity, initials, player codes, avatars, or identifying badges.
+
+Tap opens a dedicated detail screen, matching the existing Scrims card-to-detail interaction pattern:
+- Header with date and completion status.
+- A separate card/accordion for each anonymous review in randomized, non-stable order.
+- Each review shows its own total score and all dimension scores, including Communication, Coordination & Trade Support, Decision Making, Positioning, Map Awareness & Rotation, and Role Execution.
+- Show “Not observed” distinctly from a deliberate 0.
+- Under the scores, show the reviewer's two separate feedback areas:
+  1. **Mistakes observed** — what went wrong / what should be corrected.
+  2. **Improvement focus** — what the player should practise or change.
+- Show linked evidence only if it does not reveal the evaluator's identity or another player's private data. Redact author metadata and restrict access to the recipient.
+- Do not merge all peer scores into one unexplained number. Show each anonymous review separately, then an optional aggregate summary with sample count and coverage.
+- Do not expose reviewer identity through tooltips, accessibility labels, hidden DOM attributes, URLs, query parameters, client logs, or downloadable filenames.
+
+The recipient should be able to open each review independently, read the dimension-level scores and notes, and return to the card list without losing scroll position.
+
+### 16.5 Review completion and missed-review states
+
+The expected review count is calculated from the eligible cohort snapshot for that date/session, excluding the recipient themselves.
+
+- Before the daily cutoff: show “Collection in progress” / “Pending”.
+- After cutoff: if the recipient has fewer reviews than expected, show “Not all peer reviews received” and the count received/expected.
+- If all eligible peers submitted: show “Complete”.
+- If a reviewer is excused or not eligible, remove them from the expected denominator through a recorded eligibility decision; do not label them as having missed a review.
+- Do not mark a player as a missed evaluator just because they did not attend the scrim/session.
+- The recipient may see their own received count, such as 3/4, but not the identities of submitters or missing submitters.
+- Other players may see only a neutral collection state if the team needs a shared status. Do not show a per-reviewer submission list, missing-player list, or detailed per-target completion matrix to the whole squad; that can reveal identities by elimination in a small roster.
+- If the product requires a team-wide status card, show only “Daily peer review collection open/closed” without person-level counts. Coaches may see aggregate cohort coverage, not reviewer identities.
+- A missed review must not generate a public accusation or a visible “Player X failed to review Player Y” event. Remind the individual privately that they have pending peer reviews, without revealing the recipient list.
+
+### 16.6 How anonymous reviews connect to improvement tasks
+
+- A received evaluation can offer **Create improvement task** from a specific dimension or feedback item.
+- The new task references the evaluation ID and dimension/evidence IDs internally, but the player-facing task must not contain evaluator identity or a reviewer code.
+- The task title should describe the improvement, e.g. “Improve rotation timing”, not “Reviewer 2 said…”.
+- The player can acknowledge the feedback, add a reflection, and mark a linked drill/task complete.
+- Completion does not change the original evaluation. The next eligible scrim/training evaluation is linked as follow-up and measures whether the target improved.
+- A player can report that feedback is unclear or inappropriate through a private review flag. This creates a moderation/review item without revealing the evaluator to the player.
+- Feedback acknowledgement is not agreement and must not be treated as an appeal or score edit.
+
+### 16.7 Data model additions
+
+Align these logical entities with the existing schema during Phase 0; do not blindly create duplicate tables if equivalent tables already exist.
+
+- `daily_review_cohorts`: team, server-derived date, optional session ID, timezone, eligible roster snapshot, cutoff, rubric version, status.
+- `daily_peer_review_submissions`: cohort ID, target player UUID, protected evaluator UUID, submitted evaluation ID, idempotency key, submitted state. Evaluator UUID is never exposed to recipient-facing queries.
+- `daily_peer_review_eligibility`: cohort ID, player UUID, eligible/excused reason, participation evidence, decided-at.
+- `daily_peer_review_receipts` (or secure view/RPC result): recipient-scoped sanitized review payload containing evaluation ID, date, dimension scores, notes, safe evidence, and non-stable display order; no evaluator identity.
+- `daily_peer_review_status`: recipient-scoped expected/received counts and collection state, with no reviewer identities.
+- `feedback_tasks` / links: relation from received evaluation dimension/note to canonical `development_tasks`.
+
+Constraints and transaction logic:
+- Unique `(cohort_id, evaluator_user_id, target_player_id)` to prevent duplicate peer submissions, plus unique idempotency key.
+- Check that evaluator and target are different UUIDs.
+- Server-side check that both belong to the same eligible team/cohort and that target was eligible.
+- Enforce one final submission per evaluator-target-cohort. Corrections are append-only amendments with reason, not silent overwrites.
+- A cohort roster snapshot prevents a later roster edit from changing the expected review count retroactively.
+- Store author identity separately from sanitized recipient content; do not rely on a nullable evaluator column in a unique index.
+- Keep raw evaluation and notes immutable after submission; corrections create a version/amendment trail.
+
+### 16.8 RLS, API, and privacy requirements
+
+- The recipient-facing read RPC/view must return only the signed-in recipient's sanitized records.
+- A player must not query the base submission table or infer evaluator UUIDs from foreign keys, joins, counts grouped by evaluator, error messages, or realtime payloads.
+- Revoke direct client SELECT on protected evaluator mapping/submission tables. Expose only the minimal recipient-scoped sanitized response.
+- Use RLS on all exposed tables. Views must be security-invoker where supported; any privileged function must be narrowly scoped, validate `auth.uid()`, use a fixed search_path, and have EXECUTE privileges explicitly restricted.
+- Never put service-role credentials in the client.
+- Ensure notifications and realtime events contain only recipient-safe fields. Prefer “new anonymous review received” and a refetch of the sanitized receipt; do not send raw row payloads.
+- Test access as recipient, evaluator, unrelated teammate, coach/IGL, and unauthenticated user.
+- Keep the sent-feedback view private to the submitting evaluator; it may show their own content because they already know they wrote it, but it must not create a path to identify other reviewers.
+
+### 16.9 Premium UI and interaction details
+
+- Add a “Daily Peer Evaluation” card to Feedback Received, visually consistent with existing Scrims cards and Tasks styling.
+- Use clear date, progress/status, and unread indicator; avoid excessive badges and clutter.
+- Detail screen uses expandable anonymous-review cards with a stable, accessible layout; labels and values remain aligned on narrow screens.
+- Dimension scores use consistent 0–10 presentation; “Not observed” is text, not a zero-length bar.
+- Notes are visually separated into “Mistakes observed” and “Improvement focus”.
+- Add loading skeleton, empty state, partial state, complete state, failed refresh, offline/stale state, and retry behavior.
+- Tapping a card opens details; back navigation returns to the same scroll position.
+- Use 44–48px minimum effective touch targets, including accordion headers, tabs, and action buttons.
+- On Android, ensure keyboard and safe-area handling; on desktop, use a balanced two-column review layout without exposing identity in hover states.
+- Accessibility text must say “Anonymous review” and must not contain hidden author names or codes.
+
+### 16.10 Realtime and notifications
+
+- When a review is committed, enqueue a sanitized notification for the target player.
+- Realtime notification payload contains only recipient ID, cohort ID, safe status, and event ID; never evaluator ID or raw author metadata.
+- Recipient client refetches sanitized receipt data; it does not render the raw event payload as the review.
+- Update received count/status immediately after successful server commit and reconcile with server on reconnect/focus.
+- Update the sender's private Feedback Sent state separately.
+- Avoid a global live counter that lets teammates watch individual submissions arrive; this can reveal reviewer identity by timing.
+
+### 16.11 Acceptance tests specific to anonymous peer review
+
+1. In a five-player eligible cohort, each player can evaluate the other four; nobody can select or submit an evaluation for themselves.
+2. In a four-player cohort, expected reviews are three, not a hard-coded four.
+3. Direct RPC/API self-rating attempt is rejected even if the UI is bypassed.
+4. Duplicate taps, retries, and offline replay create one submission per evaluator-target-cohort.
+5. Recipient can see four anonymous review cards and all six dimension scores/notes, but no author identity or stable author code.
+6. The four cards are not ordered by submission time and do not preserve a cross-day reviewer pseudonym.
+7. Recipient can distinguish a deliberate 0 from Not observed.
+8. Recipient sees their own expected/received count; other teammates cannot inspect a reviewer-by-reviewer completion matrix.
+9. A missed/late review changes collection status without revealing who missed it.
+10. Absent or excused players are not counted as missed reviewers.
+11. Notes, notifications, URLs, accessibility labels, browser logs, exports, and Realtime payloads contain no evaluator identity.
+12. A reviewer cannot read another player's received-review inbox.
+13. A recipient cannot query the protected evaluator mapping table.
+14. Creating an improvement task from a received review links to the correct dimension/evidence but carries no reviewer identity.
+15. Completing a task creates a follow-up path and does not rewrite the original review.
+16. Realtime receipt refresh works without a full page reload and handles reconnect/stale states.
+17. Small-screen layout has no clipping, overlapping labels, or undersized tap targets.
+18. A note containing explicit self-identification is flagged for redaction/review before delivery when strict anonymity mode is enabled.
+
+### 16.12 Implementation phase integration
+
+- **Phase 0:** inspect existing Tasks feedback sent/received UI, feedback tables, daily score tables, RLS, Realtime subscriptions, roster/attendance model, and current Scrims card-detail navigation.
+- **Phase 1:** implement eligible cohort snapshot, server-derived date, self-exclusion in selector, and database self-rating rejection.
+- **Phase 2:** implement atomic anonymous peer-review submission, protected evaluator mapping, recipient-safe receipt query, and idempotency.
+- **Phase 3:** add Daily Peer Evaluation card and detail screen in Tasks → Feedback Received; keep Feedback Sent private to sender.
+- **Phase 4:** connect received feedback to canonical development tasks and follow-up evaluations.
+- **Phase 5:** add sanitized notifications/Realtime, completion states, missed-review handling, and audit-safe correction workflow.
+- **Phase 6:** complete RLS/privacy review, deanonymization tests, Android/desktop UI QA, and rollout behind a feature flag.
+
+**Definition of done for this addendum:** a player can open Tasks → Feedback Received, tap today's Daily Peer Evaluation, inspect every anonymous peer's separate dimension scores and improvement/mistake notes, and create a linked improvement task—without the app exposing who submitted any review. Self-evaluation is impossible at both UI and database layers. Missing reviews are represented through privacy-safe collection status, not a public list of reviewers who failed to submit.
