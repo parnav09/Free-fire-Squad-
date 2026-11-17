@@ -21,8 +21,8 @@ Use the exact order in the supplied report. On each user instruction "Next", imp
 | 2 | Dr. Beanie; Dreki; Falco; Fang; Finn | Implemented · preview validation pending · main merge deferred |
 | 3 | Flash; Hoot; Kactus; Kitty (alias: Gatito); Mechanical Pup | Implemented · preview validation pending · main merge deferred |
 | 4 | Moony; Mr. Waggor; Night Panther; Ottero; Poring | Implemented · preview validation pending · main merge deferred |
-| 5 | Pug; Robo; Rockie; Sensei Tig; Shiba | Pending |
-| 6 | Spirit Fox; Yeti; Zasil | Pending |
+| 5 | Pug; Robo; Rockie; Sensei Tig; Shiba | Implemented · preview READY confirmed · main merge deferred |
+| 6 | Spirit Fox; Yeti; Zasil | Implemented · preview READY confirmed · main merge deferred |
 
 ## Profile structure
 Match the existing Character Database profile layout and section order:
@@ -52,6 +52,7 @@ Use the existing Pet Database search -> alphabetical cards -> individual detail 
 - Batch 3 preview: Vercel deployment reached READY; build verification completed.
 - Batch 4 preview: Vercel deployment reached READY; build verification completed.
 - Batch 5 preview: Vercel build was still in progress at last check; final READY state not yet confirmed.
+- Batch 6 preview: latest tracker commit deployment reached READY; Batch 6 profile data is included in the preview branch.
 - Batch 6: Spirit Fox +10 HP per Med Kit (OB21, 2020-04-20); Yeti 30% explosive damage reduction with 90s cooldown (OB31, 2022-01-01); Zasil 50% chance to duplicate Med Kit/Inhaler/Repair Kit with 70s cooldown (OB33, 2022-03-23).
 - Zasil Lv4 unlockable name and additional patch-history entries were not supplied; no values inferred.
 - Poring's exact repair amount/interval and unlockable names were not present in retrieved report details and remain explicitly unspecified.
@@ -61,3 +62,10 @@ Use the existing Pet Database search -> alphabetical cards -> individual detail 
 - All 28 pet profile entries have been implemented across six batches; final data/source review is still required.
 - Artwork: on hold for all 28
 - Production release: not started / explicitly deferred
+
+## Mobile layout and language toggle follow-up
+- Applied one shared responsive two-column layout to all pet profile Ability / Factor | Current value rows; labels remain on the left and values on the right, with wrapping and overflow protection at narrow phone widths.
+- Wired the EN / HI+EN control on both the Pet catalogue and pet detail pages; it now switches the active state and the available catalogue/navigation UI labels.
+- Pet ability data translations remain ON HOLD as requested. Profile names, ability text, table values, mechanics, and patch notes remain in English until a later translation pass; the toggle does not fabricate translated profile content.
+- This is a shared component/CSS fix, so it covers all 28 profiles rather than requiring 28 separate layout edits.
+- Build and device-level visual regression checks for this follow-up are pending the new Vercel preview.
