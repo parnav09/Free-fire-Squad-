@@ -51,9 +51,18 @@ Use this file when continuing in a new ChatGPT conversation.
 - PR #115 remains open/draft and correctly targets `chore/evolution-phase-zero-one-naming`; do not merge before its Phase Zero dependency.
 - Vercel status is separately rate-limited; it does not invalidate the successful GitHub Actions run. Do not access/share the full-app preview.
 
+## E Phase One.3 implementation checkpoint
+
+- Added a latest-request guard for overlapping `loadTeam` calls. Every new request supersedes older requests.
+- The load path checks request freshness after asynchronous boundaries before writing team choices, active team, roster, join requests, IGL, or capacity state.
+- Stale request failures are ignored instead of surfacing errors over the current team selection.
+- Sign-out invalidates all in-flight team-load requests.
+- Added deterministic tests proving the newer response wins and sign-out invalidates pending work.
+- CI verification is pending for this branch; do not mark E Phase One.3 complete until the current-head workflow passes.
+
 ## Next incomplete work
 
-1. **E Phase One.3:** add race protection so a slower earlier loadTeam request cannot overwrite a newer team selection; test overlapping requests and sign-out/team-switch stale responses.
+1. Finish E Phase One.3 CI verification and inspect the final diff for unintended changes.
 2. Add session-eligibility primitives and focused permission-test helpers only as planned by Phase One. Keep authorization/RLS/grants in the separate Security workstream.
 3. Reconcile live Supabase migration history with checked-in migration provenance before proposing any timezone trigger/RPC migration.
 4. Design a reviewed forward/rollback database migration so persisted dates use each team's configured IANA timezone. Until that is safe, do not expose an editable timezone selector or claim team timezone is fully implemented.
