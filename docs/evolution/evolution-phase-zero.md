@@ -154,13 +154,13 @@ These counts show that the competitive match ledger and drill library have recor
 - Before the fix, `PlayerEvaluationRubric` initialized all six ratings to 5 and allowed saving without requiring explicit interaction.
 
 **Impact:** a reviewer could save untouched defaults as if they were observed; the player selector also began with a display label instead of a canonical UUID.  
-**Phase Zero fix on this PR branch:** removed the P1 default, removed prefilled score values, require an active roster UUID, require all five ratings to be explicitly selected, show an incomplete total as unavailable, and disable submission until the form is complete. This is a legacy-form guard only; the new session-linked evaluation workflow remains Evolution Phase Four.
+**Phase Zero fix on this PR branch:** removed the P1 default, removed prefilled score values, require another active roster UUID (self-target excluded), require all five ratings to be explicitly selected, show an incomplete total as unavailable, and disable submission until the form is complete. A duplicate preflight blocks a second score for the same team/player/date, and a busy guard prevents repeated taps. This is a legacy-form guard only; the new session-linked evaluation workflow remains Evolution Phase Four.
 
 ### EV2-AUD-004 — Evaluation and feedback are separate writes (atomic fix deferred)
 
 - Before the Phase Zero fix, `saveEvaluation` inserted the `daily_scores` row first and then separately inserted private feedback into `daily_score_feedback`.
 - If the second write failed, a score could remain without its intended feedback.
-- **Phase Zero fix on this PR branch:** private feedback entry is paused in the legacy form; the current form saves scores only. Existing private feedback remains visible in the recipient inbox. This removes the non-atomic two-write path without adding schema/API work or deleting history.
+- **Phase Zero fix on this PR branch:** private feedback entry is paused in the legacy form; the current form saves scores only. Existing private feedback remains visible in the recipient inbox. This removes the non-atomic two-write path without adding schema/API work or deleting history. The UI also blocks duplicate same-player/same-day submissions and self-target selection; a server-side idempotency/unique constraint remains part of the future phase contract.
 - **Future build:** Evolution Phase Four will restore private feedback as part of one atomic score + feedback transaction with idempotency and fault-injection tests.
 
 ### EV2-AUD-005 — Realtime evaluation refresh selected columns absent from the live table (fixed on PR branch)
@@ -247,7 +247,7 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 ### 7.1 Legacy fixes delivered on this PR branch
 
-- **Daily Evaluation:** removed the P1 default and prefilled ratings; the existing five-dimension form now requires an active team roster UUID and explicit selection of every rating. It is labelled as a legacy form; the session-linked replacement remains Evolution Phase Four.
+- **Daily Evaluation:** removed the P1 default and prefilled ratings; the existing five-dimension form now requires another active team roster UUID, excludes self-targets, requires explicit selection of every rating, and blocks duplicate same-player/day submissions. The form is labelled legacy and saves scores only; private feedback entry is paused to avoid partial writes. The session-linked atomic replacement remains Evolution Phase Four.
 - **Evaluation Realtime:** one shared loader reads valid score columns and private feedback from their correct tables; score and feedback updates both trigger refetch; same-day ordering is deterministic; refresh errors are surfaced.
 - **Weekly/Trends legacy view:** missing or incomplete records no longer count as zero; no-data players show insufficient data; records sort by date, creation time, and ID; generic weekly batch creation is paused; historical assignments remain visible and unchanged.
 - **Training rubric:** all six legacy rubric dimensions must be explicitly selected; new dimension values are stored as raw 1–10 with an explicit storage marker. Historical rubric rows remain untouched.
@@ -297,7 +297,7 @@ Security-specific migration/grant work remains in the separate Security workstre
 
 **BASELINE AUDIT COMPLETE · LEGACY FIXES UNDER VERIFICATION**
 
-The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. Safe legacy fixes on this PR branch address the P1/default-score defect, stale Realtime refresh, missing-as-zero trend calculation, duplicate weekly batch generation, advanced rubric scale mismatch, and the legacy partial score/feedback write path.
+The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. Safe legacy fixes on this PR branch address the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, missing-as-zero trend calculation, duplicate weekly batch generation, advanced rubric scale mismatch, and the legacy partial score/feedback write path.
 
 The new regression-contract tests and CI run #23 passed for the earlier code/test commit. A further fix now pauses the non-atomic private-feedback form and adds a regression test for that boundary; this newest code change requires its own CI run. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase.
 
