@@ -338,12 +338,12 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Active dash that destroys Gloo Walls and knocks back enemies.",
-    "introHi": "Oscar ki Active Dash Skill Gloo Walls destroy karti hai aur saamne aane wale Enemies ko Knockback deti hai.",
+    "introHi": "Oscar ki Active Dash Skill Gloo Walls tod deti hai aur saamne aane wale enemies ko peeche dhakel deti hai.",
     "currentEn": [
       "Dashes toward the target direction, detonating the first 3 Gloo Walls in the way with 25 DMG, while also dealing 25 DMG to and knocking back enemies encountered."
     ],
     "currentHi": [
-      "Target Direction mein Dash karta hai. raaste mein aane vaali pahali 3 Gloo Walls ko 25 DMG ke saath Detonate karta hai aur saamane aane vaale Enemy ko 25 DMG dekar Knockback karta hai."
+      "Jis direction mein target kiya ho, us taraf Dash karta hai. Raaste mein aane wali pehli 3 Gloo Walls ko 25 DMG ke saath todta hai, aur saamne aane wale enemies ko 25 DMG dekar peeche dhakel deta hai."
     ],
     "rows": [
       {
@@ -376,7 +376,7 @@
       "The cooldown was raised in OB54 because the short cooldown made Oscar strong in too many situations. The skill indicator adjusts to slopes (OB50)."
     ],
     "notesHi": [
-      "OB54 mein Cooldown badhaayaa gayaa kyonki kam Cooldown ki vajah se Oscar bahut jyaadaa Situations mein majabut ho rahaa tha. Skill Indicator dhalaan ke hisaab se Adjust hota hai (OB50)."
+      "OB54 mein Cooldown badhaya gaya, kyunki kam Cooldown ki wajah se Oscar bahut zyada situations mein effective ho raha tha. Skill Indicator dhalan ke hisaab se adjust hota hai (OB50)."
     ],
     "historyEn": [
       "OB48 (19 Feb 2025): Introduced with a 60s cooldown.",
@@ -385,10 +385,10 @@
       "OB54 (23 Jun 2026): Cooldown 45s to 60s; 9th Anniversary event Skill Boosts: Phantom Dash (longer dash range) and Sustained Dash (8s dash with speed rising over time)."
     ],
     "historyHi": [
-      "OB48 (19 Feb 2025): 60s Cooldown ke saath Introduce kiya gayaa.",
-      "OB49 (21 May 2025): Skill Card jodaa gayaa.",
-      "OB50 (30 Jul 2025): Skill Indicator dhalaan ke hisaab se Adjust hone lagaa.",
-      "OB54 (23 Jun 2026): Cooldown 45s se badhaakar 60s kiya gayaa; 9th Anniversary Event Skill Boosts: Phantom Dash (jyaadaa Dash Range) aur Sustained Dash (8s Dash, jisamen Speed samay ke saath badhati hai)."
+      "OB48 (19 Feb 2025): 60s Cooldown ke saath launch hua.",
+      "OB49 (21 May 2025): Skill Card add kiya gaya.",
+      "OB50 (30 Jul 2025): Skill Indicator dhalan ke hisaab se adjust hota hai.",
+      "OB54 (23 Jun 2026): Cooldown 45s se badhakar 60s kiya gaya. 9th Anniversary Skill Boosts: Phantom Dash (Dash ki range badhata hai) aur Sustained Dash (Dash 8s tak chalta hai; shuru mein speed kam hoti hai aur phir dheere-dheere badhti hai)."
     ],
     "source": [
       {
