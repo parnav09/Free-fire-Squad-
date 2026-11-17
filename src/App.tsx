@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
 
 const AnalyticsSection = lazy(() => import("./components/AnalyticsSection"));
@@ -27,37 +28,8 @@ function UiIcon({ name, size = 16 }: { name: UiIconName; size?: number }) {
 }
 
 type Section = "Overview" | "Tournament" | "StratForge" | "Training Legacy" | "Players" | "Evaluation" | "Assignments" | "Analytics" | "Weekly Review" | "Player Trends" | "Evolution" | "Profile" | "Settings";
-type Player = { id: string; name: string; role: string; status: string };
-const initialPlayers: Player[] = [
-  { id: "P1", name: "Player 1", role: "Primary Rusher", status: "Active" },
-  { id: "P2", name: "Player 2", role: "Secondary Rusher", status: "Active" },
-  { id: "P3", name: "Player 3", role: "Third Rusher", status: "Active" },
-  { id: "P4", name: "Player 4", role: "Sniper", status: "Active" },
-];
-
-async function makeSquareTeamLogo(file: File, x: number, y: number): Promise<File> {
-  const image = await new Promise<HTMLImageElement>((resolve, reject) => { const img = new Image(); img.onload=()=>resolve(img); img.onerror=reject; img.src=URL.createObjectURL(file); });
-  const side=Math.min(image.naturalWidth,image.naturalHeight), sx=(image.naturalWidth-side)*(x/100), sy=(image.naturalHeight-side)*(y/100);
-  const canvas=document.createElement("canvas");canvas.width=512;canvas.height=512;const ctx=canvas.getContext("2d");if(!ctx)throw new Error("Image crop is unavailable.");
-  ctx.drawImage(image,sx,sy,side,side,0,0,512,512);URL.revokeObjectURL(image.src);
-  const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Could not crop image.")),"image/jpeg",.88));
-  return new File([blob],"team-logo.jpg",{type:"image/jpeg"});
-}
 function localDateISO(date = new Date()): string { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`; }
 
-function currentISOWeekKey(date = new Date()): string {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const weekday = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - weekday);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const week = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-  return `${d.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
-}
-
-function readPlayers(): Player[] {
-  try { const v = localStorage.getItem("squad-os-roster"); return v ? JSON.parse(v) : initialPlayers; }
-  catch { return initialPlayers; }
-}
 
 type SupabaseInstance = NonNullable<typeof import("./lib/supabase/client")["supabase"]>;
 
@@ -69,15 +41,15 @@ export default function App() {
   const pendingMatchScopeRef = useRef("");
   const activeMatchScopeRef = useRef("");
   const [section, setSection] = useState<Section>("Players");
-  const [drillLanguage,setDrillLanguage]=useState<"en"|"hi-en">(()=>localStorage.getItem("squad-os-drill-language")==="hi-en"?"hi-en":"en");
-  const changeDrillLanguage=(value:"en"|"hi-en")=>{setDrillLanguage(value);localStorage.setItem("squad-os-drill-language",value);};
+  const [drillLanguage,setDrillLanguage]=useState<"en"|"hi-en">(()=>safeStorageGetItem("squad-os-drill-language")==="hi-en"?"hi-en":"en");
+  const changeDrillLanguage=(value:"en"|"hi-en")=>{setDrillLanguage(value);safeStorageSetItem("squad-os-drill-language",value);};
   const [matchesTab, setMatchesTab] = useState<"Scrims"|"Tournament">("Scrims");
   const [mobileMore, setMobileMore] = useState(false);
   const [players, setPlayers] = useState<Player[]>(readPlayers);
-  const [week, setWeek] = useState(() => localStorage.getItem("squad-os-week") || currentISOWeekKey());
-  const [day, setDay] = useState(() => Number(localStorage.getItem("squad-os-day") || 1));
+  const [week, setWeek] = useState(() => safeStorageGetItem("squad-os-week") || currentISOWeekKey());
+  const [day, setDay] = useState(() => Number(safeStorageGetItem("squad-os-day") || 1));
   const [scoreboardExpanded, setScoreboardExpanded] = useState(false);
-  const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-matches") || "{}"); } catch { return {}; } });
+  const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>(() => { try { return JSON.parse(safeStorageGetItem("squad-os-matches") || "{}"); } catch { return {}; } });
   const [killDrafts, setKillDrafts] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState("");
   useEffect(() => { if (!notice) return; const timer = window.setTimeout(() => setNotice(""), 7000); return () => window.clearTimeout(timer); }, [notice]);
@@ -98,8 +70,8 @@ export default function App() {
   const [signedIn, setSignedIn] = useState(false);
   const [sessionUserId, setSessionUserId] = useState("");
 
-  const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-drills") || "{}"); } catch { return {}; } });
-  const [notes, setNotes] = useState<Record<string, string>>(() => { try { return JSON.parse(localStorage.getItem("squad-os-notes") || "{}"); } catch { return {}; } });
+  const [drillDone, setDrillDone] = useState<Record<string, boolean>>(() => { try { return JSON.parse(safeStorageGetItem("squad-os-drills") || "{}"); } catch { return {}; } });
+  const [notes, setNotes] = useState<Record<string, string>>(() => { try { return JSON.parse(safeStorageGetItem("squad-os-notes") || "{}"); } catch { return {}; } });
   const [displayName, setDisplayName] = useState("");
   const [teamName, setTeamName] = useState("");
   const [teamCode, setTeamCode] = useState("");
@@ -125,11 +97,8 @@ export default function App() {
   const [requestRole,setRequestRole]=useState<Record<string,string>>({});
   const [iglUserId,setIglUserId]=useState<string>("");
   const [rosterCapacity,setRosterCapacity]=useState(4);
-  const [retentionDays,setRetentionDays]=useState({daily:90,tournament:30,tasks:90,training:90});
-  const [retentionBusy,setRetentionBusy]=useState(false);
-  const [retentionLoaded,setRetentionLoaded]=useState(false);
   const [ownerPowerEnabled,setOwnerPowerEnabled]=useState(true);
-  const [rosterEditEnabled,setRosterEditEnabled]=useState(()=>localStorage.getItem("squad-os-roster-edit:"+localStorage.getItem("squad-os-active-team"))==="on");
+  const [rosterEditEnabled,setRosterEditEnabled]=useState(()=>safeStorageGetItem("squad-os-roster-edit:"+safeStorageGetItem("squad-os-active-team"))==="on");
   const [selectedRosterMember,setSelectedRosterMember]=useState<{id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;user_id:string}|null>(null);
   const [characterLoadoutDraft,setCharacterLoadoutDraft]=useState<{active:string;passives:string[];notes:string}>({active:"",passives:["","",""],notes:""});
   const [characterLoadoutBusy,setCharacterLoadoutBusy]=useState(false);
@@ -191,32 +160,36 @@ export default function App() {
   const [assignmentDesc,setAssignmentDesc]=useState("Practice concise enemy/location callouts, repeat IGL orders, and confirm role.");
   const [assignmentDate,setAssignmentDate]=useState(()=>new Date().toLocaleDateString("en-CA"));
   const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
-  // Local-only records are isolated by immutable team UUID. Legacy unscoped data is migrated once to the first team opened.
+  // Local-only records are isolated by immutable team UUID. Legacy data is marked migrated
+  // only after every scoped copy has been persisted successfully.
   useEffect(()=>{
     if(!team?.id){setLocalDataHydratedFor("");return;}
     const id=team.id, prefix="squad-os:"+id+":";
-    const migrateLegacy=localStorage.getItem("squad-os-legacy-local-migrated")!=="1";
-    const readScoped=<T,>(key:string,fallback:T):T=>{
-      const raw=localStorage.getItem(prefix+key);
+    const migrateLegacy=safeStorageGetItem("squad-os-legacy-local-migrated")!=="1";
+    let migrationComplete=true;
+    const readScoped=<T,>(key:string,legacyValue:T,fallback:T):T=>{
+      const raw=safeStorageGetItem(prefix+key);
       if(raw!==null){try{return JSON.parse(raw) as T;}catch{return fallback;}}
-      return fallback;
+      const value=migrateLegacy?legacyValue:fallback;
+      if(migrateLegacy&&!safeStorageSetItem(prefix+key,JSON.stringify(value)))migrationComplete=false;
+      return value;
     };
-    setPlayers(readScoped("roster",migrateLegacy?players:initialPlayers));
-    setWeek(readScoped("week",migrateLegacy?week:currentISOWeekKey()));
-    setDay(readScoped("day",migrateLegacy?day:1));
-    setMatches(readScoped("matches",migrateLegacy?matches:{}));
-    setDrillDone(readScoped("drills",migrateLegacy?drillDone:{}));
-    setNotes(readScoped("notes",migrateLegacy?notes:{}));
-    if(migrateLegacy)localStorage.setItem("squad-os-legacy-local-migrated","1");
+    setPlayers(readScoped("roster",players,initialPlayers));
+    setWeek(readScoped("week",week,currentISOWeekKey()));
+    setDay(readScoped("day",day,1));
+    setMatches(readScoped("matches",matches,{}));
+    setDrillDone(readScoped("drills",drillDone,{}));
+    setNotes(readScoped("notes",notes,{}));
+    if(migrateLegacy&&migrationComplete)safeStorageSetItem("squad-os-legacy-local-migrated","1");
     setLocalDataHydratedFor(id);
   },[team?.id]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":roster",JSON.stringify(players));},[players,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":week",JSON.stringify(week));},[week,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":day",JSON.stringify(day));},[day,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":matches",JSON.stringify(matches));},[matches,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":drills",JSON.stringify(drillDone));},[drillDone,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)localStorage.setItem("squad-os:"+team.id+":notes",JSON.stringify(notes));},[notes,team?.id,localDataHydratedFor]);
-  useEffect(()=>{if(!team?.id){setOwnerPowerEnabled(true);return;}setOwnerPowerEnabled(localStorage.getItem("squad-os:"+team.id+":owner-power")!=="off");},[team?.id]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)safeStorageSetItem("squad-os:"+team.id+":roster",JSON.stringify(players));},[players,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)safeStorageSetItem("squad-os:"+team.id+":week",JSON.stringify(week));},[week,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)safeStorageSetItem("squad-os:"+team.id+":day",JSON.stringify(day));},[day,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)safeStorageSetItem("squad-os:"+team.id+":matches",JSON.stringify(matches));},[matches,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)safeStorageSetItem("squad-os:"+team.id+":drills",JSON.stringify(drillDone));},[drillDone,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(team?.id&&localDataHydratedFor===team.id)safeStorageSetItem("squad-os:"+team.id+":notes",JSON.stringify(notes));},[notes,team?.id,localDataHydratedFor]);
+  useEffect(()=>{if(!team?.id){setOwnerPowerEnabled(true);return;}setOwnerPowerEnabled(safeStorageGetItem("squad-os:"+team.id+":owner-power")!=="off");},[team?.id]);
 
   useEffect(() => {
     const onOnline=()=>{setIsOnline(true);setConnection("Syncing…");};
@@ -419,16 +392,16 @@ export default function App() {
     if(allMembershipsError)throw allMembershipsError;
     const allTeamIds=(allMemberships||[]).map(m=>m.team_id);
     if(allTeamIds.length){const {data:allTeams,error:allTeamsError}=await supabase.from("teams").select("id,team_name").in("id",allTeamIds);if(allTeamsError)throw allTeamsError;setTeamChoices((allTeams||[]).map(t=>({...t,membership_role:allMemberships?.find(m=>m.team_id===t.id)?.membership_role||"player"})));}else setTeamChoices([]);
-    const preferred=preferredTeamId||localStorage.getItem("squad-os-active-team")||"";
+    const preferred=preferredTeamId||safeStorageGetItem("squad-os-active-team")||"";
     let membershipQuery=supabase.from("team_members").select("id,team_id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("user_id",user.id).eq("status","active");
     if(preferred)membershipQuery=membershipQuery.eq("team_id",preferred);
     let {data:membership,error}=await membershipQuery.limit(1).maybeSingle();
     if(error)throw error;
-    if(!membership&&preferred){localStorage.removeItem("squad-os-active-team");const fallback=await supabase.from("team_members").select("id,team_id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("user_id",user.id).eq("status","active").limit(1).maybeSingle();membership=fallback.data;error=fallback.error;if(error)throw error;}
+    if(!membership&&preferred){safeStorageRemoveItem("squad-os-active-team");const fallback=await supabase.from("team_members").select("id,team_id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("user_id",user.id).eq("status","active").limit(1).maybeSingle();membership=fallback.data;error=fallback.error;if(error)throw error;}
     if(!membership){setTeam(null);setTeamMembers([]);return;}
-    localStorage.setItem("squad-os-active-team",membership.team_id);
+    safeStorageSetItem("squad-os-active-team",membership.team_id);
     const {data:t,error:te}=await supabase.from("teams").select("id,team_name,invite_code,avatar_url").eq("id",membership.team_id).single(); if(te)throw te;
-    setTeam({...t,membership_id:membership.id,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});setRosterEditEnabled(localStorage.getItem("squad-os-roster-edit:"+t.id)==="on");if(membership.display_name)setDisplayName(membership.display_name);
+    setTeam({...t,membership_id:membership.id,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});setRosterEditEnabled(safeStorageGetItem("squad-os-roster-edit:"+t.id)==="on");if(membership.display_name)setDisplayName(membership.display_name);
     const [membersResult,requestsResult,iglResult,capacityResult]=await Promise.all([
       supabase.from("team_members").select("id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("team_id",t.id).order("player_number"),
       supabase.from("team_join_requests").select("id,user_id,requested_at,status").eq("team_id",t.id).eq("status","pending").order("requested_at"),
@@ -491,7 +464,7 @@ export default function App() {
         createdTeamId = typeof data === "string" ? data : Array.isArray(data) ? data[0] : null;
       }
       if (!createdTeamId) throw new Error("The server returned no Team ID. Check your Team panel before retrying.");
-      localStorage.setItem("squad-os-active-team", createdTeamId);
+      safeStorageSetItem("squad-os-active-team", createdTeamId);
       setTeamName(""); setTeamDescription(""); setTeamLogoFile(null); setTeamLogoPreview(""); setTeamScreen("choice");
       let logoWarning = "";
       if (teamLogoFile) {
@@ -525,9 +498,6 @@ export default function App() {
   };
   const joinTeam = async () => { if(!supabase||!teamCode.trim())return; setTeamBusy(true); try { if(!displayName.trim()){throw new Error("Enter your IGN/display name first.");} const {error:ne}=await supabase.rpc("set_display_name",{p_name:displayName.trim()});if(ne)throw ne; const {error}=await supabase.rpc("request_join_team",{p_code:teamCode.trim().toUpperCase()}); if(error)throw error; setTeamCode("");setRequestStatus("Pending owner approval · access activates after slot assignment.");setNotice("Join request sent. Wait for the owner to approve your player slot and role."); } catch(e){setNotice(e instanceof Error?e.message:"Could not join team.");} finally{setTeamBusy(false);} };
   const reviewJoinRequest=async(id:string,approve:boolean)=>{if(!supabase||team?.membership_role!=="owner")return;const slot=Number(requestSlot[id]||0),role=requestRole[id]||"Primary Rusher";if(approve&&(!slot||slot>rosterCapacity)){setNotice("Choose a player slot within the current roster capacity.");return;}try{const {error}=await supabase.rpc("review_team_join_request",{p_request:id,p_player:slot,p_role:role,p_approve:approve});if(error)throw error;await loadTeam();setNotice(approve?"Player approved and added to roster.":"Join request declined.");}catch(e){setNotice(e instanceof Error?e.message:"Request review failed.");}};
-  const loadRetention=async()=>{if(!supabase||!team?.id||!ownerPowerActive)return;setRetentionLoaded(false);const {data,error}=await supabase.from("team_data_retention_settings").select("daily_evolution_days,tournament_days,completed_task_days,completed_training_days").eq("team_id",team.id).maybeSingle();if(error){setNotice("Team retention settings unavailable: "+error.message);return;}if(data)setRetentionDays({daily:data.daily_evolution_days,tournament:data.tournament_days,tasks:data.completed_task_days,training:data.completed_training_days});else setRetentionDays({daily:90,tournament:30,tasks:90,training:90});setRetentionLoaded(true);};
-  const saveRetention=async()=>{if(!supabase||!team?.id||!ownerPowerActive)return;setRetentionBusy(true);try{const {error}=await supabase.from("team_data_retention_settings").upsert({team_id:team.id,daily_evolution_days:retentionDays.daily,tournament_days:retentionDays.tournament,completed_task_days:retentionDays.tasks,completed_training_days:retentionDays.training,updated_at:new Date().toISOString()},{onConflict:"team_id"});if(error)throw error;setNotice("This team's retention policy saved. Other squads are unchanged.");}catch(e){setNotice(e instanceof Error?e.message:"Retention settings save failed.");}finally{setRetentionBusy(false);}};
-  useEffect(()=>{if(section==="Settings"&&ownerPowerActive&&team?.id)void loadRetention();},[section,ownerPowerActive,team?.id]);
   const saveRosterCapacity=async(value:number)=>{if(!supabase||team?.membership_role!=="owner"||value<4||value>10)return;setTeamBusy(true);try{const {error}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"roster_capacity",setting_value:value,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(error)throw error;setRosterCapacity(value);setNotice("Roster capacity saved. Existing members remain assigned; new slots are available up to P"+value+".");}catch(e){setNotice(e instanceof Error?e.message:"Roster capacity update failed.");}finally{setTeamBusy(false);}};
   const saveIGL=async(userId:string)=>{if(!supabase||team?.membership_role!=="owner")return;try{const {error}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"igl_user_id",setting_value:userId,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(error)throw error;setIglUserId(userId);setNotice(userId?"IGL designation updated.":"IGL designation cleared.");}catch(e){setNotice(e instanceof Error?e.message:"IGL setting failed.");}};
   const saveOwnerRole=async(slot:number)=>{if(!supabase||team?.membership_role!=="owner"||!team.membership_id)return;const roleBySlot:Record<number,string>={1:"Primary Rusher",2:"Secondary Rusher",3:"Third Rusher",4:"Sniper",5:"Substitute"};const occupied=teamMembers.find(m=>m.status==="active"&&m.player_number===slot&&m.user_id!==sessionUserId);if(occupied){setNotice("That player slot is already occupied. Move or reassign that player first.");return;}try{const {error}=await supabase.rpc("assign_member",{p_member:team.membership_id,p_player:slot,p_activate:true});if(error)throw error;const {error:re}=await supabase.from("team_members").update({assigned_role:roleBySlot[slot]||"Substitute"}).eq("id",team.membership_id);if(re)throw re;await loadTeam();setNotice("Your player slot and role were updated.");}catch(e){setNotice(e instanceof Error?e.message:"Could not update owner role.");}};
@@ -871,7 +841,7 @@ export default function App() {
             <div className="section-heading"><div><div className="eyebrow">TEAM COMMAND · PLAYER MANAGEMENT</div><h2>Players & squad identity</h2><p className="intro">Team code, active players, assigned roles and owner controls in one workspace.</p></div><span className="phase-pill">{teamMembers.filter(m=>m.status==="active").length} ACTIVE</span></div>
             <section className="connection-panel" style={{display:"block",marginBottom:22}}>
               {team ? <>
-                <div className="team-live-header team-identity-header"><div className="team-live-logo">{team.avatar_url?<img src={team.avatar_url} alt={team.team_name+" logo"}/>:<span>{team.team_name.slice(0,1).toUpperCase()}</span>}</div><div className="team-identity-copy"><h3>{team.team_name}</h3>{ownerPowerActive&&<div className="owner-team-code"><span>INVITE CODE</span><strong className="team-code-value">{team.invite_code}</strong><button className="secondary-button" onClick={async()=>{try{await navigator.clipboard.writeText(team.invite_code);setNotice("Invite code copied.");}catch{setNotice("Copy failed. Select the invite code manually.");}}}>Copy</button></div>}</div>{teamChoices.length>1&&<label className="team-switcher"><span>ACTIVE TEAM</span><select value={team.id} onChange={e=>{const next=e.target.value;localStorage.setItem("squad-os-active-team",next);loadTeam(next).then(()=>setNotice("Switched team workspace. Each team keeps its own roster and records.")).catch(err=>setNotice(err.message||"Could not switch team."));}}>{teamChoices.map(choice=><option key={choice.id} value={choice.id}>{choice.team_name} · {choice.membership_role}</option>)}</select></label>}</div>
+                <div className="team-live-header team-identity-header"><div className="team-live-logo">{team.avatar_url?<img src={team.avatar_url} alt={team.team_name+" logo"}/>:<span>{team.team_name.slice(0,1).toUpperCase()}</span>}</div><div className="team-identity-copy"><h3>{team.team_name}</h3>{ownerPowerActive&&<div className="owner-team-code"><span>INVITE CODE</span><strong className="team-code-value">{team.invite_code}</strong><button className="secondary-button" onClick={async()=>{try{await navigator.clipboard.writeText(team.invite_code);setNotice("Invite code copied.");}catch{setNotice("Copy failed. Select the invite code manually.");}}}>Copy</button></div>}</div>{teamChoices.length>1&&<label className="team-switcher"><span>ACTIVE TEAM</span><select value={team.id} onChange={e=>{const next=e.target.value;safeStorageSetItem("squad-os-active-team",next);loadTeam(next).then(()=>setNotice("Switched team workspace. Each team keeps its own roster and records.")).catch(err=>setNotice(err.message||"Could not switch team."));}}>{teamChoices.map(choice=><option key={choice.id} value={choice.id}>{choice.team_name} · {choice.membership_role}</option>)}</select></label>}</div>
                 {ownerPowerActive&&<section className="connection-panel team-admin-panel"><h3>IGL designation</h3><label className="admin-setting">IGL player<select value={iglUserId} onChange={e=>saveIGL(e.target.value)}><option value="">Not assigned</option>{teamMembers.filter(m=>m.status==="active").map(m=><option value={m.user_id} key={m.user_id}>P{m.player_number||"—"} · {m.display_name} ({m.assigned_role||"Unassigned"})</option>)}</select><small>Separate designation. Shows “Role / IGL” without changing the base role.</small></label></section>}
                 {ownerPowerActive&&<section className="connection-panel team-admin-panel"><div className="admin-section-title"><h3>Join requests</h3><span className="active-tag">{joinRequests.length} pending</span></div>{joinRequests.length===0?<p className="muted">No pending requests.</p>:<div className="request-list">{joinRequests.map(q=><article className="request-card" key={q.id}><div className="request-person"><b>{q.display_name}</b><small>{new Date(q.requested_at).toLocaleDateString()}</small></div><div className="request-controls"><label>Player slot<select value={requestSlot[q.id]||""} onChange={e=>setRequestSlot(p=>({...p,[q.id]:e.target.value}))}><option value="">Select slot</option>{Array.from({length:rosterCapacity},(_,i)=>i+1).filter(n=>!teamMembers.some(m=>m.status==="active"&&m.player_number===n)).map(n=><option key={n} value={n}>P{n}</option>)}</select></label><label>Role<select value={requestRole[q.id]||"Primary Rusher"} onChange={e=>setRequestRole(p=>({...p,[q.id]:e.target.value}))}>{["Primary Rusher","Secondary Rusher","Third Rusher","Sniper","Substitute"].map(role=><option key={role}>{role}</option>)}</select></label></div><div className="request-actions"><button className="primary-button" onClick={()=>reviewJoinRequest(q.id,true)}>Approve & add</button><button className="secondary-button" onClick={()=>reviewJoinRequest(q.id,false)}>Decline</button></div></article>)}</div>}</section>}
               </>:<>
@@ -957,14 +927,14 @@ export default function App() {
           {section==="Settings" && <>
             <div className="section-heading"><div><h2>Settings</h2></div></div>
             <section className="connection-panel language-settings-panel"><div><div className="eyebrow">PREFERENCES</div><h3>Display language</h3><p>Choose English or Hindi + English for the Drill Library and Character Database. Your preference is saved on this device.</p></div><div className="pt-language-toggle settings-language-toggle" role="group" aria-label="Drill language"><button type="button" className={drillLanguage==="en"?"active":""} onClick={()=>changeDrillLanguage("en")}>EN</button><button type="button" className={drillLanguage==="hi-en"?"active":""} onClick={()=>changeDrillLanguage("hi-en")}>HI+EN</button></div></section>
-            {signedIn&&team?.membership_role==="owner"&&<section className="connection-panel roster-edit-settings"><div className="owner-power-head"><div><div className="eyebrow">TEAM PREFERENCES</div><h3>Roster management</h3><p>Keep the Players page in clean member-view mode by default. Enable editing only when you need to adjust slots or roles.</p></div><span className={"owner-power-status "+(rosterEditEnabled?"is-on":"is-off")}>{rosterEditEnabled?"EDITING ON":"VIEW ONLY"}</span></div><label className="owner-power-toggle-row"><span><strong>{rosterEditEnabled?"Roster editing enabled":"Roster editing hidden"}</strong><small>{rosterEditEnabled?"Owner assignment controls are visible in the Player roster.":"You see the same clean player cards as team members."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={rosterEditEnabled} onChange={e=>{const next=e.target.checked;setRosterEditEnabled(next);if(team?.id)localStorage.setItem("squad-os-roster-edit:"+team.id,next?"on":"off");setNotice(next?"Roster editing enabled for this device.":"Roster returned to member view.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label><div className="owner-power-foot"><span className="owner-power-dot"/><small>This changes only the owner’s interface. Team roles and permissions remain server-controlled.</small></div></section>}
+            {signedIn&&team?.membership_role==="owner"&&<section className="connection-panel roster-edit-settings"><div className="owner-power-head"><div><div className="eyebrow">TEAM PREFERENCES</div><h3>Roster management</h3><p>Keep the Players page in clean member-view mode by default. Enable editing only when you need to adjust slots or roles.</p></div><span className={"owner-power-status "+(rosterEditEnabled?"is-on":"is-off")}>{rosterEditEnabled?"EDITING ON":"VIEW ONLY"}</span></div><label className="owner-power-toggle-row"><span><strong>{rosterEditEnabled?"Roster editing enabled":"Roster editing hidden"}</strong><small>{rosterEditEnabled?"Owner assignment controls are visible in the Player roster.":"You see the same clean player cards as team members."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={rosterEditEnabled} onChange={e=>{const next=e.target.checked;setRosterEditEnabled(next);if(team?.id)safeStorageSetItem("squad-os-roster-edit:"+team.id,next?"on":"off");setNotice(next?"Roster editing enabled for this device.":"Roster returned to member view.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label><div className="owner-power-foot"><span className="owner-power-dot"/><small>This changes only the owner’s interface. Team roles and permissions remain server-controlled.</small></div></section>}
             <section className="connection-panel profile-settings-entry">
               <div><div className="eyebrow">ACCOUNT</div><h3>Player profile</h3><p>View and update your IGN, account details, player slot, role and IGL information.</p></div>
               <button className="primary-button" type="button" onClick={()=>setSection("Profile")}>Open Profile <UiIcon name="arrow-right"/></button>
             </section>
             {signedIn&&team?.membership_role==="owner"&&<section className="connection-panel owner-power-panel">
               <div className="owner-power-head"><div><div className="eyebrow">OWNER CONTROL CENTER</div><h3>Admin command power</h3><p>Switch owner command controls on or off for this device and active team.</p></div><span className={"owner-power-status "+(ownerPowerEnabled?"is-on":"is-off")}>{ownerPowerEnabled?"POWER ON":"POWER OFF"}</span></div>
-              <label className="owner-power-toggle-row"><span><strong>{ownerPowerEnabled?"Owner commands enabled":"Member interface active"}</strong><small>{ownerPowerEnabled?"Owner-only controls are visible in the workspace.":"Owner controls are hidden; the workspace looks like a regular member view."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={ownerPowerEnabled} onChange={e=>{const next=e.target.checked;setOwnerPowerEnabled(next);if(team?.id)localStorage.setItem("squad-os:"+team.id+":owner-power",next?"on":"off");setNotice(next?"Owner command power enabled on this device.":"Owner command power disabled. Your account remains the team owner.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label>
+              <label className="owner-power-toggle-row"><span><strong>{ownerPowerEnabled?"Owner commands enabled":"Member interface active"}</strong><small>{ownerPowerEnabled?"Owner-only controls are visible in the workspace.":"Owner controls are hidden; the workspace looks like a regular member view."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={ownerPowerEnabled} onChange={e=>{const next=e.target.checked;setOwnerPowerEnabled(next);if(team?.id)safeStorageSetItem("squad-os:"+team.id+":owner-power",next?"on":"off");setNotice(next?"Owner command power enabled on this device.":"Owner command power disabled. Your account remains the team owner.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label>
               <div className="owner-power-foot"><span className="owner-power-dot"/><small>UI visibility only · Team ownership and server permissions are unchanged.</small></div>
             </section>}
             {signedIn&&<section className="connection-panel account-settings-panel">
@@ -985,15 +955,8 @@ export default function App() {
                 </>:<p className="muted">Team logo managed by the owner.</p>}
               </section>
             {ownerPowerActive&&<section className="connection-panel retention-settings-panel">
-              <div className="backup-panel-head"><div><div className="eyebrow">AUTOMATION · DATA LIFECYCLE</div><h3>Smart retention policy</h3><p>Set how long completed records stay available. Cleanup runs daily at 03:00 IST; active work is protected.</p></div><span className="backup-lock">OWNER ONLY</span></div>
-              <div className="retention-settings-grid">
-                <label className="admin-setting">Daily Evolution history<select value={retentionDays.daily} onChange={e=>setRetentionDays(v=>({...v,daily:Number(e.target.value)}))}>{[30,60,90,120,180,365].map(n=><option value={n} key={n}>{n} days</option>)}</select><small>Older scores and linked private feedback are purged.</small></label>
-                <label className="admin-setting">Tournament archive<select value={retentionDays.tournament} onChange={e=>setRetentionDays(v=>({...v,tournament:Number(e.target.value)}))}>{[7,14,30,60,90,180,365].map(n=><option value={n} key={n}>{n} days after tournament ends</option>)}</select><small>Only completed/cancelled/archived tournaments expire.</small></label>
-                <label className="admin-setting">Completed assignments<select value={retentionDays.tasks} onChange={e=>setRetentionDays(v=>({...v,tasks:Number(e.target.value)}))}>{[30,60,90,120,180,365].map(n=><option value={n} key={n}>{n} days</option>)}</select><small>Pending, in-progress and overdue tasks are never auto-deleted.</small></label>
-                <label className="admin-setting">Completed training sessions<select value={retentionDays.training} onChange={e=>setRetentionDays(v=>({...v,training:Number(e.target.value)}))}>{[30,60,90,120,180,365].map(n=><option value={n} key={n}>{n} days</option>)}</select><small>Only completed sessions are eligible.</small></label>
-              </div>
-              <div className="retention-policy-footer"><span><i className="retention-live-dot"/> Daily cleanup · 03:00 IST</span><button className="primary-button" type="button" disabled={retentionBusy||!retentionLoaded} onClick={saveRetention}>{retentionBusy?"Saving policy…":"Save retention policy"}</button></div>
-              <small className="backup-warning">Retention is permanent deletion, not archive. Keep a team backup before shortening any period. This policy applies only to the active squad; other teams are isolated.</small>
+              <div className="backup-panel-head"><div><div className="eyebrow">DATA LIFECYCLE · PROTECTION</div><h3>Historical record protection</h3><p>Automatic deletion is paused while the Evolution Version 2 history and archival rules are being established.</p></div><span className="backup-lock">HISTORY PRESERVED</span></div>
+              <p className="muted">Evaluations, private feedback, completed tasks, training records and tournament history are retained. No automatic cleanup is currently scheduled. Future archive controls will require a reviewed export, recovery and approval workflow.</p>
             </section>}
             {ownerPowerActive&&<section className="connection-panel team-admin-panel roster-capacity-panel"><div className="eyebrow">ROSTER CONFIGURATION</div><h3>Player capacity</h3><p>Default is 4 core players. Set an expanded roster from 4 up to 10; approval and slot assignment enforce this limit on the server.</p><label className="admin-setting">Maximum active player slots<select value={rosterCapacity} disabled={teamBusy} onChange={e=>saveRosterCapacity(Number(e.target.value))}>{Array.from({length:7},(_,i)=>i+4).map(n=><option key={n} value={n}>{n} players · P1–P{n}</option>)}</select><small>Changing capacity never deletes or unassigns current players. Reduce only after moving players out of higher slots.</small></label></section>}
               {ownerPowerActive&&<section className="connection-panel backup-panel">
