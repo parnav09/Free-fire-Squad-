@@ -184,14 +184,14 @@ Observed pre-fix calculation and scope limitations:
 - the generated focus was generic rather than linked to an approved review snapshot.
 
 **Impact:** team averages could be depressed by missing data, trend comparisons could be inconsistent, and the two navigation items did not deliver distinct workflows.  
-**Phase Zero fix on this PR branch:** missing/incomplete evaluations are excluded rather than treated as zero; same-day ordering uses score date, creation timestamp, and stable ID; no-data players are shown as insufficient data; the shared screen is labelled a read-only legacy snapshot; generic weekly task generation is paused. The separate Weekly Review and Player Trends builds remain Evolution Phases Seven and Eight.
+**Phase Zero fix on this PR branch:** a record is valid only when all five stored dimensions are integers from 0–10; the displayed 0–50 total is recomputed from those raw dimensions rather than trusting a stale cached `total`. Missing/incomplete evaluations are excluded rather than treated as zero; same-day ordering uses score date, creation timestamp, and stable ID; no-data players are shown as insufficient data; the shared screen is labelled a read-only legacy snapshot; generic weekly task generation is paused. The separate Weekly Review and Player Trends builds remain Evolution Phases Seven and Eight.
 
 ### EV2-AUD-007 — Training rubric storage did not match its scale label (new writes fixed on PR branch)
 
-Before the Phase Zero fix, the advanced rubric converted each 1–10 dimension to a 10–100 value before storing it in the JSON rubric, while also writing a `scale: "1-10"` marker. The overall score was normalized to 0–100, but the dimension values and declared scale disagreed.
+Before the Phase Zero fix, both the standard role rubric and advanced rubric converted each displayed 1–10 dimension to a 10–100 value before storing it in the JSON rubric, while the advanced rubric also declared `scale: "1-10"`. The overall result score is a separate 0–100 value.
 
-**Impact:** downstream readers cannot safely interpret historical dimension values without knowing this conversion detail.  
-**Phase Zero fix on this PR branch:** new advanced rubric rows store raw 1–10 dimension values and include `dimension_storage: "raw_1_to_10"`; the overall score remains normalized to 0–100. The legacy training rubric also blocks save until all six dimensions are explicitly selected. Historical rows are not rewritten. Evolution Phase Three will version the canonical rubric and add a crosswalk for old rows.
+**Impact:** downstream readers could interpret dimension values on the wrong scale, and a stored scale label did not describe the actual values.  
+**Phase Zero fix on this PR branch:** new standard and advanced rubric rows store raw 1–10 dimension values and include `scale: "1-10"` plus `dimension_storage: "raw_1_to_10"`. The standard rubric's role-weighted score is normalized separately to 0–100. Both legacy rubric forms require explicit dimension selection before saving. Historical rows are not rewritten. Evolution Phase Three will version the canonical rubric and add a crosswalk for old rows.
 
 ### EV2-AUD-008 — Squad Analytics is competitive-only (future development analytics)
 
@@ -215,6 +215,14 @@ Training sessions, participants, and training results exist, but the inspected E
 
 **Impact:** do not advertise durable offline writes, conflict-safe sync, or completed anonymous peer reviews as existing capabilities.  
 **Future build:** anonymous peer cohorts/inbox belong to Evolution Phase Five; durable offline queue, conflict resolution, and complete Realtime data-quality handling belong to Evolution Phase Ten.
+
+### EV2-AUD-011 — Team switching could retain stale Evolution records (fixed on PR branch)
+
+Before the scoped follow-up fix, evaluation and legacy-assignment arrays were not cleared immediately when the signed-in user or selected team changed. A late assignment refresh started under the previous team could also finish after a team switch and replace the new team's list. Legacy assignment completion updates filtered by assignment ID without also constraining the selected team.
+
+**Impact:** a player could briefly see a previous team's legacy evaluation/assignment information after changing team or account, and a late refresh could repopulate stale rows.
+
+**Phase Zero fix on this PR branch:** evaluation and assignment state is cleared on sign-out/team change; initial fetches are cancelled on scope change; assignment refreshes verify the active team scope before updating state; completion updates require both assignment ID and team ID and check that the actor is the assignee or an active team manager. This is a client-side data-correctness guard, not an RLS/grant remediation; the separate Security workstream remains responsible for server authorization.
 
 ## 6. Data-integrity checks
 
@@ -252,18 +260,19 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 - **Daily Evaluation:** removed the P1 default and prefilled ratings; the existing five-dimension form now requires another active team roster UUID, excludes self-targets, requires explicit selection of every rating, and blocks duplicate same-player/day submissions. The form is labelled legacy and saves scores only; private feedback entry is paused to avoid partial writes. The session-linked atomic replacement remains Evolution Phase Four.
 - **Evaluation Realtime:** one shared loader reads valid score columns and private feedback from their correct tables; score and feedback updates both trigger refetch; same-day ordering is deterministic; refresh errors are surfaced.
-- **Weekly/Trends legacy view:** missing or incomplete records no longer count as zero; no-data players show insufficient data; records sort by date, creation time, and ID; generic weekly batch creation is paused; historical assignments remain visible and unchanged.
-- **Training rubric:** all six legacy rubric dimensions must be explicitly selected; new dimension values are stored as raw 1–10 with an explicit storage marker. Historical rubric rows remain untouched.
+- **Weekly/Trends legacy view:** only complete five-dimension records (each integer 0–10) contribute; the 0–50 total is recomputed from raw dimensions; missing/incomplete records are not treated as zero; no-data players show insufficient data; records sort by date, creation time, and ID; generic weekly batch creation is paused; historical assignments remain visible and unchanged.
+- **Training rubric:** both standard role and advanced six-dimension forms require explicit selection; new dimension values are stored as raw 1–10 with an explicit storage marker; standard role-weighted overall scores are separately normalized to 0–100. Historical rubric rows remain untouched.
+- **Team-scope correctness:** evaluation and legacy assignment state clears on sign-out/team switch; late assignment refreshes cannot repopulate the previous team's rows; legacy completion writes are constrained by assignment ID and team ID and guard the current actor.
 - **Analytics boundary:** the current screen is labelled competitive-results-only; player-development analytics remain Evolution Phase Nine.
-- **Regression coverage:** `scripts/verify-evolution-legacy-fixes.mjs` is included in the build pipeline; it verifies that the legacy save path cannot recreate a partial score/feedback write.
+- **Regression coverage:** `scripts/verify-evolution-legacy-fixes.mjs` now contains ten Evolution regression-contract tests, covering score completeness, both rubric storage paths, stale team data, scoped assignment updates, and the legacy partial score/feedback boundary.
 
 
 ## 8. Build and delivery evidence
 
-- GitHub Actions run #41 for PR head commit `c150203632496c73be8ac2a6a134eef2e15c249c` completed successfully.
-- Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, all eight Evolution legacy regression-contract tests, and the Vite production build.
-- The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 333 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
-- This CI run verifies the current Phase Zero code, tests, and audit document at the PR head. Any later source or workflow change requires a new successful run.
+- GitHub Actions run #49 for PR head commit `eaffa945bb50de149c6b40bb040cc72a9e7ec39b` completed successfully.
+- The workflow passed dependency installation, lockfile artifact export, TypeScript typecheck, 18 foundation tests, 11 character-data tests, all 10 Evolution legacy regression-contract tests, and the Vite production build.
+- The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 334.13 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
+- This CI run verifies the code and regression tests at commit `eaffa945`. The subsequent audit-document update is documentation-only; any later source or workflow change requires a new successful run.
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
 - The latest Vercel Preview check on this PR head is **blocked/failed with a Vercel build-rate-limit response** (`upgradeToPro=build-rate-limit`). This is a platform build quota result, not a TypeScript or Vite build failure.
 - No Vercel Preview was available for approved-scope browser smoke tests; Android/tablet/desktop interaction QA is not claimed and remains assigned to Evolution Phase Eleven.
@@ -301,8 +310,8 @@ Security-specific migration/grant work remains in the separate Security workstre
 
 **BASELINE AUDIT COMPLETE · LEGACY FIXES IMPLEMENTED · CI VERIFIED**
 
-The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. Safe legacy fixes on this PR branch address the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, missing-as-zero trend calculation, duplicate weekly/manual legacy assignment generation, advanced rubric scale mismatch, and the legacy partial score/feedback write path.
+The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. The scoped legacy fixes on this PR branch now cover the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, incomplete/cached-total trend calculations, duplicate legacy task creation, standard and advanced rubric scale mismatch, partial score/feedback writes, and stale cross-team legacy data refresh.
 
-The complete Phase Zero legacy-fix set is implemented on this PR branch and verified by GitHub Actions run #31. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase. Device/browser interaction QA remains assigned to Evolution Phase Eleven; the restricted full-app preview was not used for testing.
+The scoped legacy-fix code and ten Evolution regression tests passed GitHub Actions run #49 at commit `eaffa945`. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase. Device/browser interaction QA remains assigned to Evolution Phase Eleven; the restricted full-app preview was not used for testing.
 
 Separate Security work remains outside this Evolution audit and is tracked independently in `docs/security/rls-review.md`.
