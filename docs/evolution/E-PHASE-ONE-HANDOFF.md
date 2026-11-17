@@ -61,9 +61,18 @@ Use this file when continuing in a new ChatGPT conversation.
 - Current PR head `a34bfa66220c8b0da8b86afee59c89b44def97fb` passed GitHub Actions run #68 (`44179015605`): typecheck, all configured tests, and Vite production build.
 - E Phase One.3 is implemented and CI-verified; Phase One remains in progress because .4, .5, and final acceptance/security gates remain open.
 
+## E Phase One.4 — implementation checkpoint
+
+- Added `resolveTeamSessionEligibility` to verify the authenticated user, exact membership UUID, team UUID, non-empty role, and active status.
+- Integrated the eligibility result into `loadTeam` after the exact membership re-fetch and before setting the active team.
+- Invalid or mismatched session membership clears the selected team and team-scoped state.
+- Added explicit team UI capability helpers for owner settings and coach/owner assignment controls; comments and tests state these are UI-only hints, not authorization.
+- Added tests for eligible sessions, all fail-closed reasons, the role capability matrix, and app integration.
+- Current-head CI verification pending; do not mark E Phase One.4 complete until it passes.
+
 ## Next incomplete work
 
-1. Add session-eligibility primitives and focused permission-test helpers only as planned by Phase One. Keep authorization/RLS/grants in the separate Security workstream.
+1. Verify E Phase One.4 CI and inspect the final diff. Keep authorization/RLS/grants in the separate Security workstream.
 3. Reconcile live Supabase migration history with checked-in migration provenance before proposing any timezone trigger/RPC migration.
 4. Design a reviewed forward/rollback database migration so persisted dates use each team's configured IANA timezone. Until that is safe, do not expose an editable timezone selector or claim team timezone is fully implemented.
 5. Complete Phase One acceptance tests, update this ledger, and only then mark E Phase One complete.
