@@ -25,3 +25,13 @@
 - Review artwork diff and compare screenshots at mobile/desktop before production promotion.
 - Supabase row count/unique IDs and required fields must match the canonical catalogue.
 - Production deploy must point to the merged commit and be verified READY; GitHub CI success alone is not a production deployment.
+
+
+## Built-in app feature boundary
+
+- The Character Database is a built-in app catalogue, not team-owned, player-owned, or test-account data. It is available independently of team creation and membership.
+- `src/data/characterProfiles.json` is the one canonical bundled dataset and currently contains all 67 profiles.
+- `src/data/characterProfilesExtra.json` was a redundant 57-profile duplicate of records already present in the canonical JSON. It was not imported by the runtime Character Database or App shell and is removed; do not recreate a second profile dataset.
+- `public.character_profiles` is an optional runtime mirror/cache for catalogue synchronization, not a separate team dataset and not the canonical authoring location. The bundled JSON must continue to render offline when Supabase is unavailable.
+- The original table-creation SQL was not retained in Git history. Migration `20261114100112_create_character_profiles_table.sql` is restored as a documented schema reconstruction from the live table inspected on 18 Nov 2026 (text primary key, required JSONB data, updated_at default, RLS enabled, public SELECT policy). It restores the repository migration source under the already-recorded live ledger version; it must not be manually reapplied to the existing remote project.
+- Character catalogue schema/source work is kept separate from the Evolution identity/timezone roadmap. It does not belong to team, player, session, or evaluation data cleanup.
