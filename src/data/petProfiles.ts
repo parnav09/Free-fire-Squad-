@@ -153,4 +153,132 @@ export const petProfiles: Record<string, PetProfile> = {
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   }
+  "dr-beanie": {
+    skill: "Dashy Duckwalk",
+    skillType: "Passive",
+    summary: "Increases movement speed while crouching by 60%.",
+    rows: [
+      { label: "Crouching movement-speed increase", value: "60%" },
+      { label: "Trigger", value: "While crouching" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB27 · 2021-03-31" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Sgt. Beanie" }
+    ],
+    effects: [
+      "Increases the owner's movement speed by 60% while crouching."
+    ],
+    mechanics: [
+      "The supplied report identifies crouching as the activation condition.",
+      "No additional range, duration, restriction, or interaction values were supplied."
+    ],
+    patchHistory: [
+      "OB27 (2021-03-31): Release date stated in the supplied report."
+    ],
+    releaseData: "OB27 · 2021-03-31",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Sgt. Beanie",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "dreki": {
+    skill: "Dragon Glare",
+    skillType: "Passive",
+    summary: "Reveals opponents recovering behind structures.",
+    rows: [
+      { label: "Detection effect", value: "Exposes opponents recovering behind structures" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB27 · 2021-04-14" },
+      { label: "Progression", value: "Unlockable nomenclature not published" }
+    ],
+    effects: [
+      "Exposes opponents who are recovering behind structures."
+    ],
+    mechanics: [
+      "The supplied report does not provide a verified detection radius or reveal duration.",
+      "Unlockable nomenclature was not published in the supplied report; no names or levels have been inferred."
+    ],
+    patchHistory: [
+      "OB27 (2021-04-14): Release date stated in the supplied report."
+    ],
+    releaseData: "OB27 · 2021-04-14",
+    progression: "Unlockable nomenclature not published",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "falco": {
+    skill: "Skyline Spree",
+    skillType: "Passive",
+    summary: "Disables enemy auto-aim during the parachute phase.",
+    rows: [
+      { label: "Effect", value: "Disables enemy auto-aim during the parachute phase" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB22 · 2020-06-14" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Evergreen Falco" }
+    ],
+    effects: [
+      "Disables enemy auto-aim against the owner during the parachute phase."
+    ],
+    mechanics: [
+      "The supplied report limits the stated effect to the parachute phase.",
+      "No separate range, duration, or post-landing effect was supplied."
+    ],
+    patchHistory: [
+      "OB22 (2020-06-14): Release date stated in the supplied report."
+    ],
+    releaseData: "OB22 · 2020-06-14",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Evergreen Falco",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "fang": {
+    skill: "Wolf Pact",
+    skillType: "Passive",
+    summary: "Grants 30 EP or 15 HP when a teammate is downed.",
+    rows: [
+      { label: "EP restored", value: "30 EP" },
+      { label: "HP restored", value: "15 HP" },
+      { label: "Trigger", value: "A teammate is downed" },
+      { label: "Cooldown", value: "25 seconds" },
+      { label: "Release data", value: "OB36 · 2022-10-18" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Artic Fang" }
+    ],
+    effects: [
+      "When a teammate is downed, grants the owner 30 EP or 15 HP."
+    ],
+    mechanics: [
+      "The supplied report specifies the alternative recovery values as 30 EP or 15 HP.",
+      "The supplied report gives a 25-second cooldown."
+    ],
+    patchHistory: [
+      "OB36 (2022-10-18): Release date stated in the supplied report."
+    ],
+    releaseData: "OB36 · 2022-10-18",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Artic Fang",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "finn": {
+    skill: "Survival (Designation)",
+    skillType: "Passive",
+    summary: "Survival-focused utility; exact numerical skill parameters are unpublished in the supplied data.",
+    rows: [
+      { label: "Numerical skill values", value: "Not published in the supplied report" },
+      { label: "Cooldown parameters", value: "Not published in the supplied report" },
+      { label: "Release data", value: "2022 · exact patch/date not supplied" },
+      { label: "Progression", value: "Exact unlockables not published" }
+    ],
+    effects: [
+      "The supplied report identifies Finn's utility as survival-focused but does not provide an exact numerical effect."
+    ],
+    mechanics: [
+      "The supplied report says the utility centers on positional survival metrics.",
+      "Precise numerical values, cooldown triggers, and percentage buffs were omitted; these remain unpopulated pending game-client data."
+    ],
+    patchHistory: [
+      "No specific patch-history entry was supplied."
+    ],
+    releaseData: "2022 · exact patch/date not supplied",
+    progression: "Exact unlockables not published",
+    sources: [],
+    dataStatus: "Incomplete user-supplied profile · source verification pending"
+  },
 };
