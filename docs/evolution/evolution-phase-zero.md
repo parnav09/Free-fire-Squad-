@@ -265,7 +265,8 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 - The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 333 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
 - This CI run verifies the current Phase Zero code, tests, and audit document at the PR head. Any later source or workflow change requires a new successful run.
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
-- The Vercel Preview status previously reported READY by the GitHub integration, but no approved-scope browser smoke test or Android/tablet/desktop interaction QA is claimed here.
+- The latest Vercel Preview check on this PR head is **blocked/failed with a Vercel build-rate-limit response** (`upgradeToPro=build-rate-limit`). This is a platform build quota result, not a TypeScript or Vite build failure.
+- No Vercel Preview was available for approved-scope browser smoke tests; Android/tablet/desktop interaction QA is not claimed and remains assigned to Evolution Phase Eleven.
 - No production deployment or promotion was performed as part of this audit.
 
 ## 9. Code/data paths to preserve
