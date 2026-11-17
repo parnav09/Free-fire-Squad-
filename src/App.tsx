@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { resolveActiveTeamIdentity } from "./lib/evolution-identity";
+import { getTeamUiCapabilities, resolveActiveTeamIdentity, resolveTeamSessionEligibility } from "./lib/evolution-identity";
 import { createLatestRequestGuard } from "./lib/latest-request-guard";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
@@ -191,6 +191,7 @@ export default function App() {
 
   const [customRoleDrafts,setCustomRoleDrafts]=useState<Record<string,string>>({});
   const ownerPowerActive=team?.membership_role==="owner"&&ownerPowerEnabled;
+  const teamUiCapabilities=getTeamUiCapabilities(team?.membership_role,ownerPowerEnabled);
   const [cloudTraining, setCloudTraining] = useState<Record<string, boolean>>({});
   const [cloudSessionNotes, setCloudSessionNotes] = useState("");
   const [trainingDate, setTrainingDate] = useState(() => new Date().toLocaleDateString("en-CA"));
@@ -306,7 +307,7 @@ export default function App() {
     if(!supabase||!team||!sessionUserId)return;
     const assignment=assignmentRows.find(row=>row.id===id);
     if(!assignment){setNotice("This legacy assignment is no longer in the current team list. Refresh and try again.");return;}
-    const canManageAssignments=team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive);
+    const canManageAssignments=teamUiCapabilities.canManageAssignments;
     if(assignment.player_id!==sessionUserId&&!canManageAssignments){setNotice("You can only update your own existing assignment.");return;}
     if(status!=="assigned"&&status!=="completed"){setNotice("Invalid assignment status.");return;}
     setConnection("Syncing…");
@@ -529,25 +530,27 @@ export default function App() {
       .maybeSingle();
     if(!isCurrent())return;
     if(membershipError)throw membershipError;
-    if(!membership){
+    const sessionEligibility=resolveTeamSessionEligibility(user.id,membership,identity.teamId);
+    if(!sessionEligibility.eligible){
       safeStorageRemoveItem("squad-os-active-team");
       setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");
       setRosterCapacity(4);
       return;
     }
+    const eligibleIdentity=sessionEligibility.identity;
 
-    if(team?.id!==identity.teamId){
+    if(team?.id!==eligibleIdentity.teamId){
       setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");
     }
-    safeStorageSetItem("squad-os-active-team",identity.teamId);
+    safeStorageSetItem("squad-os-active-team",eligibleIdentity.teamId);
     const {data:t,error:te}=await supabase
       .from("teams")
       .select("id,team_name,invite_code,avatar_url,timezone")
-      .eq("id",identity.teamId)
+      .eq("id",eligibleIdentity.teamId)
       .single();
     if(!isCurrent())return;
     if(te)throw te;
-    setTeam({...t,membership_id:identity.membershipId,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});
+    setTeam({...t,membership_id:eligibleIdentity.membershipId,membership_role:eligibleIdentity.membershipRole,player_number:membership.player_number,assigned_role:membership.assigned_role});
     setRosterEditEnabled(safeStorageGetItem("squad-os-roster-edit:"+t.id)==="on");
     if(membership.display_name)setDisplayName(membership.display_name);
 
@@ -991,7 +994,7 @@ export default function App() {
           <h1>{section==="Players" ? <>Team roster.<br/><span>People & roles.</span></> : <>{section}.<br/><span>Team operations.</span></>}</h1>
           <p className="intro">A focused workspace for tournament results, player development and team performance.</p>
 
-          {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} canAssignTasks={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))} language={drillLanguage} onLanguageChange={changeDrillLanguage}/></Suspense>}
+          {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!team&&teamUiCapabilities.canManageAssignments} canAssignTasks={!!team&&teamUiCapabilities.canManageAssignments||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))} language={drillLanguage} onLanguageChange={changeDrillLanguage}/></Suspense>}
           {section==="Evolution"&&<><div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · EVOLUTION</div><h2>One place for improvement</h2></div><span className="phase-pill">4 MODULES</span></div><p className="intro">Evaluation, weekly review, player trends and squad analytics stay together. Use the module you need; all records remain team-shared.</p><div className="evolution-hub-grid">{[{title:"Daily Evaluation",desc:"Legacy five-dimension form. Canonical session-linked workflow is planned for Evolution Phase Four.",to:"Evaluation",icon:"◎"},{title:"Weekly Review",desc:"Legacy read-only snapshot. Full review and approvals are planned for Evolution Phase Seven.",to:"Weekly Review",icon:"↗"},{title:"Player Trends",desc:"Legacy read-only preview. Longitudinal trends are planned for Evolution Phase Eight.",to:"Player Trends",icon:"⌁"},{title:"Squad Analytics",desc:"Competitive-results snapshot. Player-development analytics are planned for Evolution Phase Nine.",to:"Analytics",icon:"▥"}].map(x=><button key={x.to} className="evolution-hub-card" onClick={()=>setSection(x.to as Section)}><span className="evolution-hub-icon">{x.icon}</span><strong>{x.title}</strong><small>{x.desc}</small><span className="evolution-hub-link">Open module →</span></button>)}</div></>}
           {section==="Tournament" && <><div className="matches-section-tabs" role="tablist" aria-label="Matches sections"><button role="tab" aria-selected={matchesTab==="Scrims"} className={matchesTab==="Scrims"?"active":""} onClick={()=>setMatchesTab("Scrims")}>Scrims</button><button role="tab" aria-selected={matchesTab==="Tournament"} className={matchesTab==="Tournament"?"active":""} onClick={()=>setMatchesTab("Tournament")}>Tournaments</button></div>{matchesTab==="Scrims"?<Suspense fallback={<div className="pt-loading">Opening scrims workspace…</div>}> <ScrimsSection supabase={supabase} teamId={team?.id||""} userId={sessionUserId} teamMembers={teamMembers as Array<{user_id:string;display_name?:string}>}/> </Suspense>:<>
             <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><span className="phase-pill">42 MATCH SLOTS</span></div>
@@ -1132,12 +1135,12 @@ export default function App() {
           {section==="Settings" && <>
             <div className="section-heading"><div><h2>Settings</h2></div></div>
             <section className="connection-panel language-settings-panel"><div><div className="eyebrow">PREFERENCES</div><h3>Display language</h3><p>Choose English or Hindi + English for the Drill Library and Character Database. Your preference is saved on this device.</p></div><div className="pt-language-toggle settings-language-toggle" role="group" aria-label="Drill language"><button type="button" className={drillLanguage==="en"?"active":""} onClick={()=>changeDrillLanguage("en")}>EN</button><button type="button" className={drillLanguage==="hi-en"?"active":""} onClick={()=>changeDrillLanguage("hi-en")}>HI+EN</button></div></section>
-            {signedIn&&team?.membership_role==="owner"&&<section className="connection-panel roster-edit-settings"><div className="owner-power-head"><div><div className="eyebrow">TEAM PREFERENCES</div><h3>Roster management</h3><p>Keep the Players page in clean member-view mode by default. Enable editing only when you need to adjust slots or roles.</p></div><span className={"owner-power-status "+(rosterEditEnabled?"is-on":"is-off")}>{rosterEditEnabled?"EDITING ON":"VIEW ONLY"}</span></div><label className="owner-power-toggle-row"><span><strong>{rosterEditEnabled?"Roster editing enabled":"Roster editing hidden"}</strong><small>{rosterEditEnabled?"Owner assignment controls are visible in the Player roster.":"You see the same clean player cards as team members."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={rosterEditEnabled} onChange={e=>{const next=e.target.checked;setRosterEditEnabled(next);if(team?.id)safeStorageSetItem("squad-os-roster-edit:"+team.id,next?"on":"off");setNotice(next?"Roster editing enabled for this device.":"Roster returned to member view.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label><div className="owner-power-foot"><span className="owner-power-dot"/><small>This changes only the owner’s interface. Team roles and permissions remain server-controlled.</small></div></section>}
+            {signedIn&&teamUiCapabilities.canManageTeamSettings&&<section className="connection-panel roster-edit-settings"><div className="owner-power-head"><div><div className="eyebrow">TEAM PREFERENCES</div><h3>Roster management</h3><p>Keep the Players page in clean member-view mode by default. Enable editing only when you need to adjust slots or roles.</p></div><span className={"owner-power-status "+(rosterEditEnabled?"is-on":"is-off")}>{rosterEditEnabled?"EDITING ON":"VIEW ONLY"}</span></div><label className="owner-power-toggle-row"><span><strong>{rosterEditEnabled?"Roster editing enabled":"Roster editing hidden"}</strong><small>{rosterEditEnabled?"Owner assignment controls are visible in the Player roster.":"You see the same clean player cards as team members."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={rosterEditEnabled} onChange={e=>{const next=e.target.checked;setRosterEditEnabled(next);if(team?.id)safeStorageSetItem("squad-os-roster-edit:"+team.id,next?"on":"off");setNotice(next?"Roster editing enabled for this device.":"Roster returned to member view.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label><div className="owner-power-foot"><span className="owner-power-dot"/><small>This changes only the owner’s interface. Team roles and permissions remain server-controlled.</small></div></section>}
             <section className="connection-panel profile-settings-entry">
               <div><div className="eyebrow">ACCOUNT</div><h3>Player profile</h3><p>View and update your IGN, account details, player slot, role and IGL information.</p></div>
               <button className="primary-button" type="button" onClick={()=>setSection("Profile")}>Open Profile <UiIcon name="arrow-right"/></button>
             </section>
-            {signedIn&&team?.membership_role==="owner"&&<section className="connection-panel owner-power-panel">
+            {signedIn&&teamUiCapabilities.canManageTeamSettings&&<section className="connection-panel owner-power-panel">
               <div className="owner-power-head"><div><div className="eyebrow">OWNER CONTROL CENTER</div><h3>Admin command power</h3><p>Switch owner command controls on or off for this device and active team.</p></div><span className={"owner-power-status "+(ownerPowerEnabled?"is-on":"is-off")}>{ownerPowerEnabled?"POWER ON":"POWER OFF"}</span></div>
               <label className="owner-power-toggle-row"><span><strong>{ownerPowerEnabled?"Owner commands enabled":"Member interface active"}</strong><small>{ownerPowerEnabled?"Owner-only controls are visible in the workspace.":"Owner controls are hidden; the workspace looks like a regular member view."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={ownerPowerEnabled} onChange={e=>{const next=e.target.checked;setOwnerPowerEnabled(next);if(team?.id)safeStorageSetItem("squad-os:"+team.id+":owner-power",next?"on":"off");setNotice(next?"Owner command power enabled on this device.":"Owner command power disabled. Your account remains the team owner.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label>
               <div className="owner-power-foot"><span className="owner-power-dot"/><small>UI visibility only · Team ownership and server permissions are unchanged.</small></div>
