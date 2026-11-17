@@ -1,10 +1,17 @@
 import { useMemo, useState } from "react";
+import "./CharactersDatabase.css";
 import "./PetDatabase.css";
 
-type PetEntry = { id: string; name: string; aliases: string[]; status: "verified" | "pending" };
+type PetEntry = {
+  id: string;
+  name: string;
+  aliases: string[];
+  status: "verified" | "pending";
+  officialUrl?: string;
+};
 
-const pets: PetEntry[] = [
-  { id: "kitty", name: "Kitty", aliases: ["kity", "kitti", "kitty pet"], status: "verified" },
+const pets = ([
+  { id: "kitty", name: "Kitty", aliases: ["kity", "kitti", "kitty pet"], status: "verified", officialUrl: "https://ff.garena.com/en/pets/262" },
   { id: "mechanical-pup", name: "Mechanical Pup", aliases: ["mechanical puppy", "mech pup", "robot pup", "mechanical"], status: "verified" },
   { id: "night-panther", name: "Night Panther", aliases: ["night panther pet", "panther", "nite panther"], status: "verified" },
   { id: "detective-panda", name: "Detective Panda", aliases: ["panda", "detective panda pet", "detectiv panda"], status: "verified" },
@@ -33,121 +40,203 @@ const pets: PetEntry[] = [
   { id: "pug", name: "Pug", aliases: ["pug pet"], status: "verified" },
   { id: "unidentified-28", name: "Unidentified Pet 28", aliases: [], status: "pending" },
   { id: "unidentified-29", name: "Unidentified Pet 29", aliases: [], status: "pending" },
-];
+] as PetEntry[]).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
 
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-function distance(a: string, b: string) {
-  const row = Array.from({ length: b.length + 1 }, (_, i) => i);
+
+function editDistanceWithin(a: string, b: string, limit: number) {
+  if (Math.abs(a.length - b.length) > limit) return limit + 1;
+  let previousPrevious: number[] | null = null;
+  let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
   for (let i = 1; i <= a.length; i++) {
-    let prev = row[0]; row[0] = i;
+    const current = [i];
+    let rowMin = i;
     for (let j = 1; j <= b.length; j++) {
-      const old = row[j];
-      row[j] = Math.min(row[j] + 1, row[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
-      prev = old;
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      let value = Math.min(current[j - 1] + 1, previous[j] + 1, previous[j - 1] + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1] && previousPrevious) {
+        value = Math.min(value, previousPrevious[j - 2] + 1);
+      }
+      current[j] = value;
+      rowMin = Math.min(rowMin, value);
     }
+    if (rowMin > limit) return limit + 1;
+    previousPrevious = previous;
+    previous = current;
   }
-  return row[b.length];
+  return previous[b.length];
 }
-function scorePet(pet: PetEntry, rawQuery: string) {
+
+function petNameScore(pet: PetEntry, rawQuery: string) {
   const query = normalize(rawQuery);
   if (!query) return 0;
+  const compactQuery = query.replace(/ /g, "");
   const terms = [pet.name, ...pet.aliases].map(normalize);
   let best = 0;
   for (const term of terms) {
-    if (term === query) best = Math.max(best, 100);
-    else if (term.startsWith(query) || query.startsWith(term)) best = Math.max(best, 85);
-    else if (term.includes(query) || query.includes(term)) best = Math.max(best, 72);
+    const compactTerm = term.replace(/ /g, "");
+    if (term === query || compactTerm === compactQuery) best = Math.max(best, 150);
+    else if (term.startsWith(query) || compactTerm.startsWith(compactQuery)) best = Math.max(best, 130);
+    else if (term.includes(query) || compactTerm.includes(compactQuery)) best = Math.max(best, 118);
     else {
-      const compactA = term.replace(/ /g, "");
-      const compactB = query.replace(/ /g, "");
-      const limit = compactB.length >= 8 ? 2 : compactB.length >= 4 ? 1 : 0;
-      if (limit && distance(compactA, compactB) <= limit) best = Math.max(best, 60 - distance(compactA, compactB) * 10);
+      const limit = compactQuery.length >= 9 ? 2 : compactQuery.length >= 3 ? 1 : 0;
+      if (limit) {
+        const distance = editDistanceWithin(compactQuery, compactTerm, limit);
+        if (distance <= limit) best = Math.max(best, 108 - distance * 12);
+      }
     }
   }
   return best;
 }
 
 type Props = { onBack: () => void };
-function KittyArtwork() {
-  return <img
-    className="pet-artwork-image"
-    src="https://i.ytimg.com/vi/XW9Dz-gZ2UM/maxresdefault.jpg"
-    alt="Kitty, the orange-and-white Free Fire pet in its purple striped outfit, from Garena Free Fire's official Kitty pet announcement"
-    loading="eager"
-    decoding="async"
-    referrerPolicy="no-referrer"
-  />;
-}
 
 export default function PetDatabase({ onBack }: Props) {
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState("kitty");
-  const results = useMemo(() => pets.map(pet => ({ pet, score: scorePet(pet, query) }))
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(8);
+  const batchSize = 8;
+  const selected = pets.find(pet => pet.id === selectedId);
+  const matches = useMemo(() => pets
+    .map(pet => ({ pet, score: petNameScore(pet, query) }))
     .filter(result => !query.trim() || result.score > 0)
-    .sort((a, b) => b.score - a.score || a.pet.name.localeCompare(b.pet.name))
+    .sort((a, b) => b.score - a.score || a.pet.name.localeCompare(b.pet.name, undefined, { sensitivity: "base" }))
     .map(result => result.pet), [query]);
-  const selected = pets.find(pet => pet.id === selectedId) ?? pets[0];
-  const kittySelected = selected.id === "kitty";
-  const confirmedCount = pets.filter(pet => pet.status === "verified").length;
+  const suggestions = useMemo(() => pets
+    .map(pet => ({ pet, score: petNameScore(pet, query) }))
+    .filter(result => query.trim() && result.score > 0)
+    .sort((a, b) => b.score - a.score || a.pet.name.localeCompare(b.pet.name, undefined, { sensitivity: "base" }))
+    .slice(0, 6), [query]);
+  const verifiedCount = pets.filter(pet => pet.status === "verified").length;
 
-  return <main className="pet-database">
-    <header className="pet-db-toolbar">
-      <button type="button" onClick={onBack} className="pet-db-back">← Back to Combat Nexus</button>
-      <span>SQUAD OS / COMPANION DATABASE</span>
-    </header>
-    <section className="pet-db-intro">
-      <small>02 / COMPANION ARCHIVE</small>
-      <h1>Pet <b>Database</b></h1>
-      <p>Official-name index · typo-tolerant search · profile templates</p>
-      <div className="pet-db-counts"><span><b>29</b> REQUESTED SLOTS</span><span><b>{confirmedCount}</b> OFFICIAL NAMES IDENTIFIED</span><span><b>2</b> NEED CONFIRMATION</span></div>
-    </section>
-    <section className="pet-db-search-panel">
-      <label htmlFor="pet-db-search">Search pets</label>
-      <input id="pet-db-search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Search official name or a close spelling…" autoComplete="off" />
-      <p>Search supports common misspellings, short forms and name variations.</p>
-    </section>
-    <section className="pet-db-layout">
-      <aside className="pet-db-roster">
-        <div className="pet-db-roster-head"><strong>Pet roster</strong><span>{results.length} / 29</span></div>
-        <div className="pet-db-grid">
-          {results.map(pet => <button type="button" key={pet.id} onClick={() => setSelectedId(pet.id)} className={selectedId === pet.id ? "pet-db-card is-selected" : "pet-db-card"}>
-            <span className="pet-db-card-mark">{pet.status === "verified" ? "PET" : "PENDING"}</span>
-            <strong>{pet.name}</strong>
-            <small>{pet.status === "verified" ? "Official name" : "Name not yet verified"}</small>
-          </button>)}
+  const resetToList = () => {
+    setSelectedId(null);
+    setQuery("");
+    setShowSuggestions(false);
+    setActiveSuggestionIndex(0);
+    setVisibleCount(8);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  };
+  const selectPet = (pet: PetEntry) => {
+    setSelectedId(pet.id);
+    setShowSuggestions(false);
+    setActiveSuggestionIndex(0);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  };
+  const chooseSuggestion = (pet: PetEntry) => {
+    setQuery(pet.name);
+    setShowSuggestions(false);
+    setActiveSuggestionIndex(0);
+  };
+
+  const list = (items: string[]) => <ul>{items.map((item, index) => <li key={index}>{item}</li>)}</ul>;
+
+  if (selected) {
+    const kitty = selected.id === "kitty";
+    return <main className="character-database character-profile-page">
+      <div className="character-db-toolbar">
+        <button type="button" className="character-back-button" onClick={resetToList}><span aria-hidden="true">←</span> Back to Pets</button>
+        <div className="character-language-control" role="group" aria-label="Pet profile language">
+          <button type="button" className="active">EN</button>
+          <button type="button" disabled>HI+EN</button>
         </div>
-        {results.length === 0 && <p className="pet-db-empty">No close match. Try a shorter spelling.</p>}
-      </aside>
-      <article className="pet-db-profile">
-        <div className={kittySelected ? "pet-db-art" : "pet-db-art pet-db-art--placeholder"}>
-          {kittySelected ? <><div className="pet-db-art-halo"/><KittyArtwork/><span className="pet-db-art-label">FULL-BODY / CUTOUT STUDY</span></> : <div className="pet-db-art-placeholder-copy"><span>PROFILE TEMPLATE</span><strong>{selected.name}</strong><small>Official artwork and verified details pending</small></div>}
-        </div>
-        <div className="pet-db-profile-content">
-          <div className="pet-db-badges"><span>OFFICIAL PET NAME</span><span>{kittySelected ? "PROFILE READY" : "TEMPLATE ONLY"}</span></div>
-          <h2>{selected.name}</h2>
-          <p className="pet-db-subtitle">{kittySelected ? "Classic companion · No gameplay skill" : "Pet profile template · Details intentionally blank"}</p>
-          <div className="pet-db-rule"/>
-          <h3>Profile Overview</h3>
-          <dl className="pet-db-facts">
-            <div><dt>Official name</dt><dd>{selected.name}</dd></div>
-            <div><dt>Database category</dt><dd>Pet</dd></div>
-            <div><dt>Profile state</dt><dd>{kittySelected ? "Verified basic profile" : selected.status === "verified" ? "Name verified · details pending" : "Awaiting official identification"}</dd></div>
-            <div><dt>Gameplay skill</dt><dd>{kittySelected ? "None" : "Not entered"}</dd></div>
-          </dl>
-          <section className="pet-db-section">
-            <h3>Ability / Factor | Current value</h3>
-            {kittySelected ? <div className="pet-db-value-row"><span>Gameplay ability</span><strong>No active or passive skill</strong></div> : <div className="pet-db-blank-row">Reserved for verified data</div>}
+      </div>
+      <article className="character-profile">
+        <header className="character-profile-identity">
+          <div className="character-profile-art pet-profile-art">
+            <div className="pet-profile-art-glow" />
+            <div className="character-profile-monogram pet-profile-monogram"><span>K</span><small>OFFICIAL ART PENDING</small></div>
+          </div>
+          <div className="character-profile-heading">
+            <h2>{selected.name}</h2>
+            <span className="character-confirmed">{kitty ? "Official-source profile" : selected.status === "verified" ? "Official name verified" : "Name confirmation pending"}</span>
+            <p className="character-profile-subtitle">{kitty ? "Cosmetic-only pet · No gameplay skill" : "Pet profile template · Verified details pending"}</p>
+            <p className="character-skill-name"><b>Ability:</b> {kitty ? "None · Cosmetic-only pet" : "Not entered"}</p>
+            <p className="character-profile-summary">{kitty ? "Kitty is an appearance-focused companion. No active or passive gameplay skill is assigned to Kitty." : "This profile keeps the Character Database structure. Ability and artwork details remain blank until verified from official Garena sources."}</p>
+          </div>
+        </header>
+        <section className="character-ability-section">
+          <div className="character-values-table" role="table" aria-label={selected.name + " profile values"}>
+            <div className="character-values-row character-values-head" role="row"><span role="columnheader">Ability / Factor</span><span role="columnheader">Current value</span></div>
+            <div className="character-values-row" role="row"><span role="cell">Gameplay ability</span><strong role="cell">{kitty ? "None" : "Not entered"}</strong></div>
+            <div className="character-values-row" role="row"><span role="cell">Skill type</span><strong role="cell">{kitty ? "No active or passive skill" : "Pending verification"}</strong></div>
+            <div className="character-values-row" role="row"><span role="cell">Profile category</span><strong role="cell">Pet</strong></div>
+          </div>
+          <section className="character-detail-block">
+            <h3>Ability Effects</h3>
+            {list(kitty ? ["Kitty has no gameplay ability effects."] : ["Reserved for official, verified pet ability information."])}
           </section>
-          <section className="pet-db-section"><h3>Ability Effects</h3><p>{kittySelected ? "Kitty has no gameplay ability effects. Its profile is appearance-focused." : "Section reserved — no unverified details added."}</p></section>
-          <section className="pet-db-section"><h3>Additional Mechanics &amp; Notes</h3><p>{kittySelected ? "No skill level progression, activation condition or cooldown applies to Kitty." : "Section reserved — awaiting verified source material."}</p></section>
-          <section className="pet-db-section"><h3>Patch History</h3><p>{kittySelected ? "No gameplay-skill changes recorded for this no-skill pet profile." : "Reserved for patch-verified updates."}</p></section>
-          <section className="pet-db-section"><h3>Official Sources</h3>
-            {kittySelected ? <><a href="https://ff.garena.com/en/pets" target="_blank" rel="noreferrer">Garena — Official Free Fire Pets catalogue</a><br/><a href="https://www.youtube.com/watch?v=XW9Dz-gZ2UM" target="_blank" rel="noreferrer">Garena Free Fire Indonesia — Official Kitty announcement</a></> : <span className="pet-db-source-pending">Source links will be added with each completed profile.</span>}
+          <section className="character-detail-block">
+            <h3>Additional Mechanics &amp; Notes</h3>
+            {list(kitty ? ["Kitty is a cosmetic-only pet; do not assign a skill, cooldown, or combat effect.", "Cosmetic appearance and pet emotes are separate from gameplay ability data."] : ["No mechanics have been entered until official source verification is complete."])}
           </section>
-          <div className={selected.status === "verified" ? "pet-db-status" : "pet-db-status is-pending"}><i/>{kittySelected ? "Kitty profile structure ready · no skill invented" : selected.status === "verified" ? "Official name indexed · profile details not entered" : "Unidentified slot · needs official name confirmation"}</div>
-        </div>
+          <section className="character-detail-block">
+            <h3>Patch History</h3>
+            {list(kitty ? ["No gameplay ability changes are recorded for Kitty because it has no gameplay skill."] : ["Reserved for official patch-note history."])}
+          </section>
+          <section className="character-detail-block character-source-block">
+            <h3>Official Sources</h3>
+            <ul>
+              <li><a href="https://ff.garena.com/en/pets" target="_blank" rel="noreferrer">Garena — Official Free Fire Pets catalogue</a></li>
+              {kitty && <li><a href="https://ff.garena.com/en/pets/262" target="_blank" rel="noreferrer">Garena — Kitty official pet profile</a></li>}
+            </ul>
+          </section>
+          <div className="character-detail-block pet-artwork-note">
+            <h3>Official Artwork Status</h3>
+            <p>{kitty ? "Garena's official Kitty profile page is linked above. The direct original PNG asset URL is not exposed by the accessible page result yet, so no third-party image or YouTube thumbnail is being passed off as Garena PNG artwork." : "Official artwork has not been added yet."}</p>
+          </div>
+        </section>
       </article>
-    </section>
-    <footer className="pet-db-footer">SQUAD OS <span>·</span> PET DATABASE <span>·</span> {confirmedCount} IDENTIFIED NAMES / 29 REQUESTED SLOTS</footer>
+    </main>;
+  }
+
+  return <main className="character-database pet-character-catalogue">
+    <div className="character-db-toolbar">
+      <div><button type="button" className="character-back-button" onClick={onBack}><span aria-hidden="true">←</span> Back to Combat Nexus</button><div className="character-db-eyebrow">SQUAD OS / COMBAT NEXUS</div></div>
+      <div className="character-language-control" role="group" aria-label="Pet catalogue language">
+        <button type="button" className="active">EN</button>
+        <button type="button" disabled>HI+EN</button>
+      </div>
+    </div>
+    <header className="character-db-heading">
+      <div><div className="character-db-eyebrow">COMPANION DATABASE</div><h1>Pet Database</h1><p>Official pet names, typo-tolerant search and Character-style individual profiles.</p></div>
+      <div className="character-db-count"><b>{pets.length}</b><span>PET SLOTS<small>{verifiedCount} official names / 2 unverified</small></span></div>
+    </header>
+    <div className="character-search-wrap">
+      <label className="character-search" role="search">
+        <span aria-hidden="true">⌕</span>
+        <input type="search" value={query} onFocus={() => setShowSuggestions(Boolean(query.trim()))}
+          onChange={event => { setQuery(event.target.value); setShowSuggestions(Boolean(event.target.value.trim())); setActiveSuggestionIndex(0); }}
+          onKeyDown={event => {
+            if (event.key === "Escape") setShowSuggestions(false);
+            if (event.key === "ArrowDown" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index + 1) % suggestions.length); }
+            if (event.key === "ArrowUp" && showSuggestions && suggestions.length) { event.preventDefault(); setActiveSuggestionIndex(index => (index - 1 + suggestions.length) % suggestions.length); }
+            if (event.key === "Enter" && showSuggestions && suggestions.length) { event.preventDefault(); chooseSuggestion(suggestions[activeSuggestionIndex]?.pet || suggestions[0].pet); }
+          }}
+          placeholder="Search pet name…" aria-label="Search pets" aria-autocomplete="list" aria-expanded={showSuggestions && suggestions.length > 0} aria-controls="pet-search-suggestions" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="search" />
+        {query && <button type="button" onClick={() => { setQuery(""); setShowSuggestions(false); setActiveSuggestionIndex(0); }} aria-label="Clear search">×</button>}
+      </label>
+      {showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="pet-search-suggestions" role="listbox" aria-label="Matching pets">
+        {suggestions.map((result, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={result.pet.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(result.pet)}>
+          <span className="character-suggestion-name">{result.pet.name}</span><span className="character-suggestion-meta">{result.pet.status === "verified" ? "Official name" : "Unverified slot"}</span><span aria-hidden="true">↗</span>
+        </button>)}
+      </div>}
+    </div>
+    <div className="character-results-head"><div><b>PET PROFILES</b><span>{matches.length} matches found</span></div><span className="character-sort-label">A–Z · Alphabetical</span></div>
+    {matches.length ? <div className="character-profile-grid">
+      {(query.trim() ? matches : matches.slice(0, visibleCount)).map(pet => <button type="button" className="character-result-card" key={pet.id} onClick={() => selectPet(pet)}>
+        <div className="character-result-art">
+          <div className="character-result-monogram pet-result-monogram"><span>{pet.name.split(/[- .]/).map(part => part[0]).join("").slice(0, 2).toUpperCase()}</span><small>{pet.id === "kitty" ? "PET PROFILE" : pet.status === "verified" ? "OFFICIAL NAME" : "PENDING"}</small></div>
+        </div>
+        <div className="character-result-copy"><span className="character-result-status">{pet.status === "verified" ? "OFFICIAL NAME VERIFIED" : "NAME CONFIRMATION PENDING"}</span><h2>{pet.name}</h2><b>{pet.id === "kitty" ? "Cosmetic-only · No skill" : pet.status === "verified" ? "Pet profile" : "Unidentified slot"}</b><p>{pet.id === "kitty" ? "Appearance-focused pet with no gameplay ability." : pet.status === "verified" ? "Official name indexed. Detailed profile awaits source verification." : "Placeholder only; official pet identity is not confirmed."}</p><span className="character-result-open">Open full profile <span aria-hidden="true">↗</span></span></div>
+        <span className="character-result-chevron" aria-hidden="true">↗</span>
+      </button>)}
+    </div> : <div className="character-empty-state"><b>No matching pet</b><span>Try another spelling or a shorter name.</span></div>}
+    <div className="character-load-more-wrap">
+      {!query.trim() && visibleCount < matches.length && <button type="button" className="character-load-more" onClick={() => setVisibleCount(count => Math.min(count + batchSize, matches.length))}>More <span aria-hidden="true">↓</span></button>}
+      <p>Pet catalogue uses official Garena names. Detailed pet abilities and artwork are added only after source verification.</p>
+    </div>
   </main>;
 }
