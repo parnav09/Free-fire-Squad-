@@ -65,3 +65,33 @@ test("invalid dates and invalid timezones fail closed", () => {
   assert.throws(() => identity.teamDateISO(new Date("invalid"), "Asia/Kolkata"), RangeError);
   assert.throws(() => identity.teamDateISO(new Date(), "Invalid/Zone"), RangeError);
 });
+
+
+const appSource = await readFile(new URL("../src/App.tsx", import.meta.url), "utf8");
+
+test("E Phase One.2 resolves the active team through the stable identity contract", () => {
+  assert.match(appSource, /resolveActiveTeamIdentity\(user\.id,memberships,preferred\|\|null\)/);
+  assert.match(appSource, /\.eq\("id",identity\.membershipId\)/);
+  assert.match(appSource, /\.eq\("user_id",identity\.authUserId\)/);
+  assert.match(appSource, /\.eq\("team_id",identity\.teamId\)/);
+});
+
+test("E Phase One.2 does not silently fall back to the first active membership", () => {
+  const loadStart = appSource.indexOf("const loadTeam = async");
+  const loadEnd = appSource.indexOf("const createTeam = async", loadStart);
+  const loadBlock = appSource.slice(loadStart, loadEnd);
+  assert.ok(loadStart >= 0 && loadEnd > loadStart);
+  assert.match(loadBlock, /if\(!identity\)\{/);
+  assert.doesNotMatch(loadBlock, /\.limit\(1\)\.maybeSingle\(\)/);
+  assert.match(loadBlock, /setTeam\(null\);setTeamMembers\(\[\]\)/);
+});
+
+test("E Phase One.2 exposes an explicit team choice when identity is ambiguous", () => {
+  assert.match(appSource, /CHOOSE ACTIVE TEAM/);
+  assert.match(appSource, /disabled=\{!choice\.selectable\}/);
+  assert.match(appSource, /teamChoices\.map\(choice/);
+});
+
+test("E Phase One.2 clears active team state on sign-out", () => {
+  assert.match(appSource, /setTeamChoices\(\[\]\);setJoinRequests\(\[\]\);setIglUserId\(" "\)/);
+});
