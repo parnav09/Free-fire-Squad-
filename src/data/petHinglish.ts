@@ -33,68 +33,16 @@ const labels: Record<string,string> = {
 "Primary effect":"Main effect","Cooldown":"Cooldown","Release data":"Release detail","Detection radius":"Detection ka area","Detection duration":"Detect rehne ka time","Maximum uses":"Match mein maximum uses","Throwing-distance increase":"Throw distance mein increase","Affected items":"Kin items par effect","HP restored":"Wapas milne wala HP","Trigger":"Kab activate hota hai","Crouching movement-speed increase":"Crouch mein movement speed","Detection effect":"Detection ka effect","Effect":"Effect","EP restored":"Wapas milne wala EP","Numerical skill values":"Skill ke exact numbers","Cooldown parameters":"Cooldown ki details","Rear damage reduction":"Peeche se aane wale damage mein kami","Mitigation cap":"Damage reduction ki maximum limit","Scan radius increase":"Scan area mein increase","Scan feed duration increase":"Scan dikhne ka extra time","EP restoration":"EP recovery","Activation delay":"Activate hone se pehle wait","EP ceiling":"EP ki maximum limit","Damage reduction":"Damage mein kami","Gloo Maker EXP":"Gloo Maker EXP","Additional inventory capacity":"Inventory ke extra slots","HP-to-EP conversion":"HP se EP mein conversion","Protection":"Protection","Additional Gloo Wall HP":"Gloo Wall ke extra HP","Active-skill cooldown reduction":"Active skill ke cooldown mein kami","Maximum reduction":"Maximum reduction","Scan interval":"Scan ka interval","Marker duration":"Marker dikhne ka time","Additional HP":"Extra HP","Explosive damage reduction":"Explosive damage mein kami","Duplication chance":"Duplicate milne ka chance","Trigger items":"Trigger hone wale items"
 };
 const values: Record<string,string> = {
-  "No cooldown": "Cooldown nahi hai",
-  "Not applicable": "Apply nahi hota",
-  "Purely cosmetic companion": "Sirf cosmetic pet; gameplay skill nahi",
-  "Cosmetic companion": "Sirf cosmetic pet",
-  "While crouching": "Crouch karte waqt",
-  "During interaction animations": "Interaction animation ke dauran",
-  "Securing an elimination": "Enemy ko eliminate karne par",
-  "A teammate is downed": "Teammate knock hone par",
-  "Damage received from behind": "Peeche se hit lagne par",
-  "No cooldown stated in supplied report": "Supplied report mein cooldown nahi diya",
-  "Not published in the supplied report": "Supplied report mein nahi diya gaya",
-  "Not published": "Publish nahi hua",
-  "Exact unlockables not published": "Unlockable details publish nahi hain",
-  "Unlockable details not supplied": "Unlockable details nahi di gayi",
-  "Unlockable nomenclature not published": "Unlockable names publish nahi hain",
-  "Exact release date not published by Garena": "Garena ne exact release date publish nahi ki",
-  "Maximum 3 uses per match (no separate timer supplied)": "Ek match mein maximum 3 uses; alag timer nahi diya",
-  "Incoming explosive hit; further trigger details not supplied": "Explosive hit lagne par; baaki trigger details nahi di gayi",
-  "Med Kit · Inhaler · Repair Kit": "Med Kit · Inhaler · Repair Kit",
-  "Grenades, Gloo Walls, Flash Freeze, and other throwables (as stated in supplied report)": "Grenades, Gloo Walls, Flash Freeze aur doosri throwable items",
-  "200 EXP in the first 200 seconds (as stated in supplied report)": "Pehle 200 seconds mein 200 EXP (supplied report ke mutabik)",
-  "Repairs armor durability": "Armor ki durability repair karta hai",
-  "Prevents high-tier armor destruction": "High-tier armor ko break hone se bachata hai",
-  "Exact unified OB39 value not supplied": "OB39 ka exact value nahi diya gaya",
-  "Exact unlockables not published in the supplied report": "Exact unlockable details supplied report mein nahi hain",
-  "2019 · Early Release": "2019 · Early Release",
-  "Restores 50 EP upon safe zone shrinkage": "Safe Zone chhoti hone par 50 EP wapas milta hai",
-  "50 EP": "50 EP",
-  "10 HP": "10 HP",
-  "30%": "30%",
-  "60%": "60%",
-  "+10m": "+10m",
-  "+2.5 seconds": "+2.5 seconds",
-  "25%": "25%",
-  "35%": "35%",
-  "65% of HP healed": "Heal hue HP ka 65%",
-  "+45 slots": "45 extra slots",
-  "+100 HP": "+100 HP",
-  "15%": "15%",
-  "50%": "50%",
-  "30 EP": "30 EP",
-  "15 HP": "15 HP",
-  "25 seconds": "25 seconds",
-  "90 seconds": "90 seconds",
-  "100 seconds": "100 seconds",
-  "120 seconds": "120 seconds",
-  "30 seconds": "30 seconds",
-  "70 seconds": "70 seconds",
-  "6 seconds": "6 seconds",
-  "10 EP per second": "Har second 10 EP",
-  "100 EP": "100 EP",
-  "150 durability points": "150 durability points",
+  "3 uses per match": "Ek match mein 3 uses",
+  "6 seconds motionless": "6 seconds tak bina hile",
+  "Gloo Wall inventory below 2": "Inventory mein 2 se kam Gloo Wall",
+  "Reduces enemy marking-skill duration": "Enemy ki marking skill ka effect rehne ka time kam karta hai",
+  "+10 HP per Med Kit": "Har Med Kit par +10 HP",
   "Exposes opponents recovering behind structures": "Structures ke peeche recovery kar rahe opponents ko reveal karta hai",
-  "Disables enemy auto-aim during the parachute phase": "Parachute phase mein enemy ka auto-aim band kar deta hai",
-  "Restores 10 HP upon securing an elimination": "Elimination lene par 10 HP wapas deta hai",
-  "Increases movement speed while crouching by 60%": "Crouch karke move karne par movement speed 60% badhata hai",
-  "Restores 10 EP per second": "Har second 10 EP wapas deta hai",
-  "Reduces damage received from behind by 25%": "Peeche se aane wale damage ko 25% kam karta hai",
-  "Increases the throwing distance of throwables by 30%": "Throwable items 30% zyada door tak jaati hain",
-  "Adds an additional 100 HP energy shield to deployed Gloo Walls": "Deploy ki gayi Gloo Wall ko 100 extra HP ki shield deta hai",
-  "Reduces the recovery time of the equipped active skill by 15%": "Equipped active skill ka wait time 15% kam karta hai",
-  "2022 · exact patch/date not supplied": "2022 · exact patch/date supplied nahi hai"
+  "Disables enemy auto-aim against the owner during the parachute phase": "Parachute phase mein enemy ka auto-aim owner par kaam nahi karta",
+  "Cosmetic-only companion": "Sirf cosmetic pet",
+  "Not entered": "Abhi add nahi hua",
+  "Pending verification": "Verification pending"
 };
 export const petRowHinglish = (label:string,value:string) => ({label:labels[label]||label,value:values[value]||value});
 
@@ -105,10 +53,12 @@ export function petPatchHinglish(text:string) {
     "No additional patch-history entries were supplied.":"Koi extra patch-history entry supplied nahi ki gayi.",
     "The supplied report lists no later balance change.":"Supplied report mein baad ka koi balance change listed nahi hai.",
     "The report states that no balance changes have been recorded since introduction; this has not yet been independently source-checked.":"Report ke mutabik launch ke baad balance change record nahi hua; independent source-check abhi pending hai.",
-    "OB41: Mini-map activation optimization stated in the supplied report; exact patch wording remains to be checked.":"OB41: Mini-map activation option ka update report mein diya gaya hai; exact patch wording verify karni baaki hai."
+    "OB41: Mini-map activation optimization stated in the supplied report; exact patch wording remains to be checked.":"OB41: Mini-map activation option ka update report mein diya gaya hai; exact patch wording verify karni baaki hai.",
+    "Historical 30%–40% reduction values are mentioned; exact unified OB39 ceiling was not supplied.":"Purane 30%–40% reduction values ka zikr hai; OB39 ki exact maximum limit nahi di gayi."
   };
   if (exact[text]) return exact[text];
   return text
+    .replace(": Release date stated in the supplied report; official collaboration and release details remain to be checked.", ": Release date supplied report se li gayi hai; official collaboration aur release details verify karni baaki hain.")
     .replace(": Release date stated in the supplied report.", ": Release date supplied report se li gayi hai.")
     .replace(": Release data stated in the supplied report.", ": Release detail supplied report se li gayi hai.")
     .replace(": release period stated in the supplied report; exact date and patch were not supplied.", ": Release period supplied report mein diya gaya hai; exact date aur patch nahi diye gaye.");
