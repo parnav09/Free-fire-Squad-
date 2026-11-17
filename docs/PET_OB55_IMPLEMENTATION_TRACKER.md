@@ -80,4 +80,7 @@ Use the existing Pet Database search -> alphabetical cards -> individual detail 
 - Translation style: Roman script only, natural gaming Hinglish; difficult terms are explained in simple words (example: knockback -> peeche dhakelna), without changing the supplied mechanics.
 - Character translation audit covered all 67 character records. Oscar's HI+EN copy was corrected: Knockback is now explained as "peeche dhakel deta hai"; Gloo Wall detonation is phrased as "todta hai". Garena's official skill text specifies target-direction dash, first three Gloo Walls, 25 damage and knockback, but does not state an exact knockback angle/force; no angle was invented.
 - Remaining character profiles with notable hard technical terms in their HI+EN copy are listed in the user-facing audit response; they have not all been rewritten in this pass.
-- Latest preview build and mobile visual check pending.
+- Latest code preview build: READY at https://squad-r0elqrpby-parnav09.vercel.app (commit f92415f0332e2abd7bb4480abb334459780f3827).
+- Build pipeline: TypeScript passed; foundation tests 14/14 passed; character tests 11/11 passed; Vite production build completed.
+- Existing Vite chunk-size warning remains: main JS chunk about 337 kB minified (83.46 kB gzip), above the 250 kB advisory threshold. Build itself succeeded.
+- Device-level visual regression on multiple phone widths has not been manually completed; preview is available for that check.
