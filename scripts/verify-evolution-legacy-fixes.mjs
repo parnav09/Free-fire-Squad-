@@ -18,6 +18,9 @@ test("legacy Daily Evaluation has no P1 or fabricated score defaults", () => {
   assert.doesNotMatch(app, /useState\("P1"\)/);
   assert.doesNotMatch(app, /evalScores,setEvalScores\]=useState<Record<string,number>>\(\{communication:5/);
   assert.match(app, /evaluationComplete=evaluationKeys\.every/);
+  assert.match(app, /function kolkataDateISO/);
+  assert.match(app, /timeZone:"Asia\\/Kolkata"/);
+  assert.match(app, /const evalDate=kolkataDateISO\\(\\)/);
   assert.match(app, /disabled=\{!evalPlayer\|\|!evaluationComplete/);
 });
 
