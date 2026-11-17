@@ -267,9 +267,51 @@ export default function App() {
     return () => { alive = false; authSub.subscription.unsubscribe(); };
   }, [supabase, supabaseReady]);
 
-  const loadAssignments=async()=>{if(!supabase||!team)return;setConnection("Syncing…");const {data,error}=await supabase.from("player_drill_assignments").select("id,player_id,drill_title,drill_description,due_date,status,completion_note").eq("team_id",team.id).order("due_date",{ascending:false}).limit(100);if(error){setConnection("Signed in · sync retry needed");throw error;}setAssignmentRows(data||[]);setConnection("Signed in · cloud sync active");};
-  useEffect(()=>{if(signedIn&&team)loadAssignments().catch(e=>{setConnection("Signed in · sync retry needed");setNotice(e.message);});},[signedIn,team?.id]);
-  const updateAssignment=async(id:string,status:string)=>{if(!supabase||!team)return;setConnection("Syncing…");const {error}=await supabase.from("player_drill_assignments").update({status,completed_at:status==="completed"?new Date().toISOString():null}).eq("id",id);if(error){setConnection("Signed in · sync retry needed");setNotice(error.message);return;}await loadAssignments();};
+  const loadAssignments=async()=>{
+    if(!supabase||!team)return;
+    setConnection("Syncing…");
+    const {data,error}=await supabase.from("player_drill_assignments")
+      .select("id,player_id,drill_title,drill_description,due_date,status,completion_note")
+      .eq("team_id",team.id).order("due_date",{ascending:false}).limit(100);
+    if(error){setConnection("Signed in · sync retry needed");throw error;}
+    setAssignmentRows(data||[]);setConnection("Signed in · cloud sync active");
+  };
+  useEffect(()=>{
+    let active=true;
+    setAssignmentRows([]);
+    if(!supabase||!signedIn||!team)return()=>{active=false};
+    (async()=>{try{
+      const {data,error}=await supabase.from("player_drill_assignments")
+        .select("id,player_id,drill_title,drill_description,due_date,status,completion_note")
+        .eq("team_id",team.id).order("due_date",{ascending:false}).limit(100);
+      if(error)throw error;
+      if(active)setAssignmentRows(data||[]);
+    }catch(e){if(active){
+      setConnection("Signed in · sync retry needed");
+      setNotice(e instanceof Error?e.message:"Assignments could not be loaded.");
+    }}})();
+    return()=>{active=false};
+  },[supabase,signedIn,team?.id]);
+  const updateAssignment=async(id:string,status:"assigned"|"completed")=>{
+    if(!supabase||!team||!sessionUserId)return;
+    const assignment=assignmentRows.find(row=>row.id===id);
+    if(!assignment){setNotice("This legacy assignment is no longer in the current team list. Refresh and try again.");return;}
+    const canManageAssignments=team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive);
+    if(assignment.player_id!==sessionUserId&&!canManageAssignments){setNotice("You can only update your own existing assignment.");return;}
+    if(status!=="assigned"&&status!=="completed"){setNotice("Invalid assignment status.");return;}
+    setConnection("Syncing…");
+    try{
+      const {data,error}=await supabase.from("player_drill_assignments")
+        .update({status,completed_at:status==="completed"?new Date().toISOString():null})
+        .eq("id",id).eq("team_id",team.id).select("id").maybeSingle();
+      if(error)throw error;
+      if(!data){setNotice("Assignment was not updated. It may have changed or is no longer available.");return;}
+      await loadAssignments();
+    }catch(e){
+      setConnection("Signed in · sync retry needed");
+      setNotice(e instanceof Error?e.message:"Assignment update failed.");
+    }
+  };
   const signIn = async () => {
     if (!supabase) return setNotice("The service is unavailable right now. Please try again later.");
     const identifier = sessionUsername.trim();
@@ -635,7 +677,19 @@ export default function App() {
   };
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_log").select("activity,done").eq("team_id",team.id).eq("log_date",trainingDate);if(error)throw error;if(!cancelled)setCloudTraining(Object.fromEntries((data||[]).map(x=>[x.activity,!!x.done])));}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Training checklist could not be loaded.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_session_notes").select("notes").eq("team_id",team.id).eq("note_date",trainingDate).maybeSingle();if(error)throw error;if(!cancelled)setCloudSessionNotes(data?.notes||"");}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Session notes could not be loaded.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
-  useEffect(()=>{if(!supabase||!signedIn||!team||!sessionUserId)return;let cancelled=false;(async()=>{try{const merged=await fetchEvaluationHistory(supabase,team.id,sessionUserId);if(!cancelled)setEvalHistory(merged);}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Evaluation history unavailable.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,sessionUserId]);
+  useEffect(()=>{
+    let cancelled=false;
+    setEvalHistory([]);
+    if(!supabase||!signedIn||!team||!sessionUserId)return()=>{cancelled=true};
+    (async()=>{try{
+      const merged=await fetchEvaluationHistory(supabase,team.id,sessionUserId);
+      if(!cancelled)setEvalHistory(merged);
+    }catch(e){if(!cancelled){
+      setConnection("Signed in · sync retry needed");
+      setNotice(e instanceof Error?e.message:"Evaluation history unavailable.");
+    }}})();
+    return()=>{cancelled=true};
+  },[supabase,signedIn,team?.id,sessionUserId]);
   const evaluationKeys=["communication","coordination","decision_making","role_execution","map_awareness"] as const;
   const evaluationComplete=evaluationKeys.every(key=>Number.isInteger(evalScores[key])&&evalScores[key]>=0&&evalScores[key]<=10);
   const saveEvaluation=async()=>{
