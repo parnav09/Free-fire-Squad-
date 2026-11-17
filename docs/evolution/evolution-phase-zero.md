@@ -167,8 +167,8 @@ These counts show that the competitive match ledger and drill library have recor
 
 The initial load reads base score columns from `daily_scores` and loads private feedback separately. The Realtime callback later selects `improvement_notes` and `mistake_notes` directly from `daily_scores`. The live `daily_scores` column inventory does not contain those two columns; they belong to `daily_score_feedback`.
 
-**Impact:** the Realtime refresh query can fail and the callback does not surface that query error before updating local history. This can leave the displayed evaluation history stale or replace it with an empty result.  
-**Required later phase:** subscribe to both source tables and refetch through the same correctly joined/merged loader used by the initial load.
+**Impact:** the Realtime refresh query could fail and the callback did not surface that query error before updating local history. This could leave the displayed evaluation history stale or replace it with an empty result.  
+**Audit fix on this PR branch:** added a shared `fetchEvaluationHistory` loader that reads only valid `daily_scores` columns, merges the signed-in player's private feedback from `daily_score_feedback`, subscribes to both source tables, and reports refresh errors instead of silently replacing history. This change is on the PR branch only; it is not merged or production-deployed. Its CI run must pass before the fix is considered verified.
 
 ### EV2-AUD-006 — Weekly Review and Player Trends are not separate experiences
 
@@ -245,9 +245,9 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 ## 8. Build and delivery evidence
 
-- The most recent completed GitHub Actions run before this audit-document commit completed successfully.
+- The most recent completed GitHub Actions run before the current audit-fix commits completed successfully.
 - Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, and Vite production build.
-- This audit-document commit triggers a fresh PR workflow run; its result must be checked separately before claiming this exact commit is CI-verified.
+- The Realtime evaluation refresh fix and final audit-document commits trigger a fresh PR workflow run; that run must pass before these latest commits are considered CI-verified.
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
 - The Vercel Preview status previously reported READY by the GitHub integration, but no approved-scope browser smoke test or Android/tablet/desktop interaction QA is claimed here.
 - No production deployment or promotion was performed as part of this audit.
