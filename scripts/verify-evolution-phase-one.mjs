@@ -93,5 +93,5 @@ test("E Phase One.2 exposes an explicit team choice when identity is ambiguous",
 });
 
 test("E Phase One.2 clears active team state on sign-out", () => {
-  assert.match(appSource, /setTeamChoices\(\[\]\);setJoinRequests\(\[\]\);setIglUserId\(" "\)/);
+  assert.match(appSource, /setTeamChoices\(\[\]\);setJoinRequests\(\[\]\);setIglUserId\("\")/);
 });
