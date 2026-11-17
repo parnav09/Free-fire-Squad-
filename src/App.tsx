@@ -46,6 +46,33 @@ function localDateISO(date = new Date()): string { return `${date.getFullYear()}
 
 type SupabaseInstance = NonNullable<typeof import("./lib/supabase/client")["supabase"]>;
 
+async function fetchEvaluationHistory(client: SupabaseInstance, teamId: string, userId: string) {
+  const [scoresResult, feedbackResult] = await Promise.all([
+    client.from("daily_scores")
+      .select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total")
+      .eq("team_id", teamId)
+      .order("score_date", { ascending: false })
+      .limit(100),
+    client.from("daily_score_feedback")
+      .select("score_id,improvement_target,improvement_notes,mistake_notes,context_notes")
+      .eq("player_id", userId),
+  ]);
+  if (scoresResult.error) throw scoresResult.error;
+  if (feedbackResult.error) throw feedbackResult.error;
+
+  const privateByScore = new Map((feedbackResult.data || []).map((feedback) => [feedback.score_id, feedback]));
+  return (scoresResult.data || []).map((score) => {
+    const feedback = privateByScore.get(score.id);
+    return {
+      ...score,
+      notes: feedback?.context_notes || null,
+      improvement_target: feedback?.improvement_target || null,
+      improvement_notes: feedback?.improvement_notes || null,
+      mistake_notes: feedback?.mistake_notes || null,
+    };
+  });
+}
+
 export default function App() {
   const [supabase, setSupabase] = useState<SupabaseInstance | null>(null);
   const [supabaseReady, setSupabaseReady] = useState(false);
@@ -614,7 +641,7 @@ export default function App() {
   };
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_log").select("activity,done").eq("team_id",team.id).eq("log_date",trainingDate);if(error)throw error;if(!cancelled)setCloudTraining(Object.fromEntries((data||[]).map(x=>[x.activity,!!x.done])));}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Training checklist could not be loaded.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_session_notes").select("notes").eq("team_id",team.id).eq("note_date",trainingDate).maybeSingle();if(error)throw error;if(!cancelled)setCloudSessionNotes(data?.notes||"");}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Session notes could not be loaded.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
-  useEffect(()=>{if(!supabase||!signedIn||!team||!sessionUserId)return;let cancelled=false;(async()=>{try{const [{data:scores,error:scoreError},{data:feedback,error:feedbackError}]=await Promise.all([supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100),supabase.from("daily_score_feedback").select("score_id,improvement_target,improvement_notes,mistake_notes,context_notes").eq("player_id",sessionUserId)]);if(scoreError)throw scoreError;if(feedbackError)throw feedbackError;const privateByScore=new Map((feedback||[]).map(f=>[f.score_id,f]));const merged=(scores||[]).map(row=>{const p=privateByScore.get(row.id);return {...row,notes:p?.context_notes||null,improvement_target:p?.improvement_target||null,improvement_notes:p?.improvement_notes||null,mistake_notes:p?.mistake_notes||null};});if(!cancelled)setEvalHistory(merged);}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Evaluation history unavailable.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,sessionUserId]);
+  useEffect(()=>{if(!supabase||!signedIn||!team||!sessionUserId)return;let cancelled=false;(async()=>{try{const merged=await fetchEvaluationHistory(supabase,team.id,sessionUserId);if(!cancelled)setEvalHistory(merged);}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Evaluation history unavailable.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,sessionUserId]);
   const saveEvaluation=async()=>{if(!supabase||!team||!signedIn){setNotice("Sign in and join a team to save evaluations.");return;}setConnection("Syncing…");try{if(!sessionUserId)throw new Error("Session expired.");const {data,error}=await supabase.from("daily_scores").insert({team_id:team.id,score_date:evalDate,player_id:evalPlayer,evaluator_id:null,...evalScores,notes:null,improvement_target:null,review_visibility:"recipient_only"}).select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total").single();if(error)throw error;const privatePayload={score_id:data.id,team_id:team.id,player_id:evalPlayer,improvement_target:evalTarget.trim()||null,improvement_notes:evalImprovements.trim()||null,mistake_notes:evalMistakes.trim()||null,context_notes:evalNotes.trim()||null};if(privatePayload.improvement_target||privatePayload.improvement_notes||privatePayload.mistake_notes||privatePayload.context_notes){const {error:feedbackError}=await supabase.from("daily_score_feedback").insert(privatePayload);if(feedbackError){setEvalHistory(prev=>[{...data,notes:null,improvement_target:null,improvement_notes:null,mistake_notes:null},...prev].slice(0,100));setNotice("Score saved, but private feedback could not be delivered: "+feedbackError.message);return;}}setEvalHistory(prev=>[{...data,notes:privatePayload.context_notes,improvement_target:privatePayload.improvement_target,improvement_notes:privatePayload.improvement_notes,mistake_notes:privatePayload.mistake_notes},...prev].slice(0,100));setEvalNotes("");setEvalTarget("");setEvalImprovements("");setEvalMistakes("");setConnection("Signed in · cloud sync active");setNotice("Anonymous evaluation and private feedback saved.");}catch(e){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Evaluation save failed.");}};
   const saveCloudTraining = async (activity:string,done:boolean) => {setCloudTraining(p=>({...p,[activity]:done}));if(!supabase||!team||!signedIn||!sessionUserId)return;setConnection("Syncing…");try{const {error}=await supabase.from("training_log").upsert({team_id:team.id,log_date:trainingDate,activity,done,updated_by:sessionUserId},{onConflict:"team_id,log_date,activity"});if(error)throw error;setConnection("Signed in · cloud sync active");setNotice("Training checklist saved.");}catch(e){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Training checklist save failed.");}};
   const saveSessionNotes = async () => { if(!supabase||!team||!signedIn||!sessionUserId)return; setConnection("Syncing…"); try { const {error}=await supabase.from("training_session_notes").upsert({team_id:team.id,note_date:trainingDate,notes:cloudSessionNotes.trim(),updated_by:sessionUserId},{onConflict:"team_id,note_date"}); if(error)throw error; setConnection("Signed in · cloud sync active");setNotice("Session notes saved."); } catch(e) { setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Session notes save failed."); } };
@@ -646,8 +673,26 @@ export default function App() {
         if (active) setCloudSessionNotes(data?.notes || "");
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "daily_scores", filter: `team_id=eq.${team.id}` }, async () => {
-        const { data } = await client.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target,improvement_notes,mistake_notes").eq("team_id", team.id).order("score_date", { ascending: false }).limit(100);
-        if (active) setEvalHistory(data || []);
+        try {
+          const merged = await fetchEvaluationHistory(client, team.id, sessionUserId);
+          if (active) setEvalHistory(merged);
+        } catch (e) {
+          if (active) {
+            setConnection("Signed in · sync retry needed");
+            setNotice(e instanceof Error ? e.message : "Evaluation history refresh failed.");
+          }
+        }
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "daily_score_feedback", filter: `team_id=eq.${team.id}` }, async () => {
+        try {
+          const merged = await fetchEvaluationHistory(client, team.id, sessionUserId);
+          if (active) setEvalHistory(merged);
+        } catch (e) {
+          if (active) {
+            setConnection("Signed in · sync retry needed");
+            setNotice(e instanceof Error ? e.message : "Evaluation feedback refresh failed.");
+          }
+        }
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "player_drill_assignments", filter: `team_id=eq.${team.id}` }, () => {
         if (active) loadAssignments().catch(e => setNotice(e.message));
@@ -660,7 +705,7 @@ export default function App() {
         else if (active && ["CHANNEL_ERROR","TIMED_OUT","CLOSED"].includes(status)) setConnection("Signed in · sync retry needed");
       });
     return () => { active = false; void client.removeChannel(channel); };
-  }, [signedIn, team?.id, week, trainingDate]);
+  }, [signedIn, team?.id, sessionUserId, week, trainingDate]);
 
   const analyticsMatches = signedIn && team ? sharedMatches.filter(m=>m.placement!==null || m.kills>0) : Object.values(matches);
   const totalMatches = analyticsMatches.length;
