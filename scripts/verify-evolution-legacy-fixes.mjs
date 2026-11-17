@@ -66,5 +66,5 @@ test("the master blueprint consistently names every Evolution phase", () => {
   for (const name of phaseNames) {
     assert.match(blueprint, new RegExp("Evolution Phase " + name));
   }
-  assert.doesNotMatch(blueprint, /\\bPhase (?:[0-9]|1[0-2])\\b/);
+  assert.doesNotMatch(blueprint, /Phase [0-9]/);
 });
