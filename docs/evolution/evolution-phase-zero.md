@@ -277,10 +277,10 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 ## 8. Build and delivery evidence
 
-- GitHub Actions run #49 for PR head commit `eaffa945bb50de149c6b40bb040cc72a9e7ec39b` completed successfully.
+- GitHub Actions run #54 for PR head commit `27c9d5d23eafe0da191cdb6d3b9ad41110037da4` completed successfully.
 - The workflow passed dependency installation, lockfile artifact export, TypeScript typecheck, 18 foundation tests, 11 character-data tests, all 10 Evolution legacy regression-contract tests, and the Vite production build.
-- The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 334.13 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
-- This CI run verifies the code and regression tests at commit `eaffa945`. The subsequent audit-document update is documentation-only; any later source or workflow change requires a new successful run.
+- The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 334.24 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
+- This CI run verifies the current scoped legacy code, regression tests, and audit document at the PR head. Any later source or workflow change requires a new successful run.
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
 - The latest Vercel Preview check on this PR head is **blocked/failed with a Vercel build-rate-limit response** (`upgradeToPro=build-rate-limit`). This is a platform build quota result, not a TypeScript or Vite build failure.
 - No Vercel Preview was available for approved-scope browser smoke tests; Android/tablet/desktop interaction QA is not claimed and remains assigned to Evolution Phase Eleven.
@@ -320,6 +320,6 @@ Security-specific migration/grant work remains in the separate Security workstre
 
 The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. The scoped legacy fixes on this PR branch now cover the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, incomplete/cached-total trend calculations, duplicate legacy task creation, standard and advanced rubric scale mismatch, partial score/feedback writes, stale cross-team legacy data refresh, and browser/database date disagreement in the legacy Daily Evaluation form.
 
-The scoped legacy-fix code and ten Evolution regression tests passed GitHub Actions run #49 at commit `eaffa945`. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase. Device/browser interaction QA remains assigned to Evolution Phase Eleven; the restricted full-app preview was not used for testing.
+The scoped legacy-fix code and ten Evolution regression tests passed GitHub Actions run #54 at PR head commit `27c9d5d`. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase. Device/browser interaction QA remains assigned to Evolution Phase Eleven; the restricted full-app preview was not used for testing.
 
 Separate Security work remains outside this Evolution audit and is tracked independently in `docs/security/rls-review.md`.
