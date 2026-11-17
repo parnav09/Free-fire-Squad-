@@ -3,11 +3,10 @@ type Assignment={id:string;player_id:string;drill_title:string;due_date:string;s
 type Evaluation={id:string;player_id:string;score_date:string;created_at?:string;communication:number|null;coordination:number|null;decision_making:number|null;role_execution:number|null;map_awareness:number|null;total:number|null;improvement_target:string|null;notes:string|null};
 type Props={members:Member[];assignments:Assignment[];evaluations:Evaluation[]};
 const score=(e:Evaluation):number|null=>{
- if(e.total!==null&&Number.isFinite(e.total))return e.total;
  const values=[e.communication,e.coordination,e.decision_making,e.role_execution,e.map_awareness];
- return values.every(v=>v!==null&&Number.isFinite(v)&&v>=0&&v<=10)
-  ? values.reduce<number>((sum,value)=>sum+(value??0),0)
-  : null;
+ if(!values.every(v=>Number.isInteger(v)&&v!==null&&v>=0&&v<=10))return null;
+ // Recompute from complete raw dimensions; never trust a stale or malformed cached total.
+ return values.reduce<number>((sum,value)=>sum+(value??0),0);
 };
 const byNewest=(a:Evaluation,b:Evaluation)=>
  b.score_date.localeCompare(a.score_date)||
