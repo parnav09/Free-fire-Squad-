@@ -41,7 +41,11 @@ function readLocalRecord<T extends Record<string, unknown>>(key: string, fallbac
   }
 }
 
-function localDateISO(date = new Date()): string { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`; }
+function kolkataDateISO(date = new Date()): string {
+  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date);
+  const part=(type:string)=>parts.find(value=>value.type===type)?.value||"";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
 
 
 type SupabaseInstance = NonNullable<typeof import("./lib/supabase/client")["supabase"]>;
@@ -189,7 +193,7 @@ export default function App() {
   const [cloudSessionNotes, setCloudSessionNotes] = useState("");
   const [trainingDate, setTrainingDate] = useState(() => new Date().toLocaleDateString("en-CA"));
   const [evalPlayer,setEvalPlayer]=useState("");
-  const evalDate=localDateISO();
+  const evalDate=kolkataDateISO();
   const [evalScores,setEvalScores]=useState<Record<string,number>>({});
   const [evalSaving,setEvalSaving]=useState(false);
   const [evalHistory,setEvalHistory]=useState<Array<{id:string;player_id:string;score_date:string;created_at?:string;communication:number;coordination:number;decision_making:number;role_execution:number;map_awareness:number;total:number|null;notes:string|null;improvement_target:string|null;improvement_notes:string|null;mistake_notes:string|null}>>([]);
