@@ -410,4 +410,132 @@ export const petProfiles: Record<string, PetProfile> = {
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
+  "moony": {
+    skill: "Paranormal Protection",
+    skillType: "Passive",
+    summary: "Reduces damage received by 35% during interaction animations.",
+    rows: [
+      { label: "Damage reduction", value: "35%" },
+      { label: "Trigger", value: "During interaction animations" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB27 · 2021-05-25" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Hipster Moony" }
+    ],
+    effects: [
+      "Reduces damage received by 35% while the owner is performing interaction animations."
+    ],
+    mechanics: [
+      "The supplied report limits the protection to interaction animations.",
+      "No separate range or additional duration value was supplied."
+    ],
+    patchHistory: [
+      "OB27 (2021-05-25): Release data stated in the supplied report."
+    ],
+    releaseData: "OB27 · 2021-05-25",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Hipster Moony",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "mr-waggor": {
+    skill: "Smooth Gloo",
+    skillType: "Passive",
+    summary: "Generates a Gloo Wall when the owner's Gloo Wall inventory is below two.",
+    rows: [
+      { label: "Trigger", value: "Gloo Wall inventory below 2" },
+      { label: "Cooldown", value: "100 seconds" },
+      { label: "Gloo Maker EXP", value: "200 EXP in the first 200 seconds (as stated in supplied report)" },
+      { label: "Release data", value: "OB23 · 2020-07-25" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Party Waggor" }
+    ],
+    effects: [
+      "Generates a Gloo Wall when the owner's inventory contains fewer than two Gloo Walls."
+    ],
+    mechanics: [
+      "The supplied report describes an autonomous Gloo Wall generation cycle every 100 seconds.",
+      "The supplied report also states 200 Gloo Maker EXP in the first 200 seconds; this value is preserved as report-supplied and remains pending verification."
+    ],
+    patchHistory: [
+      "OB23 (2020-07-25): Release data stated in the supplied report."
+    ],
+    releaseData: "OB23 · 2020-07-25",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Party Waggor",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "night-panther": {
+    skill: "Weight Training",
+    skillType: "Passive",
+    summary: "Increases inventory capacity by 45 slots.",
+    rows: [
+      { label: "Additional inventory capacity", value: "+45 slots" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB15 · 2019-05-24" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Captain" }
+    ],
+    effects: [
+      "Increases the owner's inventory capacity by 45 slots."
+    ],
+    mechanics: [
+      "The supplied report describes this as an inventory-capacity increase.",
+      "No separate activation trigger or duration was supplied."
+    ],
+    patchHistory: [
+      "OB15 (2019-05-24): Release data stated in the supplied report."
+    ],
+    releaseData: "OB15 · 2019-05-24",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Captain",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "ottero": {
+    skill: "Double Blubber",
+    skillType: "Passive",
+    summary: "Converts 65% of HP healed into EP.",
+    rows: [
+      { label: "HP-to-EP conversion", value: "65% of HP healed" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB21 · 2020-05-13" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Radioactive Ottero" }
+    ],
+    effects: [
+      "Converts 65% of HP healed into EP."
+    ],
+    mechanics: [
+      "The supplied report describes the effect as an EP conversion tied to HP recovery.",
+      "No additional cap or separate activation delay was supplied."
+    ],
+    patchHistory: [
+      "OB21 (2020-05-13): Release data stated in the supplied report."
+    ],
+    releaseData: "OB21 · 2020-05-13",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Radioactive Ottero",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "poring": {
+    skill: "Stitch and Patch",
+    skillType: "Passive",
+    summary: "Repairs armor and prevents high-tier armor destruction.",
+    rows: [
+      { label: "Effect", value: "Repairs armor durability" },
+      { label: "Protection", value: "Prevents high-tier armor destruction" },
+      { label: "Cooldown", value: "No cooldown stated in supplied report" },
+      { label: "Release data", value: "OB20 · 2020-03-20" },
+      { label: "Progression", value: "Unlockable details not supplied" }
+    ],
+    effects: [
+      "Repairs armor and prevents high-tier armor from being destroyed."
+    ],
+    mechanics: [
+      "The supplied report identifies armor repair and high-tier armor preservation as the core effects.",
+      "Exact repair amount, interval, and unlockable names were not available in the retrieved report details and have not been inferred."
+    ],
+    patchHistory: [
+      "OB20 (2020-03-20): Release data stated in the supplied report."
+    ],
+    releaseData: "OB20 · 2020-03-20",
+    progression: "Unlockable details not supplied",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
 };
