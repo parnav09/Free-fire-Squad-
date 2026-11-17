@@ -121,3 +121,16 @@ Use this file when continuing in a new ChatGPT conversation.
 
 
 - Additional prior-operation search found a 7 Nov report of three migrations applied (bringing the reported total to eight), but exact SQL blocks and reliable per-migration mappings were not preserved; a separate earlier report counted five, so the count itself is not authoritative. Recovery OTP setup also lacks exact SQL/version evidence. These remain explicit provenance blockers in the audit.
+
+
+## E Phase One.5 — continuation verification checkpoint (18 Nov 2026)
+
+- Re-read the Evolution Version 2 master blueprint, this handoff, the Phase One ledger, and the existing migration provenance audit at the current PR #115 head.
+- Verified PR #115 is still open and draft, targeting `chore/evolution-phase-zero-one-naming`; current head: `79044f667a1f7fdfe1f38c1eddbdad243c778583`. It remains stacked on Phase Zero PR #114. No merge or retarget was performed.
+- Reviewed the current PR changed-file list and patches (9 files). The PR contains no Supabase migration SQL or schema files. No restricted combat/weapon/loadout source modules or full-app preview were opened.
+- GitHub Actions run #101 (`44186482533`) for this exact head completed successfully. Its single job passed dependency setup, typecheck, configured foundation/contract/character checks, and the Vite production build.
+- The combined commit status reports a separate Vercel failure due to the deployment-rate limit. This is not a GitHub Actions failure; no preview/device QA is claimed and no preview was opened.
+- Re-read the live Supabase migration ledger in read-only mode: 55 version/name rows are present, matching the previously recorded count. The ledger response contains migration version/name metadata only, not original SQL bodies or content hashes. PR discussion added no original SQL/application records.
+- No new exact SQL-to-ledger mappings were established. The previously documented 18 timestamp mismatches, 34 live names without same-name checked-in files, 3 unmatched checked-in files, duplicate live migration name, and unresolved direct-application records remain blockers. Existing Scrims filename replacement conclusions remain unchanged; do not replay old files.
+- No Supabase schema, data, trigger, RLS/policy, grant, function, or migration-history changes were made. No migration was created or applied. Destructive retention remains paused; Security remains separate; Phase Two has not started.
+- **E Phase One.5 remains IN PROGRESS.** The next required evidence is the original SQL and application record for each unresolved live migration (including direct Supabase operations). Do not reverse-engineer missing source SQL from current schema, approve a timezone migration, or apply any database change until provenance and rollback are reviewed.
