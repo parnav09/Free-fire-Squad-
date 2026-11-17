@@ -647,7 +647,7 @@ export default function App() {
   const saveSessionNotes = async () => { if(!supabase||!team||!signedIn||!sessionUserId)return; setConnection("Syncing…"); try { const {error}=await supabase.from("training_session_notes").upsert({team_id:team.id,note_date:trainingDate,notes:cloudSessionNotes.trim(),updated_by:sessionUserId},{onConflict:"team_id,note_date"}); if(error)throw error; setConnection("Signed in · cloud sync active");setNotice("Session notes saved."); } catch(e) { setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Session notes save failed."); } };
   useEffect(() => {
     const client = supabase;
-    if (!client || !signedIn || !team) return;
+    if (!client || !signedIn || !team || !sessionUserId) return;
     let active = true;
     const channel = client.channel(`squad-os-${team.id}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "tournament_matches", filter: `team_id=eq.${team.id}` }, async () => {
