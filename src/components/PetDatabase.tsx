@@ -10,7 +10,7 @@ type PetEntry = {
   officialUrl?: string;
 };
 
-const pets: PetEntry[] = [
+const pets = ([
   { id: "kitty", name: "Kitty", aliases: ["kity", "kitti", "kitty pet"], status: "verified", officialUrl: "https://ff.garena.com/en/pets/262" },
   { id: "mechanical-pup", name: "Mechanical Pup", aliases: ["mechanical puppy", "mech pup", "robot pup", "mechanical"], status: "verified" },
   { id: "night-panther", name: "Night Panther", aliases: ["night panther pet", "panther", "nite panther"], status: "verified" },
@@ -40,7 +40,7 @@ const pets: PetEntry[] = [
   { id: "pug", name: "Pug", aliases: ["pug pet"], status: "verified" },
   { id: "unidentified-28", name: "Unidentified Pet 28", aliases: [], status: "pending" },
   { id: "unidentified-29", name: "Unidentified Pet 29", aliases: [], status: "pending" },
-].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+] as PetEntry[]).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
 
 const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
@@ -97,7 +97,6 @@ export default function PetDatabase({ onBack }: Props) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(8);
-  const [batchSize, setBatchSize] = useState(8);
   const selected = pets.find(pet => pet.id === selectedId);
   const matches = useMemo(() => pets
     .map(pet => ({ pet, score: petNameScore(pet, query) }))
