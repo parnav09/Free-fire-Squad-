@@ -135,7 +135,7 @@ These counts show that the competitive match ledger and drill library have recor
 - The Weekly Review batch currently creates a fixed generic task rather than a task derived from an approved player-specific evidence/review item.
 
 **Impact:** task counts, completion, follow-up, and player development can disagree depending on which screen is read.  
-**Phase Zero fix:** generic Weekly Review batch creation is now paused so it cannot add more duplicate records to the legacy task table. Existing assignments remain readable and untouched.  
+**Phase Zero fix:** both generic Weekly Review batch creation and new manual writes to `player_drill_assignments` are paused. Existing assignments remain readable; members can still update completion state on already assigned items. The Planning/Training `practice_tasks` path remains the existing active planning task flow, but it is not claimed to be synchronized with the legacy assignment table.  
 **Future build:** Evolution Phase Six will define one canonical task contract, map both legacy sources, preserve IDs/history, and migrate through a reviewed compatibility plan. Do not delete either table in this phase.
 
 ### EV2-AUD-002 — Evaluation models are incompatible
@@ -300,7 +300,7 @@ Security-specific migration/grant work remains in the separate Security workstre
 
 **BASELINE AUDIT COMPLETE · LEGACY FIXES IMPLEMENTED · CI VERIFIED**
 
-The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. Safe legacy fixes on this PR branch address the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, missing-as-zero trend calculation, duplicate weekly batch generation, advanced rubric scale mismatch, and the legacy partial score/feedback write path.
+The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. Safe legacy fixes on this PR branch address the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, missing-as-zero trend calculation, duplicate weekly/manual legacy assignment generation, advanced rubric scale mismatch, and the legacy partial score/feedback write path.
 
 The complete Phase Zero legacy-fix set is implemented on this PR branch and verified by GitHub Actions run #31. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase. Device/browser interaction QA remains assigned to Evolution Phase Eleven; the restricted full-app preview was not used for testing.
 
