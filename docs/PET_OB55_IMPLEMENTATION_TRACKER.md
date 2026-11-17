@@ -17,7 +17,7 @@ Use the exact order in the supplied report. On each user instruction "Next", imp
 
 | Batch | Pet profiles | Status |
 |---|---|---|
-| 1 | Agent Hop; Agumon; Arvon; Beaston; Detective Panda | Pending |
+| 1 | Agent Hop; Agumon; Arvon; Beaston; Detective Panda | Implemented on feature branch · awaiting build validation |
 | 2 | Dr. Beanie; Dreki; Falco; Fang; Finn | Pending |
 | 3 | Flash; Hoot; Kactus; Kitty (alias: Gatito); Mechanical Pup | Pending |
 | 4 | Moony; Mr. Waggor; Night Panther; Ottero; Poring | Pending |
@@ -45,6 +45,6 @@ Use the existing Pet Database search -> alphabetical cards -> individual detail 
 
 ## Current progress
 - Tracker created before profile batch implementation.
-- Completed: 0 / 28
+- Completed: 5 / 28 (Batch 1 implemented; build validation pending)
 - Artwork: on hold for all 28
 - Production release: not started / explicitly deferred
