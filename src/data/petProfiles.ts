@@ -663,4 +663,81 @@ export const petProfiles: Record<string, PetProfile> = {
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
+  "spirit-fox": {
+    skill: "Well Fed",
+    skillType: "Passive",
+    summary: "Adds 10 HP to Med Kit healing.",
+    rows: [
+      { label: "Additional HP", value: "+10 HP per Med Kit" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB21 · 2020-04-20" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Red Fox" }
+    ],
+    effects: [
+      "Adds a flat 10 HP to Med Kit healing."
+    ],
+    mechanics: [
+      "The supplied report describes a flat +10 HP bonus applied to Med Kit healing."
+    ],
+    patchHistory: [
+      "OB21 (2020-04-20): Release data stated in the supplied report."
+    ],
+    releaseData: "OB21 · 2020-04-20",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Red Fox",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "yeti": {
+    skill: "Frost Fortress",
+    skillType: "Passive",
+    summary: "Reduces incoming explosive damage by 30%.",
+    rows: [
+      { label: "Explosive damage reduction", value: "30%" },
+      { label: "Cooldown", value: "90 seconds" },
+      { label: "Trigger", value: "Incoming explosive hit; further trigger details not supplied" },
+      { label: "Release data", value: "OB31 · 2022-01-01" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Fiery Yeti" }
+    ],
+    effects: [
+      "Reduces incoming explosive damage by 30%."
+    ],
+    mechanics: [
+      "The supplied report states that the reduction applies to incoming explosive damage.",
+      "Trigger details beyond an explosive hit were not explicitly supplied."
+    ],
+    patchHistory: [
+      "OB31 (2022-01-01): Release data stated in the supplied report."
+    ],
+    releaseData: "OB31 · 2022-01-01",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Fiery Yeti",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "zasil": {
+    skill: "Extra Luck",
+    skillType: "Passive",
+    summary: "Has a 50% chance to duplicate consumed utility items.",
+    rows: [
+      { label: "Duplication chance", value: "50%" },
+      { label: "Cooldown", value: "70 seconds" },
+      { label: "Trigger items", value: "Med Kit · Inhaler · Repair Kit" },
+      { label: "Release data", value: "OB33 · 2022-03-23" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Not published" }
+    ],
+    effects: [
+      "Has a 50% chance to duplicate a consumed utility item."
+    ],
+    mechanics: [
+      "The supplied report lists Med Kit, Inhaler, and Repair Kit as eligible trigger items.",
+      "The supplied report does not provide an unlockable name for Lv4."
+    ],
+    patchHistory: [
+      "OB33 (2022-03-23): Release data stated in the supplied report.",
+      "No additional patch-history entries were supplied."
+    ],
+    releaseData: "OB33 · 2022-03-23",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Not published",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
 };
