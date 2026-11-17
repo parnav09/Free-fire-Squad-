@@ -145,7 +145,8 @@ These counts show that the competitive match ledger and drill library have recor
 - The canonical Version 2 rubric specifies six dimensions, including independent Positioning and Map Awareness & Rotation, with Not observed/coverage semantics.
 - The current models do not share the same dimensions or calculation contract.
 
-**Impact:** scores from Daily Evaluation, training results, and future trends cannot safely be combined or compared as one player-development rating.
+**Impact:** scores from Daily Evaluation, training results, and future trends cannot safely be combined or compared as one player-development rating.  
+**Future build:** Evolution Phase Three defines the canonical six-dimension rubric, evidence/coverage semantics, versioning, and historical crosswalk. Phase Zero does not silently convert old scores.
 
 ### EV2-AUD-003 — Default evaluation values could look like observations (fixed on PR branch)
 
@@ -203,7 +204,8 @@ Before the Phase Zero fix, the advanced rubric converted each 1–10 dimension t
 
 Training sessions, participants, and training results exist, but the inspected Evolution path does not establish the full immutable session roster/role snapshot → match/round → evidence → evaluation chain. The current Daily Evaluation is date/player based rather than session-first.
 
-**Impact:** historical role/context and score provenance are not sufficiently linked for reliable role-aware comparison.
+**Impact:** historical role/context and score provenance are not sufficiently linked for reliable role-aware comparison.  
+**Future build:** Evolution Phase Two introduces session/match/roster/role snapshots; Evolution Phase Three connects evidence to the versioned rubric. Phase Zero preserves the existing date/player records.
 
 ### EV2-AUD-010 — Offline-first and peer-review capabilities remain unverified
 
@@ -211,7 +213,8 @@ Training sessions, participants, and training results exist, but the inspected E
 - The live table-name inventory did not surface peer cohort/submission/inbox tables.
 - The inspected navigation/components did not establish a complete anonymous peer-review workflow.
 
-**Impact:** do not advertise durable offline writes, conflict-safe sync, or completed anonymous peer reviews as existing capabilities.
+**Impact:** do not advertise durable offline writes, conflict-safe sync, or completed anonymous peer reviews as existing capabilities.  
+**Future build:** anonymous peer cohorts/inbox belong to Evolution Phase Five; durable offline queue, conflict resolution, and complete Realtime data-quality handling belong to Evolution Phase Ten.
 
 ## 6. Data-integrity checks
 
@@ -257,10 +260,10 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 ## 8. Build and delivery evidence
 
-- GitHub Actions run #31 for commit `447c66581ac08044d3d2ce977906904d5cc493a2` completed successfully.
+- GitHub Actions run #34 for commit `d60ff727aaea788921a3841b2b05022e26a86ddc` completed successfully.
 - Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, all eight Evolution legacy regression-contract tests, and the Vite production build.
 - The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 334 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
-- This CI run verifies the Phase Zero code, test and audit changes present on the PR head at that commit. Any later source or workflow change requires a new successful run.
+- This CI run verifies the Phase Zero code and regression tests at that commit. Any later source or workflow change requires a new successful run.
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
 - The Vercel Preview status previously reported READY by the GitHub integration, but no approved-scope browser smoke test or Android/tablet/desktop interaction QA is claimed here.
 - No production deployment or promotion was performed as part of this audit.
