@@ -903,7 +903,7 @@ export default function App() {
               </button>
               <div className="combat-nexus-secondary-grid">
                 <button type="button" className="combat-nexus-square combat-nexus-pets" onClick={()=>setCombatNexusView("pets")} aria-label="Open pet database">
-                  <span className="combat-nexus-square-icon" aria-hidden="true">◈</span><span className="combat-nexus-kicker">02 / COMPANIONS</span><strong>PETS</strong><span className="combat-nexus-square-count">24 <i>PETS</i></span><span className="combat-nexus-square-arrow">↗</span>
+                  <span className="combat-nexus-square-icon" aria-hidden="true">◈</span><span className="combat-nexus-kicker">02 / COMPANIONS</span><strong>PETS</strong><span className="combat-nexus-square-count">29 <i>PET SLOTS</i></span><span className="combat-nexus-square-arrow">↗</span>
                 </button>
                 <button type="button" className="combat-nexus-square combat-nexus-loadouts" onClick={()=>setCombatNexusView("loadouts")} aria-label="Open loadouts">
                   <span className="combat-nexus-square-icon" aria-hidden="true">⌘</span><span className="combat-nexus-kicker">03 / COMBAT BUILDS</span><strong>LOADOUT</strong><span className="combat-nexus-square-arrow">↗</span>
