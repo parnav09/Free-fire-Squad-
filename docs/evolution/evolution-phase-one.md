@@ -1,6 +1,6 @@
 # Evolution Phase One — Identity, Membership, Timezone
 
-**Status:** IN PROGRESS — E Phase One.1 and E Phase One.2 implemented; server-side timezone migration and final acceptance checks remain open.  
+**Status:** IN PROGRESS — E Phase One.1 and E Phase One.2 implemented and current-head CI verified; E Phase One.3 onward and the server-side timezone migration/final acceptance checks remain open.  
 **Parent:** Evolution Phase Zero — Legacy Fixes (branch chore/evolution-phase-zero-one-naming, PR #114).  
 **Branch:** feat/evolution-phase-one-identity-timezone  
 **Scope:** stable Auth UUID, team membership identity, active membership selection, team timezone validation/date boundaries, session eligibility primitives, and permission-test helpers. Authorization/RLS/grants remain in the separate Security workstream.
@@ -35,7 +35,7 @@ Added scripts/verify-evolution-phase-one.mjs with contract tests for identity ma
 
 1. Migration provenance: the Phase Zero audit found live migration history that does not map cleanly to the checked-in migration directory. Do not add/apply a timezone-trigger migration until the live migration provenance is reconciled and a forward/rollback plan is reviewed.
 2. Server-side timezone contract: the existing date trigger is hard-coded to India time. A client-only timezone selector would create inconsistent dates, so no editable timezone UI is exposed until the server trigger/RPC contract is safely updated.
-3. Application integration: the resolver must be integrated into loadTeam and team-switch behavior with a deliberate team-choice state for accounts that have multiple active memberships. Do not silently choose the first team.
+3. Application integration: E Phase One.2 is implemented and CI-verified on the current PR head. It resolves the active membership in loadTeam, requires explicit team choice for ambiguous memberships, revalidates all stable IDs, and clears scoped state on sign-out. Race protection for overlapping requests is intentionally the next slice, E Phase One.3.
 4. Session eligibility: no session roster snapshot is added here; Phase Two owns session/match/role snapshots. Phase One will provide only stable active-membership primitives.
 5. Security boundary: no RLS, grants, SECURITY DEFINER functions, Auth settings, or privileged authorization changes are included in this Evolution phase. Client checks are not a security boundary.
 
@@ -85,3 +85,14 @@ Phase One is not complete until:
 - Added source-contract regression checks for these integration rules.
 
 **E Phase One.2 boundary:** no RLS, grants, authorization RPCs, database migrations, or production data were changed. No session/match/roster snapshots were added; those remain Phase Two.
+
+
+## 7. E Phase One.2 verification record
+
+- Current PR head verified: `14f394c6479a81aabd00ea7a13f1ea170bd8acfc`.
+- GitHub Actions run #62 (`44174330712`): **success**. Job “Typecheck, tests and production build” completed successfully, including typecheck, foundation tests, character tests, Evolution legacy tests, Evolution Phase One tests, and Vite production bundle build.
+- Source diff reviewed for `src/App.tsx`, `src/lib/evolution-identity.ts`, and `scripts/verify-evolution-phase-one.mjs`.
+- Combined commit status still reports Vercel failure due to the account's deployment-rate limit. This is not a GitHub Actions/code-test failure; no preview/device QA is claimed or required for this slice.
+- PR #115 remains open and draft, based on `chore/evolution-phase-zero-one-naming`; no merge, production deployment, Supabase migration, or security-policy change was made.
+- **E Phase One.2 status: IMPLEMENTED + CI VERIFIED.**
+- Next implementation slice: **E Phase One.3 — race protection for overlapping team loads**. Do not fold it into .2 or start Phase Two.
