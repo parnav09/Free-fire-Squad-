@@ -531,7 +531,7 @@ export default function App() {
     if(!isCurrent())return;
     if(membershipError)throw membershipError;
     const sessionEligibility=resolveTeamSessionEligibility(user.id,membership,identity.teamId);
-    if(!sessionEligibility.eligible){
+    if(!sessionEligibility.eligible||!membership){
       safeStorageRemoveItem("squad-os-active-team");
       setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");
       setRosterCapacity(4);
