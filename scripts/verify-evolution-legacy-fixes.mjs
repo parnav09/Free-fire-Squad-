@@ -58,9 +58,17 @@ test("legacy training rubric requires explicit ratings before save", () => {
   assert.match(rubric, /onPointerDown=\{\(\)=>set\(d\.key,ratings\[d\.key\]\)\}/);
 });
 
-test("new advanced rubric records match the declared 1-10 dimension scale", () => {
+test("new standard and advanced rubric records match the declared 1-10 dimension scale", () => {
   assert.match(training, /scale:"1-10",dimension_storage:"raw_1_to_10"/);
   assert.doesNotMatch(training, /draft\.ratings\.coordination\*10/);
+  const standardStart=training.indexOf("const saveResult=");
+  const advancedStart=training.indexOf("const saveAdvancedEvaluation=",standardStart);
+  assert.ok(standardStart>=0&&advancedStart>standardStart);
+  const standard=training.slice(standardStart,advancedStart);
+  assert.match(standard, /scale:"1-10",dimension_storage:"raw_1_to_10"/);
+  assert.match(training, /const weightedScore=rubricValues\.every/);
+  assert.doesNotMatch(training, /Number\(rubricExecution\)\/10/);
+  assert.doesNotMatch(training, /Number\(e\.target\.value\)\*10/);
 });
 
 test("legacy Analytics is clearly separated from future player-development analytics", () => {
