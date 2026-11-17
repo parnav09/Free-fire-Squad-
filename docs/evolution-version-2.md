@@ -1170,7 +1170,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 **Inspect:**
 - current Git branch, main branch, latest commits, and open PRs;
 - app routes/components/hooks and all Evolution/Tasks/Training/Planning/Analytics callers;
-- Supabase tables, columns, foreign keys, indexes, constraints, triggers, RPCs, views, RLS policies, grants, Realtime publication;
+- Evolution-related Supabase tables, columns, foreign keys, indexes, constraints, triggers, RPCs, and views;
 - current Auth/team membership/roster/attendance/timezone models;
 - task tables and migration history;
 - score models, rubric metadata, historical rows, and data provenance;
@@ -1350,7 +1350,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 - migration dry run and backup;
 - legacy reconciliation report;
 - RLS and security review;
-- production migration only after approval;
+- production migration only after Evolution validation and separate Security workstream approval;
 - smoke tests and monitoring;
 - rollback plan;
 - production deployment verification.
