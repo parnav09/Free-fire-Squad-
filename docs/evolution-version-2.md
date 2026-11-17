@@ -1196,7 +1196,7 @@ Security is a separate workstream and is not implemented inside the Evolution ph
 - session eligibility primitives;
 - permission test helpers.
 
-**Outputs consumed by next phase:** trusted team/player IDs, membership checks, timezone policy, and authorization contract.
+**Outputs consumed by next phase:** trusted team/player IDs, active membership state, and timezone policy.
 
 **Gate:** tests prove stable player/team identity mapping, active membership is represented consistently, display labels cannot be used as IDs, and date boundaries follow the configured team timezone. Authorization and access-control tests belong to the separate Security workstream.
 
