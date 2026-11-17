@@ -68,14 +68,14 @@ Use this file when continuing in a new ChatGPT conversation.
 - Invalid or mismatched session membership clears the selected team and team-scoped state.
 - Added explicit team UI capability helpers for owner settings and coach/owner assignment controls; comments and tests state these are UI-only hints, not authorization.
 - Added tests for eligible sessions, all fail-closed reasons, the role capability matrix, and app integration.
-- Current-head CI verification pending; do not mark E Phase One.4 complete until it passes.
+- Current PR head `a48ec0c5baec1d177e22751460bdfe7f62a14a08` passed GitHub Actions run #82 (`44180351504`): typecheck, all configured test suites (20 Phase One checks), and Vite production build.
+- E Phase One.4 is implemented and CI-verified. The build still reports the existing large-chunk warning; no bundle-splitting changes were made in this slice.
 
 ## Next incomplete work
 
-1. Verify E Phase One.4 CI and inspect the final diff. Keep authorization/RLS/grants in the separate Security workstream.
-3. Reconcile live Supabase migration history with checked-in migration provenance before proposing any timezone trigger/RPC migration.
-4. Design a reviewed forward/rollback database migration so persisted dates use each team's configured IANA timezone. Until that is safe, do not expose an editable timezone selector or claim team timezone is fully implemented.
-5. Complete Phase One acceptance tests, update this ledger, and only then mark E Phase One complete.
+1. E Phase One.5: reconcile live Supabase migration history with checked-in migration provenance before proposing any timezone trigger/RPC migration.
+2. Design a reviewed forward/rollback database migration so persisted dates use each team's configured IANA timezone. Until that is safe, do not expose an editable timezone selector or claim team timezone is fully implemented.
+3. Complete Phase One acceptance tests and independent Security validation; only then mark E Phase One complete.
 
 ## Non-negotiable boundaries
 
@@ -93,5 +93,5 @@ Use this file when continuing in a new ChatGPT conversation.
 
 - Phase Zero PR #114 was open and draft at last check; its latest previously verified CI run #55 passed.
 - Phase One PR #115 is a stacked draft branch based on `chore/evolution-phase-zero-one-naming` (confirmed from current GitHub PR metadata). Preserve this dependency and do not merge it ahead of Phase Zero.
-- Earlier CI run #56 was still in progress before the E Phase One.2 commits; check the latest run for the current head before reporting CI status.
+- Historical CI runs #56 and earlier are superseded by the current-head verified runs documented above.
 - No production deployment or database migration was made as part of the Phase One work so far.
