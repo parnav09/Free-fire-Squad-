@@ -538,4 +538,129 @@ export const petProfiles: Record<string, PetProfile> = {
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
+  "pug": {
+    skill: "None",
+    skillType: "Passive (No Skill)",
+    summary: "Cosmetic companion with no gameplay ability.",
+    rows: [
+      { label: "Primary effect", value: "Cosmetic companion" },
+      { label: "Cooldown", value: "Not applicable" },
+      { label: "Release data", value: "Exact release date not published by Garena" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Tigerstripe Pug" }
+    ],
+    effects: [
+      "Pug is a cosmetic-only companion and has no gameplay ability."
+    ],
+    mechanics: [
+      "The supplied report states that Pug has no combat or economic interface."
+    ],
+    patchHistory: [
+      "No patch-history entry was supplied."
+    ],
+    releaseData: "Exact release date not published by Garena",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Tigerstripe Pug",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "robo": {
+    skill: "Wall Enforcement",
+    skillType: "Passive",
+    summary: "Adds 100 HP to deployed Gloo Walls.",
+    rows: [
+      { label: "Additional Gloo Wall HP", value: "+100 HP" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB23 · 2020-07-25" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Pharaoh's Robo" }
+    ],
+    effects: [
+      "Adds an additional 100 HP energy shield to deployed Gloo Walls."
+    ],
+    mechanics: [
+      "The supplied report describes an additional 100 HP layer on deployed Gloo Walls."
+    ],
+    patchHistory: [
+      "OB23 (2020-07-25): Release data stated in the supplied report."
+    ],
+    releaseData: "OB23 · 2020-07-25",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Pharaoh's Robo",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "rockie": {
+    skill: "Stay Chill",
+    skillType: "Passive",
+    summary: "Reduces equipped active-skill cooldown by 15%.",
+    rows: [
+      { label: "Active-skill cooldown reduction", value: "15%" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB24 · 2020-10-22" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Skeleton Rockie" }
+    ],
+    effects: [
+      "Reduces the recovery time of the equipped active skill by 15%."
+    ],
+    mechanics: [
+      "The supplied report describes a 15% reduction to the equipped active skill's cooldown."
+    ],
+    patchHistory: [
+      "OB24 (2020-10-22): Release data stated in the supplied report."
+    ],
+    releaseData: "OB24 · 2020-10-22",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Skeleton Rockie",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "sensei-tig": {
+    skill: "Nimble Ninja",
+    skillType: "Passive",
+    summary: "Reduces the duration of enemy marking skills.",
+    rows: [
+      { label: "Effect", value: "Reduces enemy marking-skill duration" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB29 · 2021-08-28" },
+      { label: "Maximum reduction", value: "Exact unified OB39 value not supplied" },
+      { label: "Progression", value: "Unlockable details not supplied" }
+    ],
+    effects: [
+      "Reduces the duration of enemy marking effects."
+    ],
+    mechanics: [
+      "The supplied report identifies Moco/Shirou-style tracking markers as affected.",
+      "Historical 30%–40% reductions are mentioned in the report, but the unified OB39 maximum is omitted; no single current percentage has been inferred."
+    ],
+    patchHistory: [
+      "OB29 (2021-08-28): Release data stated in the supplied report.",
+      "Historical 30%–40% reduction values are mentioned; exact unified OB39 ceiling was not supplied."
+    ],
+    releaseData: "OB29 · 2021-08-28",
+    progression: "Unlockable details not supplied",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "shiba": {
+    skill: "Mushroom Sense",
+    skillType: "Passive",
+    summary: "Marks ambient mushrooms on the mini-map.",
+    rows: [
+      { label: "Scan interval", value: "120 seconds" },
+      { label: "Marker duration", value: "30 seconds" },
+      { label: "Cooldown", value: "120 seconds" },
+      { label: "Release data", value: "OB17 · 2019-08-26" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Golden Tale" }
+    ],
+    effects: [
+      "Marks ambient mushrooms on the mini-map."
+    ],
+    mechanics: [
+      "The supplied report states that the scan runs every 120 seconds and the marker persists for 30 seconds.",
+      "The marker indicates a high-value mushroom."
+    ],
+    patchHistory: [
+      "OB17 (2019-08-26): Release data stated in the supplied report."
+    ],
+    releaseData: "OB17 · 2019-08-26",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Golden Tale",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
 };
