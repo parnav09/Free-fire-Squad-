@@ -102,6 +102,7 @@ test("legacy Daily Evaluation cannot create a non-atomic score/feedback partial 
 test("team changes and sign-out clear prior-team Evolution records", () => {
   assert.match(app, /setEvalHistory\(\[\]\)/);
   assert.match(app, /setAssignmentRows\(\[\]\)/);
+  assert.match(app, /assignmentScopeRef\.current!==team\.id/);
   assert.match(app, /\[supabase,signedIn,team\?\.id,sessionUserId\]/);
   assert.match(app, /\[supabase,signedIn,team\?\.id\]/);
 });
