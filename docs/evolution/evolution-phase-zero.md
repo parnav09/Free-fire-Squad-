@@ -245,9 +245,9 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 ## 8. Build and delivery evidence
 
-- The most recent completed GitHub Actions run before the current audit-fix commits completed successfully.
-- Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, and Vite production build.
-- The Realtime evaluation refresh fix and final audit-document commits trigger a fresh PR workflow run; that run must pass before these latest commits are considered CI-verified.
+- GitHub Actions run #8 for commit `6e6b5289e5dbbb48610ad6b14edee0b221731104` completed successfully.
+- Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, and Vite production build. This verifies the Realtime evaluation refresh fix and the audit content present at that commit.
+- Any later source or workflow change must be verified by its own run; documentation-only follow-up commits do not change the recorded result for this verified code commit.
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
 - The Vercel Preview status previously reported READY by the GitHub integration, but no approved-scope browser smoke test or Android/tablet/desktop interaction QA is claimed here.
 - No production deployment or promotion was performed as part of this audit.
