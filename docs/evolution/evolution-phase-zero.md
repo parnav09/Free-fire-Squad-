@@ -224,6 +224,14 @@ Before the scoped follow-up fix, evaluation and legacy-assignment arrays were no
 
 **Phase Zero fix on this PR branch:** evaluation and assignment state is cleared on sign-out/team change; initial fetches are cancelled on scope change; assignment refreshes verify the active team scope before updating state; completion updates require both assignment ID and team ID and check that the actor is the assignee or an active team manager. This is a client-side data-correctness guard, not an RLS/grant remediation; the separate Security workstream remains responsible for server authorization.
 
+### EV2-AUD-012 — Daily Evaluation client date could disagree with the live database date (fixed to current contract)
+
+The live `lock_daily_score_date_and_anonymize()` trigger assigns `score_date` using `(now() at time zone 'Asia/Kolkata')::date`. The legacy client previously calculated the date using the browser's local timezone. A device configured to another timezone could therefore preflight a duplicate against a different date from the one the database would persist. The live team timezone inventory currently contains 14 `Asia/Kolkata` rows and one `Asia/Calcutta` alias.
+
+**Impact:** the displayed/preflight evaluation date could disagree with the server-assigned date around timezone boundaries, weakening the legacy same-day duplicate guard.
+
+**Phase Zero fix on this PR branch:** the legacy Daily Evaluation date now uses the same explicit `Asia/Kolkata` timezone as the live trigger. This aligns the current implementation contract without changing the trigger or any schema. **Future build:** Evolution Phase One must replace the hard-coded timezone with a team-timezone contract and update server-side date assignment and client display together; do not assume all future teams use India time.
+
 ## 6. Data-integrity checks
 
 The following read-only aggregate checks were run against the current live records. Each returned **0 findings**:
@@ -258,7 +266,7 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 ### 7.1 Legacy fixes delivered on this PR branch
 
-- **Daily Evaluation:** removed the P1 default and prefilled ratings; the existing five-dimension form now requires another active team roster UUID, excludes self-targets, requires explicit selection of every rating, and blocks duplicate same-player/day submissions. The form is labelled legacy and saves scores only; private feedback entry is paused to avoid partial writes. The session-linked atomic replacement remains Evolution Phase Four.
+- **Daily Evaluation:** removed the P1 default and prefilled ratings; the existing five-dimension form now requires another active team roster UUID, excludes self-targets, requires explicit selection of every rating, and blocks duplicate same-player/day submissions. Its date now follows the live database trigger's Asia/Kolkata date contract. The form is labelled legacy and saves scores only; private feedback entry is paused to avoid partial writes. The session-linked atomic replacement remains Evolution Phase Four.
 - **Evaluation Realtime:** one shared loader reads valid score columns and private feedback from their correct tables; score and feedback updates both trigger refetch; same-day ordering is deterministic; refresh errors are surfaced.
 - **Weekly/Trends legacy view:** only complete five-dimension records (each integer 0–10) contribute; the 0–50 total is recomputed from raw dimensions; missing/incomplete records are not treated as zero; no-data players show insufficient data; records sort by date, creation time, and ID; generic weekly batch creation is paused; historical assignments remain visible and unchanged.
 - **Training rubric:** both standard role and advanced six-dimension forms require explicit selection; new dimension values are stored as raw 1–10 with an explicit storage marker; standard role-weighted overall scores are separately normalized to 0–100. Historical rubric rows remain untouched.
@@ -310,7 +318,7 @@ Security-specific migration/grant work remains in the separate Security workstre
 
 **BASELINE AUDIT COMPLETE · LEGACY FIXES IMPLEMENTED · CI VERIFIED**
 
-The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. The scoped legacy fixes on this PR branch now cover the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, incomplete/cached-total trend calculations, duplicate legacy task creation, standard and advanced rubric scale mismatch, partial score/feedback writes, and stale cross-team legacy data refresh.
+The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. The scoped legacy fixes on this PR branch now cover the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, incomplete/cached-total trend calculations, duplicate legacy task creation, standard and advanced rubric scale mismatch, partial score/feedback writes, stale cross-team legacy data refresh, and browser/database date disagreement in the legacy Daily Evaluation form.
 
 The scoped legacy-fix code and ten Evolution regression tests passed GitHub Actions run #49 at commit `eaffa945`. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase. Device/browser interaction QA remains assigned to Evolution Phase Eleven; the restricted full-app preview was not used for testing.
 
