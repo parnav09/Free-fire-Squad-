@@ -3,11 +3,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
-const [app, insights, rubric, training] = await Promise.all([
+const [app, insights, rubric, training, analytics, blueprint] = await Promise.all([
   read("../src/App.tsx"),
   read("../src/components/PlayerWeeklyInsights.tsx"),
   read("../src/components/PlayerEvaluationRubric.tsx"),
   read("../src/components/PlanningTrainingCenter.tsx"),
+  read("../src/components/AnalyticsSection.tsx"),
+  read("../docs/evolution-version-2.md"),
 ]);
 
 test("legacy Daily Evaluation has no P1 or fabricated score defaults", () => {
@@ -52,4 +54,17 @@ test("legacy training rubric requires explicit ratings before save", () => {
 test("new advanced rubric records match the declared 1-10 dimension scale", () => {
   assert.match(training, /scale:"1-10",dimension_storage:"raw_1_to_10"/);
   assert.doesNotMatch(training, /draft\.ratings\.coordination\*10/);
+});
+
+test("legacy Analytics is clearly separated from future player-development analytics", () => {
+  assert.match(analytics, /COMPETITIVE RESULTS · LEGACY VIEW/);
+  assert.match(analytics, /Evolution Phase Nine/);
+});
+
+test("the master blueprint consistently names every Evolution phase", () => {
+  const phaseNames = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve"];
+  for (const name of phaseNames) {
+    assert.match(blueprint, new RegExp("Evolution Phase " + name));
+  }
+  assert.doesNotMatch(blueprint, /\\bPhase (?:[0-9]|1[0-2])\\b/);
 });
