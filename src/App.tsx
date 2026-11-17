@@ -195,6 +195,7 @@ export default function App() {
   const [evalHistory,setEvalHistory]=useState<Array<{id:string;player_id:string;score_date:string;created_at?:string;communication:number;coordination:number;decision_making:number;role_execution:number;map_awareness:number;total:number|null;notes:string|null;improvement_target:string|null;improvement_notes:string|null;mistake_notes:string|null}>>([]);
 
   const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
+  const assignmentScopeRef=useRef("");
   // Local-only records are isolated by immutable team UUID. Legacy data is marked migrated
   // only after every scoped copy has been persisted successfully.
   useEffect(()=>{
@@ -274,10 +275,12 @@ export default function App() {
       .select("id,player_id,drill_title,drill_description,due_date,status,completion_note")
       .eq("team_id",team.id).order("due_date",{ascending:false}).limit(100);
     if(error){setConnection("Signed in · sync retry needed");throw error;}
+    if(assignmentScopeRef.current!==team.id)return;
     setAssignmentRows(data||[]);setConnection("Signed in · cloud sync active");
   };
   useEffect(()=>{
     let active=true;
+    assignmentScopeRef.current=team?.id||"";
     setAssignmentRows([]);
     if(!supabase||!signedIn||!team)return()=>{active=false};
     (async()=>{try{
