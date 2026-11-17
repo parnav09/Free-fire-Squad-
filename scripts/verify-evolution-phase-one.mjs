@@ -170,7 +170,7 @@ test("E Phase One.4: team UI capability matrix is explicit and fails closed for 
 
 test("E Phase One.4: app revalidates selected session eligibility before setting active team", () => {
   assert.match(appSource, /resolveTeamSessionEligibility\(user\.id,membership,identity\.teamId\)/);
-  assert.match(appSource, /if\(!sessionEligibility\.eligible\)\{/);
+  assert.match(appSource, /if\(!sessionEligibility\.eligible\|\|!membership\)\{/);
   assert.match(appSource, /const eligibleIdentity=sessionEligibility\.identity/);
   assert.match(appSource, /membership_id:eligibleIdentity\.membershipId,membership_role:eligibleIdentity\.membershipRole/);
 });
