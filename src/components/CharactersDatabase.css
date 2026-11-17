@@ -496,3 +496,91 @@
 @media(max-width:640px) {
   .character-result-card--blackout-image .character-result-art {min-height:124px;}
 }
+
+
+/* Pet profile value rows: keep labels and values in separate, wrapping columns on every viewport. */
+.pet-character-catalogue .character-values-table,
+.pet-profile-page .character-values-table {
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  table-layout:fixed;
+}
+.pet-character-catalogue .character-values-row,
+.pet-profile-page .character-values-row {
+  display:grid;
+  grid-template-columns:minmax(0,0.88fr) minmax(0,1.12fr);
+  align-items:start;
+  gap:clamp(8px,2vw,16px);
+  min-width:0;
+  width:100%;
+  box-sizing:border-box;
+}
+.pet-character-catalogue .character-values-row>span,
+.pet-profile-page .character-values-row>span,
+.pet-character-catalogue .character-values-row>strong,
+.pet-profile-page .character-values-row>strong {
+  min-width:0;
+  max-width:100%;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  line-height:1.5;
+}
+.pet-character-catalogue .character-values-row>strong,
+.pet-profile-page .character-values-row>strong {
+  text-align:right;
+  justify-self:stretch;
+}
+.pet-character-catalogue .character-values-head,
+.pet-profile-page .character-values-head {
+  align-items:center;
+}
+.pet-character-catalogue .character-values-head>span:last-child,
+.pet-profile-page .character-values-head>span:last-child {
+  text-align:right;
+}
+.pet-character-catalogue .character-profile-heading,
+.pet-character-catalogue .character-profile-heading>*,
+.pet-character-catalogue .character-profile-identity,
+.pet-character-catalogue .character-profile-summary,
+.pet-character-catalogue .character-skill-name {
+  min-width:0;
+  max-width:100%;
+  overflow-wrap:anywhere;
+}
+@media(max-width:640px) {
+  .pet-character-catalogue .character-values-row,
+  .pet-profile-page .character-values-row {
+    grid-template-columns:minmax(0,0.82fr) minmax(0,1.18fr);
+    gap:8px;
+    min-height:52px;
+    padding:11px 0;
+    font-size:12px;
+  }
+  .pet-character-catalogue .character-values-row>span,
+  .pet-profile-page .character-values-row>span,
+  .pet-character-catalogue .character-values-row>strong,
+  .pet-profile-page .character-values-row>strong {
+    font-size:12px;
+    line-height:1.45;
+  }
+  .pet-character-catalogue .character-values-head,
+  .pet-profile-page .character-values-head {
+    min-height:48px;
+  }
+}
+@media(max-width:360px) {
+  .pet-character-catalogue .character-values-row,
+  .pet-profile-page .character-values-row {
+    grid-template-columns:minmax(0,0.78fr) minmax(0,1.22fr);
+    gap:6px;
+    font-size:11px;
+  }
+  .pet-character-catalogue .character-values-row>span,
+  .pet-profile-page .character-values-row>span,
+  .pet-character-catalogue .character-values-row>strong,
+  .pet-profile-page .character-values-row>strong {
+    font-size:11px;
+  }
+}
