@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { resolveActiveTeamIdentity } from "./lib/evolution-identity";
+import { createLatestRequestGuard } from "./lib/latest-request-guard";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
 
@@ -201,6 +202,7 @@ export default function App() {
 
   const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
   const assignmentScopeRef=useRef("");
+  const teamLoadGuardRef=useRef(createLatestRequestGuard());
   // Local-only records are isolated by immutable team UUID. Legacy data is marked migrated
   // only after every scoped copy has been persisted successfully.
   useEffect(()=>{
@@ -453,7 +455,7 @@ export default function App() {
   };
   const confirmLogout=async()=>{
     if(!supabase)return;setTeamBusy(true);
-    try{const {error}=await supabase.auth.signOut();if(error)throw error;setConfirmAction(null);setNotice("Signed out successfully. Your team data remains saved.");}
+    try{const {error}=await supabase.auth.signOut();if(error)throw error;teamLoadGuardRef.current.invalidate();setConfirmAction(null);setNotice("Signed out successfully. Your team data remains saved.");}
     catch(e){setNotice(e instanceof Error?e.message:"Logout failed.");}
     finally{setTeamBusy(false);}
   };
@@ -469,9 +471,13 @@ export default function App() {
     finally{setTeamBusy(false);}
   };
   const loadTeam = async (preferredTeamId?:string) => {
-    if (!supabase) return;
-    setConnection("Syncing…");
+    const requestId=teamLoadGuardRef.current.begin();
+    const isCurrent=()=>teamLoadGuardRef.current.isCurrent(requestId);
+    try {
+      if (!supabase) return;
+      setConnection("Syncing…");
     const {data:{user}}=await supabase.auth.getUser();
+    if(!isCurrent())return;
     if(!user) {
       setTeam(null);setTeamMembers([]);setTeamChoices([]);setJoinRequests([]);setIglUserId("");
       safeStorageRemoveItem("squad-os-active-team");
@@ -483,6 +489,7 @@ export default function App() {
       .select("id,team_id,user_id,membership_role,status")
       .eq("user_id",user.id)
       .eq("status","active");
+    if(!isCurrent())return;
     if(allMembershipsError)throw allMembershipsError;
 
     const memberships=allMemberships||[];
@@ -492,6 +499,7 @@ export default function App() {
         .from("teams")
         .select("id,team_name")
         .in("id",teamIds);
+      if(!isCurrent())return;
       if(allTeamsError)throw allTeamsError;
       setTeamChoices((allTeams||[]).map(t=>{
         const rows=memberships.filter(m=>m.team_id===t.id);
@@ -519,6 +527,7 @@ export default function App() {
       .eq("team_id",identity.teamId)
       .eq("status","active")
       .maybeSingle();
+    if(!isCurrent())return;
     if(membershipError)throw membershipError;
     if(!membership){
       safeStorageRemoveItem("squad-os-active-team");
@@ -536,6 +545,7 @@ export default function App() {
       .select("id,team_name,invite_code,avatar_url,timezone")
       .eq("id",identity.teamId)
       .single();
+    if(!isCurrent())return;
     if(te)throw te;
     setTeam({...t,membership_id:identity.membershipId,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});
     setRosterEditEnabled(safeStorageGetItem("squad-os-roster-edit:"+t.id)==="on");
@@ -547,12 +557,14 @@ export default function App() {
       supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","igl_user_id").maybeSingle(),
       supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","roster_capacity").maybeSingle(),
     ]);
+    if(!isCurrent())return;
     if(membersResult.error)throw membersResult.error;
     if(requestsResult.error)throw requestsResult.error;
     if(iglResult.error)throw iglResult.error;
     if(capacityResult.error)throw capacityResult.error;
     const capacityValue=Number(capacityResult.data?.setting_value);
     setRosterCapacity(Number.isInteger(capacityValue)&&capacityValue>=4&&capacityValue<=10?capacityValue:((await supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","fifth_player").maybeSingle()).data?.setting_value===true?5:4));
+    if(!isCurrent())return;
     setTeamMembers((membersResult.data||[]).map(x=>({...x,display_name:x.display_name||"Player"})));
     const reqs=requestsResult.data||[];
     const reqIds=reqs.map(q=>q.user_id);
@@ -561,6 +573,9 @@ export default function App() {
     setJoinRequests(reqs.map(q=>({...q,display_name:rp?.find(p=>p.id===q.user_id)?.display_name||"New player"})));
     setIglUserId(String(iglResult.data?.setting_value||""));
     setConnection("Syncing…");
+    } catch(error) {
+      if(isCurrent())throw error;
+    }
   };
   const createTeam = async () => {
     if (!supabase || !sessionUserId) { setNotice("Sign in again before creating a team."); return; }
@@ -641,7 +656,7 @@ export default function App() {
   const saveIGL=async(userId:string)=>{if(!supabase||team?.membership_role!=="owner")return;try{const {error}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"igl_user_id",setting_value:userId,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(error)throw error;setIglUserId(userId);setNotice(userId?"IGL designation updated.":"IGL designation cleared.");}catch(e){setNotice(e instanceof Error?e.message:"IGL setting failed.");}};
   const saveOwnerRole=async(slot:number)=>{if(!supabase||team?.membership_role!=="owner"||!team.membership_id)return;const roleBySlot:Record<number,string>={1:"Primary Rusher",2:"Secondary Rusher",3:"Third Rusher",4:"Sniper",5:"Substitute"};const occupied=teamMembers.find(m=>m.status==="active"&&m.player_number===slot&&m.user_id!==sessionUserId);if(occupied){setNotice("That player slot is already occupied. Move or reassign that player first.");return;}try{const {error}=await supabase.rpc("assign_member",{p_member:team.membership_id,p_player:slot,p_activate:true});if(error)throw error;const {error:re}=await supabase.from("team_members").update({assigned_role:roleBySlot[slot]||"Substitute"}).eq("id",team.membership_id);if(re)throw re;await loadTeam();setNotice("Your player slot and role were updated.");}catch(e){setNotice(e instanceof Error?e.message:"Could not update owner role.");}};
   const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { if(player>=1&&player<=rosterCapacity){const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error;} const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
-  useEffect(()=>{if(signedIn)loadTeam().catch(e=>{setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Could not load team.");});else{setTeam(null);setTeamMembers([]);setTeamChoices([]);setJoinRequests([]);setIglUserId("");setMatchesHydratedKey("");safeStorageRemoveItem("squad-os-active-team");}},[signedIn]);
+  useEffect(()=>{if(signedIn)loadTeam().catch(e=>{setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Could not load team.");});else{teamLoadGuardRef.current.invalidate();setTeam(null);setTeamMembers([]);setTeamChoices([]);setJoinRequests([]);setIglUserId("");setMatchesHydratedKey("");safeStorageRemoveItem("squad-os-active-team");}},[signedIn]);
   const weekMonday = (w: string) => { const m=w.match(/^(\d{4})-W(\d{2})$/); if(!m) return new Date().toISOString().slice(0,10); const y=Number(m[1]), n=Number(m[2]); const d=new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+(n-1)*7); return d.toISOString().slice(0,10); };
   const persistMatchSnapshot = async (teamSnapshot: NonNullable<typeof team>, weekSnapshot: string, matchSnapshot: typeof matches, userId: string) => {
     try {
