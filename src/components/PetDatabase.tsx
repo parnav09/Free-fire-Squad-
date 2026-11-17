@@ -97,6 +97,7 @@ export default function PetDatabase({ onBack }: Props) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(8);
+  const batchSize = 8;
   const selected = pets.find(pet => pet.id === selectedId);
   const matches = useMemo(() => pets
     .map(pet => ({ pet, score: petNameScore(pet, query) }))
