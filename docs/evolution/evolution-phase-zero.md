@@ -2,7 +2,7 @@
 
 **Review date:** 18 November 2026  
 **Repository:** `parnav09/Free-fire-Squad-`  
-**Blueprint:** `docs/evolution-version-2.md` on this PR branch  
+**Blueprint:** `docs/evolution-version-2.md` on this PR branch (master roadmap included with all 13 renamed Evolution phases)  
 **Code baseline:** `main` at the current audited source snapshot  
 **Live data snapshot:** FF Squad Supabase project, read-only inspection  
 **Baseline audit:** **COMPLETE — Evolution scope only**  
@@ -259,9 +259,10 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 ## 8. Build and delivery evidence
 
-- GitHub Actions run #8 for commit `6e6b5289e5dbbb48610ad6b14edee0b221731104` completed successfully.
-- Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, and Vite production build. This verifies the Realtime evaluation refresh fix and the audit content present at that commit.
-- Any later source or workflow change must be verified by its own run; documentation-only follow-up commits do not change the recorded result for this verified code commit.
+- GitHub Actions run #23 for commit `a83602f1b857568aa1a29b1fe0bd0ad3bc5e3ace` completed successfully.
+- Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, all seven Evolution legacy regression-contract tests, and the Vite production build.
+- The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 336 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
+- The verified code/test commit is `a83602f`. Later documentation-only edits do not change that code verification; any later source or workflow change requires a new successful run.
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
 - The Vercel Preview status previously reported READY by the GitHub integration, but no approved-scope browser smoke test or Android/tablet/desktop interaction QA is claimed here.
 - No production deployment or promotion was performed as part of this audit.
@@ -300,6 +301,6 @@ Security-specific migration/grant work remains in the separate Security workstre
 
 The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. Safe legacy fixes on this PR branch address the P1/default-score defect, stale Realtime refresh, missing-as-zero trend calculation, duplicate weekly batch generation, and advanced rubric scale mismatch.
 
-The new regression-contract tests and CI run are being used to verify the latest fixes. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase.
+The new regression-contract tests and CI run #23 passed for the latest code/test commit. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase.
 
 Separate Security work remains outside this Evolution audit and is tracked independently in `docs/security/rls-review.md`.
