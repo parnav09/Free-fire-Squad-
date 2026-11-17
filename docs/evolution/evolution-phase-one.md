@@ -1,6 +1,6 @@
 # Evolution Phase One — Identity, Membership, Timezone
 
-**Status:** IN PROGRESS — E Phase One.1 and E Phase One.2 implemented and current-head CI verified; E Phase One.3 onward and the server-side timezone migration/final acceptance checks remain open.  
+**Status:** IN PROGRESS — E Phase One.1 and E Phase One.2 implemented and current-head CI verified; E Phase One.3 implementation added on a follow-up branch pending CI verification; E Phase One.4 onward and the server-side timezone migration/final acceptance checks remain open.  
 **Parent:** Evolution Phase Zero — Legacy Fixes (branch chore/evolution-phase-zero-one-naming, PR #114).  
 **Branch:** feat/evolution-phase-one-identity-timezone  
 **Scope:** stable Auth UUID, team membership identity, active membership selection, team timezone validation/date boundaries, session eligibility primitives, and permission-test helpers. Authorization/RLS/grants remain in the separate Security workstream.
@@ -70,6 +70,15 @@ Phase One is not complete until:
 - Fails closed on inactive, malformed, duplicate, or ambiguous membership rows.
 - Added IANA timezone validation and team-local date formatter for display.
 - Added contract tests for mapping, ambiguous teams, invalid IDs, and two timezone date boundaries.
+
+### E Phase One.3 — Overlapping team-load race protection
+
+- Added a latest-request guard so a newer `loadTeam` request supersedes any older request still in flight.
+- Checked freshness after asynchronous membership, team, and roster reads before committing state.
+- Stale request errors are ignored; only the current request can surface a load error.
+- Sign-out invalidates all in-flight team-load requests.
+- Added deterministic overlap and sign-out invalidation tests.
+- Status: implementation added; current-head CI verification pending.
 
 ### E Phase One.2 — Application team-loading integration
 
