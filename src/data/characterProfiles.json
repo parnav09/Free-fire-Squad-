@@ -338,7 +338,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Active dash that destroys Gloo Walls and knocks back enemies.",
-    "introHi": "Oscar ki Active Dash Skill Gloo Walls tod deti hai aur saamne aane wale enemies ko peeche dhakel deti hai.",
+    "introHi": "Oscar ki Active Skill tezi se aage badhti hai, Gloo Walls todti hai aur saamne aane wale enemies ko peeche dhakel deti hai.",
     "currentEn": [
       "Dashes toward the target direction, detonating the first 3 Gloo Walls in the way with 25 DMG, while also dealing 25 DMG to and knocking back enemies encountered."
     ],
@@ -388,7 +388,7 @@
       "OB48 (19 Feb 2025): 60s Cooldown ke saath launch hua.",
       "OB49 (21 May 2025): Skill Card add kiya gaya.",
       "OB50 (30 Jul 2025): Skill ka nishaan dhalan ke hisaab se adjust hota hai.",
-      "OB54 (23 Jun 2026): Dobara use karne ka wait time 45s se badhakar 60s kiya gaya. 9th Anniversary Skill Boosts: Phantom Dash (tezi se aage badhne ki doori badhata hai) aur Sustained Dash (Dash 8s tak chalta hai; shuru mein speed kam hoti hai aur phir dheere-dheere badhti hai)."
+      "OB54 (23 Jun 2026): Dobara use karne ka wait time 45s se badhakar 60s kiya gaya. 9th Anniversary Skill Boosts: Phantom Dash (tezi se aage badhne ki doori badhata hai) aur Sustained Dash (8s tak tezi se aage badhta hai; shuru mein speed kam hoti hai aur phir dheere-dheere badhti hai)."
     ],
     "source": [
       {
@@ -2935,7 +2935,7 @@
       "Increases rate of fire by 5%. When Luna hits an enemy, up to 10% of her rate of fire converts into movement speed. The conversion resets when she survives combat."
     ],
     "currentHi": [
-      "Rate of Fire 5% badha jaati hai. Luna jaba kisi Enemy ko hit karti hai, to usake Rate of Fire ka maximum 10% hissaa Movement Speed mein convert ho jata hai. Combat se bachane par yaha conversion reset ho jata hai."
+      "Rate of Fire 5% badha jaati hai. Luna jaba kisi Enemy ko hit karti hai, to usake Rate of Fire ka maximum 10% hissaa Movement Speed mein badal jata hai. Combat se bachane par yaha badalne ka effect reset ho jata hai."
     ],
     "rows": [
       {
@@ -2979,7 +2979,7 @@
     "historyHi": [
       "OB36 (Sep 2022): Introduce kiya gayaa.",
       "OB49 se pahale: Rate of Fire +8%, aur maximum 15% Movement Speed mein convert hoti thi.",
-      "OB49 (21 May 2025): Maximum Conversion 15% se ghata kar 10% ki gai.",
+      "OB49 (21 May 2025): badalne ki maximum limit 15% se ghata kar 10% ki gai.",
       "OB55 (10 Sep 2026): Rate of Fire Bonus 8% se ghata kar 5% kiya gayaa."
     ],
     "source": [
