@@ -106,3 +106,15 @@ Use this file when continuing in a new ChatGPT conversation.
 - Phase One PR #115 is a stacked draft branch based on `chore/evolution-phase-zero-one-naming` (confirmed from current GitHub PR metadata). Preserve this dependency and do not merge it ahead of Phase Zero.
 - Historical CI runs #56 and earlier are superseded by the current-head verified runs documented above.
 - No production deployment or database migration was made as part of the Phase One work so far.
+
+
+## E Phase One.5 — migration-history reconstruction update (18 Nov 2026)
+
+- Read the current live Supabase migration ledger and audited branch migration tree again. No live migration was edited or applied.
+- Git history now confirms the Scrims migration filename replacements: 20261110150000 was replaced by 20261110181415 for personal/team reviews; 20261110182000 was replaced by 20261110181550 for owner-update team scoping. Both replacement versions are present in the live ledger. Do not replay the old files.
+- The duplicate repository timestamp prefix 20261109007000 belongs to two distinct files introduced in separate commits and corresponds to separate live versions.
+- Probable, not exact, mappings were recorded for roster capacity, task metadata, and Daily Evaluation migrations.
+- Unresolved: duplicate live daily_score_feedback_private_rls entries vs one retained source file; create_character_profiles_table; singular/plural player-character loadout ledger entries; and the remaining live entries without recoverable checked-in SQL/application records.
+- Full evidence and commit references are in docs/evolution/E-PHASE-ONE-5-MIGRATION-AUDIT.md.
+- **E Phase One.5 remains IN PROGRESS.** The live ledger stores names/versions, not SQL bodies or content hashes. Do not claim full provenance reconciliation, approve/apply a timezone migration, alter the migration ledger, merge PR #115, or deploy.
+- Next safe action: obtain the original SQL/application records for the unresolved live migration entries (including any direct Supabase operations), then compare each exact SQL body with the checked-in/historical source. Only after that can the timezone forward/rollback design be reviewed.
