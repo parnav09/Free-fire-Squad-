@@ -35,7 +35,7 @@ const pets: PetEntry[] = [
   { id: "unidentified-29", name: "Unidentified Pet 29", aliases: [], status: "pending" },
 ];
 
-const normalize = (value: string) => value.normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const normalize = (value: string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 function distance(a: string, b: string) {
   const row = Array.from({ length: b.length + 1 }, (_, i) => i);
   for (let i = 1; i <= a.length; i++) {
