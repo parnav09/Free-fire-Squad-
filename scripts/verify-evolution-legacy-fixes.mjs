@@ -36,6 +36,9 @@ test("evaluation history refresh reads score and private feedback from their own
 
 test("legacy Weekly Review and Player Trends are read-only and missing scores are excluded", () => {
   assert.match(insights, /const valid=ordered\.filter\(e=>score\(e\)!==null\)/);
+  assert.match(insights, /if\(!values\.every\(v=>Number\.isInteger\(v\)&&v!==null&&v>=0&&v<=10\)\)return null/);
+  assert.match(insights, /return values\.reduce<number>/);
+  assert.doesNotMatch(insights, /if\(e\.total!==null&&Number\.isFinite\(e\.total\)\)return e\.total/);
   assert.match(insights, /const playerAverages=active\.map\(m=>avg\(m\.user_id\)\)\.filter/);
   assert.match(insights, /Existing assignments preserved/);
   assert.match(insights, /NO NEW BATCHES/);
@@ -85,4 +88,19 @@ test("legacy Daily Evaluation cannot create a non-atomic score/feedback partial 
   assert.match(save, /member\.user_id!==sessionUserId/);
   assert.match(save, /\.eq\("player_id",evalPlayer\)\.eq\("score_date",evalDate\)/);
   assert.match(app, /teamMembers\.filter\(m=>m\.status==="active"&&m\.user_id!==sessionUserId\)/);
+});
+
+
+test("team changes and sign-out clear prior-team Evolution records", () => {
+  assert.match(app, /setEvalHistory\(\[\]\)/);
+  assert.match(app, /setAssignmentRows\(\[\]\)/);
+  assert.match(app, /\[supabase,signedIn,team\?\.id,sessionUserId\]/);
+  assert.match(app, /\[supabase,signedIn,team\?\.id\]/);
+});
+
+test("legacy assignment updates stay inside the selected team and respect the current actor", () => {
+  assert.match(app, /assignment\.player_id!==sessionUserId&&!canManageAssignments/);
+  assert.match(app, /\.eq\("id",id\)\.eq\("team_id",team\.id\)/);
+  assert.match(app, /\.select\("id"\)\.maybeSingle\(\)/);
+  assert.match(app, /status:"assigned"|"completed"/);
 });
