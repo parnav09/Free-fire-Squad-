@@ -131,3 +131,14 @@ Phase One is not complete until:
 - **Status: STARTED — READ-ONLY AUDIT CHECKPOINT ONLY.** No database, migration, schema, data, trigger, policy, grant, function, UI, or production changes were made.
 
 **Next:** reconstruct the unmatched live/repository migration provenance from repository history and deployment records. Do not approve or apply the timezone migration until the mapping is complete and independently reviewed.
+
+
+### E Phase One.5 — repository-history reconstruction update (18 Nov 2026)
+
+- Reconstructed high-confidence Scrims migration filename alignment from Git history: the original personal-review file and the original owner-update filename were removed after production-aligned replacements were added. The live ledger contains the replacement versions. Do not replay or rewrite these migrations.
+- Confirmed the two files sharing repository timestamp prefix 20261109007000 came from separate commits and correspond to separate live migration versions; the duplicate repository prefix is a filename defect, not a duplicate live version.
+- Identified probable semantic mappings for the roster-capacity file, task-metadata file, and Daily Evaluation source files. These are not exact version/content matches.
+- Found that the duplicate live daily_score_feedback_private_rls entries have only one retained checked-in source file; the exact SQL applied under each live version remains unresolved.
+- Character profile creation and singular/plural loadout ledger entries also lack a complete one-to-one SQL provenance record. Prior-operation records provide partial feature context but not exact SQL/application records.
+- Expanded the migration audit with commit SHAs, historical file replacements, and an evidence-classification table: [E Phase One.5 Migration Audit](E-PHASE-ONE-5-MIGRATION-AUDIT.md).
+- **Status remains IN PROGRESS.** The ledger stores migration version/name metadata but not SQL bodies or content hashes, and the available project history does not recover every direct database operation. No database migration, schema change, ledger edit, or timezone migration approval was made.
