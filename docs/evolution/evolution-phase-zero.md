@@ -1,185 +1,251 @@
-# Evolution Phase Zero — Existing System Audit and Hardening
+# Evolution Phase Zero — Current-State Audit
 
 **Review date:** 18 November 2026  
-**Target:** SQUAD OS / Free Fire Squad  
-**Implementation branch:** main  
-**Audit status:** Evolution Phase Zero is not signed off; code hardening is committed, while migration provenance, remaining security controls, and end-to-end verification remain open.
+**Repository:** `parnav09/Free-fire-Squad-`  
+**Blueprint:** `docs/evolution-version-2.md` on `docs/evolution-version-2-blueprint`  
+**Code baseline:** `main` at the current audited source snapshot  
+**Live data snapshot:** FF Squad Supabase project, read-only inspection  
+**Audit status:** **COMPLETE — Evolution scope only**  
+**Implementation status:** **NOT COMPLETE** — this document records the verified baseline and blockers; it does not claim Version 2 features are already built.
 
-## 1. Scope and safety boundary
+## 1. Scope
 
-This review covers the existing repository, build/test pipeline, local persistence foundation, Vercel project behavior, and the connected Supabase schema/security posture. The goal is to make the existing system safe and reproducible before Evolution Version 2 phases build on it.
+This audit completes the Evolution Phase Zero current-state inventory required by the master blueprint:
 
-No feature module was redesigned as part of this pass. No production data was reset, rewritten, or deleted. No new Evolution scoring, peer-review, task, trend, or analytics schema was introduced.
+- Evolution routes, components, hooks, and their callers;
+- existing evaluation, feedback, task, planning, training, session, trend, and analytics data paths;
+- live Evolution-related table/column inventory and foreign-key relationships;
+- current rubric/task models and legacy incompatibilities;
+- aggregate live row counts;
+- read-only duplicate and relationship-integrity checks;
+- code paths that must be preserved during later phases;
+- build/CI evidence and remaining non-feature verification limits.
 
-## 2. Repository baseline
+**Separate workstream:** Security implementation and security remediation are intentionally excluded. Do not mix RLS, grants, SECURITY DEFINER, Auth controls, or security-advisor remediation into Evolution feature work. The separate security review remains at `docs/security/rls-review.md`.
 
-- Repository: parnav09/Free-fire-Squad-
-- Default branch: main
-- Starting commit inspected: 9d28a7471530f9472530d79833583e729d190f43
-- Stack: React 19, TypeScript, Vite 8, Supabase JS 2, Vercel
-- Package versions in package.json are exact direct dependencies.
-- package-lock.json is absent from the repository.
-- .nvmrc and CI runtime were not previously aligned with Vercel's configured Node 26.x runtime.
-- Two CI workflows were running overlapping build/test work; the older Phase 2 workflow also used a different Node major and npm install behavior.
+No production records, schemas, policies, grants, or settings were changed during this Evolution audit. All Supabase queries in this review were read-only metadata, aggregate-count, or integrity checks.
 
-## 3. Evolution Phase Zero — code changes already implemented on main
+## 2. Existing application architecture
 
-### 3.1 Browser storage resilience
+| Area | Current implementation path | Current source of truth |
+|---|---|---|
+| Daily Evaluation | `src/App.tsx` — Evaluation section and `saveEvaluation` | `daily_scores` |
+| Private evaluation feedback | `src/App.tsx` — feedback load/save alongside evaluation history | `daily_score_feedback` |
+| Legacy drill assignments | `src/App.tsx` — `loadAssignments`, `createAssignment`, `updateAssignment` | `player_drill_assignments` |
+| Planning and training | `src/components/PlanningTrainingCenter.tsx` | `practice_plans`, `practice_plan_blocks`, `practice_tasks`, `training_drills`, `training_sessions`, `training_session_participants`, `training_results` |
+| Weekly Review and Player Trends | `src/components/PlayerWeeklyInsights.tsx`, rendered by `src/App.tsx` for both sections | In-memory combination of evaluation history and legacy drill assignments |
+| Squad Analytics | `src/components/AnalyticsSection.tsx` | Selected competitive match history passed by `src/App.tsx` |
+| Competitive match ledger | Tournament module in `src/App.tsx` | `tournament_matches` and related tournament-cycle records |
+| Scrim review | Scrim module and its review records | `scrim_records` / `scrim_team_reviews` |
 
-- Added safeStorageGetItem, safeStorageSetItem, and safeStorageRemoveItem wrappers. They handle unavailable browser storage without crashing render or effects.
-- App.tsx now uses guarded storage access rather than direct localStorage calls.
-- Malformed or non-object persisted match/drill/note records fall back to safe empty records.
-- Invalid roster JSON or invalid roster shapes fall back to the known initial roster.
-- The selected local day is validated to the supported 1–7 range.
+The app currently has multiple connected-looking screens, but they do not yet form the single canonical Evolution development loop described in the blueprint.
 
-### 3.2 Legacy team-data migration
+## 3. Live Evolution data inventory
 
-The previous one-time migration marker was written before the scoped records were persisted by later effects. If the app closed or storage failed between those operations, the marker could prevent a later retry.
+The following is the live public-schema inventory observed on 18 November 2026. This section documents Evolution data structures only; it is not a permissions or security review.
 
-The migration now:
-1. Reads existing team-scoped data first.
-2. Copies legacy data into each missing team-scoped key.
-3. Checks whether each write succeeded.
-4. Writes the one-time migration marker only after all required scoped copies have been persisted.
-5. Leaves the marker unset on storage failure so a later mount can retry.
+| Table | Relevant fields / purpose |
+|---|---|
+| `daily_scores` | UUID id, team_id, score_date, player_id, nullable evaluator_id, five nullable integer dimensions, nullable total, notes/improvement_target, review_visibility |
+| `daily_score_feedback` | score_id, team_id, player_id, improvement_target, improvement_notes, mistake_notes, context_notes |
+| `player_drill_assignments` | player_id, assigned_by, drill_title/description, due_date, status, completion_note, completed_at |
+| `practice_plans` | team_id, title, plan_date/type, focus, objectives, planned/actual minutes, notes/review_notes, status, map/drop/rotation fields |
+| `practice_plan_blocks` | plan_id, team_id, title, category, instructions, expected_outcome, duration, sort_order, linked_drill_id |
+| `practice_tasks` | team_id, plan_id, block_id, player_member_id, source_session_id, title, instructions, status, due_date/due_at, priority, completion/review fields |
+| `practice_task_events` | task_id, team_id, task lifecycle event history |
+| `training_drills` | team_id/template flag, title, category, difficulty, role_tags, duration, objective, setup, steps, success_criteria, scoring_rubric |
+| `training_sessions` | team_id, plan_id, drill_id, title/type, scheduled_at, duration, status, instructions |
+| `training_session_participants` | session_id, team_id, player_member_id, attendance, participation_notes |
+| `training_results` | session_id, team_id, player_member_id, attempt_number, score, JSON rubric, completion, reflection, coach_feedback, next_action |
+| `training_session_notes` | team_id, note_date, notes |
+| `team_ratings` | nine legacy team-level dimensions, total, notes, next_focus |
+| `scrim_team_reviews` | scrim_id, team_id and review record |
+| `tournament_matches` | cycle_id, team_id, match day/number, placement, kills, points, verification and version fields |
 
-The same retry-safe behavior was applied to the shared team-local hook to prevent the dormant helper from retaining the old migration behavior.
+### 3.1 Relationship map
 
-### 3.3 Image-processing resource cleanup
+- `daily_scores` → `daily_score_feedback` through `score_id`.
+- `practice_plans` → `practice_plan_blocks` → `practice_tasks`.
+- `training_sessions` can reference a plan and a drill.
+- `training_sessions` → `training_session_participants` and `training_results`.
+- `practice_tasks` can reference a plan, block, and source training session; `practice_task_events` references the task.
+- `player_drill_assignments` is a separate assignment path; it is not represented as a child or synchronized projection of `practice_tasks`.
+- `tournament_matches` belongs to a tournament cycle and team. No direct session/evaluation/evidence relationship was found in the inspected Evolution paths.
+- `scrim_team_reviews` belongs to a scrim record and team. It is not yet part of the canonical player-evaluation chain.
 
-- Team-logo crop coordinates are clamped to the supported range.
-- Invalid image MIME types and zero-dimension images are rejected with readable errors.
-- The generated object URL is released in a finally block, including image decode/canvas failures.
-- Canvas and blob failures remain surfaced as errors rather than returning an invalid file.
+No live table with a peer-evaluation inbox, peer cohort, evidence-item, canonical evaluation-dimension, weekly-review snapshot, or canonical development-task name was found in the inspected table-name inventory. Treat those Version 2 capabilities as **not yet verified/implemented**, not as completed features.
 
-### 3.4 Historical data protection
+## 4. Live aggregate data snapshot
 
-The old Settings controls advertised automatic deletion of evaluations, tournament archives, completed tasks, and training history. The live cleanup function did delete these records.
+Exact read-only row counts returned on 18 November 2026:
 
-- The Supabase cron job squad-os-retention-daily (job id 3, 21:30 UTC / 03:00 IST) was paused and verified inactive.
-- No records were deleted by this action.
-- The owner Settings panel now explains that historical records are retained and automatic deletion is paused.
-- The old retention controls were removed from the active UI; the database retention tables and cleanup function were not dropped or rewritten.
-- A future archival feature must include export, recovery, authorization, audit, and explicit approval before any deletion is reintroduced.
+| Table | Rows |
+|---|---:|
+| `daily_scores` | 2 |
+| `daily_score_feedback` | 2 |
+| `player_drill_assignments` | 2 |
+| `practice_plans` | 0 |
+| `practice_plan_blocks` | 0 |
+| `practice_tasks` | 0 |
+| `practice_task_events` | 0 |
+| `training_drills` | 102 |
+| `training_sessions` | 1 |
+| `training_session_participants` | 1 |
+| `training_results` | 0 |
+| `training_session_notes` | 0 |
+| `scrim_team_reviews` | 0 |
+| `team_ratings` | 0 |
+| `tournament_matches` | 630 |
 
-### 3.5 CI hardening
+These counts show that the competitive match ledger and drill library have records, while the newer plan/task/result/review path has little or no live usage in this snapshot. Counts are a point-in-time baseline, not a product-quality score.
 
-- Consolidated the duplicate CI workflow into SQUAD OS Foundation CI.
-- Removed the stale duplicate Phase 2 CI workflow.
-- CI now runs on main pushes and pull requests targeting main.
-- Workflow permissions are read-only.
-- Added concurrency cancellation and a 15-minute timeout.
-- CI uses Node 22.12.0 and runs the full build command, which includes typecheck, foundation tests, character-data tests, and Vite build.
-- Because package-lock.json is not yet committed, CI currently generates a run-local lockfile before npm ci. This is not a substitute for a committed lockfile and remains a reproducibility task.
+## 5. Verified Evolution findings
 
-### 3.6 Foundation regression tests
+### EV2-AUD-001 — Two task systems are active
 
-Added checks for:
-- Guarded storage access and invalid persisted data fallback.
-- Retry-safe team-local migration ordering.
-- Object URL cleanup and crop bounds.
-- Historical retention controls remaining disabled.
+- Weekly Review batch generation in `src/App.tsx` writes to `player_drill_assignments`.
+- The Planning/Training center creates and updates `practice_tasks`.
+- The two paths have different identifiers, fields, lifecycle states, and completion data.
+- No synchronization adapter or canonical cross-reference was found.
+- The Weekly Review batch currently creates a fixed generic task rather than a task derived from an approved player-specific evidence/review item.
 
-The first test run exposed a regex syntax error in the newly added test code. That was corrected in commit 2f9e27f718a496250965abbbc17f53e9718b883b. The new CI run must finish successfully before this audit can claim build verification.
+**Impact:** task counts, completion, follow-up, and player development can disagree depending on which screen is read.  
+**Required later phase:** choose one canonical task contract, map both legacy sources, preserve IDs/history, and migrate through a reviewed compatibility plan. Do not delete either table during Phase Zero.
 
-## 4. Evolution Phase Zero — Supabase live audit
+### EV2-AUD-002 — Evaluation models are incompatible
 
-Project: FF Squad  
-Database: PostgreSQL 17.11  
-Project status at audit: ACTIVE_HEALTHY
+- Daily Evaluation stores five dimensions: communication, coordination, decision making, role execution, and map awareness; total is on a 0–50 scale.
+- The training advanced rubric uses six dimensions: coordination, communication, trade support, decision making, positioning, and consistency.
+- The canonical Version 2 rubric specifies six dimensions, including independent Positioning and Map Awareness & Rotation, with Not observed/coverage semantics.
+- The current models do not share the same dimensions or calculation contract.
 
-### 4.1 Table security
+**Impact:** scores from Daily Evaluation, training results, and future trends cannot safely be combined or compared as one player-development rating.
 
-- 31 public application tables were found.
-- RLS is enabled on all 31.
-- The two OTP/recovery tables have RLS enabled with no policies. Keep them inaccessible to ordinary clients unless a documented server-side flow requires otherwise.
-- No public views were found in the public schema during this snapshot.
+### EV2-AUD-003 — Default evaluation values can look like observations
 
-### 4.2 Current advisor findings
+- The Daily Evaluation state initializes the selected player as the display string `P1`, although the persisted player identity is a UUID.
+- Its five score fields initialize to 5.
+- `PlayerEvaluationRubric` also initializes all six ratings to 5 and allows saving without requiring an explicit change or an explicit Not observed choice.
 
-Security:
-- 4 trigger-only SECURITY DEFINER functions are executable by anon.
-- 22 SECURITY DEFINER functions are executable by authenticated. Some are intentional team-scoped RPCs or RLS helpers; each must be reviewed individually.
-- Leaked-password protection is disabled in Supabase Auth.
+**Impact:** a reviewer can save an untouched default as if it were an observed evaluation; the player selector also begins with a value that is not the canonical UUID identity.  
+**Required later phase:** empty/unanswered initial state, stable roster UUID selection, explicit rating or Not observed, and tests proving untouched forms cannot create scores.
 
-Performance:
-- 27 unindexed foreign-key findings.
-- 30 RLS auth/current_setting initialization-plan findings.
-- 10 multiple-permissive-policy findings.
-- 14 unused-index notices. These are not grounds for dropping indexes without query-plan and workload evidence.
+### EV2-AUD-004 — Evaluation and feedback are separate writes
 
-Health:
-- No health advisor findings.
+- `saveEvaluation` inserts the `daily_scores` row first.
+- Private feedback is inserted afterward into `daily_score_feedback`.
+- If the feedback insert fails, the score remains saved and the UI reports a partial-success state.
 
-### 4.3 Migration reconciliation snapshot (read-only, 18 November 2026)
+**Impact:** one logical evaluation can exist without its intended feedback.  
+**Required later phase:** a single atomic server-side operation with idempotency and fault-injection tests. Do not retrofit this by deleting existing rows.
 
-A fresh comparison of the live migration list and the repository migration directory confirmed:
+### EV2-AUD-005 — Realtime evaluation refresh selects columns absent from the live table
 
-- Live Supabase migration history: 55 entries.
-- Checked-in repository migration files: 23.
-- Exact migration-name matches: 21 live entries. Their timestamp prefixes do not consistently match the live version values.
-- Live entries without a same-name checked-in file: 34.
-- Repository files without a direct live migration-name match: 3.
-- The repository has a duplicate timestamp prefix on two different migration files.
-- The live history contains the same migration name, daily_score_feedback_private_rls, twice under two distinct versions.
-- The repository has no tracked supabase/config.toml.
+The initial load reads base score columns from `daily_scores` and loads private feedback separately. The Realtime callback later selects `improvement_notes` and `mistake_notes` directly from `daily_scores`. The live `daily_scores` column inventory does not contain those two columns; they belong to `daily_score_feedback`.
 
-This is not proof that all unmatched SQL is missing from the live schema: some entries may have been squashed, renamed, or applied under different timestamps. It does mean the current migration directory is not a reliable replay source without a provenance reconstruction.
+**Impact:** the Realtime refresh query can fail and the callback does not surface that query error before updating local history. This can leave the displayed evaluation history stale or replace it with an empty result.  
+**Required later phase:** subscribe to both source tables and refetch through the same correctly joined/merged loader used by the initial load.
 
-Applying new RLS/function/index migrations before reconciling this gap could make the live database even less reproducible. Therefore:
-- No new schema migration was applied in this pass.
-- No SECURITY DEFINER grants were mass-revoked.
-- No RLS policies were mass-rewritten.
-- No foreign-key indexes were blindly added.
-- No unused indexes were dropped.
+### EV2-AUD-006 — Weekly Review and Player Trends are not separate experiences
 
-The exact remediation backlog is recorded in docs/security/rls-review.md.
+Both navigation entries render the same `PlayerWeeklyInsights` component. It shows a team pulse, task totals, latest/previous evaluation comparison, and a small bulk-task form.
 
-### 4.4 Auth setting requiring dashboard access
+Observed calculation limitations:
+- no explicit review-window filter in the component;
+- latest/previous relies on array ordering and has no same-day deterministic tie-breaker;
+- recent average takes up to four rows without a documented comparable-period rule;
+- players with no evaluations return 0 from the average helper and are included in the roster average;
+- the batch duplicate guard in `App.tsx` checks from the start of the due-date year through the due date, rather than a clearly defined same-week window;
+- the generated focus is generic rather than linked to an approved review snapshot.
 
-Leaked-password protection is a Supabase Auth configuration setting, not a PostgreSQL table setting. It remains open for the project owner to enable in Authentication → Settings → Password Security.
+**Impact:** team averages can be depressed by missing data, trend comparisons can be inconsistent, and the two navigation items do not deliver distinct workflows.
 
-## 5. Evolution Phase Zero — Vercel and deployment boundary
+### EV2-AUD-007 — Training rubric storage does not match its scale label
 
-- The project is linked to the main branch and automatically creates production deployment attempts on main pushes.
-- The first build after these changes failed because of the test regex issue; it did not become a successful production release.
-- A subsequent queued production attempt was canceled.
-- The temporary Vercel ignore-build setting used during an earlier check has since been restored to its original null value. A Vercel Preview was subsequently auto-created for the naming pull request and reported READY by the Vercel GitHub integration. It has not been smoke-tested or accepted as Phase Zero verification. No Production promotion was performed as part of this PR.
-- The project Node runtime was aligned to Node 22.x to match the CI Node 22.12.0 runtime.
-- No production promotion or intentional production deployment is part of this task.
+The advanced rubric converts each 1–10 dimension to a 10–100 value before storing it in the JSON rubric, while also writing a `scale: "1-10"` marker. The overall score is normalized to 0–100, but the dimension values and declared scale disagree.
 
-## 6. Evolution Phase Zero — verification still required
+**Impact:** downstream readers cannot safely interpret the dimension values without knowing this conversion detail.  
+**Required later phase:** store canonical raw dimension values and explicit rubric/scoring-engine versions; handle legacy values through a documented crosswalk.
 
-Phase 0 is not signed off until all of the following are true:
+### EV2-AUD-008 — Squad Analytics is competitive-only
 
-1. Latest GitHub Actions run passes typecheck, foundation tests, character tests, and Vite production build.
-2. The Vercel Preview created for the naming PR is smoke-tested within an approved, safe feature scope.
-3. Smoke tests confirm the app shell, sign-in initialization, local persistence, team isolation, and history-preservation Settings state.
-4. Manual viewport QA covers 320px, 360px, 390px, tablet portrait/landscape, 1366px, and 1920px.
-5. Full migration history/schema provenance is reconstructed and reconciled with checked-in migrations.
-6. Four trigger-only function grants are safely revoked through a reviewed migration, with trigger behavior verified.
-7. Authenticated SECURITY DEFINER functions are individually reviewed.
-8. RLS policy performance warnings and missing FK indexes are addressed only after semantic and index-definition review.
-9. Leaked-password protection is enabled in Supabase Auth.
-10. A committed package-lock.json is added and CI switches to a strictly reproducible npm ci install.
+`AnalyticsSection` calculates match count, points, average kills, and a recent six-match points estimate from the competitive match records passed to it. It does not currently provide the canonical player-development analytics described in Version 2.
 
-## 7. Evolution Phase Zero — completion decision
+**Impact:** do not label competitive match metrics as player-development progress or combine them with evaluation scores.
 
-**Code safety improvements:** implemented on main.  
-**Historical auto-cleanup:** paused and verified inactive.  
-**Automated build verification:** pending the latest CI run.  
-**Vercel Preview verification:** pending.  
-**Database security/migration baseline:** audited, not yet remediated because source migration history is incomplete.  
-**Overall Evolution Phase Zero:** NOT COMPLETE until the verification and database gates above pass. Evolution Phase One is the next implementation stage and must not be treated as complete merely because its CI workflow exists.
+### EV2-AUD-009 — Session and evidence chain is incomplete
 
-This status is intentional. A documentation audit or green production deployment alone is not sufficient evidence that Phase 0 is complete.
+Training sessions, participants, and training results exist, but the inspected Evolution path does not establish the full immutable session roster/role snapshot → match/round → evidence → evaluation chain. The current Daily Evaluation is date/player based rather than session-first.
 
+**Impact:** historical role/context and score provenance are not sufficiently linked for reliable role-aware comparison.
 
-## 8. Latest validation note — 18 November 2026
+### EV2-AUD-010 — Offline-first and peer-review capabilities remain unverified
 
-- The naming change is held in draft PR #114; it has not been merged to main.
-- Vercel's PR integration reported a Preview deployment as READY. This is a deployment status only, not a smoke-test result or Phase Zero sign-off.
-- The PR is documentation/workflow naming only. No database schema, RLS, grants, production data, or production deployment was changed by the PR.
-- The migration comparison above was read-only. No schema migrations or permission changes were applied.
-- The automatic historical cleanup job remains paused; no historical records were deleted.
-- Evolution Phase Zero remains **NOT COMPLETE**. Do not mark it complete until every gate in section 6 is verified.
+- The repository README explicitly lists IndexedDB offline queue/conflict-safe background sync and browser-level end-to-end tests as not yet implemented.
+- The live table-name inventory did not surface peer cohort/submission/inbox tables.
+- The inspected navigation/components did not establish a complete anonymous peer-review workflow.
+
+**Impact:** do not advertise durable offline writes, conflict-safe sync, or completed anonymous peer reviews as existing capabilities.
+
+## 6. Data-integrity checks
+
+The following read-only aggregate checks were run against the current live records. Each returned **0 findings**:
+
+- feedback rows without a matching score/team/player;
+- Daily Evaluation rows without a matching team membership;
+- legacy drill assignments without a matching team membership;
+- practice task plan/block/session team mismatches;
+- plan block parent/team mismatches;
+- training participant/session team mismatches;
+- training result/session team mismatches;
+- duplicate feedback per score;
+- duplicate Daily Evaluation per team/player/date;
+- duplicate legacy assignment per team/player/title/due date;
+- duplicate participant per session/player;
+- duplicate training result per session/player/attempt.
+
+**Interpretation:** no orphan or duplicate groups were detected by these specific checks in this small snapshot. This does not prove all business invariants, historical correctness, or authorization behavior. It is not a security audit.
+
+## 7. Evolution Phase Zero foundation work already present
+
+These behavior-preserving baseline changes are present on `main`:
+
+- guarded browser storage helpers and safe fallback for malformed local records;
+- retry-safe legacy team-local data migration, with the completion marker written only after successful copies;
+- validated local day and roster data;
+- bounded team-logo crop coordinates and object-URL cleanup on success/failure;
+- historical automatic cleanup paused so Evolution history is not silently deleted;
+- foundation regression tests for storage, migration ordering, crop cleanup, and history-preservation UI.
+
+No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-snapshot, or analytics schema has been implemented by these foundation changes.
+
+## 8. Build and delivery evidence
+
+- The latest available GitHub Actions run for the Evolution Phase One workflow completed successfully.
+- Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, and Vite production build.
+- The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
+- The Vercel Preview status previously reported READY by the GitHub integration, but no approved-scope browser smoke test or Android/tablet/desktop interaction QA is claimed here.
+- No production deployment or promotion was performed as part of this audit.
+
+## 9. Code/data paths to preserve
+
+Until a later phase provides a reviewed migration and compatibility plan, preserve:
+
+- existing `daily_scores` and `daily_score_feedback` rows and their original IDs;
+- both legacy task tables and all completion/history fields;
+- training plans, plan blocks, drills, sessions, participants, results, and notes;
+- tournament match records and scrim review records;
+- the existing team membership/player UUID relationships;
+- the current local-storage migration behavior and history-preservation controls.
+
+Do not reset production data, merge legacy task tables destructively, silently convert historical scores, or overwrite historical role/context.
+
+## 10. Evolution Phase Zero decision
+
+<badge>Audit deliverables complete</badge>
+
+The Evolution-specific Phase Zero current-state audit is complete: application paths, live Evolution data inventory, relationships, task/rubric mapping, aggregate row counts, integrity-check results, concrete implementation gaps, and preservation requirements are documented.
+
+**This does not mean Evolution Version 2 is implemented or ready for production.** The next phase must resolve the canonical identity/session/rubric/task contracts before feature implementation. The audit does not authorize schema changes or production rollout.
+
+Separate Security work remains outside this Evolution audit and is tracked independently in `docs/security/rls-review.md`.
