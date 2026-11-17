@@ -43,15 +43,21 @@ Use this file when continuing in a new ChatGPT conversation.
 - Sign-out clears active team and related team-scoped UI state.
 - Added source-contract regression tests.
 
+## Verified E Phase One.2 checkpoint
+
+- Current PR head: `14f394c6479a81aabd00ea7a13f1ea170bd8acfc`.
+- GitHub Actions run #62 (`44174330712`) completed successfully: typecheck, all configured test suites, and Vite production build passed.
+- Reviewed the current diff for `src/App.tsx`, identity helper and Phase One tests. No device QA or deployment is claimed.
+- PR #115 remains open/draft and correctly targets `chore/evolution-phase-zero-one-naming`; do not merge before its Phase Zero dependency.
+- Vercel status is separately rate-limited; it does not invalidate the successful GitHub Actions run. Do not access/share the full-app preview.
+
 ## Next incomplete work
 
-1. Check GitHub Actions for the latest PR #115 commit; fix failures before continuing.
-2. Inspect the E Phase One.2 diff carefully, especially TypeScript types and team-switch UI behavior. Do not claim device QA or deployment.
-3. Add/verify race protection so a slower earlier loadTeam request cannot overwrite a newer team selection.
-4. Add session-eligibility primitives and focused permission-test helpers only as planned by Phase One. Keep authorization/RLS/grants in the separate Security workstream.
-5. Reconcile live Supabase migration history with checked-in migration provenance before proposing any timezone trigger/RPC migration.
-6. Design a reviewed forward/rollback database migration so persisted dates use each team's configured IANA timezone. Until that is safe, do not expose an editable timezone selector or claim team timezone is fully implemented.
-7. Complete Phase One acceptance tests, update this ledger, and only then mark E Phase One complete.
+1. **E Phase One.3:** add race protection so a slower earlier loadTeam request cannot overwrite a newer team selection; test overlapping requests and sign-out/team-switch stale responses.
+2. Add session-eligibility primitives and focused permission-test helpers only as planned by Phase One. Keep authorization/RLS/grants in the separate Security workstream.
+3. Reconcile live Supabase migration history with checked-in migration provenance before proposing any timezone trigger/RPC migration.
+4. Design a reviewed forward/rollback database migration so persisted dates use each team's configured IANA timezone. Until that is safe, do not expose an editable timezone selector or claim team timezone is fully implemented.
+5. Complete Phase One acceptance tests, update this ledger, and only then mark E Phase One complete.
 
 ## Non-negotiable boundaries
 
@@ -68,6 +74,6 @@ Use this file when continuing in a new ChatGPT conversation.
 ## Historical state to preserve
 
 - Phase Zero PR #114 was open and draft at last check; its latest previously verified CI run #55 passed.
-- Phase One PR #115 is a stacked draft branch created from the Phase Zero head; its base is main in GitHub metadata, so ensure the intended dependency/merge order is preserved. Do not merge it ahead of Phase Zero.
+- Phase One PR #115 is a stacked draft branch based on `chore/evolution-phase-zero-one-naming` (confirmed from current GitHub PR metadata). Preserve this dependency and do not merge it ahead of Phase Zero.
 - Earlier CI run #56 was still in progress before the E Phase One.2 commits; check the latest run for the current head before reporting CI status.
 - No production deployment or database migration was made as part of the Phase One work so far.
