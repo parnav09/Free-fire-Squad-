@@ -19,7 +19,7 @@ Use the exact order in the supplied report. On each user instruction "Next", imp
 |---|---|---|
 | 1 | Agent Hop; Agumon; Arvon; Beaston; Detective Panda | Implemented · Vercel preview build READY · main merge deferred |
 | 2 | Dr. Beanie; Dreki; Falco; Fang; Finn | Implemented · preview validation pending · main merge deferred |
-| 3 | Flash; Hoot; Kactus; Kitty (alias: Gatito); Mechanical Pup | Pending |
+| 3 | Flash; Hoot; Kactus; Kitty (alias: Gatito); Mechanical Pup | Implemented · preview validation pending · main merge deferred |
 | 4 | Moony; Mr. Waggor; Night Panther; Ottero; Poring | Pending |
 | 5 | Pug; Robo; Rockie; Sensei Tig; Shiba | Pending |
 | 6 | Spirit Fox; Yeti; Zasil | Pending |
@@ -45,7 +45,9 @@ Use the existing Pet Database search -> alphabetical cards -> individual detail 
 
 ## Current progress
 - Tracker created before profile batch implementation.
-- Completed: 10 / 28 (Batches 1–2 implemented; Batch 2 preview validation pending)
+- Completed: 15 / 28 (Batches 1–3 implemented; Batch 3 preview validation pending)
 - Batch 2 note: Finn has intentionally incomplete values, release patch/date, progression, patch history, and source URLs because these were not supplied; no values have been inferred.
+- Kitty and Gatito remain a single profile under the `kitty` key; no duplicate pet record is created.
+- Mechanical Pup release remains `2019 · Early Release` because no exact date or OB patch was supplied.
 - Artwork: on hold for all 28
 - Production release: not started / explicitly deferred
