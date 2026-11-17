@@ -97,6 +97,8 @@ test("E Phase One.2 clears active team state on sign-out", () => {
 });
 
 
+const identitySource = source;
+
 const guardSource = await readFile(new URL("../src/lib/latest-request-guard.ts", import.meta.url), "utf8");
 const guardCompiled = ts.transpileModule(guardSource, {
   compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 },
@@ -137,4 +139,45 @@ test("E Phase One.3: loadTeam checks request freshness after async boundaries an
   assert.ok((loadBlock.match(/if\(!isCurrent\(\)\)return;/g) || []).length >= 6);
   assert.match(loadBlock, /catch\(error\)\s*\{\s*if\(isCurrent\(\)\)throw error;/);
   assert.match(appSource, /teamLoadGuardRef\.current\.invalidate\(\);setTeam\(null\)/);
+});
+
+
+test("E Phase One.4: session eligibility requires a signed-in user and exact active membership", () => {
+  const eligible = identity.resolveTeamSessionEligibility(userA, row(), teamA);
+  assert.deepEqual(eligible, {
+    eligible: true,
+    identity: { authUserId: userA, membershipId: memberA, teamId: teamA, membershipRole: "player" },
+  });
+});
+
+test("E Phase One.4: session eligibility fails closed for missing, inactive, malformed or mismatched identity", () => {
+  assert.deepEqual(identity.resolveTeamSessionEligibility(null, row(), teamA), { eligible: false, reason: "unauthenticated" });
+  assert.deepEqual(identity.resolveTeamSessionEligibility("P1", row(), teamA), { eligible: false, reason: "invalid-auth-user" });
+  assert.deepEqual(identity.resolveTeamSessionEligibility(userA, null, teamA), { eligible: false, reason: "missing-membership" });
+  assert.deepEqual(identity.resolveTeamSessionEligibility(userA, row({ id: "P1" }), teamA), { eligible: false, reason: "invalid-membership" });
+  assert.deepEqual(identity.resolveTeamSessionEligibility(userA, row({ status: "inactive" }), teamA), { eligible: false, reason: "inactive-membership" });
+  assert.deepEqual(identity.resolveTeamSessionEligibility(userB, row(), teamA), { eligible: false, reason: "user-mismatch" });
+  assert.deepEqual(identity.resolveTeamSessionEligibility(userA, row({ team_id: teamB }), teamA), { eligible: false, reason: "team-mismatch" });
+});
+
+test("E Phase One.4: team UI capability matrix is explicit and fails closed for unknown roles", () => {
+  assert.deepEqual(identity.getTeamUiCapabilities("owner", true), { canManageTeamSettings: true, canManageAssignments: true });
+  assert.deepEqual(identity.getTeamUiCapabilities("owner", false), { canManageTeamSettings: true, canManageAssignments: false });
+  assert.deepEqual(identity.getTeamUiCapabilities("coach", false), { canManageTeamSettings: false, canManageAssignments: true });
+  assert.deepEqual(identity.getTeamUiCapabilities("player", true), { canManageTeamSettings: false, canManageAssignments: false });
+  assert.deepEqual(identity.getTeamUiCapabilities("unknown", true), { canManageTeamSettings: false, canManageAssignments: false });
+});
+
+test("E Phase One.4: app revalidates selected session eligibility before setting active team", () => {
+  assert.match(appSource, /resolveTeamSessionEligibility\(user\.id,membership,identity\.teamId\)/);
+  assert.match(appSource, /if\(!sessionEligibility\.eligible\)\{/);
+  assert.match(appSource, /const eligibleIdentity=sessionEligibility\.identity/);
+  assert.match(appSource, /membership_id:eligibleIdentity\.membershipId,membership_role:eligibleIdentity\.membershipRole/);
+});
+
+test("E Phase One.4: team management capability helpers are explicitly UI-only", () => {
+  assert.match(identitySource, /UI visibility\/affordance hints only/);
+  assert.match(identitySource, /not an authorization boundary/);
+  assert.match(appSource, /teamUiCapabilities=getTeamUiCapabilities\(team\?\.membership_role,ownerPowerEnabled\)/);
+  assert.match(appSource, /canManage=\{!!team&&teamUiCapabilities\.canManageAssignments\}/);
 });
