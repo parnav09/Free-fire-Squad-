@@ -1,0 +1,67 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+import ts from "typescript";
+
+const source = await readFile(new URL("../src/lib/evolution-identity.ts", import.meta.url), "utf8");
+const compiled = ts.transpileModule(source, {
+  compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 },
+}).outputText;
+const identity = await import("data:text/javascript;base64," + Buffer.from(compiled).toString("base64"));
+
+const userA = "11111111-1111-4111-8111-111111111111";
+const userB = "22222222-2222-4222-8222-222222222222";
+const teamA = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+const teamB = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
+const memberA = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
+const row = (overrides = {}) => ({
+  id: memberA, team_id: teamA, user_id: userA, membership_role: "player", status: "active", ...overrides,
+});
+
+test("stable identity maps auth UUID to membership UUID and team UUID", () => {
+  assert.deepEqual(identity.resolveActiveTeamIdentity(userA, [row()]), {
+    authUserId: userA, membershipId: memberA, teamId: teamA, membershipRole: "player",
+  });
+});
+
+test("display labels and malformed IDs can never resolve as identity", () => {
+  assert.equal(identity.resolveActiveTeamIdentity("P1", [row()]), null);
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [row({ id: "P1" })]), null);
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [row({ team_id: "P2" })]), null);
+});
+
+test("inactive and other-user memberships are excluded", () => {
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [
+    row({ status: "inactive" }), row({ user_id: userB }),
+  ]), null);
+});
+
+test("multiple active teams require an explicit preferred team", () => {
+  const rows = [row(), row({ id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", team_id: teamB })];
+  assert.equal(identity.resolveActiveTeamIdentity(userA, rows), null);
+  assert.equal(identity.resolveActiveTeamIdentity(userA, rows, teamB)?.teamId, teamB);
+});
+
+test("duplicate active memberships for the same team are treated as ambiguous", () => {
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [
+    row(), row({ id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd" }),
+  ], teamA), null);
+});
+
+test("team timezone validation accepts IANA zones and rejects invalid values", () => {
+  assert.equal(identity.isValidTeamTimezone("Asia/Kolkata"), true);
+  assert.equal(identity.isValidTeamTimezone("America/Los_Angeles"), true);
+  assert.equal(identity.isValidTeamTimezone("Not/A_Zone"), false);
+  assert.equal(identity.isValidTeamTimezone(" Asia/Kolkata"), false);
+});
+
+test("date boundaries follow the configured team timezone", () => {
+  const instant = new Date("2026-11-17T19:00:00.000Z");
+  assert.equal(identity.teamDateISO(instant, "Asia/Kolkata"), "2026-11-18");
+  assert.equal(identity.teamDateISO(instant, "America/Los_Angeles"), "2026-11-17");
+});
+
+test("invalid dates and invalid timezones fail closed", () => {
+  assert.throws(() => identity.teamDateISO(new Date("invalid"), "Asia/Kolkata"), RangeError);
+  assert.throws(() => identity.teamDateISO(new Date(), "Invalid/Zone"), RangeError);
+});
