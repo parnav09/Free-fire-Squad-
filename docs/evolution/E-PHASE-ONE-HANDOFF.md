@@ -143,3 +143,11 @@ Use this file when continuing in a new ChatGPT conversation.
 - GitHub Actions run #104 (`44190256268`) for that exact head completed successfully. The single job and all steps passed, including typecheck, configured verification suites, and Vite production build.
 - The separate Vercel status remains rate-limited; no full-app preview or device QA was accessed or claimed.
 - The provenance blocker is unchanged: the live migration ledger exposes only version/name metadata, and original SQL/application records for unresolved entries remain unavailable. E Phase One.5 stays IN PROGRESS.
+
+
+## E Phase One.5 — 34-entry live-only migration inventory (18 Nov 2026)
+
+- Added [`E-PHASE-ONE-5-34-LIVE-ONLY-MIGRATIONS.md`](./E-PHASE-ONE-5-34-LIVE-ONLY-MIGRATIONS.md), a row-by-row register of all 34 live version/name pairs lacking an exact same-name file on this branch.
+- The register distinguishes 24 early entries with no retained SQL/application record, probable semantic candidates, grouped Daily Evaluation source candidates, the separate-branch Character Profiles reconstruction, and the separate-branch singular loadout candidate.
+- This fixes the inventory/documentation gap, not the underlying SQL provenance gap. No original SQL was fabricated; no migration file or live ledger row was changed; no schema/RLS/grant/function/data change was made.
+- E Phase One.5 remains IN PROGRESS pending original SQL and application records, followed by rollback review. Security stays separate; destructive retention stays paused; Phase Two remains unstarted.
