@@ -6,7 +6,7 @@
 **Code baseline:** `main` at the current audited source snapshot  
 **Live data snapshot:** FF Squad Supabase project, read-only inspection  
 **Baseline audit:** **COMPLETE — Evolution scope only**  
-**Legacy-fix status:** **IN PROGRESS — code changes are on this PR branch**  
+**Legacy-fix status:** **IMPLEMENTED ON PR BRANCH · CI VERIFIED · NOT MERGED**  
 **Implementation boundary:** this phase repairs existing Evolution regressions and marks incomplete modules for their future phases. It does not build the planned Version 2 feature set.
 
 ## 1. Scope
@@ -257,10 +257,10 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 ## 8. Build and delivery evidence
 
-- GitHub Actions run #23 for commit `a83602f1b857568aa1a29b1fe0bd0ad3bc5e3ace` completed successfully.
-- Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, all seven Evolution legacy regression-contract tests, and the Vite production build.
-- The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 336 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
-- The verified code/test commit is `a83602f`. Later documentation-only edits do not change that code verification; any later source or workflow change requires a new successful run.
+- GitHub Actions run #31 for commit `447c66581ac08044d3d2ce977906904d5cc493a2` completed successfully.
+- Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, all eight Evolution legacy regression-contract tests, and the Vite production build.
+- The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 334 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
+- This CI run verifies the Phase Zero code, test and audit changes present on the PR head at that commit. Any later source or workflow change requires a new successful run.
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
 - The Vercel Preview status previously reported READY by the GitHub integration, but no approved-scope browser smoke test or Android/tablet/desktop interaction QA is claimed here.
 - No production deployment or promotion was performed as part of this audit.
@@ -295,10 +295,10 @@ Security-specific migration/grant work remains in the separate Security workstre
 
 ## 11. Evolution Phase Zero — Legacy Fixes decision
 
-**BASELINE AUDIT COMPLETE · LEGACY FIXES UNDER VERIFICATION**
+**BASELINE AUDIT COMPLETE · LEGACY FIXES IMPLEMENTED · CI VERIFIED**
 
 The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. Safe legacy fixes on this PR branch address the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, missing-as-zero trend calculation, duplicate weekly batch generation, advanced rubric scale mismatch, and the legacy partial score/feedback write path.
 
-The new regression-contract tests and CI run #23 passed for the earlier code/test commit. A further fix now pauses the non-atomic private-feedback form and adds a regression test for that boundary; this newest code change requires its own CI run. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase.
+The complete Phase Zero legacy-fix set is implemented on this PR branch and verified by GitHub Actions run #31. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase. Device/browser interaction QA remains assigned to Evolution Phase Eleven; the restricted full-app preview was not used for testing.
 
 Separate Security work remains outside this Evolution audit and is tracked independently in `docs/security/rls-review.md`.
