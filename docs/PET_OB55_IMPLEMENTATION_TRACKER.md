@@ -1,7 +1,7 @@
 # OB55 Pet Database Implementation Tracker
 
 ## Source report
-The user's comprehensive "Free Fire Pet Ecosystem up to OB55" report supplied in the conversation on 2026-11-17 is the source dataset for this staged implementation. Preserve the supplied profile wording and values during data entry; do not silently rewrite, infer, or fill missing values. The report's claims still require source validation before any profile is labelled official-source verified. Keep uncertain or unsupported values explicitly marked as user-supplied / pending verification.
+The user's comprehensive "Free Fire Pet Ecosystem up to OB55" report supplied in the conversation on 2026-11-17 is the source dataset for this staged implementation. Preserve supplied gameplay values; translation may explain wording in Roman Hinglish without changing mechanics. Do not infer or fill missing values. The report's claims still require source validation before any profile is labelled official-source verified. Keep uncertain or unsupported values explicitly marked as user-supplied / pending verification.
 
 ## Scope and counting
 - 28 profiles are present in the supplied report (not 27).
@@ -38,14 +38,15 @@ Use the existing Pet Database search -> alphabetical cards -> individual detail 
 ## Data rules
 - Preserve the report's supplied skill names, skill types, values, cooldowns, release data, progression, effects, and notes.
 - If the report itself says Garena does not publish a value, preserve that as an explicit unavailable/not published value; do not invent a number.
-- Keep the full supplied narrative for each profile as the source text for Ability Effects / Additional Mechanics & Notes, splitting it logically without changing its meaning.
+- Keep the full supplied narrative for each profile as the English source text for Ability Effects / Additional Mechanics & Notes, splitting it logically without changing its meaning.
+- Pet progression / level-up / cosmetic unlock progression rows are intentionally excluded from every profile. Do not re-add them.
 - Cosmetic-only pets must remain explicitly skill-less: Agumon, Kitty/Gatito, Mechanical Pup, and Pug.
 - Do not invent pet details, progression, patch history, or source URLs. Use only supplied URLs when present and validate official sources separately before marking as verified.
 - Do not use the sample SQL in the report as executable migration without adapting it to the actual repository/Supabase schema and checking for destructive or duplicate effects.
 
 ## Current progress
 - Tracker created before profile batch implementation.
-- Completed: 28 / 28 (Batches 1–6 implemented; final review and preview validation pending)
+- Completed: 28 / 28 (Batches 1–6 implemented; progression rows removed and Roman Hinglish toggle wired; final review and preview validation pending)
 - Batch 2 note: Finn has intentionally incomplete values, release patch/date, progression, patch history, and source URLs because these were not supplied; no values have been inferred.
 - Kitty and Gatito remain a single profile under the `kitty` key; no duplicate pet record is created.
 - Mechanical Pup release remains `2019 · Early Release` because no exact date or OB patch was supplied.
@@ -63,9 +64,20 @@ Use the existing Pet Database search -> alphabetical cards -> individual detail 
 - Artwork: on hold for all 28
 - Production release: not started / explicitly deferred
 
-## Mobile layout and language toggle follow-up
+## Mobile layout, progression removal, and language follow-up
 - Applied one shared responsive two-column layout to all pet profile Ability / Factor | Current value rows; labels remain on the left and values on the right, with wrapping and overflow protection at narrow phone widths.
 - Wired the EN / HI+EN control on both the Pet catalogue and pet detail pages; it now switches the active state and the available catalogue/navigation UI labels.
-- Pet ability data translations remain ON HOLD as requested. Profile names, ability text, table values, mechanics, and patch notes remain in English until a later translation pass; the toggle does not fabricate translated profile content.
+- The earlier translation hold was superseded by the user's latest instruction: Roman Hinglish is now implemented for all 28 pet summaries, table labels/known values, Ability Effects, Additional Mechanics & Notes, and patch-history statements. Ability names and official game terms remain unchanged where appropriate.
+- All 28 pets have their Progression rows and progression fields removed. Release/patch dates remain; only level-up and cosmetic unlock progression was removed.
+- HI+EN toggle now switches actual Roman Hinglish profile content, not only navigation labels. No Devanagari is used.
 - This is a shared component/CSS fix, so it covers all 28 profiles rather than requiring 28 separate layout edits.
 - Build and device-level visual regression checks for this follow-up are pending the new Vercel preview.
+
+## Latest pet progression and translation update
+- Removed the Progression row and progression field from all 28 pet profiles. Release data and patch history are retained.
+- Added Roman Hinglish translation content for all 28 profiles in `src/data/petHinglish.ts`, including summaries, effects, mechanics, row labels and known row values; patch-history notes use Hinglish wording while patch IDs/dates remain intact.
+- Wired Pet Database cards and profile detail sections to the HI+EN translation data. English ability names, game-specific names, numeric values, and patch identifiers are preserved where they are canonical.
+- Translation style: Roman script only, natural gaming Hinglish; difficult terms are explained in simple words (example: knockback -> peeche dhakelna), without changing the supplied mechanics.
+- Character translation audit covered all 67 character records. Oscar's HI+EN copy was corrected: Knockback is now explained as "peeche dhakel deta hai"; Gloo Wall detonation is phrased as "todta hai". Garena's official skill text specifies target-direction dash, first three Gloo Walls, 25 damage and knockback, but does not state an exact knockback angle/force; no angle was invented.
+- Remaining character profiles with notable hard technical terms in their HI+EN copy are listed in the user-facing audit response; they have not all been rewritten in this pass.
+- Latest preview build and mobile visual check pending.
