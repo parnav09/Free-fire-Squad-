@@ -118,3 +118,6 @@ Use this file when continuing in a new ChatGPT conversation.
 - Full evidence and commit references are in docs/evolution/E-PHASE-ONE-5-MIGRATION-AUDIT.md.
 - **E Phase One.5 remains IN PROGRESS.** The live ledger stores names/versions, not SQL bodies or content hashes. Do not claim full provenance reconciliation, approve/apply a timezone migration, alter the migration ledger, merge PR #115, or deploy.
 - Next safe action: obtain the original SQL/application records for the unresolved live migration entries (including any direct Supabase operations), then compare each exact SQL body with the checked-in/historical source. Only after that can the timezone forward/rollback design be reviewed.
+
+
+- Additional prior-operation search found a 7 Nov report of three migrations applied (bringing the reported total to eight), but exact SQL blocks and reliable per-migration mappings were not preserved; a separate earlier report counted five, so the count itself is not authoritative. Recovery OTP setup also lacks exact SQL/version evidence. These remain explicit provenance blockers in the audit.
