@@ -71,7 +71,7 @@ test("the master blueprint consistently names every Evolution phase", () => {
 
 test("legacy Daily Evaluation cannot create a non-atomic score/feedback partial write", () => {
   const start = app.indexOf("const saveEvaluation=");
-  const end = app.indexOf("\\n  const saveCloudTraining", start);
+  const end = app.indexOf("const saveCloudTraining", start);
   assert.ok(start >= 0 && end > start);
   const save = app.slice(start, end);
   assert.doesNotMatch(save, /daily_score_feedback|privatePayload/);
