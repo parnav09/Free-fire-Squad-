@@ -49,6 +49,7 @@ test("legacy training rubric requires explicit ratings before save", () => {
   assert.match(rubric, /const \[rated,setRated\]/);
   assert.match(rubric, /const complete=dimensions\.every/);
   assert.match(rubric, /disabled=\{loading\|\|!complete\}/);
+  assert.match(rubric, /onPointerDown=\{\(\)=>set\(d\.key,ratings\[d\.key\]\)\}/);
 });
 
 test("new advanced rubric records match the declared 1-10 dimension scale", () => {
