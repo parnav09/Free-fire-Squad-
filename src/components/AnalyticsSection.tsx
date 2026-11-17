@@ -30,8 +30,9 @@ export default function AnalyticsSection({ totalMatches, points, analyticsMatche
     <>
       <div className="section-heading">
         <div>
-          <div className="eyebrow">PERFORMANCE SNAPSHOT</div>
-          <h2>Current week</h2>
+          <div className="eyebrow">COMPETITIVE RESULTS · LEGACY VIEW</div>
+          <h2>Competitive results</h2>
+          <p>These metrics describe match outcomes only. Player-development analytics are planned for Evolution Phase Nine.</p>
         </div>
         <span className="phase-pill">WEEKLY SUMMARY</span>
       </div>
