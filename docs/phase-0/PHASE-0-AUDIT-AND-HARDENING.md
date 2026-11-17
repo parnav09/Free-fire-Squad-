@@ -1,9 +1,9 @@
-# Phase 0 — Existing System Audit and Hardening
+# Evolution Phase Zero — Existing System Audit and Hardening
 
 **Review date:** 18 November 2026  
 **Target:** SQUAD OS / Free Fire Squad  
 **Implementation branch:** main  
-**Audit status:** Code hardening in progress; Phase 0 sign-off is blocked by database migration drift and remaining security controls.
+**Audit status:** Evolution Phase Zero is not signed off; code hardening is committed, while migration provenance, remaining security controls, and end-to-end verification remain open.
 
 ## 1. Scope and safety boundary
 
@@ -22,7 +22,7 @@ No feature module was redesigned as part of this pass. No production data was re
 - .nvmrc and CI runtime were not previously aligned with Vercel's configured Node 26.x runtime.
 - Two CI workflows were running overlapping build/test work; the older Phase 2 workflow also used a different Node major and npm install behavior.
 
-## 3. Code changes implemented on main
+## 3. Evolution Phase Zero — code changes already implemented on main
 
 ### 3.1 Browser storage resilience
 
@@ -82,7 +82,7 @@ Added checks for:
 
 The first test run exposed a regex syntax error in the newly added test code. That was corrected in commit 2f9e27f718a496250965abbbc17f53e9718b883b. The new CI run must finish successfully before this audit can claim build verification.
 
-## 4. Supabase live audit
+## 4. Evolution Phase Zero — Supabase live audit
 
 Project: FF Squad  
 Database: PostgreSQL 17.11  
@@ -128,16 +128,16 @@ The exact remediation backlog is recorded in docs/security/rls-review.md.
 
 Leaked-password protection is a Supabase Auth configuration setting, not a PostgreSQL table setting. It remains open for the project owner to enable in Authentication → Settings → Password Security.
 
-## 5. Vercel and deployment boundary
+## 5. Evolution Phase Zero — Vercel and deployment boundary
 
 - The project is linked to the main branch and automatically creates production deployment attempts on main pushes.
 - The first build after these changes failed because of the test regex issue; it did not become a successful production release.
 - A subsequent queued production attempt was canceled.
-- A temporary ignore-build command is configured to skip production Git builds while allowing Preview builds during this Phase 0 validation. Restore the original project setting after the preview is verified.
-- The project Node runtime was configured as 26.x while CI used Node 22.12.0. Aligning the Vercel project runtime to Node 22.x is required before preview sign-off.
+- The temporary Vercel ignore-build setting used during an earlier check has since been restored to its original null value. No Preview deployment was created, and no successful new Production deployment was verified in this audit.
+- The project Node runtime was aligned to Node 22.x to match the CI Node 22.12.0 runtime.
 - No production promotion or intentional production deployment is part of this task.
 
-## 6. Verification still required
+## 6. Evolution Phase Zero — verification still required
 
 Phase 0 is not signed off until all of the following are true:
 
@@ -152,13 +152,13 @@ Phase 0 is not signed off until all of the following are true:
 9. Leaked-password protection is enabled in Supabase Auth.
 10. A committed package-lock.json is added and CI switches to a strictly reproducible npm ci install.
 
-## 7. Phase 0 completion decision
+## 7. Evolution Phase Zero — completion decision
 
 **Code safety improvements:** implemented on main.  
 **Historical auto-cleanup:** paused and verified inactive.  
 **Automated build verification:** pending the latest CI run.  
 **Vercel Preview verification:** pending.  
 **Database security/migration baseline:** audited, not yet remediated because source migration history is incomplete.  
-**Overall Phase 0:** NOT COMPLETE until the verification and database gates above pass.
+**Overall Evolution Phase Zero:** NOT COMPLETE until the verification and database gates above pass. Evolution Phase One is the next implementation stage and must not be treated as complete merely because its CI workflow exists.
 
 This status is intentional. A documentation audit or green production deployment alone is not sufficient evidence that Phase 0 is complete.
