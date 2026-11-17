@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import "./CharactersDatabase.css";
 import "./PetDatabase.css";
 import { petProfiles } from "../data/petProfiles";
+import { petHinglish, petPatchHinglish, petRowHinglish } from "../data/petHinglish";
 
 type PetEntry = {
   id: string;
@@ -139,6 +140,7 @@ export default function PetDatabase({ onBack }: Props) {
   if (selected) {
     const kitty = selected.id === "kitty";
     const profile = petProfiles[selected.id];
+    const translated = isHindi ? petHinglish[selected.id] : undefined;
     return <main className="character-database character-profile-page pet-profile-page">
       <div className="character-db-toolbar">
         <button type="button" className="character-back-button" onClick={resetToList}><span aria-hidden="true">←</span> {isHindi ? "Pets par wapas" : "Back to Pets"}</button>
@@ -158,25 +160,25 @@ export default function PetDatabase({ onBack }: Props) {
             <span className="character-confirmed">{profile ? "User-supplied profile · source verification pending" : kitty ? "Official name · cosmetic-only" : "Official name verified"}</span>
             <p className="character-profile-subtitle">{profile ? `${profile.skillType} · ${profile.dataStatus}` : kitty ? "Cosmetic-only pet · No gameplay skill" : "Pet profile template · Details pending"}</p>
             <p className="character-skill-name"><b>Ability:</b> {profile ? profile.skill : kitty ? "None · Cosmetic-only pet" : "Not entered"}</p>
-            <p className="character-profile-summary">{profile ? profile.summary : kitty ? "Kitty is an appearance-focused companion. No active or passive gameplay skill is assigned to Kitty." : "This profile keeps the Character Database structure. Ability and artwork details remain blank until verified from official Garena sources."}</p>
+            <p className="character-profile-summary">{profile ? (translated?.summary || profile.summary) : kitty ? (isHindi ? "Kitty sirf appearance ke liye hai; koi active ya passive gameplay skill nahi hai." : "Kitty is an appearance-focused companion. No active or passive gameplay skill is assigned to Kitty.") : "This profile keeps the Character Database structure. Ability and artwork details remain blank until verified from official Garena sources."}</p>
           </div>
         </header>
         <section className="character-ability-section">
           <div className="character-values-table" role="table" aria-label={selected.name + " profile values"}>
             <div className="character-values-row character-values-head" role="row"><span role="columnheader">Ability / Factor</span><span role="columnheader">{isHindi ? "Current value" : "Current value"}</span></div>
-            {(profile ? profile.rows : [{ label: "Gameplay ability", value: kitty ? "None" : "Not entered" }, { label: "Skill type", value: kitty ? "No active or passive skill" : "Pending verification" }, { label: "Profile category", value: "Pet" }]).map((row, index) => <div className="character-values-row" role="row" key={`${row.label}-${index}`}><span role="cell">{row.label}</span><strong role="cell">{row.value}</strong></div>)}
+            {(profile ? profile.rows : [{ label: "Gameplay ability", value: kitty ? "None" : "Not entered" }, { label: "Skill type", value: kitty ? "No active or passive skill" : "Pending verification" }, { label: "Profile category", value: "Pet" }]).map((row, index) => { const translatedRow = isHindi ? petRowHinglish(row.label, row.value) : row; return <div className="character-values-row" role="row" key={`${row.label}-${index}`}><span role="cell">{translatedRow.label}</span><strong role="cell">{translatedRow.value}</strong></div>; })}
           </div>
           <section className="character-detail-block">
             <h3>{isHindi ? "Ability Effects" : "Ability Effects"}</h3>
-            {list(profile ? profile.effects : kitty ? ["Kitty has no gameplay ability effects."] : ["Reserved for verified pet ability information."])}
+            {list(profile ? (translated?.effects || profile.effects) : kitty ? [isHindi ? "Kitty ki koi gameplay ability effect nahi hai." : "Kitty has no gameplay ability effects."] : ["Reserved for verified pet ability information."])}
           </section>
           <section className="character-detail-block">
             <h3>{isHindi ? "Additional Mechanics & Notes" : "Additional Mechanics & Notes"}</h3>
-            {list(profile ? profile.mechanics : kitty ? ["Kitty is a cosmetic-only pet; do not assign a skill, cooldown, or combat effect.", "Cosmetic appearance and pet emotes are separate from gameplay ability data."] : ["No mechanics have been entered until official source verification is complete."])}
+            {list(profile ? (translated?.mechanics || profile.mechanics) : kitty ? [isHindi ? "Kitty sirf cosmetic pet hai; iske liye skill, cooldown ya combat effect assign nahi karna chahiye." : "Kitty is a cosmetic-only pet; do not assign a skill, cooldown, or combat effect.", "Cosmetic appearance and pet emotes are separate from gameplay ability data."] : ["No mechanics have been entered until official source verification is complete."])}
           </section>
           <section className="character-detail-block">
             <h3>{isHindi ? "Patch History" : "Patch History"}</h3>
-            {list(profile ? profile.patchHistory : kitty ? ["No gameplay ability changes are recorded for Kitty because it has no gameplay skill."] : ["Reserved for official patch-note history."])}
+            {list(profile ? (isHindi ? profile.patchHistory.map(petPatchHinglish) : profile.patchHistory) : kitty ? [isHindi ? "Kitty ki gameplay skill nahi hai, isliye ability changes record nahi hain." : "No gameplay ability changes are recorded for Kitty because it has no gameplay skill."] : ["Reserved for official patch-note history."])}
           </section>
           <section className="character-detail-block character-source-block">
             <h3>{isHindi ? "Official Sources" : "Official Sources"}</h3>
@@ -204,7 +206,7 @@ export default function PetDatabase({ onBack }: Props) {
     </div>
     <header className="character-db-heading">
       <div><div className="character-db-eyebrow">COMPANION DATABASE</div><h1>Pet Database</h1><p>{isHindi ? "Official pet names, typo-tolerant search aur Character-style individual profiles." : "Official pet names, typo-tolerant search and Character-style individual profiles."}</p></div>
-      <div className="character-db-count"><b>{pets.length}</b><span>PET PROFILES<small>{profileCount} detailed profiles added so far · artwork on hold</small></span></div>
+      <div className="character-db-count"><b>{pets.length}</b><span>PET PROFILES<small>{isHindi ? `${profileCount} detailed profiles · artwork hold par` : `${profileCount} detailed profiles · artwork on hold`}</small></span></div>
     </header>
     <div className="character-search-wrap">
       <label className="character-search" role="search">
@@ -232,13 +234,13 @@ export default function PetDatabase({ onBack }: Props) {
         <div className="character-result-art">
           <div className="character-result-monogram pet-result-monogram"><span>{pet.name.split(/[- .]/).map(part => part[0]).join("").slice(0, 2).toUpperCase()}</span><small>{petProfiles[pet.id] ? "PROFILE ADDED" : pet.id === "kitty" ? "PET PROFILE" : "OFFICIAL NAME"}</small></div>
         </div>
-        <div className="character-result-copy"><span className="character-result-status">{pet.status === "verified" ? "OFFICIAL NAME VERIFIED" : "NAME CONFIRMATION PENDING"}</span><h2>{pet.name}</h2><b>{petProfiles[pet.id] ? petProfiles[pet.id].skill : pet.id === "kitty" ? "Cosmetic-only · No skill" : "Pet profile"}</b><p>{petProfiles[pet.id] ? petProfiles[pet.id].summary : pet.id === "kitty" ? "Appearance-focused pet with no gameplay ability." : "Official name indexed. Detailed profile will be added in its assigned batch."}</p><span className="character-result-open">{isHindi ? "Full profile dekhein" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
+        <div className="character-result-copy"><span className="character-result-status">{pet.status === "verified" ? "OFFICIAL NAME VERIFIED" : "NAME CONFIRMATION PENDING"}</span><h2>{pet.name}</h2><b>{petProfiles[pet.id] ? petProfiles[pet.id].skill : pet.id === "kitty" ? "Cosmetic-only · No skill" : "Pet profile"}</b><p>{petProfiles[pet.id] ? (isHindi ? (petHinglish[pet.id]?.summary || petProfiles[pet.id].summary) : petProfiles[pet.id].summary) : pet.id === "kitty" ? (isHindi ? "Sirf appearance ke liye; gameplay ability nahi." : "Appearance-focused pet with no gameplay ability.") : "Official name indexed. Detailed profile will be added in its assigned batch."}</p><span className="character-result-open">{isHindi ? "Full profile dekhein" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
         <span className="character-result-chevron" aria-hidden="true">↗</span>
       </button>)}
     </div> : <div className="character-empty-state"><b>{isHindi ? "Koi matching pet nahi mila" : "No matching pet"}</b><span>{isHindi ? "Dusri spelling ya chhota naam try karein." : "Try another spelling or a shorter name."}</span></div>}
     <div className="character-load-more-wrap">
       {!query.trim() && visibleCount < matches.length && <button type="button" className="character-load-more" onClick={() => setVisibleCount(count => Math.min(count + batchSize, matches.length))}>{isHindi ? "Aur pets" : "More"} <span aria-hidden="true">↓</span></button>}
-      <p>{isHindi ? "Pet profile text translation abhi hold par hai. Artwork bhi hold par hai; supplied values source verification ke liye pending hain." : "Pet profiles are implemented in six batches. Artwork remains on hold; supplied profile values are pending source verification."}</p>
+      <p>{isHindi ? "Pet profiles ke liye Roman Hinglish translation available hai. Artwork hold par hai; supplied values ki source verification pending hai." : "Pet profiles are implemented in six batches. Artwork remains on hold; supplied profile values are pending source verification."}</p>
     </div>
   </main>;
 }
