@@ -1198,7 +1198,7 @@ Security is a separate workstream and is not implemented inside the Evolution ph
 
 **Outputs consumed by next phase:** trusted team/player IDs, membership checks, timezone policy, and authorization contract.
 
-**Gate:** tests prove a player cannot act outside their team/permission; display labels cannot be used as IDs; date boundaries are server/team authoritative.
+**Gate:** tests prove stable player/team identity mapping, active membership is represented consistently, display labels cannot be used as IDs, and date boundaries follow the configured team timezone. Authorization and access-control tests belong to the separate Security workstream.
 
 ### Evolution Phase Two — Session, match, roster, and role snapshots
 
