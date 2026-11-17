@@ -281,4 +281,133 @@ export const petProfiles: Record<string, PetProfile> = {
     sources: [],
     dataStatus: "Incomplete user-supplied profile · source verification pending"
   },
+  "flash": {
+    skill: "Steel Shell",
+    skillType: "Passive",
+    summary: "Reduces damage received from behind by 25%.",
+    rows: [
+      { label: "Rear damage reduction", value: "25%" },
+      { label: "Cooldown", value: "90 seconds" },
+      { label: "Mitigation cap", value: "150 durability points" },
+      { label: "Trigger", value: "Damage received from behind" },
+      { label: "Release data", value: "OB32 · 2022-01-20" },
+      { label: "Progression", value: "Lv3: Play · Lv4: Gamer Flash" }
+    ],
+    effects: [
+      "Reduces damage received from behind by 25%."
+    ],
+    mechanics: [
+      "The supplied report states that rear-damage mitigation is capped at 150 durability points.",
+      "The report's stated coverage caveat refers to ballistic firearms and tactical knives when attacks come from behind."
+    ],
+    patchHistory: [
+      "OB32 (2022-01-20): Release data stated in the supplied report."
+    ],
+    releaseData: "OB32 · 2022-01-20",
+    progression: "Lv3: Play · Lv4: Gamer Flash",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "hoot": {
+    skill: "Far-sighted",
+    skillType: "Passive",
+    summary: "Amplifies scanning skill distance and reveal duration.",
+    rows: [
+      { label: "Scan radius increase", value: "+10m" },
+      { label: "Scan feed duration increase", value: "+2.5 seconds" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB35 · 2022-08-10" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Frosty Hoot" }
+    ],
+    effects: [
+      "Increases scanning skill distance by 10m and scanning feed duration by 2.5 seconds."
+    ],
+    mechanics: [
+      "The supplied report describes interaction with Clu's scanning ability and UAV scans.",
+      "The report states that scan information is shared with teammates."
+    ],
+    patchHistory: [
+      "OB35 (2022-08-10): Release data stated in the supplied report."
+    ],
+    releaseData: "OB35 · 2022-08-10",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Frosty Hoot",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "kactus": {
+    skill: "Self-Sufficient",
+    skillType: "Passive",
+    summary: "Restores 10 EP per second while the owner remains stationary.",
+    rows: [
+      { label: "EP restoration", value: "10 EP per second" },
+      { label: "Activation delay", value: "6 seconds motionless" },
+      { label: "EP ceiling", value: "100 EP" },
+      { label: "Cooldown", value: "No cooldown" },
+      { label: "Release data", value: "OB38 · 2023-01-11" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Ghost Kactus" }
+    ],
+    effects: [
+      "Restores 10 EP per second after the owner has remained motionless for six seconds."
+    ],
+    mechanics: [
+      "The effect stops when the owner moves or jumps.",
+      "EP restoration stops when the owner reaches 100 EP."
+    ],
+    patchHistory: [
+      "OB38 (2023-01-11): Release data stated in the supplied report."
+    ],
+    releaseData: "OB38 · 2023-01-11",
+    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Ghost Kactus",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "kitty": {
+    skill: "None",
+    skillType: "Passive · No Skill",
+    summary: "Cosmetic companion.",
+    rows: [
+      { label: "Primary effect", value: "Cosmetic companion" },
+      { label: "Cooldown", value: "Not applicable" },
+      { label: "Release data", value: "2019-01-22" },
+      { label: "Progression", value: "Garena does not publish exact unlockables" }
+    ],
+    effects: [
+      "Kitty is a cosmetic-only companion with no gameplay ability."
+    ],
+    mechanics: [
+      "The supplied report states that Kitty has no tactical skills, algorithms, or gameplay modifiers.",
+      "Gatito is an alias/backend name for this same pet, not a separate profile."
+    ],
+    patchHistory: [
+      "2019-01-22: Release date stated in the supplied report."
+    ],
+    releaseData: "2019-01-22",
+    progression: "Garena does not publish exact unlockables",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
+  "mechanical-pup": {
+    skill: "None",
+    skillType: "Passive · No Skill",
+    summary: "Cosmetic companion.",
+    rows: [
+      { label: "Primary effect", value: "Cosmetic companion" },
+      { label: "Cooldown", value: "Not applicable" },
+      { label: "Release data", value: "2019 · Early Release" },
+      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play 1 / Play 2 / Scared · Lv4: Lightning Pup" }
+    ],
+    effects: [
+      "Mechanical Pup is a cosmetic-only companion with no combat or utility skill."
+    ],
+    mechanics: [
+      "The supplied report states that Mechanical Pup has no combat scripts or gameplay utility."
+    ],
+    patchHistory: [
+      "2019 · Early Release: release period stated in the supplied report; exact date and patch were not supplied."
+    ],
+    releaseData: "2019 · Early Release",
+    progression: "Lv2: Celebrate · Lv3: Play 1 / Play 2 / Scared · Lv4: Lightning Pup",
+    sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
+    dataStatus: "User-supplied profile · source verification pending"
+  },
 };
