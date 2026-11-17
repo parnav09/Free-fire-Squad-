@@ -42,6 +42,9 @@ test("legacy Weekly Review and Player Trends are read-only and missing scores ar
   assert.match(insights, /Evolution Phase Seven/);
   assert.match(insights, /Evolution Phase Eight/);
   assert.doesNotMatch(insights, /onGenerate|Generate weekly batch/);
+  assert.doesNotMatch(app, /const createAssignment=/);
+  assert.match(app, /Legacy creation paused/);
+  assert.match(app, /const updateAssignment=/);
   assert.match(app, /<PlayerWeeklyInsights members=\{teamMembers\} assignments=\{assignmentRows\} evaluations=\{evalHistory\}\/\>/);
 });
 
