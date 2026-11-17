@@ -152,3 +152,10 @@ Prior conversation records establish that additional Supabase migrations were ap
 A separate 8 Nov record reports that recovery-email enrollment OTP storage was applied, but likewise lacks the exact migration SQL/version and application workflow. The live ledger's account-recovery entry is therefore only a probable feature mapping.
 
 These records confirm that some live database changes were made outside the currently retained migration files, but they do not supply enough evidence to reconstruct the exact source SQL. They must remain unresolved rather than be reverse-engineered from the current schema and treated as original source.
+
+
+## 8.7 Detailed register for all 34 live-only names — 18 Nov 2026
+
+A dedicated row-by-row register was added at [`E-PHASE-ONE-5-34-LIVE-ONLY-MIGRATIONS.md`](./E-PHASE-ONE-5-34-LIVE-ONLY-MIGRATIONS.md). It lists every live version/name pair and separates: 24 early Nov 7–8 operations without retained SQL/application records; roster-capacity candidates; the task-metadata filename variant; three Daily Evaluation entries with a grouped candidate source; two retention entries; the Character Profiles schema reconstruction; and the singular player-loadout candidate found on a separate feature branch.
+
+The 34 count is an exact-name repository comparison, not evidence of 34 missing database features. The inventory classifies candidates without promoting them to verified mappings. The Character Profiles file is explicitly a reconstruction, not original SQL. The singular loadout candidate has a different timestamp and no exact application record. No migration files were renamed/copied/synthesized, and no database or migration-history changes were made. Original SQL plus application evidence remains required before a provenance row can be marked verified.
