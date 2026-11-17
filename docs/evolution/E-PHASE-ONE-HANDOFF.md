@@ -4,7 +4,7 @@ Use this file when continuing in a new ChatGPT conversation.
 
 ## Exact resume prompt
 
-**Continue Squad OS E Phase One from PR #115 at the next incomplete point. Read docs/evolution/E-PHASE-ONE-HANDOFF.md and docs/evolution/evolution-phase-one.md first. Preserve the existing roadmap and safety/scope boundaries.**
+**Continue Squad OS E Phase One.5 from PR #115. Read docs/evolution/E-PHASE-ONE-HANDOFF.md, docs/evolution/evolution-phase-one.md, and docs/evolution/E-PHASE-ONE-5-MIGRATION-AUDIT.md first. Continue migration provenance reconstruction only; do not approve or apply a timezone migration until provenance is reconciled. Preserve all roadmap and safety/scope boundaries.**
 
 ## Naming
 
@@ -71,10 +71,21 @@ Use this file when continuing in a new ChatGPT conversation.
 - Current PR head `a48ec0c5baec1d177e22751460bdfe7f62a14a08` passed GitHub Actions run #82 (`44180351504`): typecheck, all configured test suites (20 Phase One checks), and Vite production build.
 - E Phase One.4 is implemented and CI-verified. The build still reports the existing large-chunk warning; no bundle-splitting changes were made in this slice.
 
+## E Phase One.5 — read-only audit checkpoint (18 Nov 2026)
+
+- Re-verified PR #115 as open/draft and still stacked on Phase Zero PR #114. Audited head before the documentation checkpoint: `dbaaa00bd42657bdb01238dd447a54fc89cfd9e9`.
+- GitHub Actions run #86 (`44180645838`) passed its typecheck, configured tests, and Vite production build. Vercel separately reports a build-rate-limit failure; no preview/device QA is claimed.
+- Live Supabase migration history contains 55 entries; the branch contains 23 migration files. Twenty distinct names overlap (21 live entries because one name appears twice); only 2 have exact version+name matches, 18 have timestamp mismatches, 34 live names have no same-name checked-in file, and 3 checked-in files have no direct same-name live entry.
+- The repo has a duplicate migration timestamp prefix; the live history has a duplicate migration name under two versions. These are provenance anomalies, not proof that SQL is absent.
+- Live `teams.timezone` exists; current teams use valid `Asia/Kolkata` and `Asia/Calcutta` values. The current Daily Evaluation insert trigger and `ds_insert` policy both hard-code `Asia/Kolkata`. The trigger also preserves anonymization and recipient-only privacy behavior that must remain intact.
+- Added the read-only audit record: `docs/evolution/E-PHASE-ONE-5-MIGRATION-AUDIT.md`.
+- No SQL, schema, data, trigger, policy, grant, function, or migration-history changes were made. No timezone UI was exposed.
+- **E Phase One.5 is started but NOT complete:** migration provenance remains unreconciled, so no timezone migration design is approved.
+
 ## Next incomplete work
 
-1. E Phase One.5: reconcile live Supabase migration history with checked-in migration provenance before proposing any timezone trigger/RPC migration.
-2. Design a reviewed forward/rollback database migration so persisted dates use each team's configured IANA timezone. Until that is safe, do not expose an editable timezone selector or claim team timezone is fully implemented.
+1. Reconstruct the live migration provenance, including the 34 live entries without same-name files, 18 timestamp mismatches, duplicate live name, duplicate checked-in timestamp prefix, and 3 unmatched checked-in files. Use repository history and deployment records; do not infer SQL absence from filename mismatch.
+2. Inspect the remaining safe timezone/date write paths. Only after provenance is reconciled, prepare and review the forward/rollback timezone migration and acceptance tests.
 3. Complete Phase One acceptance tests and independent Security validation; only then mark E Phase One complete.
 
 ## Non-negotiable boundaries
