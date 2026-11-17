@@ -164,3 +164,11 @@ Phase One is not complete until:
 - GitHub Actions run #104 (`44190256268`) for that exact head completed successfully. The single job and all steps passed, including typecheck, configured verification suites, and Vite production build.
 - The separate Vercel status remains rate-limited; no full-app preview or device QA was accessed or claimed.
 - The provenance blocker is unchanged: the live migration ledger exposes only version/name metadata, and original SQL/application records for unresolved entries remain unavailable. E Phase One.5 stays IN PROGRESS.
+
+
+## E Phase One.5 — 34-entry live-only migration inventory (18 Nov 2026)
+
+- Added [`E-PHASE-ONE-5-34-LIVE-ONLY-MIGRATIONS.md`](./E-PHASE-ONE-5-34-LIVE-ONLY-MIGRATIONS.md) with all 34 live-only version/name rows and evidence classification.
+- Exact-name mismatch is not proof of missing database functionality. Semantic matches and files found on other branches are explicitly marked as candidates until original SQL and application records are verified.
+- No migration source was invented, renamed, copied, or applied. No Supabase schema, data, trigger, RLS, grant, function, or migration-history change was made.
+- Phase One.5 remains blocked on original SQL/application evidence and rollback review. Phase Two has not started.
