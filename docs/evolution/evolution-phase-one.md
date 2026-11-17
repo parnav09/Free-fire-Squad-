@@ -1,6 +1,6 @@
 # Evolution Phase One — Identity, Membership, Timezone
 
-**Status:** IN PROGRESS — E Phase One.1 and E Phase One.2 implemented and current-head CI verified; E Phase One.3 implemented and current-head CI verified; E Phase One.4 implemented and current-head CI verified. E Phase One.5 and the server-side timezone migration/final acceptance checks remain open.  
+**Status:** IN PROGRESS — E Phase One.1–.4 implemented and CI verified. E Phase One.5 read-only audit started; migration provenance is not reconciled and no timezone migration design is approved. Server-side timezone migration and final acceptance checks remain open.  
 **Parent:** Evolution Phase Zero — Legacy Fixes (branch chore/evolution-phase-zero-one-naming, PR #114).  
 **Branch:** feat/evolution-phase-one-identity-timezone  
 **Scope:** stable Auth UUID, team membership identity, active membership selection, team timezone validation/date boundaries, session eligibility primitives, and permission-test helpers. Authorization/RLS/grants remain in the separate Security workstream.
@@ -13,8 +13,8 @@
 - teams.timezone already exists in the live schema inventory.
 - Team creation currently calls create_team with p_timezone: "Asia/Kolkata".
 - The live lock_daily_score_date_and_anonymize() trigger currently derives score dates using a hard-coded Asia/Kolkata timezone.
-- The current loadTeam path loads active memberships and uses the saved preferred team ID; if that preference is absent/invalid, it falls back to the first active membership. The new contract helper deliberately refuses ambiguous multi-team selection without an explicit preferred team.
-- The app currently has no canonical reusable identity resolver or validated team-timezone utility.
+- The current loadTeam path uses the saved preferred team ID and requires explicit selection when active memberships are ambiguous; it does not silently fall back to the first active membership.
+- The reusable identity resolver and IANA timezone validation/date-formatting helper are implemented in E Phase One.1–.4.
 
 ## 2. First implementation slice
 
@@ -118,3 +118,16 @@ Phase One is not complete until:
 - Added focused tests for eligible/ineligible sessions, role capability combinations, and app integration.
 - GitHub Actions run #82 (`44180351504`) passed typecheck, all configured test suites (20 Phase One checks), and Vite production build.
 - Status: IMPLEMENTED + CI VERIFIED.
+
+
+### E Phase One.5 — read-only migration provenance audit checkpoint
+
+- Re-verified PR #115 and its current-head CI before the audit. GitHub Actions run #86 (`44180645838`) passed; the separate Vercel build-rate-limit failure is not a GitHub Actions failure.
+- Compared the live Supabase ledger (55 entries) with the checked-in branch migration directory (23 files): 20 distinct names overlap (21 live entries due to one duplicate name); 2 have exact version+name matches; 18 shared names have timestamp mismatches; 34 live names have no same-name checked-in file; and 3 checked-in files have no direct same-name live entry.
+- Found a duplicate checked-in timestamp prefix and a duplicate live migration name under two versions. These are provenance mismatches, not proof that live SQL is absent.
+- Live `teams.timezone` is present. Current team values are valid `Asia/Kolkata` and `Asia/Calcutta`. The live Daily Evaluation BEFORE INSERT trigger and `ds_insert` policy both still hard-code `Asia/Kolkata`; both must be considered together in any future migration.
+- The trigger also enforces evaluator anonymization and recipient-only feedback behavior. Those behaviors must be preserved. The trigger function is currently SECURITY DEFINER; Security review remains a separate gate.
+- Full findings and provisional, not-approved migration direction: [E Phase One.5 Migration Audit](E-PHASE-ONE-5-MIGRATION-AUDIT.md).
+- **Status: STARTED — READ-ONLY AUDIT CHECKPOINT ONLY.** No database, migration, schema, data, trigger, policy, grant, function, UI, or production changes were made.
+
+**Next:** reconstruct the unmatched live/repository migration provenance from repository history and deployment records. Do not approve or apply the timezone migration until the mapping is complete and independently reviewed.
