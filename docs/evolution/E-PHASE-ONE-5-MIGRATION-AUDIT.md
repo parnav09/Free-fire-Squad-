@@ -97,3 +97,49 @@ This is a design direction, not migration SQL and not approval to apply a migrat
 - No retention job changes.
 - No merge, production deployment, or full-app preview testing.
 - No Phase Two work.
+
+
+## 8. Repository-history provenance reconstruction — 18 Nov 2026
+
+This section records evidence recovered from Git commit history and prior project-operation records. It separates exact historical filename alignment from semantic similarity. A matching name or feature description is not, by itself, proof that the SQL applied under a live ledger version is byte-for-byte identical.
+
+### 8.1 High-confidence Scrims filename alignment
+
+- The original 20261110150000_scrims_personal_team_review.sql was added in commit cc7d2cd079de4518eab58767a790520a37afe812, then removed in 120e81f384de2b2814acec28599d95ec1ec813f2. The replacement file 20261110181415_scrims_personal_team_review.sql was added in 47a4f490ba247d66f66fa14cac0d45d4bc1ef946.
+- Prior project records show the user approved applying the Scrims migration and the assistant reported the live tables created and migration history recorded as scrims_personal_team_review. The live ledger now contains exactly version 20261110181415 with that name. This supports the replacement filename as the applied migration source; the earlier 20261110150000 file is historical and must not be replayed.
+- The owner-update migration was first committed as 20261110182000_scrims_owner_update_team_scope.sql in 35e874ad51dfc2ac2c75db964afcc893d21b869c. A production-aligned file 20261110181550_scrims_owner_update_team_scope.sql was added in 3da844d5c9c060204b1b776a4357c4a60c3f5121; the earlier 20261110182000 file was removed in 577bd03b304247dba23bf350ccd88d728be73583. The live ledger contains version 20261110181550 with the matching name. Do not reapply either file to “repair” history.
+
+### 8.2 Tracked SQL with timestamp/name mismatches
+
+- The two files sharing repository timestamp prefix 20261109007000 were introduced by separate commits: e930b82a5a3b851185ed9f5f7546e5d9ec67daca (role-drill templates) and 86ab551ef56f47cd21d31fd8c1561a57a091a135 (task metadata). The live ledger records separate versions 20261108174411 and 20261108174835 for the corresponding features. The duplicate repository prefix is a filename-ordering defect; it does not mean the live ledger has a duplicate version.
+- The task-metadata file is named phase_2_3_task_blocked_reason_category, while the live ledger name is phase_2_3_task_blocked_reason_and_category. The SQL content is visible in Git history, but the naming difference must remain an explicit semantic mapping, not an exact name match.
+- The roster-capacity file 20261108230000_phase_2_roster_capacity.sql and the live entry 20261108105554_phase_2_configurable_roster_capacity are semantically related but have different names and timestamps. The source file is in commit 1b61c7ec4ad6a26c4c6f194a0a7264ad3bf3fa0d; no SQL hash is stored in the migration ledger to prove exact equivalence.
+- The Daily Evaluation source history is not one-to-one. Commit c8bfd087e5d5a14994a6c57bbb8ca410266947a0 introduced 20261109014000_anonymous_daily_evaluation.sql and 20261109035000_daily_score_feedback_private_rls.sql. The first file includes the anonymous date-lock trigger/policy and the recipient-feedback table transition; the second repeats the private-feedback table/policy/function portion. The live ledger has separate names for anonymous feedback, date/anonymity enforcement, anonymous insert permission, and two entries named daily_score_feedback_private_rls. The tracked files provide feature-level evidence, but do not prove the exact SQL/version mapping for all five live entries.
+
+### 8.3 Character catalogue and loadout history
+
+- The live entry 20261114100112_create_character_profiles_table has no same-name checked-in migration file in the audited branch tree or the retrieved migration-path history.
+- The checked-in 20261116102000_sync_all_67_character_profiles.sql is present in Git history (commit 7e131b4f7d6d680fce40487d3ecee8f97b98c0a5). The live ledger has the same name at version 20261116092206; prior project records report that the 67-profile sync migration was applied on 16 Nov. This establishes a likely source relationship, but not an exact version/SQL hash match.
+- The live ledger contains both player_character_loadouts (20261116115255) and player_character_loadout (20261116115907). Git history contains one plural-named file, 20261116120000_player_character_loadouts.sql, introduced with the player character assignment work. Prior records confirm the feature was merged, but do not establish whether the two live entries are separate revisions, a singular/plural rename, or distinct SQL operations. Keep both ledger rows untouched and mark the mapping unresolved.
+
+### 8.4 Prior-operation records for migrations without retained SQL
+
+- The recovery_email_enrollment_otps table was reported as applied on 8 Nov, while the live ledger contains account_recovery_email_and_otp at 20261108052253. The feature relationship is plausible, but the prior record contains no exact migration SQL, version, or application mechanism; classify as probable, not verified.
+- player_drill_assignments was reported as created on 7 Nov and is present in the live ledger at 20261107133318. The prior record references a GitHub commit but does not preserve the SQL or a migration-file path. Exact provenance remains unverified.
+- Prior records report team_scoped_retention_policies as the latest migration on 10 Nov; the live ledger records it at 20261109095926, and the repository contains a similarly named file with a different timestamp. This is a name-level match, not an exact version match.
+- Prior project history also records a data reset on 8 Nov that preserved database structure, functions, and migrations. It is not migration provenance evidence and must not be interpreted as a migration-ledger reset.
+
+### 8.5 Reconciliation status
+
+| Evidence class | Result | Treatment |
+|---|---|---|
+| Exact version + name matches | 2 | Keep as exact matches |
+| Same name, different live/repository version | 18 | Preserve as timestamp mismatches until exact source mapping is proven |
+| Same feature, different migration name | At least 3 candidates | Record as probable mappings only; do not rename ledger rows |
+| Git-confirmed historical rename/replacement | Scrims pair | Source alignment reconstructed; do not replay old filenames |
+| Duplicate live migration name | 2 ledger rows, 1 tracked source file | Unresolved; no deletion, reapplication, or ledger rewrite |
+| Live migrations without recoverable checked-in SQL | Remaining entries | Unresolved pending original SQL/application records |
+
+The Git and prior-conversation evidence improves provenance coverage, but it does **not** reconcile every live migration. Supabase's migration ledger stores version/name metadata, not the SQL body or a content hash. The available project history does not preserve the original SQL/application record for every direct database operation. No migration SQL should be inferred from the current schema alone.
+
+**E Phase One.5 remains IN PROGRESS.** The migration provenance gate is not met; the timezone design remains provisional and unapproved. No database or migration-history changes were made during this reconstruction.
