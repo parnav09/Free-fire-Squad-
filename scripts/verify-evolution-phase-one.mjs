@@ -95,3 +95,46 @@ test("E Phase One.2 exposes an explicit team choice when identity is ambiguous",
 test("E Phase One.2 clears active team state on sign-out", () => {
   assert.ok(appSource.includes('setTeamChoices([]);setJoinRequests([]);setIglUserId("");'));
 });
+
+
+const guardSource = await readFile(new URL("../src/lib/latest-request-guard.ts", import.meta.url), "utf8");
+const guardCompiled = ts.transpileModule(guardSource, {
+  compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 },
+}).outputText;
+const guardModule = await import("data:text/javascript;base64," + Buffer.from(guardCompiled).toString("base64"));
+
+test("E Phase One.3: a newer team-load request invalidates an older request", async () => {
+  const guard = guardModule.createLatestRequestGuard();
+  let resolveOlder;
+  let resolveNewer;
+  const olderResult = new Promise((resolve) => { resolveOlder = resolve; });
+  const newerResult = new Promise((resolve) => { resolveNewer = resolve; });
+  const committed = [];
+  const olderId = guard.begin();
+  const older = olderResult.then((value) => { if (guard.isCurrent(olderId)) committed.push(value); });
+  const newerId = guard.begin();
+  const newer = newerResult.then((value) => { if (guard.isCurrent(newerId)) committed.push(value); });
+  resolveNewer("new-team");
+  await newer;
+  resolveOlder("old-team");
+  await older;
+  assert.deepEqual(committed, ["new-team"]);
+});
+
+test("E Phase One.3: sign-out invalidates every in-flight team-load request", () => {
+  const guard = guardModule.createLatestRequestGuard();
+  const requestId = guard.begin();
+  guard.invalidate();
+  assert.equal(guard.isCurrent(requestId), false);
+});
+
+test("E Phase One.3: loadTeam checks request freshness after async boundaries and ignores stale errors", () => {
+  const loadStart = appSource.indexOf("const loadTeam = async");
+  const loadEnd = appSource.indexOf("const createTeam = async", loadStart);
+  const loadBlock = appSource.slice(loadStart, loadEnd);
+  assert.match(appSource, /teamLoadGuardRef=useRef\(createLatestRequestGuard\(\)\)/);
+  assert.match(loadBlock, /const requestId=teamLoadGuardRef\.current\.begin\(\)/);
+  assert.ok((loadBlock.match(/if\(!isCurrent\(\)\)return;/g) || []).length >= 6);
+  assert.match(loadBlock, /catch\(error\)\s*\{\s*if\(isCurrent\(\)\)throw error;/);
+  assert.match(appSource, /teamLoadGuardRef\.current\.invalidate\(\);setTeam\(null\)/);
+});
