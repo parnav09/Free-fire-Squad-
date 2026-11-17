@@ -260,10 +260,10 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 
 ## 8. Build and delivery evidence
 
-- GitHub Actions run #38 for commit `d01b40286e1424973073d918d0ec444949c863a4` completed successfully.
+- GitHub Actions run #39 for PR head commit `9797223f7b527d6a33f253a42c77389acb809c0a` completed successfully.
 - Its single job passed dependency installation, lockfile artifact export, TypeScript typecheck, foundation tests, character-data tests, all eight Evolution legacy regression-contract tests, and the Vite production build.
 - The build completed with a non-blocking Vite chunk-size warning: the main JavaScript chunk is approximately 333 kB minified, above the configured 250 kB warning threshold. No build error occurred. This general bundle-size follow-up is not a reason to expand Phase Zero into unrelated app-wide performance work.
-- This CI run verifies the Phase Zero code and regression tests at that commit. Any later source or workflow change requires a new successful run.
+- This CI run verifies the current Phase Zero code, tests, and audit document at the PR head. Any later source or workflow change requires a new successful run.
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
 - The Vercel Preview status previously reported READY by the GitHub integration, but no approved-scope browser smoke test or Android/tablet/desktop interaction QA is claimed here.
 - No production deployment or promotion was performed as part of this audit.
