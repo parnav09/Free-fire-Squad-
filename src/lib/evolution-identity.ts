@@ -92,3 +92,87 @@ export function teamDateISO(date: Date, timeZone: string): string {
   const part = (type: string) => parts.find((item) => item.type === type)?.value ?? "";
   return `${part("year")}-${part("month")}-${part("day")}`;
 }
+
+
+export type TeamSessionEligibility =
+  | { eligible: true; identity: StableTeamIdentity }
+  | {
+      eligible: false;
+      reason:
+        | "unauthenticated"
+        | "invalid-auth-user"
+        | "missing-membership"
+        | "invalid-membership"
+        | "inactive-membership"
+        | "user-mismatch"
+        | "team-mismatch";
+    };
+
+/**
+ * Check whether the current authenticated user still owns the exact active
+ * membership selected for this team. This is a client-side consistency guard,
+ * not an authorization boundary; Supabase RLS/RPC policies remain authoritative.
+ */
+export function resolveTeamSessionEligibility(
+  authUserId: unknown,
+  membership: MembershipRow | null | undefined,
+  expectedTeamId: unknown,
+): TeamSessionEligibility {
+  if (authUserId == null || authUserId === "") {
+    return { eligible: false, reason: "unauthenticated" };
+  }
+  if (!isStableUuid(authUserId)) {
+    return { eligible: false, reason: "invalid-auth-user" };
+  }
+  if (!membership) {
+    return { eligible: false, reason: "missing-membership" };
+  }
+  if (
+    !isStableUuid(membership.id) ||
+    !isStableUuid(membership.team_id) ||
+    !isStableUuid(membership.user_id) ||
+    typeof membership.membership_role !== "string" ||
+    membership.membership_role.trim().length === 0
+  ) {
+    return { eligible: false, reason: "invalid-membership" };
+  }
+  if (membership.status !== "active") {
+    return { eligible: false, reason: "inactive-membership" };
+  }
+  if (membership.user_id.toLowerCase() !== authUserId.toLowerCase()) {
+    return { eligible: false, reason: "user-mismatch" };
+  }
+  if (!isStableUuid(expectedTeamId) || membership.team_id.toLowerCase() !== expectedTeamId.toLowerCase()) {
+    return { eligible: false, reason: "team-mismatch" };
+  }
+
+  return {
+    eligible: true,
+    identity: {
+      authUserId: authUserId.toLowerCase(),
+      membershipId: membership.id.toLowerCase(),
+      teamId: membership.team_id.toLowerCase(),
+      membershipRole: membership.membership_role,
+    },
+  };
+}
+
+export type TeamUiCapabilities = {
+  canManageTeamSettings: boolean;
+  canManageAssignments: boolean;
+};
+
+/**
+ * UI visibility/affordance hints only. These booleans must never be treated
+ * as server authorization; protected writes still require RLS/RPC enforcement.
+ */
+export function getTeamUiCapabilities(
+  membershipRole: unknown,
+  ownerPowerEnabled: boolean,
+): TeamUiCapabilities {
+  const role = typeof membershipRole === "string" ? membershipRole : "";
+  return {
+    canManageTeamSettings: role === "owner",
+    canManageAssignments: role === "coach" || (role === "owner" && ownerPowerEnabled === true),
+  };
+}
