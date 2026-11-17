@@ -158,12 +158,10 @@ These counts show that the competitive match ledger and drill library have recor
 
 ### EV2-AUD-004 — Evaluation and feedback are separate writes (atomic fix deferred)
 
-- `saveEvaluation` inserts the `daily_scores` row first.
-- Private feedback is inserted afterward into `daily_score_feedback`.
-- If the feedback insert fails, the score remains saved and the UI reports a partial-success state.
-
-**Impact:** one logical evaluation can exist without its intended feedback. The current UI reports this as a partial save rather than claiming full success.  
-**Future build:** atomic score + feedback transaction, idempotency, and fault-injection tests belong to Evolution Phase Four. Implementing that now would prematurely build the future evaluation transaction and require database/API work; no schema or historical data is changed in Phase Zero.
+- Before the Phase Zero fix, `saveEvaluation` inserted the `daily_scores` row first and then separately inserted private feedback into `daily_score_feedback`.
+- If the second write failed, a score could remain without its intended feedback.
+- **Phase Zero fix on this PR branch:** private feedback entry is paused in the legacy form; the current form saves scores only. Existing private feedback remains visible in the recipient inbox. This removes the non-atomic two-write path without adding schema/API work or deleting history.
+- **Future build:** Evolution Phase Four will restore private feedback as part of one atomic score + feedback transaction with idempotency and fault-injection tests.
 
 ### EV2-AUD-005 — Realtime evaluation refresh selected columns absent from the live table (fixed on PR branch)
 
@@ -254,7 +252,7 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 - **Weekly/Trends legacy view:** missing or incomplete records no longer count as zero; no-data players show insufficient data; records sort by date, creation time, and ID; generic weekly batch creation is paused; historical assignments remain visible and unchanged.
 - **Training rubric:** all six legacy rubric dimensions must be explicitly selected; new dimension values are stored as raw 1–10 with an explicit storage marker. Historical rubric rows remain untouched.
 - **Analytics boundary:** the current screen is labelled competitive-results-only; player-development analytics remain Evolution Phase Nine.
-- **Regression coverage:** `scripts/verify-evolution-legacy-fixes.mjs` is included in the build pipeline.
+- **Regression coverage:** `scripts/verify-evolution-legacy-fixes.mjs` is included in the build pipeline; it verifies that the legacy save path cannot recreate a partial score/feedback write.
 
 
 ## 8. Build and delivery evidence
@@ -299,8 +297,8 @@ Security-specific migration/grant work remains in the separate Security workstre
 
 **BASELINE AUDIT COMPLETE · LEGACY FIXES UNDER VERIFICATION**
 
-The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. Safe legacy fixes on this PR branch address the P1/default-score defect, stale Realtime refresh, missing-as-zero trend calculation, duplicate weekly batch generation, and advanced rubric scale mismatch.
+The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. Safe legacy fixes on this PR branch address the P1/default-score defect, stale Realtime refresh, missing-as-zero trend calculation, duplicate weekly batch generation, advanced rubric scale mismatch, and the legacy partial score/feedback write path.
 
-The new regression-contract tests and CI run #23 passed for the latest code/test commit. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase.
+The new regression-contract tests and CI run #23 passed for the earlier code/test commit. A further fix now pauses the non-atomic private-feedback form and adds a regression test for that boundary; this newest code change requires its own CI run. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase.
 
 Separate Security work remains outside this Evolution audit and is tracked independently in `docs/security/rls-review.md`.
