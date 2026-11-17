@@ -563,12 +563,19 @@ export default function App() {
     if(iglResult.error)throw iglResult.error;
     if(capacityResult.error)throw capacityResult.error;
     const capacityValue=Number(capacityResult.data?.setting_value);
-    setRosterCapacity(Number.isInteger(capacityValue)&&capacityValue>=4&&capacityValue<=10?capacityValue:((await supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","fifth_player").maybeSingle()).data?.setting_value===true?5:4));
+    let fallbackCapacity=4;
+    if(!Number.isInteger(capacityValue)||capacityValue<4||capacityValue>10){
+      const {data:fifthPlayerSetting}=await supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","fifth_player").maybeSingle();
+      if(!isCurrent())return;
+      fallbackCapacity=fifthPlayerSetting?.setting_value===true?5:4;
+    }
     if(!isCurrent())return;
+    setRosterCapacity(Number.isInteger(capacityValue)&&capacityValue>=4&&capacityValue<=10?capacityValue:fallbackCapacity);
     setTeamMembers((membersResult.data||[]).map(x=>({...x,display_name:x.display_name||"Player"})));
     const reqs=requestsResult.data||[];
     const reqIds=reqs.map(q=>q.user_id);
     const {data:rp,error:profilesError}=reqIds.length?await supabase.from("profiles").select("id,display_name").in("id",reqIds):{data:[],error:null};
+    if(!isCurrent())return;
     if(profilesError)throw profilesError;
     setJoinRequests(reqs.map(q=>({...q,display_name:rp?.find(p=>p.id===q.user_id)?.display_name||"New player"})));
     setIglUserId(String(iglResult.data?.setting_value||""));
