@@ -75,6 +75,30 @@ The following is the live public-schema inventory observed on 18 November 2026. 
 
 No live table with a peer-evaluation inbox, peer cohort, evidence-item, canonical evaluation-dimension, weekly-review snapshot, or canonical development-task name was found in the inspected table-name inventory. Treat those Version 2 capabilities as **not yet verified/implemented**, not as completed features.
 
+### 3.2 Column-level dictionary
+
+The following column inventory was read from `information_schema.columns`. It is included so later phases can map existing fields before proposing new ones.
+
+- `teams`: id, team_name, team_description, owner_id, timezone, invite_code, created_at, updated_at, avatar_url, deletion_scheduled_at, deletion_reason
+- `team_members`: id, team_id, user_id, player_number, assigned_role, membership_role, status, joined_at, display_name, character_loadout
+- `daily_scores`: id, team_id, score_date, player_id, evaluator_id, communication, coordination, decision_making, role_execution, map_awareness, total, notes, improvement_target, created_at, updated_at, review_visibility
+- `daily_score_feedback`: id, score_id, team_id, player_id, improvement_target, improvement_notes, mistake_notes, context_notes, created_at
+- `player_drill_assignments`: id, team_id, player_id, assigned_by, drill_title, drill_description, due_date, status, completion_note, completed_at, created_at
+- `practice_plans`: id, team_id, title, plan_date, plan_type, focus, objectives, notes, status, planned_minutes, actual_minutes, review_notes, created_by, created_at, updated_at, completed_at, reviewed_at, map_name, drop_zone, rotation_notes, scrim_matches, rules_notes
+- `practice_plan_blocks`: id, team_id, plan_id, title, category, instructions, expected_outcome, duration_minutes, sort_order, linked_drill_id, created_at
+- `practice_tasks`: id, team_id, plan_id, block_id, player_member_id, title, instructions, priority, status, due_date, estimated_minutes, success_criteria, completion_note, review_feedback, assigned_by, created_at, updated_at, completed_at, reviewed_at, blocked_reason, task_category, source_session_id, due_at, completion_submitted_by, completion_acknowledged_at
+- `practice_task_events`: id, task_id, team_id, actor_id, event_type, from_status, to_status, note, created_at
+- `training_drills`: id, team_id, is_template, title, category, difficulty, role_tags, duration_minutes, objective, setup, steps, success_criteria, scoring_rubric, tags, archived, created_by, created_at, updated_at
+- `training_sessions`: id, team_id, plan_id, drill_id, title, session_type, scheduled_at, duration_minutes, status, instructions, coach_notes, created_by, created_at, updated_at, completed_at
+- `training_session_participants`: id, team_id, session_id, player_member_id, attendance, participation_notes, created_at
+- `training_results`: id, team_id, session_id, player_member_id, attempt_number, score, rubric, completed, player_reflection, coach_feedback, next_action, replay_reference, submitted_by, created_at
+- `training_session_notes`: id, team_id, note_date, notes, updated_by, updated_at
+- `team_ratings`: id, team_id, week_start, evaluator_id, communication_quality, team_coordination, igl_decision_making, rotation_management, role_consistency, map_adaptation, match_consistency, survival_decisions, replay_improvement, total, notes_worked, notes_wrong, next_focus, created_at, updated_at
+- `scrim_records`: id, team_id, owner_id, scrim_date, match_count, matches, overall_rank, total_teams, personal_review, created_at, updated_at
+- `scrim_team_reviews`: id, scrim_id, team_id, author_id, category, match_number, title, detail, solution, created_at
+- `tournament_cycles`: id, team_id, cycle_start, cycle_end, title, registration_open_at, registration_close_at, status, roster_snapshot, created_by, created_at, updated_at
+- `tournament_matches`: id, cycle_id, team_id, match_day, match_number, map_name, drop_location, placement, kills, points, status, notes, recorded_by, verified_by, verified_at, version, created_at, updated_at
+
 ## 4. Live aggregate data snapshot
 
 Exact read-only row counts returned on 18 November 2026:
@@ -241,7 +265,22 @@ Until a later phase provides a reviewed migration and compatibility plan, preser
 
 Do not reset production data, merge legacy task tables destructively, silently convert historical scores, or overwrite historical role/context.
 
-## 10. Evolution Phase Zero decision
+## 10. Evolution migration and rollback plan
+
+No Evolution schema migration is authorized or required to complete this audit. The following is the required safe sequence for later implementation:
+
+1. Freeze the current source-to-table map in this audit and export a schema/data backup before any Evolution migration.
+2. Reconcile migration provenance and the live schema against the checked-in migration directory before creating a new migration. Do not assume the current migration folder can recreate production.
+3. Prefer additive tables/columns and compatibility views/adapters first. Do not rename/drop either legacy task table or rewrite historical score values during the first cutover.
+4. Backfill only through an idempotent, reviewed script that records source table, source row ID, mapping version, and outcome. Compare source/target counts and relationship checks before enabling reads from the new model.
+5. Use a controlled dual-read or compatibility adapter during transition; avoid dual-write unless the operation is atomic and retry-safe.
+6. Switch one consumer at a time behind a reversible feature flag. Keep the old read path available until parity checks pass.
+7. Roll back by disabling the new consumer/flag and returning reads to the preserved legacy source. Do not roll back by deleting migrated or historical rows.
+8. Remove legacy paths only in a later, separately approved phase after export, parity, retention, and rollback windows have been proven.
+
+Security-specific migration/grant work remains in the separate Security workstream.
+
+## 11. Evolution Phase Zero decision
 
 **AUDIT DELIVERABLES COMPLETE**
 
