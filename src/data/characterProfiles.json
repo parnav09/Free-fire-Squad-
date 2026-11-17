@@ -338,7 +338,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Active dash that destroys Gloo Walls and knocks back enemies.",
-    "introHi": "Oscar ki Active Dash Skill Gloo Walls tod deti hai aur saamne aane wale enemies ko peeche dhakel deti hai.",
+    "introHi": "Oscar ki Active tezi se aage badhta Skill Gloo Walls tod deti hai aur saamne aane wale enemies ko peeche dhakel deti hai.",
     "currentEn": [
       "Dashes toward the target direction, detonating the first 3 Gloo Walls in the way with 25 DMG, while also dealing 25 DMG to and knocking back enemies encountered."
     ],
@@ -974,7 +974,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB42 (Oct 2023)",
     "introEn": "Electromagnetic wave that blocks enemy skills, deals damage and interrupts interactions.",
-    "introHi": "A124 ek Electromagnetic Wave release karti hai, jo Enemy ki Skills block karti hai, Damage deti hai aur unki ongoing Interactions rok deti hai.",
+    "introHi": "A124 ek Electromagnetic Wave release karti hai, jo Enemy ki Skills block karti hai, Damage deti hai aur unki ongoing kisi cheez ko use karne ka action rok deti hai.",
     "currentEn": [
       "Unleashes an 8m electromagnetic wave. Enemies inside cannot activate skills, take 25 DMG, and have their interaction countdowns (such as reviving) interrupted."
     ],
@@ -1049,7 +1049,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB46 (Sep 2024)",
     "introEn": "Passive that slows armor durability loss and adds armor damage reduction, boosted by nearby teammates.",
-    "introHi": "Andrew ki Passive Skill Armor Durability kam hone ki Speed ghataati hai aur Armor Damage Reduction deti hai. Aas-paas ke teammates se iska bonus aur badhta hai.",
+    "introHi": "Andrew ki Passive Skill Armor armor ki majbooti kam hone ki Speed ghataati hai aur Armor Damage Reduction deti hai. Aas-paas ke teammates se iska bonus aur badhta hai.",
     "currentEn": [
       "Armor loses durability 40% slower. Wolf Pack adds 4% armor damage reduction, plus 1% for every teammate within 15m."
     ],
@@ -1485,7 +1485,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB53 (2 Apr 2026)",
     "introEn": "Passive that restores HP when Jota hits and knocks down enemies.",
-    "introHi": "Jota ki Passive Skill Enemy ko hit karne par HP restore karti hai. Enemy ko Knockdown karne par bhi extra HP milti hai.",
+    "introHi": "Jota ki Passive Skill Enemy ko hit karne par HP wapas deta karti hai. Enemy ko Knockdown karne par bhi extra HP milti hai.",
     "rows": [
       {
         "en": "Gun hit",
@@ -1553,7 +1553,7 @@
     "status": "OB55 values reconciled · 14 Nov 2026",
     "lastChanged": "OB45 (26 Jun 2024)",
     "introEn": "Active scan that reveals enemy positions and shares them with the squad.",
-    "introHi": "Clu ka Active Scan Enemy ki location reveal karta hai aur unki position Squad ke saath share karta hai.",
+    "introHi": "Clu ka Active Scan Enemy ki location location dikha deta karta hai aur unki position Squad ke saath share karta hai.",
     "rows": [
       {
         "en": "Scan range",
@@ -1795,7 +1795,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB47 (2 Dec 2024)",
     "introEn": "Passive that boosts explosive damage and range, and splits each grenade into mini grenades after it explodes.",
-    "introHi": "Alvaro ki Passive Skill Explosive Damage aur Range badhati hai. Grenade explode hone ke baad woh 3 Mini Grenades mein split ho jata hai.",
+    "introHi": "Alvaro ki Passive Skill Explosive Damage aur kitni door tak badhati hai. Grenade explode hone ke baad woh 3 Mini Grenades mein split ho jata hai.",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
@@ -1875,7 +1875,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB36 (Sep 2022)",
     "introEn": "Passive that restores EP for every enemy Miguel knocks down.",
-    "introHi": "Miguel ki Passive Skill har Enemy Knockdown par EP restore karti hai.",
+    "introHi": "Miguel ki Passive Skill har Enemy Knockdown par EP wapas deta karti hai.",
     "status": "OB55 values reconciled · 14 Nov 2026",
     "rows": [
       {
@@ -2448,7 +2448,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB51 (Oct 2025)",
     "introEn": "Passive that restores HP over time after Ford takes damage.",
-    "introHi": "Ford ki Passive Skill Damage lagne ke baad samay ke saath HP restore karti hai.",
+    "introHi": "Ford ki Passive Skill Damage lagne ke baad samay ke saath HP wapas deta karti hai.",
     "currentEn": [
       "Gains 10 HP/s for 3 seconds when taking damage. The skill resets immediately after Ford releases an active skill."
     ],
@@ -2526,7 +2526,7 @@
     "status": "OB55 values reconciled · 15 Nov 2026",
     "lastChanged": "OB46 (4 Sep 2024)",
     "introEn": "Active skill that switches between EP-conversion support and personal EP recovery modes.",
-    "introHi": "K ki Active Skill EP-conversion support aur khud EP recover karne wale do Modes ke beech switch karti hai.",
+    "introHi": "K ki Active Skill EP-badalna support aur khud EP recover karne wale do Modes ke beech switch karti hai.",
     "currentEn": [
       "Master of All increases Max EP by 50. Jiu-jitsu Mode boosts EP conversion for allies within 15m by 600%. Psychology Mode restores 3 EP every 1s, up to 250 EP."
     ],
@@ -2850,7 +2850,7 @@
     "status": "OB55 values reconciled · 15 Nov 2026",
     "lastChanged": "OB52 (9 Jan 2026)",
     "introEn": "Active mobility skill that dashes forward and refreshes its cooldown after a timely knockdown.",
-    "introHi": "Tatsuya ki Active Mobility Skill aage ki taraf Dash karti hai. Sahi waqt par Knockdown karne se iska Cooldown reset ho jata hai.",
+    "introHi": "Tatsuya ki Active Mobility Skill aage ki taraf tezi se aage badhta karti hai. Sahi waqt par Knockdown karne se iska Cooldown reset ho jata hai.",
     "currentEn": [
       "Rushes forward quickly for 0.3s. Knocking down an enemy within 10s after skill release resets Rebel Rush's cooldown. If no qualifying knockdown occurs, cooldown is 90s."
     ],
@@ -3352,7 +3352,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB50 (30 Jul 2025)",
     "introEn": "Passive ability that restores deployed Gloo Wall durability and provides limited HP recovery to nearby teammates.",
-    "introHi": "Nairi ki Passive Ability deployed Gloo Wall ki Durability restore karti hai aur aas-paas ke teammates ko limited HP Recovery deti hai.",
+    "introHi": "Nairi ki Passive Ability deployed Gloo Wall ki armor ki majbooti wapas deta karti hai aur aas-paas ke teammates ko limited HP Recovery deti hai.",
     "currentEn": [
       "After a Gloo Wall is deployed, it restores 160 durability per second during a 1.5-second effect window.",
       "Teammates within 5m recover 5 HP per second during the effect window."
@@ -3612,7 +3612,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB38 (11 Jan 2023)",
     "introEn": "Passive ability that restores HP after Leon survives combat.",
-    "introHi": "Leon ki Passive Ability Combat se bachkar nikalne ke baad HP restore karti hai.",
+    "introHi": "Leon ki Passive Ability Combat se bachkar nikalne ke baad HP wapas deta karti hai.",
     "currentEn": [
       "After surviving combat, Leon recovers 60 HP at a rate of 4 HP per second for 15 seconds."
     ],
@@ -3716,7 +3716,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Active ability that activates an aurora effect, increases movement speed and periodically reveals enemies behind cover.",
-    "introHi": "Koda ki Active Ability Aurora Effect activate karti hai, Movement Speed badhati hai aur time-time par cover ke peeche maujood Enemy ko reveal karti hai.",
+    "introHi": "Koda ki Active Ability Aurora Effect chaalu hona karti hai, Movement Speed badhati hai aur time-time par cover ke peeche maujood Enemy ko location dikha deta karti hai.",
     "currentEn": [
       "Activates the Aurora power for 8 seconds and increases movement speed by 15%.",
       "Reveals enemies behind cover within 50m every 1 second; crouching or prone enemies cannot be detected.",
@@ -3956,7 +3956,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB42 (30 Oct 2023)",
     "introEn": "Active healing zone that restores HP to Dimitri and nearby allies, and automatically starts self-recovery for downed players inside it.",
-    "introHi": "Dimitri ka Active Healing Zone Dimitri aur aas-paas ke allies ko HP restore karta hai. Zone ke andar Knockdown hue players ka Self-recovery automatically shuru ho jata hai.",
+    "introHi": "Dimitri ka Active Healing Zone Dimitri aur aas-paas ke allies ko HP wapas deta karta hai. Zone ke andar Knockdown hue players ka Self-recovery automatically shuru ho jata hai.",
     "currentEn": [
       "Creates a healing zone with a 3.5m radius.",
       "Dimitri and allies inside the zone recover 10 HP per second.",
@@ -4255,7 +4255,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB52 (09 Jan 2026)",
     "introEn": "Active skill that grants temporary Shield Points, which refill and refresh the skill duration when Xayne knocks down an enemy.",
-    "introHi": "Xayne ki Active Skill temporary Shield Points deti hai. Enemy ko Knockdown karne par Shield Points refill hote hain aur Skill Duration reset ho jati hai.",
+    "introHi": "Xayne ki Active Skill temporary Shield Points deti hai. Enemy ko Knockdown karne par Shield Points refill hote hain aur Skill kitni der tak reset ho jati hai.",
     "currentEn": [
       "Enters the Xtreme state and instantly gains 70 temporary Shield Points for 15 seconds.",
       "Each enemy knockdown during the state restores the temporary Shield Points from this skill back to 70 and resets the state duration.",
@@ -4512,7 +4512,7 @@
     "lastChanged": "OB54 (23 Jun 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that scales weapon damage based on the distance to the target and deals extra damage to marked enemies.",
-    "introHi": "Maro ki Passive Skill target se Doorie ke hisaab se Weapon Damage badhati hai aur Mark hue Enemy ko extra Damage deti hai.",
+    "introHi": "Maro ki Passive Skill aim kiya hua se Doorie ke hisaab se Weapon Damage badhati hai aur Mark hue Enemy ko extra Damage deti hai.",
     "currentEn": [
       "Damage increases with distance, up to a maximum of 20%. Damage to marked enemies increases by 5%."
     ],
@@ -4598,7 +4598,7 @@
     "lastChanged": "OB53 (02 Apr 2026)",
     "status": "OB55 values reconciled 15 Nov 2026",
     "introEn": "Passive that marks attackers who hit the user and grants massive armor penetration on the first retaliatory shot.",
-    "introHi": "Shirou ki Passive Skill use hit karne wale attackers ko Mark karti hai aur pehli retaliatory Shot par Armor Penetration badhati hai.",
+    "introHi": "Shirou ki Passive Skill use hit karne wale attackers ko Mark karti hai aur pehli retaliatory Shot par Armor armor ke paar damage badhati hai.",
     "currentEn": [
       "When hit by an enemy from within 100m, the attacker is marked for 8 seconds. Intel is shared with teammates. The first shot on marked enemies has 100% additional armor penetration. Maximum of 4 markings active at once."
     ],
@@ -5114,7 +5114,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB47 (3 Dec 2024)",
     "introEn": "A passive ability that increases sprinting speed and activates Deadly Velocity after a sustained sprint, empowering the first shot that hits a target during its active window.",
-    "introHi": "KELLY ki Passive Ability Sprinting Speed badhati hai. Lagataar Sprint karne ke baad Deadly Velocity activate hoti hai, jo active window mein target ko lagne wali pehli Shot ka Damage badhati hai.",
+    "introHi": "KELLY ki Passive Ability Sprinting Speed badhati hai. Lagataar Sprint karne ke baad Deadly Velocity chaalu hona hoti hai, jo active window mein aim kiya hua ko lagne wali pehli Shot ka Damage badhati hai.",
     "currentEn": [
       "Sprinting speed increases by 6%. Sprint continuously for 4 seconds to activate Deadly Velocity. The effect lasts 5 seconds; the first shot that hits a target during this window deals 106% damage."
     ],
@@ -5237,7 +5237,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB47 (3 Dec 2024)",
     "introEn": "A passive ability that combines armor penetration and frontal damage reduction, with both effects scaling as maximum HP is lost.",
-    "introHi": "HAYATO ki Passive Ability Armor Penetration aur saamne se milne wale Damage Reduction ko combine karti hai. Maximum HP kam hone ke saath dono Effects badhte hain.",
+    "introHi": "HAYATO ki Passive Ability Armor armor ke paar damage aur saamne se milne wale Damage Reduction ko combine karti hai. Maximum HP kam hone ke saath dono Effects badhte hain.",
     "currentEn": [
       "For every 10% decrease in maximum HP, armor penetration increases by 3.5% and frontal damage taken decreases by 2%."
     ],
@@ -5466,7 +5466,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB33 (23 Mar 2022)",
     "introEn": "Active that creates a protective graffiti area that blocks throwables, reduces bullet damage, and restores armor.",
-    "introHi": "STEFFIE ki Active Skill ek Protective Graffiti Area banati hai, jo Throwables ko block karta hai, Bullet Damage kam karta hai aur Armor restore karta hai.",
+    "introHi": "STEFFIE ki Active Skill ek Protective Graffiti Area banati hai, jo Throwables ko block karta hai, Bullet Damage kam karta hai aur Armor wapas deta karta hai.",
     "currentEn": [
       "Creates a 4m area that completely blocks incoming throwables. Allies inside the area restore 10% armor durability every second, and ammunition damage taken from enemies is reduced by 20%. The effects do not stack."
     ],
@@ -5544,7 +5544,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB54 (23 Jun 2026)",
     "introEn": "Passive that increases driving speed and reduces damage taken while making the user harder to target on mounts.",
-    "introHi": "MISHA ki Passive Skill Driving Speed badhati hai aur Vehicle ke andar milne wala Damage kam karti hai. Drive ya ride karte waqt Enemy ke liye use target karna mushkil hota hai.",
+    "introHi": "MISHA ki Passive Skill Driving Speed badhati hai aur Vehicle ke andar milne wala Damage kam karti hai. Drive ya ride karte waqt Enemy ke liye use aim kiya hua karna mushkil hota hai.",
     "currentEn": [
       "Increases driving speed by 20% and reduces damage taken while inside vehicles by 30%. The user becomes harder to be targeted by enemy aim while driving or riding."
     ],
@@ -5759,7 +5759,7 @@
     "badge": "Official-source profile",
     "lastChanged": "OB19 (11 Dec 2019)",
     "introEn": "Passive that acts as a mobile healing station, restoring health for all squadmates residing within a driven vehicle.",
-    "introHi": "NOTORA ki Passive Skill ek mobile Healing Station ki tarah kaam karti hai aur moving Vehicle mein maujood sabhi Squadmates ko HP restore karti hai.",
+    "introHi": "NOTORA ki Passive Skill ek mobile Healing Station ki tarah kaam karti hai aur moving Vehicle mein maujood sabhi Squadmates ko HP wapas deta karti hai.",
     "currentEn": [
       "When driving a vehicle, restores 5 HP every 2 seconds for the driver and all passengers on the vehicle. Multiple instances of this skill do not stack."
     ],
