@@ -143,3 +143,12 @@ This section records evidence recovered from Git commit history and prior projec
 The Git and prior-conversation evidence improves provenance coverage, but it does **not** reconcile every live migration. Supabase's migration ledger stores version/name metadata, not the SQL body or a content hash. The available project history does not preserve the original SQL/application record for every direct database operation. No migration SQL should be inferred from the current schema alone.
 
 **E Phase One.5 remains IN PROGRESS.** The migration provenance gate is not met; the timezone design remains provisional and unapproved. No database or migration-history changes were made during this reconstruction.
+
+
+### 8.6 Initial database-application records — exact SQL unavailable
+
+Prior conversation records establish that additional Supabase migrations were applied on 7 Nov and that the assistant reported three new migrations, bringing the applied total to eight. The summary mentions security/performance work, assignment hardening, realtime, session notes, and RLS fixes, but does not retain the exact SQL blocks, exact version/name-to-SQL mapping, or a reliable application-tool record. An earlier summary in the same history reported five migrations before the later report of eight, so counts alone are not reliable provenance.
+
+A separate 8 Nov record reports that recovery-email enrollment OTP storage was applied, but likewise lacks the exact migration SQL/version and application workflow. The live ledger's account-recovery entry is therefore only a probable feature mapping.
+
+These records confirm that some live database changes were made outside the currently retained migration files, but they do not supply enough evidence to reconstruct the exact source SQL. They must remain unresolved rather than be reverse-engineered from the current schema and treated as original source.
