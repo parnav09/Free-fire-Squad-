@@ -69,28 +69,14 @@ function scorePet(pet: PetEntry, rawQuery: string) {
 
 type Props = { onBack: () => void };
 function KittyArtwork() {
-  return <svg className="pet-artwork-svg" viewBox="0 0 320 460" role="img" aria-label="Kitty full-body companion illustration" focusable="false">
-    <defs>
-      <linearGradient id="kitty-fur" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#fff"/><stop offset=".55" stopColor="#dce8f2"/><stop offset="1" stopColor="#91a9bc"/></linearGradient>
-      <linearGradient id="kitty-shadow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f7fbff"/><stop offset="1" stopColor="#a8bdce"/></linearGradient>
-      <filter id="kitty-glow" x="-40%" y="-30%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
-    </defs>
-    <ellipse cx="161" cy="430" rx="92" ry="13" fill="#4fcfff" opacity=".2" filter="url(#kitty-glow)"/>
-    <path d="M218 333c55-8 71 25 54 52-11 18-35 20-50 5" fill="none" stroke="#b8cad8" strokeWidth="20" strokeLinecap="round"/>
-    <path d="M218 333c55-8 71 25 54 52-11 18-35 20-50 5" fill="none" stroke="#f5faff" strokeWidth="12" strokeLinecap="round"/>
-    <path d="M103 272c-24 13-34 49-32 91l-7 47c-1 11 7 18 18 18h29c10 0 15-7 15-17l3-44 15-1 4 45c1 10 7 17 17 17h28c11 0 18-7 17-18l-8-52c-3-39-13-74-38-87z" fill="url(#kitty-shadow)" stroke="#d9e8f4" strokeWidth="3"/>
-    <path d="M95 297c-17 22-20 59-18 91l-3 23h27l9-61 9 61h21l-2-83c-1-18-10-30-22-36zM171 292c17 18 22 54 23 90l7 29h-28l-12-63-6 63h-22l3-80c1-19 11-33 35-39z" fill="url(#kitty-fur)"/>
-    <path d="M96 145 79 45c-2-11 9-18 18-10l55 48 55-48c9-8 20-1 18 10l-17 100c-5 44-29 72-57 72s-50-28-55-72z" fill="url(#kitty-fur)" stroke="#d9e8f4" strokeWidth="4"/>
-    <path d="m94 60 10 73 31-40zM226 60l-10 73-31-40z" fill="#e7a5b7" opacity=".8"/>
-    <path d="M112 171c-2-18 8-31 22-31s24 13 23 31c-1 15-10 24-23 24s-21-9-22-24zM165 171c-1-18 9-31 23-31s24 13 22 31c-1 15-10 24-22 24s-22-9-23-24z" fill="#d9f5ff"/>
-    <ellipse cx="135" cy="169" rx="7" ry="11" fill="#142b3e"/><ellipse cx="188" cy="169" rx="7" ry="11" fill="#142b3e"/>
-    <circle cx="137" cy="165" r="2.5" fill="#fff"/><circle cx="190" cy="165" r="2.5" fill="#fff"/>
-    <path d="m155 191 9 0-4 7z" fill="#c77f91"/><path d="M160 198c-8 10-18 10-24 3M160 198c8 10 18 10 24 3" fill="none" stroke="#607b91" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M105 190 69 183M106 202 67 205M214 190l37-7M213 202l39 3" stroke="#9db1c1" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M125 253c18 13 52 13 70 0" fill="none" stroke="#a5bbcb" strokeWidth="4" strokeLinecap="round"/>
-    <path d="M116 276c-5 19 3 34 18 39M204 276c5 19-3 34-18 39" fill="none" stroke="#fff" strokeWidth="7" strokeLinecap="round"/>
-    <path d="M101 408h31M173 408h31" stroke="#839daf" strokeWidth="5" strokeLinecap="round"/>
-  </svg>;
+  return <img
+    className="pet-artwork-image"
+    src="https://i.ytimg.com/vi/XW9Dz-gZ2UM/maxresdefault.jpg"
+    alt="Kitty, the orange-and-white Free Fire pet in its purple striped outfit, from Garena Free Fire's official Kitty pet announcement"
+    loading="eager"
+    decoding="async"
+    referrerPolicy="no-referrer"
+  />;
 }
 
 export default function PetDatabase({ onBack }: Props) {
@@ -156,7 +142,7 @@ export default function PetDatabase({ onBack }: Props) {
           <section className="pet-db-section"><h3>Additional Mechanics &amp; Notes</h3><p>{kittySelected ? "No skill level progression, activation condition or cooldown applies to Kitty." : "Section reserved — awaiting verified source material."}</p></section>
           <section className="pet-db-section"><h3>Patch History</h3><p>{kittySelected ? "No gameplay-skill changes recorded for this no-skill pet profile." : "Reserved for patch-verified updates."}</p></section>
           <section className="pet-db-section"><h3>Official Sources</h3>
-            {kittySelected ? <a href="https://ff.garena.com/en/pets" target="_blank" rel="noreferrer">Garena — Free Fire Pets</a> : <span className="pet-db-source-pending">Source links will be added with each completed profile.</span>}
+            {kittySelected ? <a href="https://ff.garena.com/en/pets" target="_blank" rel="noreferrer">Garena — Official Free Fire Pets catalogue</a><br/><a href="https://www.youtube.com/watch?v=XW9Dz-gZ2UM" target="_blank" rel="noreferrer">Garena Free Fire Indonesia — Official Kitty announcement</a> : <span className="pet-db-source-pending">Source links will be added with each completed profile.</span>}
           </section>
           <div className={selected.status === "verified" ? "pet-db-status" : "pet-db-status is-pending"}><i/>{kittySelected ? "Kitty profile structure ready · no skill invented" : selected.status === "verified" ? "Official name indexed · profile details not entered" : "Unidentified slot · needs official name confirmation"}</div>
         </div>
