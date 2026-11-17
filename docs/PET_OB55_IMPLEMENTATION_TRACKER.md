@@ -45,11 +45,15 @@ Use the existing Pet Database search -> alphabetical cards -> individual detail 
 
 ## Current progress
 - Tracker created before profile batch implementation.
-- Completed: 20 / 28 (Batches 1–4 implemented; Batch 4 preview validation pending)
+- Completed: 25 / 28 (Batches 1–5 implemented; Batch 5 preview validation pending)
 - Batch 2 note: Finn has intentionally incomplete values, release patch/date, progression, patch history, and source URLs because these were not supplied; no values have been inferred.
 - Kitty and Gatito remain a single profile under the `kitty` key; no duplicate pet record is created.
 - Mechanical Pup release remains `2019 · Early Release` because no exact date or OB patch was supplied.
 - Batch 3 preview: Vercel deployment reached READY; build verification completed.
+- Batch 4 preview: Vercel deployment reached READY; build verification completed.
 - Poring's exact repair amount/interval and unlockable names were not present in retrieved report details and remain explicitly unspecified.
+- Pug's exact release date and patch history were not supplied; no date was inferred.
+- Sensei Tig's exact unified OB39 maximum reduction and progression/unlockables were not supplied; historical 30%–40% values remain qualified, not presented as current verified values.
+- Batch 5: Shiba scan interval/cooldown 120s; marker duration 30s. Robo +100 Gloo Wall HP; Rockie -15% active-skill cooldown.
 - Artwork: on hold for all 28
 - Production release: not started / explicitly deferred
