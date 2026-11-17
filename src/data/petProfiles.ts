@@ -152,7 +152,7 @@ export const petProfiles: Record<string, PetProfile> = {
     progression: "Lv2: Celebrate · Lv3: Play · Lv4: Wild Panda",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
-  }
+  },
   "dr-beanie": {
     skill: "Dashy Duckwalk",
     skillType: "Passive",
