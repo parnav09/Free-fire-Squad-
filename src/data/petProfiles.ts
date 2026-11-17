@@ -8,7 +8,6 @@ export type PetProfile = {
   mechanics: string[];
   patchHistory: string[];
   releaseData: string;
-  progression: string;
   sources: { label: string; url: string }[];
   dataStatus: string;
 };
@@ -22,7 +21,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Primary effect", value: "Restores 50 EP upon safe zone shrinkage" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB30 · 2021-09-28" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Bullseye Agent Hop" }
     ],
     effects: [
       "Triggers when the safe zone shrinks and restores 50 EP to the owner.",
@@ -37,7 +35,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "The report states that no balance changes have been recorded since introduction; this has not yet been independently source-checked."
     ],
     releaseData: "OB30 · 2021-09-28",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Bullseye Agent Hop",
     sources: [
       { label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" },
       { label: "User-supplied report reference — Agent Hop", url: "https://ff.garena.com/en/pets/2" }
@@ -52,7 +49,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Primary effect", value: "Purely cosmetic companion" },
       { label: "Cooldown", value: "Not applicable" },
       { label: "Release data", value: "OB52 · 2025-12-02" },
-      { label: "Progression", value: "Exact unlockables not published in the supplied report" }
     ],
     effects: [
       "The supplied report identifies Agumon as a cosmetic-only companion with no combat, resource-generation, or mobility ability."
@@ -65,7 +61,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB52 (2025-12-02): Release data stated in the supplied report; official collaboration and release details remain to be checked."
     ],
     releaseData: "OB52 · 2025-12-02",
-    progression: "Garena does not publish exact unlockables (as stated in supplied report)",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -79,7 +74,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Maximum uses", value: "3 uses per match" },
       { label: "Cooldown", value: "Maximum 3 uses per match (no separate timer supplied)" },
       { label: "Release data", value: "OB37 · 2022-11-16" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Ash Arvon" }
     ],
     effects: [
       "Sends a radar pulse that detects the numerical count of enemies within a 50m radius for six seconds.",
@@ -95,7 +89,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB41: Mini-map activation optimization stated in the supplied report; exact patch wording remains to be checked."
     ],
     releaseData: "OB37 · 2022-11-16",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Ash Arvon",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -108,7 +101,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Affected items", value: "Grenades, Gloo Walls, Flash Freeze, and other throwables (as stated in supplied report)" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB25 · 2021-01-01" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Great White Beaston" }
     ],
     effects: [
       "Increases the throwing distance of throwables by 30%."
@@ -122,7 +114,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "The supplied report does not list a later balance change."
     ],
     releaseData: "OB25 · 2021-01-01",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Great White Beaston",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -135,7 +126,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Trigger", value: "Securing an elimination" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB16 · 2019-06-22" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Wild Panda" }
     ],
     effects: [
       "Restores 10 HP to the owner immediately after an elimination."
@@ -149,7 +139,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "The supplied report lists no later balance change."
     ],
     releaseData: "OB16 · 2019-06-22",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Wild Panda",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -162,7 +151,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Trigger", value: "While crouching" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB27 · 2021-03-31" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Sgt. Beanie" }
     ],
     effects: [
       "Increases the owner's movement speed by 60% while crouching."
@@ -175,7 +163,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB27 (2021-03-31): Release date stated in the supplied report."
     ],
     releaseData: "OB27 · 2021-03-31",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Sgt. Beanie",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -187,7 +174,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Detection effect", value: "Exposes opponents recovering behind structures" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB27 · 2021-04-14" },
-      { label: "Progression", value: "Unlockable nomenclature not published" }
     ],
     effects: [
       "Exposes opponents who are recovering behind structures."
@@ -200,7 +186,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB27 (2021-04-14): Release date stated in the supplied report."
     ],
     releaseData: "OB27 · 2021-04-14",
-    progression: "Unlockable nomenclature not published",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -212,7 +197,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Effect", value: "Disables enemy auto-aim during the parachute phase" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB22 · 2020-06-14" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Evergreen Falco" }
     ],
     effects: [
       "Disables enemy auto-aim against the owner during the parachute phase."
@@ -225,7 +209,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB22 (2020-06-14): Release date stated in the supplied report."
     ],
     releaseData: "OB22 · 2020-06-14",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Evergreen Falco",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -239,7 +222,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Trigger", value: "A teammate is downed" },
       { label: "Cooldown", value: "25 seconds" },
       { label: "Release data", value: "OB36 · 2022-10-18" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Artic Fang" }
     ],
     effects: [
       "When a teammate is downed, grants the owner 30 EP or 15 HP."
@@ -252,7 +234,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB36 (2022-10-18): Release date stated in the supplied report."
     ],
     releaseData: "OB36 · 2022-10-18",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Artic Fang",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -264,7 +245,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Numerical skill values", value: "Not published in the supplied report" },
       { label: "Cooldown parameters", value: "Not published in the supplied report" },
       { label: "Release data", value: "2022 · exact patch/date not supplied" },
-      { label: "Progression", value: "Exact unlockables not published" }
     ],
     effects: [
       "The supplied report identifies Finn's utility as survival-focused but does not provide an exact numerical effect."
@@ -277,7 +257,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "No specific patch-history entry was supplied."
     ],
     releaseData: "2022 · exact patch/date not supplied",
-    progression: "Exact unlockables not published",
     sources: [],
     dataStatus: "Incomplete user-supplied profile · source verification pending"
   },
@@ -291,7 +270,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Mitigation cap", value: "150 durability points" },
       { label: "Trigger", value: "Damage received from behind" },
       { label: "Release data", value: "OB32 · 2022-01-20" },
-      { label: "Progression", value: "Lv3: Play · Lv4: Gamer Flash" }
     ],
     effects: [
       "Reduces damage received from behind by 25%."
@@ -304,7 +282,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB32 (2022-01-20): Release data stated in the supplied report."
     ],
     releaseData: "OB32 · 2022-01-20",
-    progression: "Lv3: Play · Lv4: Gamer Flash",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -317,7 +294,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Scan feed duration increase", value: "+2.5 seconds" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB35 · 2022-08-10" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Frosty Hoot" }
     ],
     effects: [
       "Increases scanning skill distance by 10m and scanning feed duration by 2.5 seconds."
@@ -330,7 +306,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB35 (2022-08-10): Release data stated in the supplied report."
     ],
     releaseData: "OB35 · 2022-08-10",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Frosty Hoot",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -344,7 +319,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "EP ceiling", value: "100 EP" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB38 · 2023-01-11" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Ghost Kactus" }
     ],
     effects: [
       "Restores 10 EP per second after the owner has remained motionless for six seconds."
@@ -357,7 +331,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB38 (2023-01-11): Release data stated in the supplied report."
     ],
     releaseData: "OB38 · 2023-01-11",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Ghost Kactus",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -369,7 +342,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Primary effect", value: "Cosmetic companion" },
       { label: "Cooldown", value: "Not applicable" },
       { label: "Release data", value: "2019-01-22" },
-      { label: "Progression", value: "Garena does not publish exact unlockables" }
     ],
     effects: [
       "Kitty is a cosmetic-only companion with no gameplay ability."
@@ -382,7 +354,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "2019-01-22: Release date stated in the supplied report."
     ],
     releaseData: "2019-01-22",
-    progression: "Garena does not publish exact unlockables",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -394,7 +365,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Primary effect", value: "Cosmetic companion" },
       { label: "Cooldown", value: "Not applicable" },
       { label: "Release data", value: "2019 · Early Release" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play 1 / Play 2 / Scared · Lv4: Lightning Pup" }
     ],
     effects: [
       "Mechanical Pup is a cosmetic-only companion with no combat or utility skill."
@@ -406,7 +376,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "2019 · Early Release: release period stated in the supplied report; exact date and patch were not supplied."
     ],
     releaseData: "2019 · Early Release",
-    progression: "Lv2: Celebrate · Lv3: Play 1 / Play 2 / Scared · Lv4: Lightning Pup",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -419,7 +388,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Trigger", value: "During interaction animations" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB27 · 2021-05-25" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Hipster Moony" }
     ],
     effects: [
       "Reduces damage received by 35% while the owner is performing interaction animations."
@@ -432,7 +400,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB27 (2021-05-25): Release data stated in the supplied report."
     ],
     releaseData: "OB27 · 2021-05-25",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Hipster Moony",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -445,7 +412,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Cooldown", value: "100 seconds" },
       { label: "Gloo Maker EXP", value: "200 EXP in the first 200 seconds (as stated in supplied report)" },
       { label: "Release data", value: "OB23 · 2020-07-25" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Party Waggor" }
     ],
     effects: [
       "Generates a Gloo Wall when the owner's inventory contains fewer than two Gloo Walls."
@@ -458,7 +424,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB23 (2020-07-25): Release data stated in the supplied report."
     ],
     releaseData: "OB23 · 2020-07-25",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Party Waggor",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -470,7 +435,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Additional inventory capacity", value: "+45 slots" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB15 · 2019-05-24" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Captain" }
     ],
     effects: [
       "Increases the owner's inventory capacity by 45 slots."
@@ -483,7 +447,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB15 (2019-05-24): Release data stated in the supplied report."
     ],
     releaseData: "OB15 · 2019-05-24",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Captain",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -495,7 +458,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "HP-to-EP conversion", value: "65% of HP healed" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB21 · 2020-05-13" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Radioactive Ottero" }
     ],
     effects: [
       "Converts 65% of HP healed into EP."
@@ -508,7 +470,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB21 (2020-05-13): Release data stated in the supplied report."
     ],
     releaseData: "OB21 · 2020-05-13",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Radioactive Ottero",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -521,7 +482,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Protection", value: "Prevents high-tier armor destruction" },
       { label: "Cooldown", value: "No cooldown stated in supplied report" },
       { label: "Release data", value: "OB20 · 2020-03-20" },
-      { label: "Progression", value: "Unlockable details not supplied" }
     ],
     effects: [
       "Repairs armor and prevents high-tier armor from being destroyed."
@@ -534,7 +494,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB20 (2020-03-20): Release data stated in the supplied report."
     ],
     releaseData: "OB20 · 2020-03-20",
-    progression: "Unlockable details not supplied",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -546,7 +505,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Primary effect", value: "Cosmetic companion" },
       { label: "Cooldown", value: "Not applicable" },
       { label: "Release data", value: "Exact release date not published by Garena" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Tigerstripe Pug" }
     ],
     effects: [
       "Pug is a cosmetic-only companion and has no gameplay ability."
@@ -558,7 +516,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "No patch-history entry was supplied."
     ],
     releaseData: "Exact release date not published by Garena",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Tigerstripe Pug",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -570,7 +527,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Additional Gloo Wall HP", value: "+100 HP" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB23 · 2020-07-25" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Pharaoh's Robo" }
     ],
     effects: [
       "Adds an additional 100 HP energy shield to deployed Gloo Walls."
@@ -582,7 +538,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB23 (2020-07-25): Release data stated in the supplied report."
     ],
     releaseData: "OB23 · 2020-07-25",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Pharaoh's Robo",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -594,7 +549,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Active-skill cooldown reduction", value: "15%" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB24 · 2020-10-22" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Skeleton Rockie" }
     ],
     effects: [
       "Reduces the recovery time of the equipped active skill by 15%."
@@ -606,7 +560,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB24 (2020-10-22): Release data stated in the supplied report."
     ],
     releaseData: "OB24 · 2020-10-22",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Skeleton Rockie",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -619,7 +572,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB29 · 2021-08-28" },
       { label: "Maximum reduction", value: "Exact unified OB39 value not supplied" },
-      { label: "Progression", value: "Unlockable details not supplied" }
     ],
     effects: [
       "Reduces the duration of enemy marking effects."
@@ -633,7 +585,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "Historical 30%–40% reduction values are mentioned; exact unified OB39 ceiling was not supplied."
     ],
     releaseData: "OB29 · 2021-08-28",
-    progression: "Unlockable details not supplied",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -646,7 +597,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Marker duration", value: "30 seconds" },
       { label: "Cooldown", value: "120 seconds" },
       { label: "Release data", value: "OB17 · 2019-08-26" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Golden Tale" }
     ],
     effects: [
       "Marks ambient mushrooms on the mini-map."
@@ -659,7 +609,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB17 (2019-08-26): Release data stated in the supplied report."
     ],
     releaseData: "OB17 · 2019-08-26",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Golden Tale",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -671,7 +620,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Additional HP", value: "+10 HP per Med Kit" },
       { label: "Cooldown", value: "No cooldown" },
       { label: "Release data", value: "OB21 · 2020-04-20" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Red Fox" }
     ],
     effects: [
       "Adds a flat 10 HP to Med Kit healing."
@@ -683,7 +631,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB21 (2020-04-20): Release data stated in the supplied report."
     ],
     releaseData: "OB21 · 2020-04-20",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Red Fox",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -696,7 +643,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Cooldown", value: "90 seconds" },
       { label: "Trigger", value: "Incoming explosive hit; further trigger details not supplied" },
       { label: "Release data", value: "OB31 · 2022-01-01" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Fiery Yeti" }
     ],
     effects: [
       "Reduces incoming explosive damage by 30%."
@@ -709,7 +655,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "OB31 (2022-01-01): Release data stated in the supplied report."
     ],
     releaseData: "OB31 · 2022-01-01",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Fiery Yeti",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
@@ -722,7 +667,6 @@ export const petProfiles: Record<string, PetProfile> = {
       { label: "Cooldown", value: "70 seconds" },
       { label: "Trigger items", value: "Med Kit · Inhaler · Repair Kit" },
       { label: "Release data", value: "OB33 · 2022-03-23" },
-      { label: "Progression", value: "Lv2: Celebrate · Lv3: Play · Lv4: Not published" }
     ],
     effects: [
       "Has a 50% chance to duplicate a consumed utility item."
@@ -736,7 +680,6 @@ export const petProfiles: Record<string, PetProfile> = {
       "No additional patch-history entries were supplied."
     ],
     releaseData: "OB33 · 2022-03-23",
-    progression: "Lv2: Celebrate · Lv3: Play · Lv4: Not published",
     sources: [{ label: "Garena — Official Pets catalogue", url: "https://ff.garena.com/en/pets" }],
     dataStatus: "User-supplied profile · source verification pending"
   },
