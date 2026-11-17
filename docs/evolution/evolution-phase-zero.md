@@ -2,7 +2,7 @@
 
 **Review date:** 18 November 2026  
 **Repository:** `parnav09/Free-fire-Squad-`  
-**Blueprint:** `docs/evolution-version-2.md` on `docs/evolution-version-2-blueprint`  
+**Blueprint:** `docs/evolution-version-2.md` on this PR branch  
 **Code baseline:** `main` at the current audited source snapshot  
 **Live data snapshot:** FF Squad Supabase project, read-only inspection  
 **Baseline audit:** **COMPLETE — Evolution scope only**  
@@ -128,7 +128,7 @@ These counts show that the competitive match ledger and drill library have recor
 
 ### EV2-AUD-001 — Two task systems are active (future unification)
 
-- Weekly Review batch generation in `src/App.tsx` writes to `player_drill_assignments`.
+- Weekly Review batch generation in `src/App.tsx` previously wrote to `player_drill_assignments`; Phase Zero has now paused this generic creation path.
 - The Planning/Training center creates and updates `practice_tasks`.
 - The two paths have different identifiers, fields, lifecycle states, and completion data.
 - No synchronization adapter or canonical cross-reference was found.
@@ -149,9 +149,9 @@ These counts show that the competitive match ledger and drill library have recor
 
 ### EV2-AUD-003 — Default evaluation values could look like observations (fixed on PR branch)
 
-- The Daily Evaluation state initializes the selected player as the display string `P1`, although the persisted player identity is a UUID.
-- Its five score fields initialize to 5.
-- `PlayerEvaluationRubric` also initializes all six ratings to 5 and allows saving without requiring an explicit change or an explicit Not observed choice.
+- Before the fix, Daily Evaluation initialized the selected player as the display string `P1`, although the persisted player identity is a UUID.
+- Before the fix, its five score fields initialized to 5.
+- Before the fix, `PlayerEvaluationRubric` initialized all six ratings to 5 and allowed saving without requiring explicit interaction.
 
 **Impact:** a reviewer could save untouched defaults as if they were observed; the player selector also began with a display label instead of a canonical UUID.  
 **Phase Zero fix on this PR branch:** removed the P1 default, removed prefilled score values, require an active roster UUID, require all five ratings to be explicitly selected, show an incomplete total as unavailable, and disable submission until the form is complete. This is a legacy-form guard only; the new session-linked evaluation workflow remains Evolution Phase Four.
@@ -167,29 +167,29 @@ These counts show that the competitive match ledger and drill library have recor
 
 ### EV2-AUD-005 — Realtime evaluation refresh selected columns absent from the live table (fixed on PR branch)
 
-The initial load reads base score columns from `daily_scores` and loads private feedback separately. The Realtime callback later selects `improvement_notes` and `mistake_notes` directly from `daily_scores`. The live `daily_scores` column inventory does not contain those two columns; they belong to `daily_score_feedback`.
+Before the fix, the initial load read base score columns from `daily_scores` and loaded private feedback separately. The Realtime callback selected `improvement_notes` and `mistake_notes` directly from `daily_scores`. The live `daily_scores` column inventory does not contain those two columns; they belong to `daily_score_feedback`.
 
 **Impact:** the Realtime refresh query could fail and the callback did not surface that query error before updating local history. This could leave the displayed evaluation history stale or replace it with an empty result.  
 **Phase Zero fix on this PR branch:** the shared `fetchEvaluationHistory` loader reads valid score columns, merges private feedback from its own table, orders same-day records deterministically, subscribes to both source tables, and reports refresh errors. This change is not merged or production-deployed.
 
 ### EV2-AUD-006 — Weekly Review and Player Trends are not separate experiences (legacy view corrected)
 
-Both navigation entries render the same `PlayerWeeklyInsights` component. It shows a team pulse, task totals, latest/previous evaluation comparison, and a small bulk-task form.
+Both navigation entries still render the same `PlayerWeeklyInsights` component. Before the Phase Zero fix, it presented a team pulse, task totals, latest/previous evaluation comparison, and a generic bulk-task form as though it were a finished review/trends workflow.
 
-Observed calculation limitations:
+Observed pre-fix calculation and scope limitations:
 - no explicit review-window filter in the component;
-- latest/previous relies on array ordering and has no same-day deterministic tie-breaker;
-- recent average takes up to four rows without a documented comparable-period rule;
-- players with no evaluations return 0 from the average helper and are included in the roster average;
-- the batch duplicate guard in `App.tsx` checks from the start of the due-date year through the due date, rather than a clearly defined same-week window;
-- the generated focus is generic rather than linked to an approved review snapshot.
+- latest/previous relied on array ordering and had no same-day deterministic tie-breaker;
+- recent average took up to four rows without a documented comparable-period rule;
+- players with no evaluations returned 0 from the average helper and were included in the roster average;
+- the batch duplicate guard checked from the start of the due-date year through the due date, rather than a clearly defined same-week window;
+- the generated focus was generic rather than linked to an approved review snapshot.
 
 **Impact:** team averages could be depressed by missing data, trend comparisons could be inconsistent, and the two navigation items did not deliver distinct workflows.  
 **Phase Zero fix on this PR branch:** missing/incomplete evaluations are excluded rather than treated as zero; same-day ordering uses score date, creation timestamp, and stable ID; no-data players are shown as insufficient data; the shared screen is labelled a read-only legacy snapshot; generic weekly task generation is paused. The separate Weekly Review and Player Trends builds remain Evolution Phases Seven and Eight.
 
 ### EV2-AUD-007 — Training rubric storage did not match its scale label (new writes fixed on PR branch)
 
-The advanced rubric converts each 1–10 dimension to a 10–100 value before storing it in the JSON rubric, while also writing a `scale: "1-10"` marker. The overall score is normalized to 0–100, but the dimension values and declared scale disagree.
+Before the Phase Zero fix, the advanced rubric converted each 1–10 dimension to a 10–100 value before storing it in the JSON rubric, while also writing a `scale: "1-10"` marker. The overall score was normalized to 0–100, but the dimension values and declared scale disagreed.
 
 **Impact:** downstream readers cannot safely interpret historical dimension values without knowing this conversion detail.  
 **Phase Zero fix on this PR branch:** new advanced rubric rows store raw 1–10 dimension values and include `dimension_storage: "raw_1_to_10"`; the overall score remains normalized to 0–100. The legacy training rubric also blocks save until all six dimensions are explicitly selected. Historical rows are not rewritten. Evolution Phase Three will version the canonical rubric and add a crosswalk for old rows.
@@ -246,6 +246,16 @@ These behavior-preserving baseline changes are present on `main`:
 - foundation regression tests for storage, migration ordering, crop cleanup, and history-preservation UI.
 
 No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-snapshot, or analytics schema has been implemented by these foundation changes.
+
+### 7.1 Legacy fixes delivered on this PR branch
+
+- **Daily Evaluation:** removed the P1 default and prefilled ratings; the existing five-dimension form now requires an active team roster UUID and explicit selection of every rating. It is labelled as a legacy form; the session-linked replacement remains Evolution Phase Four.
+- **Evaluation Realtime:** one shared loader reads valid score columns and private feedback from their correct tables; score and feedback updates both trigger refetch; same-day ordering is deterministic; refresh errors are surfaced.
+- **Weekly/Trends legacy view:** missing or incomplete records no longer count as zero; no-data players show insufficient data; records sort by date, creation time, and ID; generic weekly batch creation is paused; historical assignments remain visible and unchanged.
+- **Training rubric:** all six legacy rubric dimensions must be explicitly selected; new dimension values are stored as raw 1–10 with an explicit storage marker. Historical rubric rows remain untouched.
+- **Analytics boundary:** the current screen is labelled competitive-results-only; player-development analytics remain Evolution Phase Nine.
+- **Regression coverage:** `scripts/verify-evolution-legacy-fixes.mjs` is included in the build pipeline.
+
 
 ## 8. Build and delivery evidence
 
