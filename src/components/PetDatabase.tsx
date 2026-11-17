@@ -139,7 +139,7 @@ export default function PetDatabase({ onBack }: Props) {
   if (selected) {
     const kitty = selected.id === "kitty";
     const profile = petProfiles[selected.id];
-    return <main className="character-database character-profile-page">
+    return <main className="character-database character-profile-page pet-profile-page">
       <div className="character-db-toolbar">
         <button type="button" className="character-back-button" onClick={resetToList}><span aria-hidden="true">←</span> {isHindi ? "Pets par wapas" : "Back to Pets"}</button>
         <div className="character-language-control" role="group" aria-label="Pet profile language">
