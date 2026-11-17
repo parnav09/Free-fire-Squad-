@@ -59,7 +59,7 @@ Each stage must use stable IDs and explicit relationships from the previous stag
 
 ## 2. Existing implementation baseline — what is known and what is not
 
-This section preserves the previous audit findings as the starting hypothesis for Phase 0. It must be revalidated against the branch and live schema before implementation.
+This section preserves the previous audit findings as the starting hypothesis for Evolution Phase Zero. It must be revalidated against the branch and live schema before implementation.
 
 ### 2.1 Daily Evaluation
 
@@ -136,7 +136,7 @@ This section preserves the previous audit findings as the starting hypothesis fo
 
 ### 2.6 What the baseline does not prove
 
-The earlier audit does not prove current production row counts, current RLS correctness, current deployment health, or current UI behavior. Phase 0 must re-check all of these. Do not turn an old audit note into an unverified current-state claim.
+The earlier audit does not prove current production row counts, current RLS correctness, current deployment health, or current UI behavior. Evolution Phase Zero must re-check all of these. Do not turn an old audit note into an unverified current-state claim.
 
 ---
 
@@ -720,7 +720,7 @@ May place competitive outcomes beside development trends to explore relationship
 
 ## 13. System architecture boundaries
 
-The implementation must use clear layers. Exact folder names can follow the existing app after Phase 0, but the responsibilities cannot be blurred.
+The implementation must use clear layers. Exact folder names can follow the existing app after Evolution Phase Zero, but the responsibilities cannot be blurred.
 
 ### 13.1 Domain layer
 
@@ -817,7 +817,7 @@ Align names to existing schema only after inventory. Suggested entities:
 - optional rebuildable `player_trend_snapshots`;
 - `audit_log`, `outbox_events`, sync/idempotency records.
 
-Do not create a second table when an equivalent table already exists. Phase 0 maps existing schema to these logical concepts.
+Do not create a second table when an equivalent table already exists. Evolution Phase Zero maps existing schema to these logical concepts.
 
 ### 15.2 Keys and constraints
 
@@ -1120,34 +1120,34 @@ The implementation must be built as a sequence of complete, testable vertical sl
 ### 23.1 Dependency graph
 
 ```text
-Phase 0: Current-state audit + data map + safety baseline
+Evolution Phase Zero: legacy code audit + safe bug fixes + future-phase boundary
                     |
-Phase 1: Identity, team membership, permissions, timezone
+Evolution Phase One: Identity, team membership, timezone
                     |
-Phase 2: Session / match / roster / role snapshot
+Evolution Phase Two: Session / match / roster / role snapshot
                     |
-Phase 3: Evidence model + canonical rubric + scoring engine
+Evolution Phase Three: Evidence model + canonical rubric + scoring engine
                     |
-Phase 4: Atomic Daily Evaluation + feedback + audit/outbox
+Evolution Phase Four: Atomic Daily Evaluation + feedback + audit/outbox
                     |
-Phase 5: Peer-review cohorts + anonymity + recipient inbox
+Evolution Phase Five: Peer-review cohorts + anonymity + recipient inbox
                     |
-Phase 6: Canonical development tasks + drills + follow-up
+Evolution Phase Six: Canonical development tasks + drills + follow-up
                     |
-Phase 7: Weekly Review snapshots and approvals
+Evolution Phase Seven: Weekly Review snapshots and approvals
                     |
-Phase 8: Player Trends and comparability engine
+Evolution Phase Eight: Player Trends and comparability engine
                     |
-Phase 9: Squad Analytics (competitive + development domains)
+Evolution Phase Nine: Squad Analytics (competitive + development domains)
                     |
-Phase 10: Realtime + offline sync + data quality
+Evolution Phase Ten: Realtime + offline sync + data quality
                     |
-Phase 11: Responsive UI hardening + accessibility + regression QA
+Evolution Phase Eleven: Responsive UI hardening + accessibility + regression QA
                     |
-Phase 12: Staging migration + controlled rollout + production verification
+Evolution Phase Twelve: Staging migration + controlled rollout + production verification
 ```
 
-Cross-cutting security, tests, observability, and documentation begin in Phase 0 and continue in every phase. The diagram is the dependency order, not a claim that each phase is a separate deploy or that no safe parallel work is possible.
+Security is a separate workstream and is not implemented inside the Evolution phases. Its independent review is a prerequisite before production rollout. Tests, observability, and documentation cross-cut every Evolution phase. The diagram is the dependency order, not a claim that each phase is a separate deploy or that no safe parallel work is possible.
 
 ### 23.2 Why this order is mandatory
 
@@ -1165,7 +1165,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 ## 24. Phase-by-phase implementation contracts and gates
 
-### Phase 0 — Audit and safety baseline
+### Evolution Phase Zero — Legacy Fixes
 
 **Inspect:**
 - current Git branch, main branch, latest commits, and open PRs;
@@ -1180,7 +1180,6 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 - current-state architecture map;
 - table/column/data dictionary;
 - read/write path inventory;
-- permissions matrix;
 - task/rubric legacy mapping;
 - row counts and orphan/duplicate report;
 - migration/rollback plan;
@@ -1188,11 +1187,10 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** every current read/write path and source of truth is identified. No production data is deleted or changed.
 
-### Phase 1 — Identity, membership, permissions, timezone
+### Evolution Phase One — Identity, membership, timezone
 
 **Build:**
 - stable auth/player/team membership contract;
-- explicit roles/permissions;
 - team timezone setting and server-side date utilities;
 - no P1-as-ID behavior;
 - session eligibility primitives;
@@ -1202,7 +1200,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** tests prove a player cannot act outside their team/permission; display labels cannot be used as IDs; date boundaries are server/team authoritative.
 
-### Phase 2 — Session, match, roster, and role snapshots
+### Evolution Phase Two — Session, match, roster, and role snapshots
 
 **Build:**
 - canonical session and match IDs;
@@ -1216,7 +1214,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** every participating player has a stable session role/context; a later roster edit does not rewrite historical session membership.
 
-### Phase 3 — Evidence, rubric, and scoring engine
+### Evolution Phase Three — Evidence, rubric, and scoring engine
 
 **Build:**
 - evidence item model and privacy classification;
@@ -1230,7 +1228,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** tests prove 0 vs NULL, role weights, partial coverage, invalid ranges, rubric versioning, and reproducible score results.
 
-### Phase 4 — Atomic Daily Evaluation and feedback
+### Evolution Phase Four — Atomic Daily Evaluation and feedback
 
 **Build:**
 - session-first evaluation form;
@@ -1247,7 +1245,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** fault-injection tests prove all-or-nothing writes; retries create one record; unauthorized access fails; no score can be submitted from untouched inputs.
 
-### Phase 5 — Peer cohorts and anonymous Feedback Received
+### Evolution Phase Five — Peer cohorts and anonymous Feedback Received
 
 **Build:**
 - cohort snapshot and eligibility;
@@ -1264,7 +1262,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** access tests and deanonymization checks pass; no identity leak in payloads/logs/URLs/exports; cohort denominator is reproducible.
 
-### Phase 6 — Unified development tasks and follow-up
+### Evolution Phase Six — Unified development tasks and follow-up
 
 **Build:**
 - legacy task reconciliation;
@@ -1278,7 +1276,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** task created in any supported workflow appears once across modules; status/version conflicts are handled; follow-up evaluation links to the correct task.
 
-### Phase 7 — Weekly Review
+### Evolution Phase Seven — Weekly Review
 
 **Build:**
 - timezone-aware week window;
@@ -1291,7 +1289,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** no-data players are not counted as zero; every recommendation traces to evidence; published snapshot is reproducible and corrections create a new version.
 
-### Phase 8 — Player Trends
+### Evolution Phase Eight — Player Trends
 
 **Build:**
 - separate route and query layer;
@@ -1306,7 +1304,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** incompatible records are blocked or clearly labelled; results are deterministic; every point drills to source.
 
-### Phase 9 — Squad Analytics
+### Evolution Phase Nine — Squad Analytics
 
 **Build:**
 - Competitive Results domain integration;
@@ -1317,7 +1315,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** tournament points cannot alter development score and development score cannot alter official tournament points; all aggregates show sample/coverage.
 
-### Phase 10 — Realtime, offline sync, and data quality
+### Evolution Phase Ten — Realtime, offline sync, and data quality
 
 **Build:**
 - transactional outbox delivery;
@@ -1330,7 +1328,7 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** reconnect, stale state, duplicate replay, permission revocation, stuck queue, outbox retry, and conflicting task update tests pass.
 
-### Phase 11 — UI, accessibility, and regression hardening
+### Evolution Phase Eleven — UI, accessibility, and regression hardening
 
 **Build/verify:**
 - premium dark responsive layout;
@@ -1343,13 +1341,12 @@ Cross-cutting security, tests, observability, and documentation begin in Phase 0
 
 **Gate:** actual screenshots and interaction tests at defined viewport sizes; no clipped text, broken navigation, horizontal overflow, or undersized critical controls.
 
-### Phase 12 — Controlled rollout
+### Evolution Phase Twelve — Controlled rollout
 
 **Build/execute:**
 - staging feature flag;
 - migration dry run and backup;
 - legacy reconciliation report;
-- RLS and security review;
 - production migration only after Evolution validation and separate Security workstream approval;
 - smoke tests and monitoring;
 - rollback plan;
@@ -1492,7 +1489,7 @@ Evolution Version 2 is complete only when:
 
 ## 34. Current status versus target
 
-This table preserves the earlier audit's status. Phase 0 must refresh it before code work.
+This table preserves the earlier audit's status. Evolution Phase Zero revalidates the existing implementation and fixes safe legacy defects; future feature builds remain assigned to their named phases.
 
 | Area | Previously observed baseline | Version 2 target |
 |---|---|---|
@@ -1541,7 +1538,7 @@ Additional QA issues remain in scope: Positioning vs Map Awareness; rubric scale
 
 This document is the **Evolution Version 2 master blueprint**. This rewrite changes documentation only. It does not implement features, modify Supabase tables/data, reset production data, run migrations, merge the documentation branch, or deploy the app.
 
-**Next implementation action:** begin Phase 0 against the actual current repository and Supabase schema, produce the architecture/data/permission map, reconcile it against this blueprint, and only then start Phase 1. The first implementation slice must establish stable identity, membership, permissions, and timezone so every later slice has a trusted base.
+**Next implementation action:** complete Evolution Phase Zero — Legacy Fixes against the actual current repository and live Evolution data. Repair existing Evolution regressions, preserve historical records, and clearly mark incomplete future modules without building their planned functionality. Then begin Evolution Phase One for stable identity, team membership, and timezone. Authorization/RLS/grants and security hardening remain in the separate Security workstream.
 
 ---
 
