@@ -130,3 +130,30 @@ test("foundation utilities and team data hook are available without forcing a mo
   assert.match(localDataHook, /squad-os-legacy-local-migrated/);
   assert.match(localDataHook, /setHydratedFor\(teamId\)/);
 });
+
+test("browser storage access is guarded and malformed local records fall back safely", () => {
+  assert.match(appUtils, /safeStorageGetItem/);
+  assert.match(appUtils, /safeStorageSetItem/);
+  assert.match(appUtils, /safeStorageRemoveItem/);
+  assert.match(appUtils, /function isPlayerArray/);
+  assert.match(app, /readLocalRecord/);
+  assert.doesNotMatch(app, /localStorage\\.(getItem|setItem|removeItem)/);
+});
+
+test("legacy team-local data is persisted before the one-time migration marker is written", () => {
+  assert.match(app, /safeStorageSetItem\\(prefix\\+key,JSON\\.stringify\\(value\\)\\)/);
+  assert.match(app, /if\\(migrateLegacy&&migrationComplete\\)safeStorageSetItem\\("squad-os-legacy-local-migrated","1"\\)/);
+  assert.match(localDataHook, /migrationComplete/);
+});
+
+test("logo crop releases its object URL even when image processing fails", () => {
+  assert.match(appUtils, /finally \\{[\\s\\S]*URL\\.revokeObjectURL\\(objectUrl\\)/);
+  assert.match(appUtils, /naturalWidth/);
+  assert.match(appUtils, /Math\\.min\\(100, Math\\.max\\(0/);
+});
+
+test("automatic history deletion remains disabled until an archive and recovery workflow is approved", () => {
+  assert.match(app, /Automatic deletion is paused/);
+  assert.match(app, /HISTORY PRESERVED/);
+  assert.doesNotMatch(app, /saveRetention|loadRetention|retentionDays/);
+});
