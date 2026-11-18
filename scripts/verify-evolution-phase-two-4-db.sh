@@ -473,6 +473,7 @@ DECLARE
   v_submission public.canonical_session_result_submissions;
   v_count integer;
   v_title text;
+  v_title_after text;
 BEGIN
   SELECT canonical_session_id INTO v_session
   FROM public.canonical_session_sources WHERE source_system='scrim';
@@ -577,8 +578,8 @@ BEGIN
 
   SELECT title INTO v_title FROM public.canonical_sessions WHERE id=v_session;
   UPDATE public.canonical_sessions SET title='Must not edit archived session' WHERE id=v_session;
-  SELECT title INTO v_row.title FROM public.canonical_sessions WHERE id=v_session;
-  IF v_row.title IS DISTINCT FROM v_title THEN
+  SELECT title INTO v_title_after FROM public.canonical_sessions WHERE id=v_session;
+  IF v_title_after IS DISTINCT FROM v_title THEN
     RAISE EXCEPTION 'Archived session remained editable through direct table update';
   END IF;
 
@@ -589,6 +590,9 @@ BEGIN
     OR v_row.lifecycle_version <> 7
   THEN RAISE EXCEPTION 'Audited archive reopening failed'; END IF;
 
+  PERFORM pg_catalog.set_config('app.evolution_session_lifecycle_action','',true);
+  PERFORM pg_catalog.set_config('app.evolution_session_lifecycle_reason','',true);
+  PERFORM pg_catalog.set_config('app.evolution_session_lifecycle_idempotency_key','',true);
   BEGIN
     UPDATE public.canonical_sessions
     SET lifecycle_status='scheduled', lifecycle_version=lifecycle_version+1
