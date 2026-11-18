@@ -270,7 +270,7 @@ BEGIN
   EXCEPTION WHEN foreign_key_violation THEN
     NULL;
   END;
-END $;
+END $$;
 
 -- Team A Owner exercises the guarded source sync and correction RPCs.
 SET ROLE authenticated;
