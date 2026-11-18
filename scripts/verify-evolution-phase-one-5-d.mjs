@@ -31,7 +31,7 @@ test("E Phase One.5-D: full build runs the base, B, C and D verification suites"
 
 test("E Phase One.5-D: B verification covers IST-only validation, locked evaluation date and midnight boundary", () => {
   for (const expected of [
-    "Asia/Kolkata", "Asia/Calcutta", "America/Los_Angeles",
+    "India-only timezone contract accepts IST and its legacy alias only",
     "India date key flips exactly at 00:00 IST",
     "Daily Evaluation auto-selects and locks the India date without a date input",
   ]) assert.ok(bSuite.includes(expected), "B suite missing: " + expected);
