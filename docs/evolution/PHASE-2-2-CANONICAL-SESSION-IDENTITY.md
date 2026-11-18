@@ -6,7 +6,7 @@
 
 ## 1. Contract
 
-A canonical session is a team-owned record with a generated UUID. The UUID is the only stable internal identity. Title, session date, scheduled time, season label, week number, lobby label and display order are descriptive metadata and are not identity keys.
+A canonical session is a team-owned record with a generated UUID. The UUID is the only stable internal identity. Display labels are descriptive metadata and are not identity keys. Title, session date, scheduled time, season label, week number, lobby label and display order remain mutable attributes.
 
 Controlled session types:
 - `scrim`
