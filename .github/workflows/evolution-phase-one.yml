@@ -2,9 +2,9 @@ name: SQUAD OS — Evolution Phase One & Phase Two.1 Audit CI
 
 on:
   push:
-    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation]
+    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity]
   pull_request:
-    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone]
+    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation]
 
 permissions:
   contents: read
@@ -62,6 +62,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
+
+      - name: Verify Evolution Phase 2.2 canonical session migration against disposable PostgreSQL
+        run: bash scripts/verify-evolution-phase-two-2-db.sh
 
       - name: Verify staged B migration against disposable PostgreSQL
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
