@@ -37,7 +37,7 @@ test("Scrim source identity preserves the parent, original JSONB sequence and pa
   assert.match(migration, /source_match_fingerprint text/i);
   assert.match(migration, /jsonb_array_elements\(sr\.matches\) WITH ORDINALITY/i);
   assert.match(migration, /md5\(item\.value::text\)/i);
-  assert.match(report, /no per-match UUID exists in the Scrim JSONB source/i);
+  assert.match(report, /does not provide a native per-match UUID/i);
 });
 
 test("Tournament match UUIDs and source coordinates remain traceable and team-scoped", () => {
@@ -54,7 +54,7 @@ test("Expected counts are source-derived and absent matches are never fabricated
   assert.match(migration, /sr\.match_count/);
   assert.match(migration, /count\(tm\.id\)/i);
   assert.doesNotMatch(migration, /generate_series\s*\(/i);
-  assert.match(report, /missing matches remain missing/i);
+  assert.match(report, /Missing source rows remain missing/i);
   assert.match(harness, /Scrim expected\/actual mismatch/);
 });
 
@@ -100,7 +100,7 @@ test("Backfill preserves existing Scrim and Tournament source IDs without changi
   assert.match(migration, /canonical_session_sources/);
   assert.match(scrimsUi, /from\("scrim_records"\)/);
   assert.match(tournamentSql, /create table if not exists public\.tournament_matches/i);
-  assert.match(report, /No legacy source rows are rewritten/i);
+  assert.match(report, /Source rows and existing JSONB payloads are not rewritten/i);
 });
 
 test("The exact Phase 2.3 PostgreSQL harness runs in the standard build and CI", () => {
