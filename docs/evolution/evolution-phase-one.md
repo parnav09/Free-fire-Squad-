@@ -27,7 +27,7 @@ Added src/lib/evolution-identity.ts:
 - IANA timezone validation.
 - Team-local date formatting for display and deterministic boundary tests.
 
-Important: the date formatter is not an authority for persisted records. Database triggers/RPCs remain authoritative until a reviewed migration makes the configured team timezone the server-side source of truth.
+Important: the date formatter is a client display utility only. The existing persisted Daily Evaluation date contract remains Asia/Kolkata, enforced by the database trigger and ds_insert RLS policy. Phase One.5-B validates configured team timezone values but deliberately does not change persisted date boundaries or reinterpret historical records.
 
 Added scripts/verify-evolution-phase-one.mjs with contract tests for identity mapping, labels-vs-IDs, active membership, multiple teams, duplicate membership ambiguity, timezone validation, and date-boundary behavior.
 
@@ -48,7 +48,7 @@ Phase One is not complete until:
 - Multiple active teams require an explicit selection; ambiguous membership is not silently resolved.
 - Configured IANA timezone is validated.
 - Date-boundary tests pass for at least two different team timezones.
-- Server-side persisted dates follow the configured team timezone after a reviewed migration.
+- Existing server-side persisted Daily Evaluation dates continue to follow Asia/Kolkata; Phase One.5-B must prove that contract remains unchanged while validating configured team timezone values.
 - Session eligibility primitives are documented and tested.
 - Separate Security workstream validates authorization independently.
 
