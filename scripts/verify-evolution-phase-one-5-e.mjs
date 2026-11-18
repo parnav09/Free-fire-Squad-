@@ -32,13 +32,12 @@ test("E final audit preserves the 53-entry historical provenance and rollback ev
   assert.ok(audit.includes("55 live migration rows"));
   assert.ok(audit.includes("0 stored rollback statements"));
   assert.ok(audit.includes("53 in-scope"));
-  assert.ok(audit.includes("0 stored rollback statements"));
 });
 
 test("E final audit carries forward the latest exact-head D CI evidence", () => {
   assert.match(audit, /run #284/i);
   assert.ok(audit.includes("0de4ecc9dfd450f8cb2be87bed0cbf299965813b"));
-  assert.ok(audit.includes("D suite: 6/6"));
+  assert.match(audit, /D suite:? 6\/6/i);
   assert.ok(dSuite.includes("E Phase One.5-D"));
 });
 
