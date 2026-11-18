@@ -170,3 +170,16 @@ Use this file when continuing in a new ChatGPT conversation.
 - GitHub exact-path history and retained branch trees still do not recover the original SQL for the early 24 live entries. Roster-capacity, task metadata, Daily Evaluation and retention files are semantic candidates only; version/application order is unproven.
 - No fabricated/no-op migration files or live database changes were made. Such stubs would mask missing schema on clean builds and misrepresent provenance.
 - Continue to keep E Phase One.5 **IN PROGRESS / BLOCKED ON ORIGINAL SQL + APPLICATION EVIDENCE + ROLLBACK REVIEW**. Do not proceed to Phase Two or deploy.
+
+
+## E Phase One.5 — live-ledger SQL recovery checkpoint (18 Nov 2026)
+
+- Corrected an earlier audit gap: `supabase_migrations.schema_migrations` contains `statements` and `rollback` columns in addition to version/name metadata.
+- All 55 live rows have stored SQL statements; none has stored rollback statements.
+- Recovered 53 non-loadout SQL statements verbatim into `docs/evolution/recovered-migrations/`; the two restricted loadout entries were excluded.
+- Git blob verification matched the exact live SQL source for all 53 archived files (53/53).
+- The archive is deliberately outside `supabase/migrations/`; no active migration file was replaced or replayed.
+- Of the 22 active non-loadout migration files, 13 match live SQL byte-for-byte, 6 same-name files differ from live SQL, and 3 have no same-name live ledger row. Resolve these before rebuilding the active chain.
+- No rollback SQL exists in the ledger. Clean-database replay remains unverified; the project has no Supabase development branches.
+- Current recovery commit: `082bb2e89f564dc1182f1e86849781fdca530c64`. PR #115 remains open/draft; no merge, production deployment, database change, Phase Two work, Security change, retention change, or loadout inspection occurred.
+- **Status:** source recovery is complete for the 53-entry safe scope, but E Phase One.5 remains IN PROGRESS pending active-chain reconciliation, independent rollback design, and isolated clean-database verification.
