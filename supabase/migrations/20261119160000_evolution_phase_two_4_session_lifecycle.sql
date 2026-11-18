@@ -402,6 +402,16 @@ BEGIN
     WHERE tm.team_id = v_session.team_id AND tm.user_id = auth.uid()
       AND tm.status = 'active' AND tm.membership_role IN ('owner','coach')
   ) THEN RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501'; END IF;
+  -- A committed retry must remain idempotent even if the original transition archived the row.
+  SELECT * INTO v_event FROM public.canonical_session_lifecycle_events
+  WHERE canonical_session_id = p_session_id AND idempotency_key = p_idempotency_key;
+  IF FOUND THEN
+    IF v_event.event_kind <> 'transition' OR v_event.new_status <> p_target_status
+      OR v_event.reason <> pg_catalog.btrim(p_reason)
+      OR v_event.cancellation_reason_code IS DISTINCT FROM p_cancellation_reason_code
+    THEN RAISE EXCEPTION 'lifecycle_idempotency_key_reused_with_different_payload' USING ERRCODE = '22023'; END IF;
+    RETURN v_session;
+  END IF;
   IF v_session.archived_at IS NOT NULL THEN
     RAISE EXCEPTION 'archived_session_requires_audited_reopen' USING ERRCODE = '22023';
   END IF;
@@ -414,6 +424,7 @@ BEGIN
       AND tm.status = 'active' AND tm.membership_role IN ('owner','coach')
   ) THEN RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501'; END IF;
 
+  -- Recheck after locking to serialize competing requests with the same key.
   SELECT * INTO v_event FROM public.canonical_session_lifecycle_events
   WHERE canonical_session_id = p_session_id AND idempotency_key = p_idempotency_key;
   IF FOUND THEN
