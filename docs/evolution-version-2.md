@@ -1755,12 +1755,12 @@ Evolution Version 2 is complete only when:
 
 ### 34A.4 Phase Two detailed tracker — session foundation
 
-**Overall status: OPEN · POINT 2.1 AUDIT PASS · CI VERIFIED · POINTS 2.2–2.12 GATED.** Phase Two is opened for its read-only discovery point 2.1. Schema-changing implementation points remain gated until the Phase One 1.5-E carry-over acceptance blockers are resolved or a separate, explicit, documented exception is approved. This preserves the original dependency without blocking safe discovery.
+**Overall status: OPEN · POINT 2.1 AUDIT PASS · POINT 2.2 IMPLEMENTATION IN PROGRESS.** On 19 November 2026, the owner explicitly approved a limited-development exception to proceed with Point 2.2 while the Free-plan leaked-password limitation, original clean-replay baseline gap and broader legacy RPC adversarial review remain open. This exception does not waive the separate Security workstream or authorize production rollout. See `docs/evolution/PHASE-2-2-CANONICAL-SESSION-IDENTITY.md`.
 
 | Subphase | Planned workflow | Status | Acceptance evidence required |
 |---|---|---|---|
 | 2.1 | Existing System Audit — inspect Scrims, Tournament, Training and Planning session/match data and all callers | **PASS · audit + exact-head CI verified** | `docs/evolution/PHASE-2-1-EXISTING-SYSTEM-AUDIT.md`; run #371 (`44363393358`) on `bbc4a600d12ecb3b9d86dc2d700d7d113849713a`; 99 tests passed, 0 failed, typecheck and Vite production build passed. |
-| 2.2 | Canonical Session Identity — stable session UUID, team, session type and season association | **Gated · Not started** | One stable session identity; no display label or mutable name used as a key. |
+| 2.2 | Canonical Session Identity — stable session UUID, team, session type and season association | **Implementation in branch · exact-head CI pending** | Additive canonical session/source schema, team-scoped source FKs, idempotent Owner/Coach create RPC, soft archive; awaiting exact-head CI and disposable PostgreSQL proof. Report: `docs/evolution/PHASE-2-2-CANONICAL-SESSION-IDENTITY.md`. |
 | 2.3 | Match Identity — individual match records under a parent session | **Gated · Not started** | Stable unique match IDs and correct parent-session relationship; no duplicate match identity. |
 | 2.4 | Session Lifecycle — Draft → Scheduled → In Progress → Awaiting Results → Verified → Closed → Archived | **Gated · Not started** | Validated state transitions, permissions, timestamps and audited amendments. |
 | 2.5 | Session Roster Snapshot — persist actual participants for the session | **Gated · Not started** | Historical participant set remains unchanged when current team roster changes. |
