@@ -69,13 +69,23 @@ The forward SQL is still staged outside `supabase/migrations/`. It has not yet b
 - Does not delete or rewrite historical rows.
 - Does not replace or drop the pre-existing anonymization trigger/function.
 
-### Historical rollback remains unavailable
+### Historical rollback disposition — COMPLETE
 
-The 53 recovered safe-scope historical ledger entries contain zero stored rollback statements. A rollback for those old migrations cannot safely be fabricated from today's schema. Each historical migration needs a separately reviewed compensating migration or an explicit “forward-only / no automatic rollback” classification. Therefore C is not globally complete.
+See [E Phase One.5-C Historical Rollback Disposition Register](./E-PHASE-ONE-5-C-ROLLBACK-REGISTER.md) and its machine-checked [manifest](./evolution-phase-one-5-c-rollback-manifest.json).
+
+- Read-only live-ledger audit: 55 rows total; 53 in-scope non-loadout historical rows; two loadout rows remain outside this phase.
+- Stored rollback statements: **0/53**. No historical rollback SQL was invented from the current schema.
+- All **53/53** in-scope versions now have an explicit, reasoned `forward-only / no automatic rollback` disposition, a risk class, and a concrete recovery rule.
+- The duplicate name `daily_score_feedback_private_rls` remains represented as two distinct versioned entries.
+- Destructive cleanup/retention changes, user-edited seed data, privacy/RLS changes, function replacements, and schema dependencies are explicitly protected from blind reversal.
+- The register prohibits migration-ledger rewrites, replaying old forward migrations, and unreviewed destructive inverses.
+- The B timezone rollback remains a separate staged draft; it is not a historical rollback and has not been database-tested.
+
+**C historical disposition result: COMPLETE · DOCUMENTED · MACHINE-CHECKED.** This does not claim that historical rollback SQL exists or that production data can be restored by code alone. Any future compensation remains a new, independently reviewed migration with isolated database tests and separate release approval.
 
 ## D — Tests and validation
 
-Added `scripts/verify-evolution-phase-one-5.mjs` and `npm run test:evolution-phase-one-5`, wired into `npm run build`.
+Added `scripts/verify-evolution-phase-one-5.mjs`, the C rollback disposition manifest/register, and `scripts/verify-evolution-phase-one-5-c.mjs`; the dedicated B and C suites are wired into `npm run build`.
 
 The checks cover:
 - timezone validation trigger presence;
@@ -85,7 +95,7 @@ The checks cover:
 - no historical row rewrite;
 - staged SQL remaining outside the active migration directory.
 
-**Local result:** the new Node source-contract suite was executed against the staged forward/rollback files in an isolated temporary workspace: **6 passed, 0 failed**. The current PR head has no reported GitHub Actions run available through the workflow lookup; the combined commit status shows only Vercel's build-rate-limit failure. A full repository build has not been verified on this head.
+**Earlier local result:** the original Node source-contract suite passed **6/6**. The new C-specific suite validates all 53 disposition records, unique version coverage, the two intentionally excluded loadout versions, duplicate-name handling, and no-destructive-inverse rules. Current-head CI is pending after these changes.
 
 **Limit:** these are source-contract tests, not a database integration test. CI must pass on the new head, and the forward/rollback SQL must still pass isolated database execution before D can be marked complete.
 
