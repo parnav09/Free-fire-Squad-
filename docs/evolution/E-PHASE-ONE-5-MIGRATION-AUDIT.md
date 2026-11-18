@@ -1,6 +1,6 @@
 # E Phase One.5 — Migration Provenance Audit Checkpoint
 
-**Status:** SQL source recovery completed for 53/55 live ledger entries in the non-loadout scope. The recovered SQL is archived and hash-verified; active migration-chain reconciliation, rollback design, and clean-database replay remain incomplete. No database migration or schema change has been applied.
+**Status:** SQL source recovery completed for 53/55 live ledger entries in the non-loadout scope and all 53 safe-scope migrations are represented in the active chain. Six active-file SQL mismatches and three unmatched files remain under disposition review. Historical rollback is absent (0/53); the new timezone forward/rollback pair is staged only. No database migration or schema change has been applied.
 
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
 **PR:** #115 (open, draft; stacked on Phase Zero PR #114)  
@@ -210,3 +210,15 @@ The earlier conclusion that the live migration ledger exposed only version/name 
 5. Run a clean-database replay and schema/behavior verification in an isolated development database. The project currently has no Supabase development branches; no paid/chargeable branch was created.
 
 **Result:** original SQL source is now recovered and content-verified for 53 live migrations. E Phase One.5 is still **IN PROGRESS**, not complete: active-chain reconciliation, rollback, and clean replay remain unverified. No Phase Two implementation, Security changes, retention changes, merge, or production deployment was performed.
+
+
+## 11. Phase One.5-B/C/D/E timezone implementation checkpoint — 18 Nov 2026
+
+- Read-only inspection confirmed current `teams.timezone` values are Asia/Kolkata (14) and Asia/Calcutta (1), both recognized by PostgreSQL. The column is NOT NULL and defaults to UTC.
+- Read-only inspection confirmed the existing Daily Evaluation trigger `daily_scores_lock_date_anonymous` and `ds_insert` policy independently hard-code Asia/Kolkata. The trigger also nulls evaluator/notes and sets recipient-only visibility; these behaviors must remain unchanged.
+- A forward migration was drafted outside the active Supabase migration directory: `docs/evolution/staged-migrations/20261118070000_team_timezone_contract.sql`. It adds timezone validation on all `teams.timezone` writes, a subsequent Daily Evaluation team-local date trigger, and the matching `ds_insert` predicate.
+- A rollback was drafted at `docs/evolution/staged-migrations/20261118070000_team_timezone_contract.rollback.sql`. It restores the prior policy predicate and drops only new objects; it does not touch historical rows or the existing anonymization trigger.
+- Source-contract tests were added in `scripts/verify-evolution-phase-one-5.mjs` and added to the production build test sequence. They are not database integration tests.
+- No SQL was applied to Supabase. No active migration was added for the timezone contract. No merge, deployment, or Supabase development branch was created.
+- B and the new-migration portion of C are **DRAFTED**. D is **PENDING CI + isolated database validation**. E is **NOT PASSED** because the six content mismatches/three unmatched files, historical rollback classification, and clean replay/runtime checks remain open.
+- See [B/C/D/E acceptance record](./E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md) for exact gates.
