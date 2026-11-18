@@ -21,11 +21,12 @@ test("Point 2.4 is scoped to the canonical lifecycle and does not change source-
   assert.match(report, /does not rewrite Scrims, Tournament or Training source rows/i);
 });
 
-test("Existing canonical sessions are non-destructively initialized to Draft", () => {
+test("Existing canonical sessions preserve explicit archives and otherwise initialize to Draft", () => {
   assert.match(migration, /ADD COLUMN IF NOT EXISTS lifecycle_status text NOT NULL DEFAULT 'draft'/i);
   assert.match(migration, /ADD COLUMN IF NOT EXISTS lifecycle_version integer NOT NULL DEFAULT 0/i);
+  assert.match(migration, /SET lifecycle_status = 'archived'\\s+WHERE archived_at IS NOT NULL AND lifecycle_status = 'draft'/i);
   assert.match(migration, /canonical_sessions_lifecycle_status_check/);
-  assert.match(harness, /Existing canonical sessions were not conservatively initialized to Draft/);
+  assert.match(harness, /Existing canonical session lifecycle state was not conservatively initialized/);
 });
 
 test("Lifecycle state transitions are constrained and server-side guarded", () => {
