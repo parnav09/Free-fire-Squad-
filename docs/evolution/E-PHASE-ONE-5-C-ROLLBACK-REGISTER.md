@@ -85,7 +85,7 @@ For every in-scope version, this register records an explicit no-automatic-rollb
 | Risk class | Required recovery strategy |
 |---|---|
 | `SECURITY_STATE`, `SECURITY_AND_DATA`, `SECURITY_AND_PRIVACY` | Keep current restrictive posture. Any permission reversal requires exact old ACL/policy source, access-path review, and independent Security approval. |
-| `FUNCTION_STATE`, `FUNCTION_AND_SECURITY`, `FUNCTION_AND_DATA` | Capture current function/trigger definitions and grants; write a new compensating migration only after reviewing callers, dependencies, and behavior. |
+| `FUNCTION_STATE`, `FUNCTION_AND_SECURITY`, `FUNCTION_AND_DATA`, `FUNCTION_AND_PRIVACY` | Capture current function/trigger definitions and grants; write a new compensating migration only after reviewing callers, dependencies, and behavior. |
 | `SCHEMA_STATE`, `SCHEMA_AND_DATA`, `SCHEMA_AND_PRIVACY`, `SCHEMA_AND_CATALOGUE` | Preserve tables/columns and existing rows. Deprecate/compatibly migrate first; drop only after a separate verified data-retention and dependency gate. |
 | `SEEDED_DATA`, `SEEDED_CATALOGUE_DATA` | Never delete or overwrite the seed batch blindly. Preserve later user edits and stable IDs; use versioned updates or explicit deprecation. |
 | `DESTRUCTIVE_FUNCTION`, `DESTRUCTIVE_MIXED` | No data rollback exists for already-deleted rows. Stop the destructive job first, then recover only from a verified backup; code reversal alone is insufficient. |
