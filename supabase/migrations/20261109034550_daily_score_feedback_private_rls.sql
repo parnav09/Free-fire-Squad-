@@ -1,5 +1,4 @@
--- Daily Evolution narrative feedback is recipient-only; no reviewer identity is stored.
-update public.daily_scores set notes=null, improvement_target=null;
+update public.daily_scores set notes=null, improvement_target=null, improvement_notes=null, mistake_notes=null;
 alter table public.daily_scores drop constraint if exists daily_scores_improvement_notes_len;
 alter table public.daily_scores drop constraint if exists daily_scores_mistake_notes_len;
 alter table public.daily_scores drop column if exists improvement_notes;
@@ -24,7 +23,7 @@ drop policy if exists dsf_recipient_read on public.daily_score_feedback;
 create policy dsf_recipient_read on public.daily_score_feedback for select using(player_id=auth.uid());
 drop policy if exists dsf_authorized_submit on public.daily_score_feedback;
 create policy dsf_authorized_submit on public.daily_score_feedback for insert with check(
- can_rate(daily_score_feedback.team_id,daily_score_feedback.player_id) and exists(select 1 from public.daily_scores ds where ds.id=daily_score_feedback.score_id and ds.team_id=daily_score_feedback.team_id and ds.player_id=daily_score_feedback.player_id)
+ can_rate(team_id,player_id) and exists(select 1 from public.daily_scores ds where ds.id=score_id and ds.team_id=team_id and ds.player_id=player_id)
 );
 create or replace function public.lock_daily_score_date_and_anonymize()
 returns trigger language plpgsql security definer set search_path=public as $$

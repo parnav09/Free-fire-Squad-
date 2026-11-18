@@ -1,4 +1,3 @@
--- SQUAD OS Phase 2 + Phase 3 durable workflow entities
 create table if not exists public.practice_plans (
  id uuid primary key default gen_random_uuid(), team_id uuid not null references public.teams(id) on delete cascade,
  title text not null check(length(trim(title)) between 2 and 120), plan_date date not null,
@@ -67,15 +66,5 @@ create table if not exists public.training_results (
  unique(session_id,player_member_id,attempt_number)
 );
 create index if not exists training_results_session_idx on public.training_results(session_id,created_at desc);
-
--- Team membership controls visibility. Owners/coaches control plan/drill/session authoring.
-do $$ declare t text; begin
- foreach t in array array['practice_plans','practice_plan_blocks','practice_tasks','training_drills','training_sessions','training_results'] loop
-  execute format('alter table public.%I enable row level security',t);
-  execute format('drop policy if exists squad_team_read on public.%I',t);
-  execute format('create policy squad_team_read on public.%I for select to authenticated using (exists(select 1 from public.team_members tm where tm.team_id=%I.team_id and tm.user_id=auth.uid() and tm.status=''active''))',t,t);
-  execute format('drop policy if exists squad_staff_write on public.%I',t);
-  execute format('create policy squad_staff_write on public.%I for all to authenticated using (exists(select 1 from public.team_members tm where tm.team_id=%I.team_id and tm.user_id=auth.uid() and tm.status=''active'' and tm.membership_role in (''owner'',''coach''))) with check (exists(select 1 from public.team_members tm where tm.team_id=%I.team_id and tm.user_id=auth.uid() and tm.status=''active'' and tm.membership_role in (''owner'',''coach'')))',t,t,t);
- end loop;
-end $$;
+do $$ declare t text; begin foreach t in array array['practice_plans','practice_plan_blocks','practice_tasks','training_drills','training_sessions','training_results'] loop execute format('alter table public.%I enable row level security',t); execute format('drop policy if exists squad_team_read on public.%I',t); execute format('create policy squad_team_read on public.%I for select to authenticated using (exists(select 1 from public.team_members tm where tm.team_id=%I.team_id and tm.user_id=auth.uid() and tm.status=''active''))',t,t); execute format('drop policy if exists squad_staff_write on public.%I',t); execute format('create policy squad_staff_write on public.%I for all to authenticated using (exists(select 1 from public.team_members tm where tm.team_id=%I.team_id and tm.user_id=auth.uid() and tm.status=''active'' and tm.membership_role in (''owner'',''coach''))) with check (exists(select 1 from public.team_members tm where tm.team_id=%I.team_id and tm.user_id=auth.uid() and tm.status=''active'' and tm.membership_role in (''owner'',''coach'')))',t,t,t); end loop; end $$;
 grant select,insert,update,delete on public.practice_plans,public.practice_plan_blocks,public.practice_tasks,public.training_drills,public.training_sessions,public.training_results to authenticated;
