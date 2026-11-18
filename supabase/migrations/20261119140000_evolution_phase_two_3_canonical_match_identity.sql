@@ -3,8 +3,6 @@
 -- Additive backfill only: existing source rows are retained and never rewritten.
 
 -- Composite keys make source references tenant-safe.
-CREATE UNIQUE INDEX IF NOT EXISTS scrim_records_id_team_canonical_uidx
-  ON public.scrim_records (id, team_id);
 CREATE UNIQUE INDEX IF NOT EXISTS tournament_matches_id_team_canonical_uidx
   ON public.tournament_matches (id, team_id);
 
