@@ -30,6 +30,7 @@ test("E final audit preserves the 53-entry historical provenance and rollback ev
   assert.ok(rollbackRegister.includes("53/53"));
   assert.ok(rollbackRegister.includes("forward-only"));
   assert.ok(audit.includes("55 live migration rows"));
+  assert.ok(audit.includes("0 stored rollback statements"));
   assert.ok(audit.includes("53 in-scope"));
   assert.ok(audit.includes("0 stored rollback statements"));
 });
