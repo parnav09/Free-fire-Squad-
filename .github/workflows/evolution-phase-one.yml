@@ -2,9 +2,9 @@ name: SQUAD OS — Evolution Phase One & Phase Two.1 Audit CI
 
 on:
   push:
-    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity]
+    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity]
   pull_request:
-    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation]
+    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity]
 
 permissions:
   contents: read
@@ -67,6 +67,11 @@ jobs:
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_2_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_2_ci bash scripts/verify-evolution-phase-two-2-db.sh
+
+      - name: Verify Evolution Phase Two.3 match identity migration against isolated disposable PostgreSQL
+        run: |
+          PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_3_ci
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_3_ci bash scripts/verify-evolution-phase-two-3-db.sh
 
       - name: Verify staged B migration against disposable PostgreSQL
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
