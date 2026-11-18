@@ -63,7 +63,7 @@ test("Actual played count uses source status and source-consistent Scrim fingerp
   assert.match(migration, /WITH \(security_invoker = true\)/i);
   assert.match(migration, /status IN \('draft', 'submitted', 'verified', 'disputed'\)/i);
   assert.match(migration, /tournament_matches\.recorded_by IS NOT NULL/i);
-  assert.match(migration, /tournament_matches\.recorded_by IS NOT NULL/i);
+  assert.match(migration, /tournament_matches\.placement IS NOT NULL/i);
   assert.match(migration, /actual_played_match_count/i);
   assert.match(harness, /Scheduled-only Tournament cycle must have zero played matches/);
 });
