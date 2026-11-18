@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS public.evolution_role_weight_profiles (
   CONSTRAINT evolution_role_profile_activation_pair CHECK ((status = 'draft' AND activated_at IS NULL) OR (status IN ('active', 'retired') AND activated_at IS NOT NULL)),
   CONSTRAINT evolution_role_profile_weights_shape CHECK (
     jsonb_typeof(weights) = 'object'
-    AND jsonb_object_length(weights) = 6
+    AND (weights - ARRAY['communication','coordination_trade_support','decision_making','positioning','map_awareness_rotation','role_execution']) = '{}'::jsonb
     AND weights ?& ARRAY[
       'communication',
       'coordination_trade_support',
@@ -341,7 +341,7 @@ CREATE POLICY evolution_role_profiles_read ON public.evolution_role_weight_profi
 CREATE POLICY evolution_role_profiles_staff_insert ON public.evolution_role_weight_profiles
   FOR INSERT TO authenticated
   WITH CHECK (
-    NOT is_system AND created_by = (SELECT auth.uid())
+    NOT is_system AND status = 'draft' AND activated_at IS NULL AND created_by = (SELECT auth.uid())
     AND EXISTS (
       SELECT 1 FROM public.team_members tm
       WHERE tm.team_id = evolution_role_weight_profiles.team_id
