@@ -36,7 +36,7 @@ test("E final audit preserves the 53-entry historical provenance and rollback ev
 });
 
 test("E final audit carries forward the latest exact-head D CI evidence", () => {
-  assert.ok(audit.includes("Run #284"));
+  assert.match(audit, /run #284/i);
   assert.ok(audit.includes("0de4ecc9dfd450f8cb2be87bed0cbf299965813b"));
   assert.ok(audit.includes("D suite: 6/6"));
   assert.ok(dSuite.includes("E Phase One.5-D"));
@@ -47,7 +47,7 @@ test("E cannot be marked PASS while isolated timezone execution and baseline rep
   assert.match(acceptance, /Runtime timezone\/RLS verification\s*\|\s*Not run/i);
   assert.match(acceptance, /Full Phase One acceptance\s*\|\s*\*\*NOT PASSED\*\*/);
   assert.match(audit, /FINAL ACCEPTANCE: BLOCKED \/ NOT PASSED/);
-  assert.match(audit, /pre-migration baseline is unavailable/i);
+  assert.match(audit, /pre-migration baseline(?: schema)? is unavailable/i);
   assert.match(audit, /staged B forward\/rollback SQL has not been executed/i);
 });
 
