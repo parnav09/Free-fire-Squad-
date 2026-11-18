@@ -268,11 +268,11 @@ These observations should be carried into the date/offline design decisions; no 
 - [x] Existing workflow preservation requirements recorded.
 - [x] No production write/schema/policy/deployment performed.
 - [x] Source-contract audit test added to standard CI build.
-- [ ] Exact-head GitHub Actions CI passes on the Phase Two.1 branch.
+- [x] Exact-head GitHub Actions CI passes on the Phase Two.1 branch (run #371, `44363393358`, commit `bbc4a600d12ecb3b9d86dc2d700d7d113849713a`).
 - [ ] Review the audit report and authorize transition to Point 2.2 separately.
 
 ## 12. Point 2.1 exit decision
 
-**Audit outcome: PASS WITH FOLLOW-UP FINDINGS.** The current source and live schema are mapped sufficiently to design Point 2.2 without guessing. The findings are not defects silently fixed in this audit; they are explicit requirements for subsequent identity, integrity, snapshot and result-verification work.
+**Audit outcome: PASS WITH FOLLOW-UP FINDINGS.** Source-contract CI passed on exact head `bbc4a600d12ecb3b9d86dc2d700d7d113849713a` (GitHub Actions run #371 / `44363393358`): 99 tests passed, 0 failed; typecheck passed; disposable PostgreSQL 16 B integration and trigger ACL checks passed; Vite production build passed. The current source and live schema are mapped sufficiently to design Point 2.2 without guessing. The findings are not defects silently fixed in this audit; they are explicit requirements for subsequent identity, integrity, snapshot and result-verification work.
 
 Point 2.1 does not claim the Evolution Phase Two session system is implemented. It closes discovery only. Phase One 1.5-E acceptance gates remain open and are not waived by this audit.
