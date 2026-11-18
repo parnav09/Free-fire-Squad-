@@ -118,7 +118,8 @@ The current-head final audit and its machine-checkable guard suite are recorded 
 
 1. The pre-migration baseline needed for a clean replay is unavailable; do not invent it or claim a clean replay.
 2. The staged B timezone forward/rollback SQL still needs isolated PostgreSQL/Supabase-compatible execution and runtime validation; this is a separate B acceptance gate, not a C historical-disposition blocker.
-3. Any future historical compensation must be implemented as a new reviewed migration with isolated tests; no automatic historical rollback is approved.
-4. Re-run the full build/CI and Phase One acceptance checklist against the resulting exact commit.
+3. Independent Security review/disposition is required for the current advisor findings: 2 RLS-enabled/no-policy INFO findings, 4 anon SECURITY DEFINER warnings, 22 authenticated SECURITY DEFINER warnings, and 1 leaked-password-protection warning. These belong to the separate Security workstream; no permission changes were made under E.
+4. Any future historical compensation must be implemented as a new reviewed migration with isolated tests; no automatic historical rollback is approved.
+5. Re-run the full build/CI and Phase One acceptance checklist against the resulting exact commit.
 
-**Current result:** C historical rollback disposition is complete (53/53) and D source-contract CI passed on the exact head. B's staged forward/rollback SQL remains unexecuted in an isolated database; the pre-migration baseline required for clean replay is unavailable. E therefore remains **BLOCKED / NOT PASSED**. No production database or deployment changes were made.
+**Current result:** C historical rollback disposition is complete (53/53), D source-contract CI passed (6/6), and the E audit suite passed (5/5) in run #304. B's staged forward/rollback SQL remains unexecuted in an isolated database; the pre-migration baseline required for clean replay is unavailable; independent Security review remains open. E therefore remains **BLOCKED / NOT PASSED**. No production database or deployment changes were made.
