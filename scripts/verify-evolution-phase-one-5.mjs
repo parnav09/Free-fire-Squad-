@@ -32,14 +32,11 @@ test("E Phase One.5-B: timezone trigger remains SECURITY INVOKER and does not mo
   assert.doesNotMatch(forward, /can_rate\(team_id, player_id\)/);
 });
 
-test("E Phase One.5-C: rollback restores the exact old policy date predicate and removes only new objects", () => {
-  assert.match(rollback, /score_date = \(\(now\(\) AT TIME ZONE 'Asia\/Kolkata'::text\)\)::date/);
-  assert.match(rollback, /DROP TRIGGER IF EXISTS trg_daily_scores_team_timezone_date/);
-  assert.match(rollback, /DROP FUNCTION IF EXISTS public\.set_daily_score_team_local_date\(\)/);
-  assert.match(rollback, /DROP TRIGGER IF EXISTS teams_validate_timezone/);
-  assert.match(rollback, /DROP FUNCTION IF EXISTS public\.validate_team_timezone\(\)/);
+test("E Phase One.5-C: rollback removes only the timezone guard introduced by the forward migration", () => {
+  assert.match(rollback, /DROP TRIGGER IF EXISTS teams_validate_timezone ON public\\.teams/);
+  assert.match(rollback, /DROP FUNCTION IF EXISTS public\\.validate_team_timezone\\(\\)/);
+  assert.doesNotMatch(rollback, /daily_scores|ALTER POLICY|set_daily_score_team_local_date/i);
 });
-
 test("E Phase One.5-C: migration does not rewrite historical evaluation rows", () => {
   assert.doesNotMatch(forward, /UPDATE\s+public\.daily_scores/i);
   assert.doesNotMatch(rollback, /UPDATE\s+public\.daily_scores/i);
