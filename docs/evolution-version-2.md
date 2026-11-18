@@ -1104,6 +1104,22 @@ Every alert must point to a repairable record/process. Do not auto-correct histo
 
 Keep the existing premium dark Squad OS design language. Do not add decorative charts or hero blocks that displace useful workflow content.
 
+### 20.1A Cross-device UI contract — Laptop, Tablet, Mobile
+
+The complete Evolution and Evaluation experience must remain available and usable on all three device classes. Responsive behavior may rearrange spacing and component sizing, but must not remove features, hide required information, or change workflow behavior.
+
+- **Laptop / desktop:** preserve the full page composition, clear hierarchy, comfortable content width, and the four Evaluation cards in a two-column × two-row grid.
+- **Tablet:** adapt card width, gutters, typography, and detail-page layout to the available viewport. Keep all four cards and all controls available without clipping or horizontal page overflow.
+- **Mobile:** retain the four Evaluation cards in a compact two-column × two-row grid as requested. Use readable labels, sufficiently large touch targets, and vertical scrolling for long detail pages. Do not force desktop-width tables or forms onto the screen.
+- The four-card order and labels remain identical on every device: **Daily Evaluation**, **Weekly Team Review**, **Matches Evaluation**, **Evaluation Activity**.
+- Detail pages must preserve all fields, statuses, privacy notices, validation messages, and actions on every viewport. If a dense table cannot fit, convert it to stacked responsive rows/cards without dropping columns or information.
+- Dialogs, selectors, date labels, feedback fields, status indicators, and navigation must remain operable by touch, mouse, and keyboard as applicable.
+- No feature may be mobile-only, tablet-only, or desktop-only unless a separately approved product requirement says so.
+- Use responsive CSS/layout breakpoints based on available viewport width, not device-brand detection. Support portrait and landscape orientation.
+- Prevent clipped cards, overlapping text, inaccessible dropdown menus, off-screen primary actions, accidental horizontal scrolling, and hover-only interactions.
+- Keep existing visual identity and interaction patterns; responsive work must not introduce an unrelated redesign.
+- **Acceptance gate:** verify the complete Evaluation flow and the surrounding Evolution navigation at representative laptop, tablet, and mobile viewport sizes, in both portrait and landscape where applicable. Check card grid, detail navigation, selector self-exclusion, forms, pending tracker, scroll behavior, and touch target usability. Capture screenshots or visual regression evidence for each device class before rollout.
+
 ### 20.1 Evolution navigation and Evaluation workspace
 
 - Evolution is reachable without repeatedly opening mobile “More”; use a dedicated navigation slot or persistent shortcut based on existing nav constraints.
