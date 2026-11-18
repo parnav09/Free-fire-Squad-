@@ -4,7 +4,7 @@ Use this file when continuing in a new ChatGPT conversation.
 
 ## Exact resume prompt
 
-**Continue Squad OS E Phase One.5 from PR #115. Read docs/evolution/E-PHASE-ONE-HANDOFF.md, docs/evolution/evolution-phase-one.md, and docs/evolution/E-PHASE-ONE-5-MIGRATION-AUDIT.md first. Continue migration provenance reconstruction only; do not approve or apply a timezone migration until provenance is reconciled. Preserve all roadmap and safety/scope boundaries.**
+**Continue Squad OS E Phase One.5-B/C/D/E from PR #115. Read docs/evolution/E-PHASE-ONE-HANDOFF.md, docs/evolution/evolution-phase-one.md, docs/evolution/E-PHASE-ONE-5-MIGRATION-AUDIT.md, and docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md. The team-timezone forward migration and rollback are staged under docs/evolution/staged-migrations; run the added source-contract tests, reconcile active-chain mismatches, and obtain isolated PostgreSQL validation before promotion. Do not apply production SQL, merge, or deploy without explicit authorization and all acceptance gates.**
 
 ## Naming
 
@@ -183,3 +183,13 @@ Use this file when continuing in a new ChatGPT conversation.
 - No rollback SQL exists in the ledger. Clean-database replay remains unverified; the project has no Supabase development branches.
 - Current recovery commit: `082bb2e89f564dc1182f1e86849781fdca530c64`. PR #115 remains open/draft; no merge, production deployment, database change, Phase Two work, Security change, retention change, or loadout inspection occurred.
 - **Status:** source recovery is complete for the 53-entry safe scope, but E Phase One.5 remains IN PROGRESS pending active-chain reconciliation, independent rollback design, and isolated clean-database verification.
+
+
+## E Phase One.5-B/C/D/E continuation — 18 Nov 2026
+
+- Staged team timezone forward migration: `docs/evolution/staged-migrations/20261118070000_team_timezone_contract.sql`.
+- Staged rollback: `docs/evolution/staged-migrations/20261118070000_team_timezone_contract.rollback.sql`.
+- New source-contract test: `scripts/verify-evolution-phase-one-5.mjs`; npm script `test:evolution-phase-one-5` is wired into `npm run build`.
+- Acceptance record: `docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md`.
+- These are staged artifacts only. No production database changes or migration replay occurred. Run CI on the current head; then resolve six active migration content mismatches and three unmatched files, review historical forward-only migration classifications, and validate forward/rollback against an isolated PostgreSQL/Supabase-compatible database.
+- Do not mark Phase One complete until all gates in the acceptance record pass. Phase Two remains unstarted.
