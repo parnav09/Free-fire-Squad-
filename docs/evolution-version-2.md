@@ -1728,7 +1728,7 @@ Evolution Version 2 is complete only when:
 
 ### 34A.3 Phase One detailed tracker — identity foundation
 
-**Correct overall reading:** Phase One is **not fully complete**. Subphases **1.1–1.4 were implemented and CI-verified**. Subphase **1.5 is the remaining acceptance blocker**. Therefore, the accurate status is **Phase One foundation (1.1–1.4) complete; Phase One overall NOT PASSED / acceptance blocked**. The earlier roll-up label “Partial” is too broad unless this subphase distinction is shown.
+**Correct overall reading:** Phase One is **not fully complete**. Subphases **1.1–1.4 were implemented and CI-verified**, and **1.5-A Migration Provenance & Schema-History Reconciliation is now COMPLETE · VERIFIED**. Subphases **1.5-B, 1.5-C, 1.5-D, and 1.5-E remain incomplete/not started as applicable**. Therefore, the accurate status is **Phase One foundation (1.1–1.4) plus 1.5-A complete; Phase One overall NOT PASSED / acceptance blocked**.
 
 | Subphase | Scope | Status | Evidence / remaining work |
 |---|---|---|---|
@@ -1736,7 +1736,7 @@ Evolution Version 2 is complete only when:
 | 1.2 | Team loading and explicit active-team context | **Implemented · CI verified** | Auth → Membership → Team loading, explicit team selection, validation and sign-out cleanup were implemented; latest-head CI passed. |
 | 1.3 | Async/race protection for identity and team context | **Implemented · CI verified** | Race-protection work was implemented; recorded GitHub Actions run #68 passed on commit `a34bfa6`. |
 | 1.4 | Session eligibility and capability helpers | **Implemented · CI verified** | Exact authenticated-user/membership UUID/team UUID plus active eligibility, fail-closed clearing, and Owner/Coach capability helpers. Recorded checks and CI runs #82/#85 passed; later Phase One run #101 passed. |
-| 1.5-A | Migration provenance and schema-history reconciliation | **Blocked / Partial** | 53 safe-scope migrations were recovered with exact source matches. Remaining: 6 active SQL mismatches, 3 unmatched files, and no stored rollback SQL for the 53 historical migrations. Clean replay/baseline and database-level policy validation are not proven. |
+| 1.5-A | Migration provenance and schema-history reconciliation | **Complete · Verified** | Live ledger 55 rows; 53 in-scope non-loadout rows map 1:1 to active migration files by exact version/name. Direct live SQL-to-file comparison passed 53/53 with zero mismatches; zero missing/extra in-scope files and zero duplicate timestamp prefixes. Two loadout rows excluded. Rollback and clean-replay work are separate gates, not 1.5-A. Evidence: Phase One migration audit Section 11. |
 | 1.5-B | Existing date/timezone contract verification and staged migration | **Drafted · Not applied · Not DB tested** | SQL contract was staged outside the active Supabase migration chain; preserve the existing timezone behavior and do not redesign it. Isolated-PostgreSQL execution has not been completed. |
 | 1.5-C | Rollback plan for the staged date/timezone change | **Drafted · Not DB tested** | Rollback SQL exists as a draft; isolated rollback rehearsal remains outstanding. |
 | 1.5-D | Source-contract tests | **Partial · Local tests passed** | Six local source-contract tests passed. Database integration, migration execution and policy behavior tests remain. |
