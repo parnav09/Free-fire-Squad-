@@ -259,9 +259,9 @@ The archive and active-chain Git blob identities also match for all 53 in-scope 
 
 ### 11.4 Automated verification and boundaries
 
-- Current Phase One branch head: `123b674356edb8cdd226316b58f3153f53618d67`.
-- GitHub Actions run #198 (`44246059976`) completed successfully for this head.
-- GitHub's separate Vercel status is a deployment-rate-limit failure; it does not invalidate the SQL-to-ledger comparison. No preview, device QA, merge, or production deployment is claimed.
+- The migration comparison was performed against the Phase One code head `123b674356edb8cdd226316b58f3153f53618d67`; GitHub Actions run #198 (`44246059976`) passed for that implementation state.
+- The subsequent audit/blueprint documentation update at commit `e848e28fc2577ce0e7e8607c72155a6bfdb316b8` passed GitHub Actions run #200 (`44251584935`).
+- The Vercel check for the post-update commit is successful. No manual preview/device QA, merge, or production deployment is claimed.
 - All database inspection was read-only. No migration was applied, no ledger row was inserted/deleted/updated, and no schema/data/function/policy/grant/trigger was changed.
 - The live ledger contains zero stored rollback statements across all 55 rows. That remains a separate 1.5-C concern; no 1.5-C work was started here.
 - Clean-database replay/baseline verification is not claimed here and remains outside 1.5-A.
