@@ -35,7 +35,7 @@ test("E Phase One.5-C: duplicate migration names remain distinct versioned recor
 
 test("E Phase One.5-C: register explicitly prohibits destructive fabricated inverses and ledger rewrites", () => {
   assert.match(report, /Never delete, rewrite, or renumber a row/);
-  assert.match(report, /Never DROP TABLE/);
+  assert.match(report, /Never `DROP TABLE`/);
   assert.match(report, /Retention\/cleanup migrations are intrinsically non-restorable/);
   assert.match(report, /53\/53 in-scope historical migrations explicitly classified/);
 });
