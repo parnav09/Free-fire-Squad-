@@ -1,7 +1,7 @@
 # Evolution Phase 2.3 — Canonical Match Identity
 
 **Blueprint mapping:** Evolution Version 2, §38.3 Point 2.3 — Match Identity  
-**Status:** Implementation branch · exact-head CI pending  
+**Status:** PASS · development implementation and exact-head CI verified; production rollout remains gated on Point 2.9  
 **Branch:** feat/evolution-phase-two-3-match-identity  
 **Parent:** feat/evolution-phase-two-2-canonical-session-identity  
 **Scope:** First-class match UUIDs, parent-session linkage, source traceability, deterministic sequence, expected-vs-played counts and audited sequence corrections.
@@ -102,7 +102,8 @@ The current live source snapshot implies a backfill of 16 parent sessions and 63
 ## 8. Deployment boundary and exit gate
 
 - The migration is committed to this feature branch only.
+- Exact-head CI evidence: [run #436](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44390023164), SHA `94aeeaa38be133be39afc13e978d6b8cc282a010` — PASS.
 - It has not been applied to the live Supabase project.
 - No production data backfill, app deployment, branch merge or Vercel rollout is performed.
-- Point 2.3 is PASS for limited development only after the exact branch-head CI run is green across PostgreSQL integration, source contracts, TypeScript and Vite build.
+- Point 2.3 is PASS for development: exact branch-head CI run #436 (`94aeeaa38be133be39afc13e978d6b8cc282a010`) completed successfully. The run passed Phase 2.2 + 2.3 disposable PostgreSQL integration, Phase 1.5-B integration, trigger ACL integration, source contracts, TypeScript and the production Vite build.
 - Production rollout remains gated on Point 2.9's non-destructive source archive integration.
