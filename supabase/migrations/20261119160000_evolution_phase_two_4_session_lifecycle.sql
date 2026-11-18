@@ -454,6 +454,8 @@ BEGIN
     OR p_reason IS NULL OR pg_catalog.char_length(pg_catalog.btrim(p_reason)) NOT BETWEEN 1 AND 500
   THEN RAISE EXCEPTION 'lifecycle_reopen_arguments_invalid' USING ERRCODE = '22023'; END IF;
 
+  -- The archived-row UPDATE policy permits the row lock only in the reopen RPC context.
+  PERFORM pg_catalog.set_config('app.evolution_session_lifecycle_action','reopen',true);
   SELECT * INTO v_session FROM public.canonical_sessions WHERE id = p_session_id FOR UPDATE;
   IF NOT FOUND THEN RAISE EXCEPTION 'canonical_session_not_found' USING ERRCODE = 'P0002'; END IF;
   IF NOT EXISTS (
