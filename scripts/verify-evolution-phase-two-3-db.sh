@@ -390,7 +390,7 @@ BEGIN
   SELECT id INTO match_id FROM public.canonical_session_matches
   WHERE team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' LIMIT 1;
   BEGIN
-    PERFORM public.correct_canonical_match_sequence(match_id,9,'Player must not edit order');
+    PERFORM public.correct_canonical_match_sequence(match_id,9::smallint,'Player must not edit order');
     RAISE EXCEPTION 'Player unexpectedly corrected match sequence';
   EXCEPTION WHEN insufficient_privilege THEN
     NULL;
