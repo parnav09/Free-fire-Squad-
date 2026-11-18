@@ -1,6 +1,6 @@
 # Evolution Phase One — Identity, Membership, Timezone
 
-**Status:** IN PROGRESS — E Phase One.1–.4 implemented and CI-verified; E Phase One.5-A migration provenance is COMPLETE · VERIFIED. E Phase One.5-B India-only app/date contract and staged forward SQL are implemented; dedicated B tests and full GitHub Actions run #236 passed. Isolated database execution remains pending. Existing .5-C/.5-D notes are historical and outside the current B-only scope; .5-E acceptance remains NOT PASSED.  
+**Status:** IN PROGRESS — E Phase One.1–.4 implemented and CI-verified; E Phase One.5-A migration provenance is COMPLETE · VERIFIED. E Phase One.5-B India-only app/date contract and staged forward SQL are implemented; dedicated B tests and full GitHub Actions run #236 passed. Isolated database execution remains pending. E Phase One.5-C historical rollback disposition is COMPLETE · DOCUMENTED · MACHINE-CHECKED (53/53); B isolated database execution remains pending; .5-D/.5-E are not complete.  
 **Parent:** Evolution Phase Zero — Legacy Fixes (branch chore/evolution-phase-zero-one-naming, PR #114).  
 **Branch:** feat/evolution-phase-one-identity-timezone  
 **Scope:** stable Auth UUID, team membership identity, active membership selection, team timezone validation/date boundaries, session eligibility primitives, and permission-test helpers. Authorization/RLS/grants remain in the separate Security workstream.
@@ -195,3 +195,15 @@ Phase One is not complete until:
 - Added [Phase One.5-B/C/D/E acceptance record](./E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md).
 - The forward SQL remains outside `supabase/migrations/` and has not been applied. No production schema/data/RLS/function/trigger/ledger changes, Supabase branch, merge, or deployment occurred.
 - **B-only status:** India-only timezone and auto-locked IST date implementation updated; isolated database execution is still pending. Existing C/D notes above are historical work and were not changed in this B-only continuation. E acceptance remains NOT PASSED.
+
+
+### E Phase One.5-C — historical rollback disposition (18 Nov 2026)
+
+- Re-read the live Supabase migration ledger in read-only mode: 55 rows total, 53 in-scope non-loadout rows, and 0 stored rollback statements for those 53.
+- Added `docs/evolution/evolution-phase-one-5-c-rollback-manifest.json` with one version-keyed disposition for every in-scope historical migration.
+- Added `docs/evolution/E-PHASE-ONE-5-C-ROLLBACK-REGISTER.md` with per-migration risk classification, no-automatic-rollback rationale, and safe compensation/recovery rules.
+- All 53/53 in-scope versions are explicitly classified `forward-only / no automatic rollback`; no reverse SQL was fabricated from the current schema.
+- Preserved the two distinct `daily_score_feedback_private_rls` versions; the two loadout rows remain outside this phase.
+- Added `scripts/verify-evolution-phase-one-5-c.mjs` and wired it into the production build test sequence.
+- No Supabase schema/data/policy/grant/function/trigger/migration-ledger changes, no production rollback, no merge, and no deployment were performed.
+- **E Phase One.5-C status: COMPLETE · DOCUMENTED · MACHINE-CHECKED.** This is a disposition register, not a claim that 53 executable rollback scripts exist. Any compensation remains a separately reviewed migration.
