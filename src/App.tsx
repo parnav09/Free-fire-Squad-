@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { getTeamUiCapabilities, resolveActiveTeamIdentity, resolveTeamSessionEligibility } from "./lib/evolution-identity";
+import { getTeamUiCapabilities, indiaDateISO, indiaDateLabel, millisecondsUntilIndiaMidnight, resolveActiveTeamIdentity, resolveTeamSessionEligibility } from "./lib/evolution-identity";
 import { createLatestRequestGuard } from "./lib/latest-request-guard";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
@@ -42,13 +42,6 @@ function readLocalRecord<T extends Record<string, unknown>>(key: string, fallbac
     return fallback;
   }
 }
-
-function kolkataDateISO(date = new Date()): string {
-  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date);
-  const part=(type:string)=>parts.find(value=>value.type===type)?.value||"";
-  return `${part("year")}-${part("month")}-${part("day")}`;
-}
-
 
 type SupabaseInstance = NonNullable<typeof import("./lib/supabase/client")["supabase"]>;
 
@@ -196,7 +189,21 @@ export default function App() {
   const [cloudSessionNotes, setCloudSessionNotes] = useState("");
   const [trainingDate, setTrainingDate] = useState(() => new Date().toLocaleDateString("en-CA"));
   const [evalPlayer,setEvalPlayer]=useState("");
-  const evalDate=kolkataDateISO();
+  const [indiaToday,setIndiaToday]=useState(()=>({iso:indiaDateISO(),label:indiaDateLabel()}));
+  const evalDate=indiaToday.iso;
+  const evalDateLabel=indiaToday.label;
+  useEffect(()=>{
+    let timer:number|undefined;
+    let cancelled=false;
+    const refreshIndiaDate=()=>{
+      if(cancelled)return;
+      const now=new Date();
+      setIndiaToday({iso:indiaDateISO(now),label:indiaDateLabel(now)});
+      timer=window.setTimeout(refreshIndiaDate,millisecondsUntilIndiaMidnight(now)+100);
+    };
+    refreshIndiaDate();
+    return()=>{cancelled=true;if(timer!==undefined)window.clearTimeout(timer);};
+  },[]);
   const [evalScores,setEvalScores]=useState<Record<string,number>>({});
   const [evalSaving,setEvalSaving]=useState(false);
   const [evalHistory,setEvalHistory]=useState<Array<{id:string;player_id:string;score_date:string;created_at?:string;communication:number;coordination:number;decision_making:number;role_execution:number;map_awareness:number;total:number|null;notes:string|null;improvement_target:string|null;improvement_notes:string|null;mistake_notes:string|null}>>([]);
@@ -1100,7 +1107,7 @@ export default function App() {
           {section==="Evaluation" && <>
             <div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · LEGACY FORM</div><h2>Legacy daily evaluation</h2><p className="daily-eval-helper">This is the existing five-dimension record form. The canonical session-linked Daily Evaluation is reserved for Evolution Phase Four.</p></div></div>
             <section className="connection-panel" style={{display:"block"}}>
-              <div className="daily-eval-date-lock"><span className="date-lock-mark">▣</span><div><b>Today's evaluation · {evalDate}</b><small>Locked to today's local date · cannot be edited</small></div><span className="date-lock-badge">DATE LOCK</span></div>
+              <div className="daily-eval-date-lock"><span className="date-lock-mark">▣</span><div><b>Today's evaluation · {evalDateLabel}</b><small>India date · UTC+05:30 · auto-selected and locked for today</small></div><span className="date-lock-badge">DATE LOCK</span></div>
               <div className="daily-eval-player-select"><label>Evaluate player<select value={evalPlayer} onChange={e=>setEvalPlayer(e.target.value)}><option value="">Select another active team player</option>{teamMembers.filter(m=>m.status==="active"&&m.user_id!==sessionUserId).map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · {m.assigned_role||("P"+m.player_number)}</option>)}</select></label><span className="daily-eval-anon">◉ Anonymous · evaluator identity is not stored</span></div>
               <p className="daily-eval-helper">Rate observed actions, not reputation or match result. Each dimension is 0–10; total is out of 50. Slider positions are placeholders until selected; all five ratings are required before saving.</p>
               <div className="daily-eval-ratings">{[["communication","Communication","Clear, timely calls + confirmations"],["coordination","Coordination","Team timing, spacing and sync"],["decision_making","Decision making","Fight, reset, rotate and regroup"],["role_execution","Role execution","Player's assigned role delivered"],["map_awareness","Map awareness","Zone, enemy info and safe angles"]].map(([k,label,hint])=><div className="daily-eval-rating" key={k}><div className="daily-eval-rating-copy"><div><b>{label}</b><small>{hint}</small></div><strong>{evalScores[k]??"Not rated"}<em>/10</em></strong></div><input aria-label={label+" rating 0 to 10"} type="range" min="0" max="10" step="1" value={evalScores[k]??5} onPointerDown={()=>setEvalScores(p=>p[k]===undefined?({...p,[k]:5}):p)} onChange={e=>setEvalScores(p=>({...p,[k]:Number(e.target.value)}))}/><div className="daily-eval-ticks"><span>0</span><span>2</span><span>5</span><span>8</span><span>10</span></div></div>)}</div>
