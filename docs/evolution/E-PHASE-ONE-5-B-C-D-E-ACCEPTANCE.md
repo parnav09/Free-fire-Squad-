@@ -57,6 +57,8 @@ The checks cover:
 - no historical row rewrite;
 - staged SQL remaining outside the active migration directory.
 
+**Local result:** the new Node source-contract suite was executed against the staged forward/rollback files in an isolated temporary workspace: **6 passed, 0 failed**. The current PR head has no reported GitHub Actions run available through the workflow lookup; the combined commit status shows only Vercel's build-rate-limit failure. A full repository build has not been verified on this head.
+
 **Limit:** these are source-contract tests, not a database integration test. CI must pass on the new head, and the forward/rollback SQL must still pass isolated database execution before D can be marked complete.
 
 ## E — Final Phase One acceptance audit
