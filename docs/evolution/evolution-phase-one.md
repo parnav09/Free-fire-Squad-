@@ -1,6 +1,6 @@
 # Evolution Phase One — Identity, Membership, Timezone
 
-**Status:** IN PROGRESS — E Phase One.1–.4 implemented and CI-verified; E Phase One.5-A migration provenance is COMPLETE · VERIFIED. E Phase One.5-B India-only app/date contract and staged forward SQL are implemented; dedicated B tests and full GitHub Actions run #236 passed. Isolated database execution remains pending. E Phase One.5-C historical rollback disposition is COMPLETE · DOCUMENTED · MACHINE-CHECKED (53/53); B isolated database execution remains pending; .5-D/.5-E are not complete.  
+**Status:** IN PROGRESS — E Phase One.1–.4 implemented and CI-verified; E Phase One.5-A migration provenance is COMPLETE · VERIFIED. E Phase One.5-B India-only app/date contract and staged forward SQL are implemented; dedicated B tests and full GitHub Actions run #236 passed. Isolated database execution remains pending. E Phase One.5-C historical rollback disposition is COMPLETE · DOCUMENTED · MACHINE-CHECKED (53/53); E Phase One.5-D source-contract suite is CI-verified 6/6 on run #284; B isolated database execution and baseline replay remain pending, so .5-E is BLOCKED.  
 **Parent:** Evolution Phase Zero — Legacy Fixes (branch chore/evolution-phase-zero-one-naming, PR #114).  
 **Branch:** feat/evolution-phase-one-identity-timezone  
 **Scope:** stable Auth UUID, team membership identity, active membership selection, team timezone validation/date boundaries, session eligibility primitives, and permission-test helpers. Authorization/RLS/grants remain in the separate Security workstream.
