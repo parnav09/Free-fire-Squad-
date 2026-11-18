@@ -52,9 +52,10 @@ test("E final audit preserves the 53-entry historical provenance and rollback ev
 });
 
 test("E final audit carries exact-head full CI and database evidence", () => {
-  assert.match(audit, /run #337/i);
-  assert.ok(audit.includes("44275561389"));
-  assert.ok(audit.includes("da5ca832060c30aad309f24ada929dc2499ca75f"));
+  assert.match(audit, /run #352/i);
+  assert.ok(audit.includes("44276950260"));
+  assert.ok(audit.includes("0a24ce6fd9811ef53b0e8d39b3dbd54597fe4426"));
+  assert.ok(audit.includes("44276957631"));
   assert.match(audit, /B.*PASS.*CI database verified/i);
   assert.match(audit, /E audit integrity.*PASS.*CI verified/i);
   assert.match(dSuite, /E Phase One\.5-D/);
