@@ -26,7 +26,7 @@ Migration: `supabase/migrations/20261119120000_evolution_phase_two_2_canonical_s
 - Mutable title/date/schedule/season metadata.
 - Required per-team UUID idempotency key.
 - Authenticated creator provenance.
-- Soft archive fields; no hard-delete grant or policy. Archive is non-destructive: archived sessions remain stored and read-only through normal application permissions.
+- Soft archive fields; no hard-delete grant or policy. The non-destructive archive behavior keeps archived sessions stored and read-only through normal application permissions.
 - Composite unique key `(id, team_id)` for tenant-safe child references.
 
 ### `public.canonical_session_sources`
@@ -104,7 +104,7 @@ Official references:
 - **Remaining:** the separate broad adversarial review of all historical SECURITY DEFINER RPCs is not included in Point 2.2 and remains open. No claim is made that it is a Free/Pro plan restriction; it is a distinct test/review scope.
 
 ### 6.3 Original clean-replay baseline
-- **Disposition:** not fabricated.
+- **Disposition:** not fabricated. The available evidence is not a verified original baseline.
 - The repository does not contain an authoritative pre-migration schema baseline. The live migration ledger starts with historical migrations, but a migration ledger is not a schema dump.
 - The connected Supabase database tools can inspect catalog metadata and execute SQL, but do not expose a schema-only `pg_dump` artifact or the database password needed for the official CLI `supabase db pull` workflow.
 - Reconstructing a "baseline" from table lists or partial catalog queries would omit definitions such as policies, functions, triggers, grants, extensions and view dependencies. That would create a false clean-replay claim.
