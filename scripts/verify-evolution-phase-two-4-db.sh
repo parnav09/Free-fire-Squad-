@@ -493,6 +493,14 @@ BEGIN
     OR v_row.lifecycle_scheduled_at IS NULL OR v_row.lifecycle_scheduled_by <> auth.uid()
   THEN RAISE EXCEPTION 'Scheduled transition timestamp/actor/version missing'; END IF;
 
+  BEGIN
+    PERFORM public.transition_canonical_session(
+      v_session,0,'in_progress','Stale version must fail','51000000-0000-0000-0000-000000000099',NULL
+    );
+    RAISE EXCEPTION 'Stale lifecycle version was accepted';
+  EXCEPTION WHEN SQLSTATE '40001' THEN NULL;
+  END;
+
   -- Same key and payload is idempotent even when the caller retries the old version.
   v_row := public.transition_canonical_session(
     v_session,0,'scheduled','Schedule confirmed','51000000-0000-0000-0000-000000000002',NULL
@@ -553,6 +561,11 @@ BEGIN
   );
   IF v_row.results_verified_at IS NULL OR v_row.results_verified_by <> auth.uid() THEN
     RAISE EXCEPTION 'Verified timestamp/actor missing';
+  END IF;
+  IF (public.submit_canonical_session_results(
+    v_session,'52000000-0000-0000-0000-000000000001'
+  )).id <> v_submission.id THEN
+    RAISE EXCEPTION 'Result submission retry stopped being idempotent after verification';
   END IF;
 
   BEGIN
@@ -666,6 +679,13 @@ BEGIN
   v_row := public.transition_canonical_session(
     v_session,0,'scheduled','Scheduled tournament session','56000000-0000-0000-0000-000000000001',NULL
   );
+  BEGIN
+    PERFORM public.transition_canonical_session(
+      v_session,1,'cancelled','No-show code is mandatory','56000000-0000-0000-0000-000000000099',NULL
+    );
+    RAISE EXCEPTION 'Cancellation without a reason code was accepted';
+  EXCEPTION WHEN SQLSTATE '22023' THEN NULL;
+  END;
   v_row := public.transition_canonical_session(
     v_session,1,'cancelled','Team did not attend the scheduled session','56000000-0000-0000-0000-000000000002','no_show'
   );
