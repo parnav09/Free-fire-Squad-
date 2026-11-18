@@ -454,7 +454,13 @@ DECLARE
   v_count integer;
   v_title text;
 BEGIN
-  IF (SELECT count(*) FROM public.canonical_sessions WHERE lifecycle_status='draft' AND lifecycle_version=0) <> 3 THEN
+  IF NOT EXISTS (SELECT 1 FROM public.canonical_sessions) THEN
+    RAISE EXCEPTION 'Phase 2.3 fixture did not produce canonical sessions';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM public.canonical_sessions
+    WHERE lifecycle_status <> 'draft' OR lifecycle_version <> 0
+  ) THEN
     RAISE EXCEPTION 'Existing canonical sessions were not conservatively initialized to Draft';
   END IF;
   SELECT canonical_session_id INTO v_session
