@@ -1,6 +1,6 @@
 # Evolution Phase One — Identity, Membership, Timezone
 
-**Status:** IN PROGRESS — E Phase One.1–.4 implemented. E Phase One.5-B forward SQL and .5-C rollback are drafted in staged-migrations; .5-D source-contract tests are added to build. No database integration validation has run. E Phase One.5-E acceptance is NOT PASSED because active-chain disposition, historical rollback classification, and isolated replay remain open.  
+**Status:** IN PROGRESS — E Phase One.1–.4 implemented and CI-verified; E Phase One.5-A migration provenance is COMPLETE · VERIFIED. E Phase One.5-B India-only app/date contract and staged forward SQL are implemented; dedicated B tests and full GitHub Actions run #236 passed. Isolated database execution remains pending. Existing .5-C/.5-D notes are historical and outside the current B-only scope; .5-E acceptance remains NOT PASSED.  
 **Parent:** Evolution Phase Zero — Legacy Fixes (branch chore/evolution-phase-zero-one-naming, PR #114).  
 **Branch:** feat/evolution-phase-one-identity-timezone  
 **Scope:** stable Auth UUID, team membership identity, active membership selection, team timezone validation/date boundaries, session eligibility primitives, and permission-test helpers. Authorization/RLS/grants remain in the separate Security workstream.
@@ -14,7 +14,7 @@
 - Team creation currently calls create_team with p_timezone: "Asia/Kolkata".
 - The live lock_daily_score_date_and_anonymize() trigger currently derives score dates using a hard-coded Asia/Kolkata timezone.
 - The current loadTeam path uses the saved preferred team ID and requires explicit selection when active memberships are ambiguous; it does not silently fall back to the first active membership.
-- The reusable identity resolver and IANA timezone validation/date-formatting helper are implemented in E Phase One.1–.4.
+- The reusable identity resolver and India-only timezone/date helpers are implemented; only Asia/Kolkata and the legacy Asia/Calcutta alias are accepted by the current app contract.
 
 ## 2. First implementation slice
 
@@ -24,17 +24,17 @@ Added src/lib/evolution-identity.ts:
 - Active-membership filtering.
 - Preferred-team selection.
 - Fail-closed behavior for malformed IDs, duplicate membership rows, and ambiguous multi-team selection.
-- IANA timezone validation.
-- Team-local date formatting for display and deterministic boundary tests.
+- India-only timezone validation (Asia/Kolkata; Asia/Calcutta accepted as a legacy alias).
+- India-local ISO date keys, English ordinal date labels, and deterministic IST-midnight refresh calculations.
 
-Important: the date formatter is a client display utility only. The existing persisted Daily Evaluation date contract remains Asia/Kolkata, enforced by the database trigger and ds_insert RLS policy. Phase One.5-B validates configured team timezone values but deliberately does not change persisted date boundaries or reinterpret historical records.
+Important: the app date is always the India calendar day, regardless of device timezone. The existing persisted Daily Evaluation date contract remains Asia/Kolkata, enforced by the database trigger and ds_insert RLS policy. Phase One.5-B stages a teams.timezone write guard and normalizes the UTC column default/legacy alias on INSERT, but does not change persisted score_date boundaries or reinterpret historical records.
 
 Added scripts/verify-evolution-phase-one.mjs with contract tests for identity mapping, labels-vs-IDs, active membership, multiple teams, duplicate membership ambiguity, timezone validation, and date-boundary behavior.
 
 ## 3. Hard blockers before completing Phase One
 
-1. Migration provenance: the Phase Zero audit found live migration history that does not map cleanly to the checked-in migration directory. Do not add/apply a timezone-trigger migration until the live migration provenance is reconciled and a forward/rollback plan is reviewed.
-2. Server-side timezone contract: the existing date trigger is hard-coded to India time. A client-only timezone selector would create inconsistent dates, so no editable timezone UI is exposed until the server trigger/RPC contract is safely updated.
+1. Migration provenance: Phase One.5-A has reconciled the 53 in-scope live migration entries byte-for-byte with active SQL files. Historical rollback coverage and clean-replay evidence remain separate acceptance items; the B migration remains staged until isolated execution is approved and verified.
+2. Server-side timezone contract: the app is India-only; no timezone selector is exposed. The existing Daily Evaluation trigger/RLS remain the authority for persisted IST dates. The staged B trigger guards all writes to teams.timezone and must pass isolated database verification before promotion.
 3. Application integration: E Phase One.2 is implemented and CI-verified on the current PR head. It resolves the active membership in loadTeam, requires explicit team choice for ambiguous memberships, revalidates all stable IDs, and clears scoped state on sign-out. Race protection for overlapping requests is implemented and CI-verified in E Phase One.3.
 4. Session eligibility: no session roster snapshot is added here; Phase Two owns session/match/role snapshots. Phase One will provide only stable active-membership primitives.
 5. Security boundary: no RLS, grants, SECURITY DEFINER functions, Auth settings, or privileged authorization changes are included in this Evolution phase. Client checks are not a security boundary.
@@ -46,9 +46,9 @@ Phase One is not complete until:
 - Display labels/IGN/P1 labels are never accepted as IDs.
 - Active membership is represented consistently and inactive membership is excluded.
 - Multiple active teams require an explicit selection; ambiguous membership is not silently resolved.
-- Configured IANA timezone is validated.
-- Date-boundary tests pass for at least two different team timezones.
-- Existing server-side persisted Daily Evaluation dates continue to follow Asia/Kolkata; Phase One.5-B must prove that contract remains unchanged while validating configured team timezone values.
+- Only Asia/Kolkata and the legacy Asia/Calcutta alias are accepted; the alias is normalized to Asia/Kolkata by the staged server trigger, and all other zones are rejected.
+- Date-boundary tests prove the IST calendar-day flip at 00:00 IST and the same result for the legacy alias; member device timezone does not affect the result.
+- Existing server-side persisted Daily Evaluation dates continue to follow Asia/Kolkata; Phase One.5-B must prove that contract remains unchanged while enforcing the team timezone write guard.
 - Session eligibility primitives are documented and tested.
 - Separate Security workstream validates authorization independently.
 
@@ -68,8 +68,8 @@ Phase One is not complete until:
 - Added reusable UUID validation and Auth → membership → team identity mapping.
 - Rejects display labels as IDs.
 - Fails closed on inactive, malformed, duplicate, or ambiguous membership rows.
-- Added IANA timezone validation and team-local date formatter for display.
-- Added contract tests for mapping, ambiguous teams, invalid IDs, and two timezone date boundaries.
+- Added India-only timezone validation and India-local date formatter for display.
+- Added contract tests for mapping, ambiguous teams, invalid IDs, and IST date boundaries.
 
 ### E Phase One.2 — Application team-loading integration
 
@@ -178,7 +178,7 @@ Phase One is not complete until:
 
 - Current PR #115 head ac76497c30b90464ecfb10adc9ded8e1bdfdf48a is open/draft and stacked on Phase Zero PR #114.
 - GitHub Actions run #114 (44191983016) passed for the exact current head: dependency setup, lockfile pinning, typecheck, configured verification suites, and Vite production build.
-- Re-read the live Supabase migration ledger: 55 version/name rows. No Supabase development branches are present. The ledger exposes version/name metadata only, not original SQL bodies or content hashes; unresolved provenance remains blocked.
+- Re-read the live Supabase migration ledger: 55 version/name rows. No Supabase development branches are present. The ledger exposes version/name metadata only, not original SQL bodies or content hashes; the 53-entry byte-for-byte provenance reconciliation is recorded separately in the 1.5-A audit.
 - Read-only inspection expanded the timezone write-path inventory: create_team, restore_team_backup, and restore_team_backup_for_team all write teams.timezone without server-side IANA validation. Daily Evaluation date persistence remains hard-coded to Asia/Kolkata in both the BEFORE INSERT trigger and ds_insert policy.
 - A complete future timezone change must validate timezone values in all three write paths and update the trigger/policy as one consistent contract. Preserve existing anonymization and recipient-only feedback semantics; do not rewrite historical scores.
 - No Supabase schema/data/trigger/policy/grant/function/migration-history change, merge, production deployment, preview QA, Security implementation, retention change, or Phase Two work occurred.
