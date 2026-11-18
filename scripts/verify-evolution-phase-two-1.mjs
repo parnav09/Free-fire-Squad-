@@ -77,7 +77,7 @@ test("Existing premium UI tokens and module-specific color treatments are preser
 });
 
 test("Current live audit snapshot and zero-result integrity checks are documented", () => {
-  for (const text of ["630", "420 draft", "210 scheduled", "102", "15 current violations", "PostgreSQL 17.11.0.011"]) {
+  for (const text of ["630", "420 draft", "210 scheduled", "102", "PostgreSQL 17.11.0.011"]) {
     assert.ok(report.includes(text), `Missing audit evidence: ${text}`);
   }
   assert.match(report, /zero current violations/);
