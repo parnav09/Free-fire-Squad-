@@ -5,7 +5,7 @@
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
 **PR:** #115 — open, draft, unmerged  
 **D evidence head:** `0de4ecc9dfd450f8cb2be87bed0cbf299965813b`  
-**E audit CI head:** `e3af59a68fd7c5c76fdd6c240c4041bb61011639`
+**E audit CI head:** `c7a58ca4f9f62581a0cd0da162cf53c255299772`
 
 ## Final result
 
@@ -26,7 +26,7 @@ This is the final acceptance audit for Evolution Phase One.5. It consolidates A�
 | 1.5-B — application contract | India-only timezone/date contract and dedicated source tests are present; CI history includes the B suite | **PARTIAL · runtime SQL gate open** |
 | 1.5-C — historical rollback disposition | 53/53 in-scope versions have explicit forward-only dispositions, risk classes, and recovery rules; no reverse SQL fabricated | **PASS · documented and machine-checked** |
 | 1.5-D — source-contract tests | Exact-head GitHub Actions run #284 on `0de4ecc9dfd450f8cb2be87bed0cbf299965813b` passed; D suite 6/6; full configured build and Vite production build passed | **PASS · CI verified** |
-| E audit integrity | Dedicated E acceptance audit suite passed 5/5 in GitHub Actions run #304 on exact head `e3af59a68fd7c5c76fdd6c240c4041bb61011639`; full configured build and Vite production build passed | **PASS · CI verified** |
+| E audit integrity | Dedicated E acceptance audit suite passed 6/6 in GitHub Actions run #315 on exact head `c7a58ca4f9f62581a0cd0da162cf53c255299772`; all configured suites and Vite production build passed | **PASS · CI verified** |
 
 ## Independent Security-advisor review
 
