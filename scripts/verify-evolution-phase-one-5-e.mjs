@@ -41,6 +41,15 @@ test("E final audit carries forward the latest exact-head D CI evidence", () => 
   assert.ok(dSuite.includes("E Phase One.5-D"));
 });
 
+test("E final audit records the exact active migration tree and separate Security review", () => {
+  assert.ok(audit.includes("55 active migration files"));
+  assert.ok(audit.includes("53 exact in-scope version/name matches"));
+  assert.ok(audit.includes("duplicate active timestamp prefixes: 0"));
+  assert.ok(audit.includes("4 WARN findings"));
+  assert.ok(audit.includes("22 WARN findings"));
+  assert.ok(audit.includes("leaked-password protection is disabled"));
+});
+
 test("E cannot be marked PASS while isolated timezone execution and baseline replay are unverified", () => {
   assert.match(acceptance, /Isolated clean replay\s*\|\s*Not run/i);
   assert.match(acceptance, /Runtime timezone\/RLS verification\s*\|\s*Not run/i);
