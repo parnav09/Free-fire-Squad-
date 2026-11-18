@@ -4,7 +4,7 @@ set -euo pipefail
 : "${DATABASE_URL:?DATABASE_URL must point to the disposable CI PostgreSQL service}"
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ACL_SQL="$ROOT/supabase/migrations/20261119121000_revoke_direct_trigger_function_execution.sql"
+ACL_SQL="$ROOT/supabase/migrations/20261118193817_revoke_direct_trigger_function_execution.sql"
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 DO $$
