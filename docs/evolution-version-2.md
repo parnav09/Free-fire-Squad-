@@ -14,6 +14,32 @@
 
 ---
 
+## Workflow-first product map — authoritative page order
+
+Evolution Version 2 uses one Evaluation workspace with four entry cards arranged as a two-column by two-row grid. Each card opens its own detail page. This is one connected workflow, not four disconnected data systems.
+
+| Order | Evaluation card / page | Purpose |
+|---|---|---|
+| 1 | **Daily Evaluation** | Select other active teammates and submit today's peer evaluations. The signed-in evaluator is never selectable. |
+| 2 | **Weekly Team Review** | Each eligible active member submits one team-level review for the current week using nine team dimensions. This is separate from the coach-led **Weekly Review** snapshot. |
+| 3 | **Matches Evaluation** | Evaluate a selected match from either Scrims or Tournament, using its existing canonical match/session ID. |
+| 4 | **Evaluation Activity** | Show completion and pending work. The Daily Pending Tracker shows overdue evaluator → target pairs only after a 24-hour grace period, then removes each visible item after a further 24 hours. It never shows scores or private feedback. |
+
+### Workflow sequence
+
+1. Open **Evolution → Evaluation** and see the four cards in the order above.
+2. Open **Daily Evaluation**; today's date is supplied automatically by the existing server-side date contract. No date picker or backdated submission is available.
+3. Select eligible teammates. The current user's own player record is excluded before rendering and rejected again by the server.
+4. Complete the required dimensions and private feedback for each selected teammate; save each evaluator-target assignment idempotently.
+5. The system tracks expected, submitted, and pending assignments. After 24 hours without submission, the exact evaluator → target pair enters Evaluation Activity for the next 24 hours.
+6. Open **Weekly Team Review** to submit the current week's team-level review.
+7. Open **Matches Evaluation** and choose a match from Scrims or Tournament.
+8. Open **Evaluation Activity** to see workflow status and the temporary Daily Pending Tracker.
+
+**Privacy boundary:** the temporary overdue tracker is a narrow accountability exception. It may show only evaluator name/slot, target name/slot, evaluation date, and Pending status during its 24-hour display window. It must not show submitted scores, dimension ratings, written feedback, or reviewer identity attached to completed anonymous feedback.
+
+**Expiry boundary:** expiry removes the item from the visible tracker; it does not delete the original evaluation, feedback, assignment/audit provenance, or historical source records. This is a work-queue expiry, not destructive data retention.
+
 # Part I — Product foundation and non-negotiable rules
 
 ## 1. Product definition
@@ -308,19 +334,23 @@ Rules:
 
 ## 6. Daily Evaluation workflow
 
+> **Daily Evaluation selector rule:** the current evaluator is excluded from the target list at render time and rejected server-side. Each eligible evaluator-target pair has its own stable assignment ID. The date is automatic/read-only under the existing date contract; no date picker, backdating, or timezone redesign is part of this change.
+
 ### 6.1 Default path
 
-1. Evaluator opens Daily Evolution.
-2. Selects an existing session/match; session context, team, map/mode, and roster are prefilled.
-3. Selects an eligible player from the session roster.
-4. The role used in that session is shown and locked unless an authorized correction is made.
-5. Evaluator rates each of six dimensions or explicitly selects Not observed with a reason.
-6. Adds dimension-linked or overall evidence.
-7. Adds separate notes: **Mistakes observed / what went wrong** and **What to improve next**.
-8. Preview shows score (if eligible), coverage, context, rubric version, and privacy visibility.
-9. Submit commits evaluation, dimension scores, evidence links, feedback, audit event, and outbox events atomically.
-10. Player receives permitted feedback and may acknowledge it.
-11. Evaluator cannot silently rewrite a submitted evaluation; corrections use an amendment flow.
+1. Evaluator opens **Evolution → Evaluation → Daily Evaluation**.
+2. Selects an existing session/match where applicable; session context, team, map/mode, and roster are prefilled.
+3. The server supplies today's date using the existing date/time contract. The page has no date picker and rejects client-supplied past/future dates.
+4. The eligible active teammate list is loaded from the daily cohort. The signed-in evaluator's own UUID is excluded from the selector; the server independently rejects self-target attempts.
+5. Evaluator selects each teammate to review. Every evaluator-target pair receives its own stable assignment ID and idempotency key; one teammate's submission cannot mark another target complete.
+6. The role/context used in the linked session is shown from the roster snapshot where applicable.
+7. Evaluator rates each canonical rubric dimension or explicitly selects Not observed with a reason.
+8. Adds permitted evidence and separate private notes: **Mistakes observed / what went wrong** and **What to improve next**.
+9. Preview shows the evaluator's own entered values and a visibility notice. Numeric ratings are not exposed to other players through the team activity tracker or recipient feedback view.
+10. Submit commits the evaluation, scores, evidence links, feedback, audit event, and outbox events atomically.
+11. The recipient receives only sanitized feedback permitted by the anonymity/privacy policy. The evaluator can see their own submission status.
+12. The assignment changes to Complete only after the server confirms commit. A retry reuses the same idempotency key.
+13. Evaluator cannot silently rewrite a submitted evaluation; corrections use an audited amendment flow.
 
 ### 6.2 Manual evaluation path
 
@@ -338,6 +368,26 @@ A standalone/manual evaluation remains available only with a reason. It must not
 - Show Pending / Saved / Failed / Conflict states.
 - Do not show success until the server confirms commit.
 - Offline submission is queued and marked Pending; it is not considered official until server validation succeeds.
+
+### 6.4 Daily assignment lifecycle
+
+- For N eligible active players, each evaluator has N−1 target assignments. A five-player cohort therefore has four targets per evaluator and twenty directed assignments in total.
+- Create one stable UUID per team + evaluation date + evaluator + target. Enforce uniqueness and idempotency server-side.
+- Do not generate self-pairs. A self-target must never flash in the selector during loading.
+- A completed assignment is marked Complete only after the server confirms the atomic save.
+- Numeric ratings remain private; team-wide activity displays workflow status only.
+
+### 6.5 Daily Pending Tracker — 24-hour grace + 24-hour visibility
+
+- The first 24 hours after the daily evaluation window begins are the grace period. Unsubmitted assignments remain ordinary Pending and are not listed in the overdue tracker.
+- If still unsubmitted after 24 hours, show the exact outstanding pair in **Evaluation → Evaluation Activity → Daily Pending Tracker**, e.g. **Player 1 → Player 4 — Pending**.
+- Show only evaluator, target, evaluation date, and Pending status. Do not show scores, dimension ratings, or feedback.
+- Keep the row visible for the following 24 hours. If the evaluator completes the assignment during this window, remove it immediately.
+- If still incomplete, automatically remove it from the visible tracker at the end of that second 24-hour window. Do not carry it into the next day's list.
+- Generate each day's cohort independently; yesterday's pending item never blocks today's assignments.
+- Use server timestamps and status, not a client/device timer. Reconcile expiry on page load/focus as well as Realtime updates.
+- Expiry hides only the tracker item. Preserve the underlying assignment/audit record and all submitted source records.
+- Tests must cover the 24h grace boundary, the second 24h expiry boundary, completion during the visible window, no carry-forward, and no self-pairs.
 
 ## 7. Feedback model
 
@@ -436,28 +486,24 @@ Daily Peer Evaluation card:
 - no evaluator identity, initials, avatars, codes, or identifying badge.
 
 Detail screen:
-- separate review cards in non-stable order;
-- each review's total score where valid and all six dimension scores;
-- Not observed visibly distinct from deliberate 0;
-- separate Mistakes observed and Improvement focus notes;
+- separate sanitized feedback cards in non-stable order;
+- **Mistakes observed / what went wrong** and **What to improve next** notes;
 - only safe evidence links;
-- optional aggregate summary only with sample count and coverage;
-- no unexplained merged score;
+- no evaluator identity, numeric rating, dimension score, or reviewer-linked score summary visible to the recipient or other players;
 - no hidden author data in tooltips, accessibility labels, URLs, logs, exports, or filenames.
+- Any future aggregate requires separate approval, cohort-safe thresholds, and must not reveal an individual evaluator's rating.
 
-Card-to-detail navigation should follow the existing Scrims interaction pattern. Returning to the list preserves scroll position.
+### 8.6 Completion states and overdue-tracker exception
 
-### 8.6 Completion and missed-review states
-
-- Before cutoff: Collection in progress / Pending.
-- After cutoff with fewer than expected: Not all peer reviews received.
-- All eligible peers submitted: Complete.
-- Excused/ineligible players are excluded from expected denominator.
-- Recipient may see their own expected/received count.
-- Other teammates see only neutral collection open/closed status; no person-level matrix, reviewer list, missing-player list, or other target's progress count.
-- Coaches may see aggregate cohort coverage only, without reviewer identity.
-- Private reminders go only to the individual with pending work.
-- No public accusation or “Player X failed to review Player Y” event.
+- Before the first 24-hour grace period ends: Collection in progress / Pending.
+- If every expected assignment is submitted: Complete.
+- Excused/ineligible players are excluded from the expected denominator.
+- Each evaluator can see their own outgoing assignment status; each recipient can see only their own sanitized feedback availability.
+- **Evaluation Activity → Daily Pending Tracker** is the sole exception to the general no-person-level-progress rule: after the first 24 hours, it may show the exact outstanding evaluator → target pair for the next 24 hours, as specified in Section 6.5.
+- The tracker shows only unsubmitted assignments. It never shows completed reviewer-target pairs, scores, dimensions, or feedback.
+- At the end of the second 24-hour window, the item automatically disappears from the visible tracker and is not carried into the next day's cohort.
+- Private reminders may go to the individual evaluator with pending work.
+- Do not create a public blame notification or expose any submitted feedback author.
 
 ### 8.7 Link feedback to tasks
 
@@ -634,6 +680,42 @@ Draft → Coach Review → Approved → Published → Archived.
 - Archive is non-destructive and searchable.
 - Every actionable focus can become a linked development task.
 
+## 10A. Weekly Team Review — member-submitted team evaluation
+
+This is a separate page inside the four-card Evaluation workspace. It must not be confused with Section 10's coach-led **Weekly Review**, which produces player-development summaries and immutable review snapshots.
+
+### 10A.1 Submission model
+
+- Each eligible active team member submits one team-level review for the current week.
+- The form evaluates the team's performance as a unit, not one teammate against another.
+- The review period is selected automatically as the current week under the existing date/week policy; users cannot backdate a submission.
+- The page displays the week range and the member's submission state.
+- A member can edit only an unsubmitted draft. A submitted review is immutable except through an audited correction process.
+- Team-wide completion status may show which members have submitted and which remain Pending. It must not expose private narrative or numeric ratings to ordinary teammates unless a separately approved permission policy allows it.
+
+### 10A.2 Canonical team dimensions
+
+Use the existing nine-dimension team-review model where it matches the current database contract; map to existing fields before adding schema. Do not create duplicate parallel ratings if the existing team-ratings table already represents these dimensions.
+
+1. Team Communication
+2. Coordination & Trade Support
+3. IGL Decision Making
+4. Rotation & Zone Control
+5. Role Balance & Execution
+6. Fight Selection
+7. Survival & Placement Management
+8. Utility Management
+9. Match Consistency & Replay Improvement
+
+### 10A.3 Completion and history
+
+- One expected submission per eligible active member per team-week.
+- The activity view shows Submitted / Pending and the week identifier.
+- Previous weeks remain available as history according to existing read permissions.
+- A new week creates a new review period; no prior submission is silently copied forward.
+- Missing submissions remain missing, not zero.
+- Aggregate team results require a documented denominator and minimum sample; do not expose an individual member's rating by inference.
+
 ## 11. Player Trends
 
 ### 11.1 Views and filters
@@ -717,6 +799,18 @@ May place competitive outcomes beside development trends to explore relationship
 ---
 
 # Part VI — Architecture and engineering contracts
+
+### 12.5 Matches Evaluation — Scrims and Tournament
+
+- The Evaluation workspace page is named **Matches Evaluation**, not Tournament Evaluation.
+- The user selects a match from either the existing Scrims match list or Tournament match list.
+- The selected record retains its original canonical session/match ID, event type, date, map/mode, roster snapshot, and result-verification state.
+- Do not create a duplicate match table or a second match identity just for Evaluation.
+- A match evaluation is linked to the exact selected match and participating roster. Non-participants cannot be evaluated as match participants.
+- Competitive placement/elimination points remain in the Competitive Results domain and never become development scores.
+- Scrims and Tournament filters must be explicit so users know which match source they selected.
+- The same match cannot receive duplicate final evaluation submissions for the same evaluator/purpose; enforce idempotency and audited amendments.
+- The 24h + 24h expiry rule applies only to the Daily Pending Tracker.
 
 ## 13. System architecture boundaries
 
@@ -1010,10 +1104,33 @@ Every alert must point to a repairable record/process. Do not auto-correct histo
 
 Keep the existing premium dark Squad OS design language. Do not add decorative charts or hero blocks that displace useful workflow content.
 
-### 20.1 Evolution navigation
+### 20.1A Cross-device UI contract — Laptop, Tablet, Mobile
 
-- Four main areas: Daily Evaluation, Weekly Review, Player Trends, Squad Analytics.
-- Evolution must be reachable without repeatedly opening mobile “More”; use a dedicated navigation slot or persistent shortcut based on existing nav constraints.
+The complete Evolution and Evaluation experience must remain available and usable on all three device classes. Responsive behavior may rearrange spacing and component sizing, but must not remove features, hide required information, or change workflow behavior.
+
+- **Laptop / desktop:** preserve the full page composition, clear hierarchy, comfortable content width, and the four Evaluation cards in a two-column × two-row grid.
+- **Tablet:** adapt card width, gutters, typography, and detail-page layout to the available viewport. Keep all four cards and all controls available without clipping or horizontal page overflow.
+- **Mobile:** retain the four Evaluation cards in a compact two-column × two-row grid as requested. Use readable labels, sufficiently large touch targets, and vertical scrolling for long detail pages. Do not force desktop-width tables or forms onto the screen.
+- The four-card order and labels remain identical on every device: **Daily Evaluation**, **Weekly Team Review**, **Matches Evaluation**, **Evaluation Activity**.
+- Detail pages must preserve all fields, statuses, privacy notices, validation messages, and actions on every viewport. If a dense table cannot fit, convert it to stacked responsive rows/cards without dropping columns or information.
+- Dialogs, selectors, date labels, feedback fields, status indicators, and navigation must remain operable by touch, mouse, and keyboard as applicable.
+- No feature may be mobile-only, tablet-only, or desktop-only unless a separately approved product requirement says so.
+- Use responsive CSS/layout breakpoints based on available viewport width, not device-brand detection. Support portrait and landscape orientation.
+- Prevent clipped cards, overlapping text, inaccessible dropdown menus, off-screen primary actions, accidental horizontal scrolling, and hover-only interactions.
+- Keep existing visual identity and interaction patterns; responsive work must not introduce an unrelated redesign.
+- **Acceptance gate:** verify the complete Evaluation flow and the surrounding Evolution navigation at representative laptop, tablet, and mobile viewport sizes, in both portrait and landscape where applicable. Check card grid, detail navigation, selector self-exclusion, forms, pending tracker, scroll behavior, and touch target usability. Capture screenshots or visual regression evidence for each device class before rollout.
+
+### 20.1 Evolution navigation and Evaluation workspace
+
+- Evolution is reachable without repeatedly opening mobile “More”; use a dedicated navigation slot or persistent shortcut based on existing nav constraints.
+- The Evaluation landing page contains exactly four entry cards in a two-column × two-row grid, in this order: **Daily Evaluation**, **Weekly Team Review**, **Matches Evaluation**, **Evaluation Activity**.
+- Each card opens its own detail page; a clear back path returns to the Evaluation landing page without losing relevant context.
+- **Daily Evaluation** handles today's evaluator-to-teammate submissions and self-exclusion.
+- **Weekly Team Review** handles each member's team-level weekly submission; it is not the coach-led Weekly Review.
+- **Matches Evaluation** allows match selection from both Scrims and Tournament.
+- **Evaluation Activity** contains completion states and the 24h-grace/24h-display Daily Pending Tracker.
+- The four cards are separate workflows over shared canonical records, not four duplicated data stores.
+- Existing **Weekly Review**, **Player Trends**, and **Squad Analytics** remain separate Evolution destinations and retain their prior scope.
 - Keep Tasks feedback and improvement tasks accessible from their existing Tasks area.
 - Shared filters/context should be consistent across pages.
 
@@ -1120,21 +1237,27 @@ The implementation must be built as a sequence of complete, testable vertical sl
 ### 23.1 Dependency graph
 
 ```text
-Evolution Phase Zero: legacy code audit + safe bug fixes + future-phase boundary
+Evolution Phase Zero: legacy code/schema audit + safe bug fixes + preserve existing workflows
                     |
-Evolution Phase One: Identity, team membership, timezone
+Evolution Phase One: identity + active membership + existing date contract (no timezone redesign)
                     |
-Evolution Phase Two: Session / match / roster / role snapshot
+Evolution Phase Two: session / match / roster / role snapshots for Scrims and Tournament
                     |
-Evolution Phase Three: Evidence model + canonical rubric + scoring engine
+Evolution Phase Three: evidence + canonical rubric + scoring/privacy contracts
                     |
-Evolution Phase Four: Atomic Daily Evaluation + feedback + audit/outbox
+Evolution Phase Four: Daily Evaluation form + atomic save + self-exclusion + stable N−1 assignments
                     |
-Evolution Phase Five: Peer-review cohorts + anonymity + recipient inbox
+Evolution Phase Five: anonymous recipient feedback + protected author mapping
                     |
-Evolution Phase Six: Canonical development tasks + drills + follow-up
+Evolution Phase Five-B: Evaluation Activity + 24h grace / 24h visible Daily Pending Tracker
                     |
-Evolution Phase Seven: Weekly Review snapshots and approvals
+Evolution Phase Five-C: Matches Evaluation using existing Scrims/Tournament match IDs
+                    |
+Evolution Phase Six: canonical development tasks + drills + follow-up
+                    |
+Evolution Phase Seven-A: Weekly Team Review (member-submitted nine-dimension team review)
+                    |
+Evolution Phase Seven-B: coach-led Weekly Review snapshots and approvals
                     |
 Evolution Phase Eight: Player Trends and comparability engine
                     |
@@ -1142,12 +1265,14 @@ Evolution Phase Nine: Squad Analytics (competitive + development domains)
                     |
 Evolution Phase Ten: Realtime + offline sync + data quality
                     |
-Evolution Phase Eleven: Responsive UI hardening + accessibility + regression QA
+Evolution Phase Eleven: Evaluation four-card navigation + responsive UI + accessibility + regression QA
                     |
-Evolution Phase Twelve: Staging migration + controlled rollout + production verification
+Evolution Phase Twelve: staging migration + controlled rollout + production verification
 ```
 
-Security is a separate workstream and is not implemented inside the Evolution phases. Its independent review is a prerequisite before production rollout. Tests, observability, and documentation cross-cut every Evolution phase. The diagram is the dependency order, not a claim that each phase is a separate deploy or that no safe parallel work is possible.
+Security remains a separate workstream and its independent review is a prerequisite before production rollout. Tests, observability, and documentation cross-cut every phase. This sequence describes dependencies and page/workflow order; it does not authorize a production migration, merge, or deployment.
+
+### 23.2 Why this order is mandatory
 
 ### 23.2 Why this order is mandatory
 
@@ -1262,6 +1387,33 @@ Security is a separate workstream and is not implemented inside the Evolution ph
 
 **Gate:** access tests and deanonymization checks pass; no identity leak in payloads/logs/URLs/exports; cohort denominator is reproducible.
 
+### Evolution Phase Five-B — Evaluation Activity and Daily Pending Tracker
+
+**Build:**
+- the fourth Evaluation workspace page and its activity summary;
+- expected evaluator-target assignment status from the daily cohort;
+- exact evaluator → target pending row, visible only after the first 24-hour grace period;
+- automatic removal from the visible tracker after the next 24 hours;
+- immediate removal from the pending list when the evaluator completes the assignment;
+- no carry-forward into the next daily cohort;
+- server-time expiry and refresh/reconnect behavior.
+
+**Outputs consumed by next phase:** a reliable, expiring workflow-status view that does not expose scores or feedback.
+
+**Gate:** tests prove the 24h grace boundary, 24h visibility boundary, completion during the visible window, automatic expiry, no self-pairs, no score/feedback leakage, and preservation of underlying audit records.
+
+### Evolution Phase Five-C — Matches Evaluation
+
+**Build:**
+- the Matches Evaluation page;
+- selection adapters for existing Scrims and Tournament matches;
+- canonical match/session/roster links;
+- per-match evaluation completion state and duplicate protection.
+
+**Outputs consumed by next phase:** match-linked evaluation records over existing match identities.
+
+**Gate:** a Scrims match and a Tournament match can each be evaluated without creating duplicate match identities or mixing competitive points into development ratings.
+
 ### Evolution Phase Six — Unified development tasks and follow-up
 
 **Build:**
@@ -1275,6 +1427,19 @@ Security is a separate workstream and is not implemented inside the Evolution ph
 **Outputs consumed by next phase:** one task source of truth with outcome history.
 
 **Gate:** task created in any supported workflow appears once across modules; status/version conflicts are handled; follow-up evaluation links to the correct task.
+
+### Evolution Phase Seven-A — Weekly Team Review
+
+**Build:**
+- member-submitted weekly team review page;
+- current-week-only submission window using the existing date policy;
+- nine team dimensions mapped to the existing team-ratings contract where possible;
+- one expected submission per eligible active member per team-week;
+- Submitted/Pending completion status and historical week access.
+
+**Outputs consumed by next phase:** versioned weekly team review records and safe completion coverage.
+
+**Gate:** tests prove one submission per eligible member/week, no backdating, no duplicate rating model, missing is not zero, and private ratings/narratives are not exposed through the completion tracker.
 
 ### Evolution Phase Seven — Weekly Review
 
@@ -1487,6 +1652,141 @@ Evolution Version 2 is complete only when:
 - migration and production deployment are verified independently;
 - rollback and monitoring are ready.
 
+## 34A. Phase-wise implementation and acceptance status ledger
+
+**Status legend**
+
+- **Implemented:** confirmed present in the earlier code audit; not a claim of current production verification.
+- **Partial:** a related page/model/path exists, but required workflow or correctness conditions are incomplete.
+- **Not Implemented:** no implementation was established in the referenced audit.
+- **Not Verified:** current branch/live database/deployment evidence has not been freshly checked.
+- **Gate: PASS** is allowed only when the phase's acceptance evidence is recorded. A feature being visible in the UI is not a pass.
+- **Gate: NOT PASSED** means known required work remains. **Test result: NOT RUN / NOT VERIFIED** means no current test run is being claimed.
+
+**Evidence baseline:** the statuses below are conservative classifications from the static code-audit reference recorded at the top of this blueprint. They are not a fresh audit of the current branch, live Supabase database, or Vercel production deployment. Phase Zero must refresh this ledger before implementation begins.
+
+| Phase | Workflow / deliverable | App implementation status | Acceptance gate | Evidence / remaining work |
+|---|---|---|---|---|
+| Zero | Existing Evolution code, schema, RLS, RPC, migrations, deployment and data audit | **Partial** | **NOT PASSED · Not Verified** | Earlier static audit exists; fresh branch/live-schema/deployment inventory, provenance reconciliation and full read/write map remain. No destructive changes. |
+| One | Auth UUID ↔ player ↔ team membership identity | **Partial** | **NOT PASSED · Not Verified** | Auth/team/roster structures exist; old P1-as-ID issue and membership contract need revalidation and repair. |
+| One | Current server-side date contract | **Partial** | **NOT PASSED · Not Verified** | Earlier Asia/Kolkata database date enforcement exists. Preserve the existing contract; no timezone redesign. Verify all clients/RPCs use it consistently. |
+| Two | Existing Scrims/Tournament session and match identity adapters | **Partial** | **NOT PASSED · Not Verified** | Competitive match records exist; complete canonical Evolution linkage was not established. |
+| Two | Immutable session roster, participation and per-match role snapshots | **Not Implemented / Not Verified** | **NOT PASSED · Not Tested** | Must be proven against existing schema before adding anything; historical roles must not change with current roster edits. |
+| Two | Verified match result and substitution/amendment history | **Partial / Not Verified** | **NOT PASSED · Not Tested** | Existing match/result workflows exist; canonical verified-state and audit linkage remain to be checked. |
+| Three | Six-dimension canonical rubric and separate Positioning dimension | **Partial** | **NOT PASSED · Known mismatch** | Training's six-dimension rubric existed; Daily Evaluation used five dimensions. Reconcile without silently remapping history. |
+| Three | Rubric versions, role weights, 0-vs-NULL, Not observed, coverage and confidence | **Partial / Not Implemented** | **NOT PASSED · Not Tested** | Existing rubric metadata was inconsistent; versioned scoring/coverage/confidence contract needs implementation and deterministic tests. |
+| Three | Evidence records linked to session/match/round | **Partial** | **NOT PASSED · Not Verified** | Evidence linkage was weak; complete evidence model and privacy tests remain. |
+| Four | Daily Evaluation page and basic five-dimension form | **Implemented (legacy form)** | **NOT PASSED** | Existing page/form and 0–50 display were observed. It is not the Version 2 six-dimension workflow. |
+| Four | No prefilled scores; deliberate 0 vs unanswered / Not observed | **Not Implemented / Defective** | **NOT PASSED · Known defect** | Earlier form defaulted sliders to 5; untouched forms could produce a score. |
+| Four | Correct Auth UUID target, atomic score + feedback + evidence save | **Partial / Not Implemented** | **NOT PASSED · Known gaps** | P1 default identity issue and separate score/feedback writes were observed; transactional RPC and idempotency need proof. |
+| Four | Stable evaluator → target N−1 assignments; self-exclusion in UI and server | **Not Implemented / Not Verified** | **NOT PASSED · Not Tested** | Dynamic cohort assignments, unique keys, server-side self-target rejection and retry tests remain. |
+| Five | Anonymous peer-feedback source and recipient feedback path | **Partial** | **NOT PASSED · Not Verified** | Separate feedback table/path existed; complete cohort eligibility, protected author mapping, sanitized receipt and deanonymization testing were not verified. |
+| Five | Feedback Sent / Feedback Received, low-cohort privacy threshold | **Not Implemented / Not Verified** | **NOT PASSED · Not Tested** | Full inbox, cohort threshold, metadata/log/export protection and recipient-scoped views remain. |
+| Five-B | Evaluation Activity landing/detail page and workflow summary | **Not Implemented** | **NOT PASSED · Not Tested** | New workflow page required. |
+| Five-B | Daily Pending Tracker: 24h grace + next 24h visibility + immediate completion removal | **Not Implemented** | **NOT PASSED · Not Tested** | Server-time boundaries, exact evaluator → target pending pair, no score/feedback leakage, no next-day carry-forward and non-destructive expiry remain. |
+| Five-C | Matches Evaluation from existing Scrims and Tournament records | **Not Implemented** | **NOT PASSED · Not Tested** | New page/adapters and duplicate protection required; must reuse canonical match/session IDs. |
+| Six | One canonical development task model across Planning/Training/Tasks/Evolution | **Partial** | **NOT PASSED · Known gap** | Two task paths existed without guaranteed synchronization. |
+| Six | Acknowledge → complete → reflect → verify → follow-up evaluation | **Partial / Not Implemented** | **NOT PASSED · Not Tested** | Full state machine, conflict handling, drill criteria and evaluation linkage remain. |
+| Seven-A | Member-submitted Weekly Team Review page | **Not Implemented** | **NOT PASSED · Not Tested** | Separate nine-dimension member workflow is new. |
+| Seven-A | One submission per eligible member/team/week; Submitted/Pending and history | **Not Implemented** | **NOT PASSED · Not Tested** | Current-week-only eligibility, uniqueness, privacy-safe status and history remain. Existing team_ratings model is a reuse candidate, not proof of implementation. |
+| Seven-B | Coach-led Weekly Review insights | **Partial** | **NOT PASSED** | Combined weekly insight component existed; review lifecycle was incomplete. |
+| Seven-B | Evidence-backed recommendations, coach approval and immutable published snapshot | **Not Implemented / Partial** | **NOT PASSED · Not Tested** | Draft/review/publish lifecycle, source manifest, no-data handling and reproducibility remain. |
+| Eight | Player Trends page and latest/previous comparison | **Partial** | **NOT PASSED** | Basic latest-versus-previous and recent average existed. |
+| Eight | 7/30/season/custom filters, six dimension trends, confidence and comparability | **Not Implemented / Partial** | **NOT PASSED · Not Tested** | Context-aware trend engine, sample coverage, deterministic ordering and evidence drill-down remain. |
+| Nine | Competitive match analytics | **Implemented (legacy competitive domain)** | **NOT A VERSION 2 PASS** | Matches/points/placements/kills analytics existed. |
+| Nine | Unified development analytics while keeping competitive and development scores separate | **Not Implemented / Partial** | **NOT PASSED · Not Tested** | Development aggregates, role coverage and separation/correlation safeguards remain. |
+| Ten | Realtime subscriptions and basic refresh paths | **Partial** | **NOT PASSED · Known gaps** | Subscriptions existed; stale-column reference and feedback refresh gaps were observed. Revalidate current subscriptions and authorization. |
+| Ten | Durable offline queue, idempotent replay, conflict resolution and outbox | **Not Implemented / Partial** | **NOT PASSED · Not Tested** | Offline conflict handling was incomplete; durable queue/outbox/monitoring need implementation and tests. |
+| Ten | Data-quality monitor and operational alerts | **Not Implemented** | **NOT PASSED · Not Tested** | Orphan, duplicate, stale subscription, outbox and provenance monitors remain. |
+| Eleven | Existing premium dark UI and legacy Evolution screens | **Partial / Implemented by area** | **NOT A VERSION 2 PASS** | Existing UI exists, but Evolution navigation was buried and some controls/layout issues were observed. |
+| Eleven | Four Evaluation cards, 2×2 grid, each with its own detail page | **Not Implemented** | **NOT PASSED · Not Tested** | Blueprint requirement only; implementation not established by the audit. |
+| Eleven | Responsive Laptop + Tablet + Mobile behavior, including requested mobile 2×2 card grid | **Not Verified** | **NOT PASSED · QA NOT RUN** | CSS inspection is not device QA. Need viewport screenshots and interaction checks in portrait/landscape. |
+| Eleven | Accessibility, touch targets, keyboard, safe-area, loading/empty/error/offline states | **Partial / Not Verified** | **NOT PASSED · QA NOT RUN** | Prior slider target and mobile navigation issues were noted; complete interaction and accessibility QA remains. |
+| Twelve | Staging migration dry-run, backup, reconciliation and rollback rehearsal | **Not Implemented / Not Verified** | **NOT PASSED · Not Tested** | No Phase Twelve rollout evidence recorded. |
+| Twelve | Security sign-off, controlled production migration, deploy and smoke verification | **Not Implemented / Not Authorized** | **NOT PASSED · Not Run** | Requires separate Security workstream approval and explicit owner authorization. Blueprint edits do not authorize rollout. |
+
+### 34A.1 Phase roll-up
+
+| Phase | Overall status | Gate |
+|---|---|---|
+| Zero — Legacy audit/fixes | **Partial** | **NOT PASSED** |
+| One — Identity/date contract | **Implementation closed · Acceptance pending** | **NOT PASSED · 1.5-E carry-over gates open** |
+| Two — Session/match/roster/role | **OPEN · 2.1 read-only audit authorized; implementation gated** | **NOT STARTED · No implementation evidence** |
+| Three — Evidence/rubric/scoring | **Partial** | **NOT PASSED** |
+| Four — Daily Evaluation | **Partial (legacy form exists)** | **NOT PASSED** |
+| Five — Anonymous peer feedback | **Partial** | **NOT PASSED** |
+| Five-B — Evaluation Activity / Pending Tracker | **Not Implemented** | **NOT PASSED** |
+| Five-C — Matches Evaluation | **Not Implemented** | **NOT PASSED** |
+| Six — Unified tasks/follow-up | **Partial** | **NOT PASSED** |
+| Seven-A — Weekly Team Review | **Not Implemented** | **NOT PASSED** |
+| Seven-B — Coach-led Weekly Review | **Partial** | **NOT PASSED** |
+| Eight — Player Trends | **Partial** | **NOT PASSED** |
+| Nine — Squad Analytics | **Partial (competitive analytics exists)** | **NOT PASSED** |
+| Ten — Realtime/offline/data quality | **Partial** | **NOT PASSED** |
+| Eleven — UI/accessibility/responsive QA | **Partial / Not Verified** | **NOT PASSED** |
+| Twelve — Controlled rollout | **Not Started** | **NOT PASSED** |
+
+### 34A.3 Phase One detailed tracker — identity foundation
+
+**Status as of 18 November 2026: IMPLEMENTATION CLOSED · ACCEPTANCE PENDING.** The identity/date-contract implementation work and exact-head CI are complete. Phase One is being administratively closed as an implementation workstream at the owner's direction; this is not a claim that its final acceptance gate passed. The remaining 1.5-E items are carried forward as explicit acceptance blockers and must not be silently dropped.
+
+| Subphase | Scope | Status | Evidence / remaining work |
+|---|---|---|---|
+| 1.1 | Stable identity foundation: authenticated user, player identity, team identity mapping | **Implemented · CI verified** | Identity contract work completed in the Phase One branch. |
+| 1.2 | Team loading and explicit active-team context | **Implemented · CI verified** | Auth → Membership → Team loading, explicit team selection, validation and sign-out cleanup; latest-head CI passed. |
+| 1.3 | Async/race protection for identity and team context | **Implemented · CI verified** | Race-protection work implemented; earlier recorded GitHub Actions run #68 passed on commit `a34bfa6`. |
+| 1.4 | Session eligibility and capability helpers | **Implemented · CI verified** | Authenticated-user/membership UUID/team UUID plus active eligibility, fail-closed clearing, and Owner/Coach capability helpers; recorded checks and CI passed. |
+| 1.5-A | Migration provenance and schema-history reconciliation | **Complete · Verified** | Live ledger 55 rows; 53 in-scope non-loadout rows map 1:1 to active migration files by exact version/name. Direct live SQL-to-file comparison passed 53/53 with zero mismatches; zero missing/extra in-scope files and zero duplicate timestamp prefixes. Two loadout rows excluded. |
+| 1.5-B | Existing date/timezone contract verification and staged migration | **Implemented · Disposable-PostgreSQL CI verified** | India-only date contract and staged timezone trigger tested against PostgreSQL 16. Seven B tests passed, including forward/rollback behavior. No production migration applied. |
+| 1.5-C | Historical migration rollback disposition | **Complete · CI/source verified** | Live ledger read-only audit: 55 rows total; 53 in-scope historical rows; 0 stored rollback statements. All 53 explicitly classified forward-only/no automatic rollback with risk class and recovery rationale. No destructive inverse SQL fabricated. |
+| 1.5-D | Source-contract tests and security ACL staging | **Implemented · CI verified** | Six D source-contract tests passed. Staged least-privilege ACL SQL for four trigger-returning SECURITY DEFINER functions passed disposable PostgreSQL role/trigger checks; not production-applied. |
+| 1.5-E | Phase One final acceptance audit | **Blocked · NOT PASSED** | Three acceptance gates remain: (1) authoritative original pre-migration schema baseline/clean-replay proof unavailable; (2) Supabase Auth leaked-password protection remains disabled; (3) independent adversarial role-level tests for remaining authenticated SECURITY DEFINER RPCs outstanding. Trigger ACL SQL is staged and CI-verified, not production-applied. |
+
+**Exact-head CI evidence:** commit `6b03de65e9e00c20b62d890fd343b58edc18cc2c`; push run #364 (44277415151) and pull-request run #365 (44277425324) both passed. 91 tests passed, 0 failed; typecheck and Vite production build passed.
+
+**Carry-over acceptance register (must remain open):**
+1. Obtain the authoritative pre-migration schema baseline or approve a separately reviewed, evidence-backed baseline exception. Never fabricate a baseline fixture and call it original.
+2. Enable Supabase Auth leaked-password protection in the Dashboard and rerun Security Advisor.
+3. Complete independent adversarial role-level authorization tests for the remaining authenticated SECURITY DEFINER RPCs.
+4. Re-run the final acceptance audit and attach evidence for all three gates.
+5. Keep staged trigger-function ACL remediation unapplied to production until separately reviewed and authorized.
+
+**Delivery boundary:** PR #115 remains Draft/open and unmerged, stacked on prerequisite PR #114. No production deployment, production migration, production ACL/RLS/schema/data change, or Auth setting change is claimed. Closing the Phase One implementation workstream does not close PR #115 or waive its acceptance blockers.
+
+### 34A.4 Phase Two detailed tracker — session foundation
+
+**Overall status: OPEN · POINT 2.1 AUDIT COMPLETE · CI VERIFICATION PENDING · POINTS 2.2–2.12 GATED.** Phase Two is opened for its read-only discovery point 2.1. Schema-changing implementation points remain gated until the Phase One 1.5-E carry-over acceptance blockers are resolved or a separate, explicit, documented exception is approved. This preserves the original dependency without blocking safe discovery.
+
+| Subphase | Planned workflow | Status | Acceptance evidence required |
+|---|---|---|---|
+| 2.1 | Existing System Audit — inspect Scrims, Tournament, Training and Planning session/match data and all callers | **Audit complete · CI pending** | `docs/evolution/PHASE-2-1-EXISTING-SYSTEM-AUDIT.md`; live read-only schema/data inventory, caller map, RLS policy inventory, integrity checks and UI design review. |
+| 2.2 | Canonical Session Identity — stable session UUID, team, session type and season association | **Gated · Not started** | One stable session identity; no display label or mutable name used as a key. |
+| 2.3 | Match Identity — individual match records under a parent session | **Gated · Not started** | Stable unique match IDs and correct parent-session relationship; no duplicate match identity. |
+| 2.4 | Session Lifecycle — Draft → Scheduled → In Progress → Awaiting Results → Verified → Closed → Archived | **Gated · Not started** | Validated state transitions, permissions, timestamps and audited amendments. |
+| 2.5 | Session Roster Snapshot — persist actual participants for the session | **Gated · Not started** | Historical participant set remains unchanged when current team roster changes. |
+| 2.6 | Role Snapshot — preserve each player's role for the session/match | **Gated · Not started** | Historical role context is immutable and tied to the correct player/session/match. |
+| 2.7 | Substitution Tracking — record substitutions and when/where they occurred | **Gated · Not started** | Audited substitution events with effective match/time context; prior roster/role history remains reconstructable. |
+| 2.8 | Result Verification — Draft / Submitted / Verified result states and correction audit | **Gated · Not started** | Only verified results feed official aggregates; corrections are versioned/audited. |
+| 2.9 | Existing Module Integration — connect Scrims, Tournament and Training through adapters | **Gated · Not started** | Existing workflows continue to work and resolve to canonical session/match IDs without parallel identity systems. |
+| 2.10 | Database Integrity — foreign keys, uniqueness, relationships, idempotency and migration tests | **Gated · Not started** | Constraints and retry behavior tested against a disposable/isolated database; rollback documented. |
+| 2.11 | Application UI — session, match, roster, role and status workflows | **Gated · Not started** | Responsive UI on laptop/tablet/mobile, correct state handling, and no regression to existing Scrims/Tournament/Training flows. |
+| 2.12 | Regression & Acceptance — historical snapshot, cross-module and device QA | **Gated · Not started** | Stable session/match IDs; roster/roles/substitutions preserved; only verified results aggregated; old sessions unchanged; database and application tests pass. |
+
+**Phase Two dependency rule:** Point 2.1 is read-only and is now complete as an audit deliverable; its source-contract CI verification is pending. Points 2.2–2.12 must not create or apply a competing production session/match model until the Phase One acceptance gate passes or the owner separately approves a documented exception. No production schema/data change, destructive migration, merge, or deployment is authorized by opening this phase.
+
+**Point 2.1 result:** the four existing domains use separate identities (Tournament cycle/match; Scrim record with JSONB matches; Planning plan/task; Training session/participant/result). Fifteen read-only integrity checks found zero current duplicate-slot, duplicate-participant or cross-team mismatch rows. Structural composite-FK, historical role/substitution, and common result-verification gaps are documented for later points. The existing UI has a shared Deep Onyx foundation with distinct Scrims cyan/gold and Planning/Training blue-violet treatments; no new UI belongs in this audit-only point.
+
+### 34A.5 Phase Zero and pull-request status context
+
+- **Phase Zero:** legacy-fix work was CI-verified in the recorded history (18 Foundation, 11 Character-data, and 10 Evolution regression tests; TypeScript/build checks passed). PR #114 remained Draft/open, unmerged and undeployed in the last recorded status; Vercel preview was blocked by a rate limit. No production schema/RLS/grant changes were recorded.
+- **Phase One:** PR #115 contains the identity-foundation work. It remained Draft/unmerged/undeployed in the last recorded status. The 1.1–1.4 code/CI work should not be confused with full Phase One acceptance because 1.5-E is blocked.
+- **Phase Two:** Point 2.1 existing-system audit is complete as a read-only discovery deliverable in PR #118; source-contract CI is pending. No feature UI or production schema change was made. Points 2.2–2.12 remain gated.
+- **Production:** this ledger update is documentation only. It does not authorize or report a merge, migration, Supabase write, or Vercel deployment.
+
+### 34A.2 What counts as PASS
+
+A phase changes to **PASS** only after all its required workflows are implemented and the phase gate has evidence attached: migration/test output where applicable, automated test results, RLS/permission tests, manual QA screenshots or recordings where applicable, and a reviewed handoff. Until then, keep **Not Tested**, **Not Verified**, or **Not Passed** as appropriate. Never infer PASS from a successful build, an existing page, a merged PR, or a blueprint checkbox alone.
+
 ## 34. Current status versus target
 
 This table preserves the earlier audit's status. Evolution Phase Zero revalidates the existing implementation and fixes safe legacy defects; future feature builds remain assigned to their named phases.
@@ -1538,9 +1838,214 @@ Additional QA issues remain in scope: Positioning vs Map Awareness; rubric scale
 
 This document is the **Evolution Version 2 master blueprint**. This rewrite changes documentation only. It does not implement features, modify Supabase tables/data, reset production data, run migrations, merge the documentation branch, or deploy the app.
 
-**Next implementation action:** complete Evolution Phase Zero — Legacy Fixes against the actual current repository and live Evolution data. Repair existing Evolution regressions, preserve historical records, and clearly mark incomplete future modules without building their planned functionality. Then begin Evolution Phase One for stable identity, team membership, and timezone. Authorization/RLS/grants and security hardening remain in the separate Security workstream.
+**Next action:** review the completed Evolution Phase Two Point 2.1 audit in `docs/evolution/PHASE-2-1-EXISTING-SYSTEM-AUDIT.md` and its CI result. Then proceed to Point 2.2 only when Phase One 1.5-E acceptance passes or a separate documented exception is approved. Do not create a second identity system. Keep Phase One acceptance carry-over gates visible. Do not redesign or migrate timezone as part of the new Evaluation workspace. Authorization/RLS/grants and security hardening remain in the separate Security workstream.
 
 ---
+
+## 38. Evolution Phase Two — detailed implementation blueprint
+
+**Phase objective:** establish one trustworthy, immutable, auditable identity chain for every competitive or training session and each match inside it. Phase Two supplies the session/match context consumed by later Evidence, Evaluation, scoring, trends, and analytics phases. It does not build the Evaluation rubric or replace official tournament scoring.
+
+### 38.1 Point 2.1 — Existing System Audit (read-only first)
+
+**Purpose:** discover the real current data model before designing migrations.
+
+Work items:
+1. Inspect Scrims, Tournament, Training, and Planning UI routes, forms, hooks, services, RPCs, tables, views, triggers, and edge functions.
+2. Trace every create, edit, delete/archive, result-entry, roster-selection, role-selection, and list/detail read path.
+3. Inventory current identifiers: UUIDs, legacy numeric IDs, display labels, date-based keys, tournament/week labels, and any implicit match indexes.
+4. Map parent/child relationships: team → session/event → match → participant/role → result/evidence.
+5. Identify duplicate, orphaned, null, ambiguous, and cross-team references using read-only queries and non-production fixtures.
+6. Document lifecycle semantics already used by each module; distinguish true persisted state from UI-only status.
+7. Record existing access rules and identify which roles can create, edit, verify, close, archive, or correct records.
+8. Capture baseline behavior and regression paths for existing Scrims, Tournament, Training, and Planning.
+9. Produce a data dictionary, relationship diagram, caller/read-write matrix, compatibility matrix, and risk register.
+10. Recommend reuse/adapters versus migration only after evidence is collected.
+
+Deliverables: audit report; schema/data dictionary; relationship map; module caller matrix; duplicate/orphan report; current workflow screenshots or reproducible test notes; migration-risk register; explicit no-change confirmation.
+
+Acceptance: every existing session/match source is accounted for; every write/read caller is mapped; no production data changed; no new schema or competing model created; ambiguous records are listed rather than guessed. **Audit evidence:** `docs/evolution/PHASE-2-1-EXISTING-SYSTEM-AUDIT.md` records the live read-only inventory, 15 integrity checks, RLS policy inventory, UI/design audit and explicit follow-up gaps. The source-contract checks run in the standard `npm run build` gate.
+
+### 38.2 Point 2.2 — Canonical Session Identity
+
+Purpose: define one stable parent identity for each Scrim block, Tournament event/week, or Training session.
+
+Work items:
+1. Define canonical session UUID as the internal primary identity.
+2. Associate each session with exactly one team and a controlled session type.
+3. Store season/tournament association where applicable without encoding it into the primary key.
+4. Keep human-readable title, date, lobby label, week number, and display order as mutable attributes—not identity.
+5. Define source-system references for legacy Scrims/Tournament/Training records.
+6. Enforce tenant/team ownership and prevent cross-team linking.
+7. Specify create idempotency so retries do not create duplicate sessions.
+8. Define archive behavior without deleting historical records.
+
+Acceptance: one canonical UUID per session; unique source mapping; team-scoped foreign keys; idempotent create; no display string used as a key; migration mapping reviewed before writes.
+
+### 38.3 Point 2.3 — Match Identity
+
+Purpose: represent each match as a first-class child of a session.
+
+Work items:
+1. Define stable match UUID and parent session UUID.
+2. Store match sequence/order separately from match identity.
+3. Support expected match count and actual played match count without fabricating missing matches.
+4. Preserve mode/map/round metadata only where the source actually provides it.
+5. Define uniqueness for session + match sequence while allowing audited correction of sequence metadata.
+6. Map existing Scrim and Tournament match rows to canonical IDs.
+7. Preserve external/source IDs for traceability.
+8. Ensure one match cannot be attached to two sessions.
+
+Acceptance: every match has one parent; duplicate match identity is rejected; ordering is deterministic; legacy references remain traceable; missing matches remain missing rather than auto-created as played records.
+
+### 38.4 Point 2.4 — Session Lifecycle
+
+Canonical lifecycle: **Draft → Scheduled → In Progress → Awaiting Results → Verified → Closed → Archived**.
+
+Work items:
+1. Define permitted transitions and disallowed shortcuts.
+2. Define who may perform each transition (Owner/Coach/authorized organizer; member permissions only where explicitly needed).
+3. Store transition timestamps and actor identity.
+4. Require results to be submitted before verification; require verification before closure.
+5. Define cancellation/no-show handling without mislabeling it as a played match.
+6. Permit reopening only through an audited correction path.
+7. Define archive as non-destructive and read-only for ordinary users.
+8. Make lifecycle transitions atomic and idempotent.
+
+Acceptance: transition matrix tested; unauthorized transitions rejected server-side; timestamps and actors recorded; archived sessions cannot be silently edited; no invalid transition can bypass result verification.
+
+### 38.5 Point 2.5 — Session Roster Snapshot
+
+Purpose: preserve who actually participated, not merely who is currently on the team.
+
+Work items:
+1. Snapshot eligible team members at session creation or roster lock.
+2. Record actual participation per match where the source supports it.
+3. Distinguish invited/selected, confirmed, participated, absent, and substituted states.
+4. Preserve player UUID and team membership provenance.
+5. Define handling for a player who later leaves the team or changes IGN.
+6. Prevent later roster edits from rewriting historical participants.
+7. Support team-size/session-type constraints as configuration, not hard-coded assumptions.
+
+Acceptance: historical roster is reproducible after current roster changes; each participant resolves to the correct player identity; no duplicate participant per match; absent is not confused with participated.
+
+### 38.6 Point 2.6 — Role Snapshot
+
+Purpose: preserve the role actually played in each session/match.
+
+Work items:
+1. Snapshot role ID/name and role-definition version at session or match lock.
+2. Support the team's role taxonomy without treating P1/P2/P3/P4 labels as identity.
+3. Permit a player to perform different roles in different matches.
+4. Record role changes with effective match/time context.
+5. Keep current roster role edits separate from historical snapshots.
+6. Define unknown/unassigned role handling without guessing.
+
+Acceptance: old sessions retain the role originally played; role history is reconstructable; role changes do not overwrite prior match context; unknown role remains explicitly unknown.
+
+### 38.7 Point 2.7 — Substitution Tracking
+
+Purpose: record lineup changes during a session without destroying the original lineup.
+
+Work items:
+1. Record outgoing and incoming player identities.
+2. Link substitution to session and, when available, match and effective time/round.
+3. Record actor, reason/category if supplied, and source provenance.
+4. Capture role transfer or role reassignment separately from player replacement.
+5. Support multiple substitutions in order.
+6. Validate that a substitution does not create overlapping active participation unless the ruleset permits it.
+7. Preserve the pre- and post-substitution lineup as reconstructable snapshots.
+
+Acceptance: substitution timeline is ordered and auditable; active lineup at any supported point can be reconstructed; no historical participant/role row is silently overwritten.
+
+### 38.8 Point 2.8 — Result Verification and Correction Audit
+
+Purpose: separate raw submission from trusted/official result data.
+
+Work items:
+1. Define result states: Draft, Submitted, Verified, Corrected/Amended, Rejected where applicable.
+2. Store result source, submitter, verifier, and timestamps.
+3. Define a verification checklist appropriate to Scrim, Tournament, and Training sources.
+4. Keep raw submitted values and verified values distinguishable.
+5. Require authorized verifier for trusted status.
+6. Implement append-only correction/amendment history with reason and actor.
+7. Prevent unverified results from entering official aggregates.
+8. Never infer kills, placement, survival, or match events from incomplete data.
+
+Acceptance: only verified results feed official competitive aggregates; corrections preserve prior values and audit history; unverified data is visibly marked; permissions are tested.
+
+### 38.9 Point 2.9 — Existing Module Integration
+
+Purpose: connect existing modules to canonical IDs without breaking their workflows.
+
+Work items:
+1. Define adapters for Scrims, Tournament, and Training.
+2. Preserve existing screens and expected actions unless a separately approved UI change is required.
+3. Resolve existing records to canonical session/match IDs through explicit mapping.
+4. Avoid duplicate writes and parallel source-of-truth tables.
+5. Keep Planning as a scheduling/planning surface; promote a planned item to a session through an explicit transition.
+6. Ensure old deep links and route parameters resolve safely or show a recoverable not-found state.
+7. Add compatibility tests for existing callers before removing any legacy path.
+
+Acceptance: existing workflows pass regression tests; each source maps to one canonical session/match; no duplicate source of truth; Planning does not create phantom played matches.
+
+### 38.10 Point 2.10 — Database Integrity and Migration Safety
+
+Work items:
+1. Design normalized tables and constraints only after Point 2.1 audit is accepted.
+2. Add team-scoped foreign keys, unique constraints, check constraints, and indexes.
+3. Define transaction boundaries for session creation, match creation, roster lock, role snapshot, substitution, and result verification.
+4. Define idempotency keys for retryable writes.
+5. Add RLS and server-side authorization tests for each role and team boundary.
+6. Build disposable PostgreSQL/Supabase-compatible migration tests where possible.
+7. Test forward migration, rollback or forward-only recovery plan, and historical-data reconciliation.
+8. Prove no orphan or duplicate relationships after migration.
+9. Avoid production execution until staging evidence and explicit rollout approval.
+
+Acceptance: constraints prevent invalid relationships; retries are safe; cross-team access tests fail closed; forward and recovery paths are tested; no unexplained data loss or orphan rows.
+
+### 38.11 Point 2.11 — Application UI
+
+Work items:
+1. Session list with filters for type, season, status, and date.
+2. Session detail with matches, roster, roles, substitutions, and result status.
+3. Create/edit flows constrained by lifecycle and permissions.
+4. Match detail with clear parent-session context.
+5. Roster and role snapshot editing before lock; audited change path after lock.
+6. Result submission and verification surfaces with visible provenance.
+7. Empty, loading, error, permission-denied, archived, and offline states.
+8. Responsive behavior for Android/mobile, tablet, and desktop; preserve premium dark UI.
+9. Accessible touch targets, keyboard focus, labels, and clear validation.
+10. Avoid UI controls that imply an action the backend does not support.
+
+Acceptance: each action matches its permission and lifecycle rule; no accidental double-submit; mobile/tablet/desktop interactions verified; no regression in Scrims, Tournament, Training, or Planning.
+
+### 38.12 Point 2.12 — Regression and Phase Acceptance
+
+Required test groups:
+1. Canonical identity uniqueness and team isolation.
+2. Session-to-match parent/child integrity.
+3. Lifecycle transition and authorization matrix.
+4. Historical roster immutability after roster edits.
+5. Role snapshot immutability and role changes across matches.
+6. Substitution ordering and lineup reconstruction.
+7. Result submission, verification, correction, and aggregate eligibility.
+8. Idempotent retries and concurrent writes.
+9. Migration forward/recovery and historical reconciliation.
+10. Existing Scrims/Tournament/Training/Planning regression.
+11. RLS and adversarial cross-team access tests.
+12. Android/mobile, tablet, desktop responsive and accessibility QA.
+
+Phase Two Definition of Done:
+- All twelve points have explicit implementation and acceptance evidence.
+- Canonical session and match IDs are used by all integrated modules.
+- Historical roster, role, substitution, and result provenance are preserved.
+- Only verified results feed official competitive aggregates.
+- No duplicate session/match source of truth exists.
+- Database constraints, RLS, and idempotency tests pass.
+- Existing workflows remain functional.
+- Phase One acceptance carry-over is resolved or formally excepted without weakening security.
+- No production migration/deployment occurs without separate rollout approval.
 
 # Appendix A — Requirement preservation checklist
 
@@ -1552,7 +2057,10 @@ The following original requirements remain explicitly represented in this rewrit
 - 0–10 scale, zero vs missing, Not observed, no negative ratings.
 - Versioned role-aware weighted 0–100 scoring.
 - Legacy 37/50 and advanced 82/100 caution.
-- Daily Evaluation workflow and atomic writes.
+- Daily Evaluation workflow, self-excluding teammate selector, unique evaluator-target assignments, atomic writes, and expiring overdue tracker.
+- Four-card Evaluation workspace: Daily Evaluation, Weekly Team Review, Matches Evaluation, Evaluation Activity.
+- Weekly Team Review as a member-submitted nine-dimension team review, separate from coach-led Weekly Review snapshots.
+- Matches Evaluation for both Scrims and Tournament match records.
 - Weekly Review workflow and immutable snapshots.
 - Player Trends with 7/30/season/custom periods and comparability.
 - Squad Analytics with separate competitive/development domains.
