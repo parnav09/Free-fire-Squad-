@@ -70,6 +70,7 @@ DO $$
 DECLARE
   first_session public.canonical_sessions;
   retry_session public.canonical_sessions;
+  second_session public.canonical_sessions;
   visible_count integer;
   changed_count integer;
 BEGIN
@@ -101,11 +102,16 @@ BEGIN
     'aaaaaaaa-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000001'
   );
 
+  second_session := public.create_canonical_session(
+    'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','scrim','Second Scrim',
+    '33333333-3333-3333-3333-333333333333',DATE '2026-11-21',NULL,'Season 2026'
+  );
+
   BEGIN
     INSERT INTO public.canonical_session_sources(
       team_id,canonical_session_id,source_system,scrim_record_id,created_by
     ) VALUES (
-      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',first_session.id,'scrim',
+      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',second_session.id,'scrim',
       'bbbbbbbb-0000-0000-0000-000000000002','10000000-0000-0000-0000-000000000001'
     );
     RAISE EXCEPTION 'cross-team source mapping was accepted';
@@ -113,7 +119,7 @@ BEGIN
   END;
 
   SELECT count(*) INTO visible_count FROM public.canonical_sessions;
-  IF visible_count <> 1 THEN RAISE EXCEPTION 'team RLS returned % rows, expected 1', visible_count; END IF;
+  IF visible_count <> 2 THEN RAISE EXCEPTION 'team RLS returned % rows, expected 2', visible_count; END IF;
 
   UPDATE public.canonical_sessions
   SET archived_at = now(), archived_by = auth.uid(), archive_reason = 'completed'
