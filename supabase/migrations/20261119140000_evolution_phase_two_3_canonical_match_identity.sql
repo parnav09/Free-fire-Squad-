@@ -356,15 +356,17 @@ CREATE POLICY canonical_session_match_sets_staff_insert
       (
         source_system = 'tournament'
         AND EXISTS (
-          SELECT 1
-          FROM public.canonical_session_sources css
-          JOIN public.tournament_matches tm
-            ON tm.cycle_id = css.tournament_cycle_id AND tm.team_id = css.team_id
+          SELECT 1 FROM public.canonical_session_sources css
+          JOIN public.canonical_sessions cs
+            ON cs.id = css.canonical_session_id AND cs.team_id = css.team_id
           WHERE css.canonical_session_id = canonical_session_match_sets.canonical_session_id
             AND css.team_id = canonical_session_match_sets.team_id
             AND css.source_system = 'tournament'
-          GROUP BY css.canonical_session_id
-          HAVING count(tm.id) = canonical_session_match_sets.expected_match_count
+            AND cs.session_type = 'tournament'
+            AND (
+              SELECT count(*) FROM public.tournament_matches tm
+              WHERE tm.cycle_id = css.tournament_cycle_id AND tm.team_id = css.team_id
+            ) = canonical_session_match_sets.expected_match_count
         )
       )
     )
@@ -380,32 +382,37 @@ CREATE POLICY canonical_session_match_sets_staff_update
   ))
   WITH CHECK (
     (
-      source_system = 'scrim'
-      AND EXISTS (
-        SELECT 1 FROM public.canonical_session_sources css
-        JOIN public.scrim_records sr
-          ON sr.id = css.scrim_record_id AND sr.team_id = css.team_id
-        WHERE css.canonical_session_id = canonical_session_match_sets.canonical_session_id
-          AND css.team_id = canonical_session_match_sets.team_id
-          AND css.source_system = 'scrim'
-          AND sr.match_count = canonical_session_match_sets.expected_match_count
+      (
+        source_system = 'scrim'
+        AND EXISTS (
+          SELECT 1 FROM public.canonical_session_sources css
+          JOIN public.scrim_records sr
+            ON sr.id = css.scrim_record_id AND sr.team_id = css.team_id
+          JOIN public.canonical_sessions cs
+            ON cs.id = css.canonical_session_id AND cs.team_id = css.team_id
+          WHERE css.canonical_session_id = canonical_session_match_sets.canonical_session_id
+            AND css.team_id = canonical_session_match_sets.team_id
+            AND css.source_system = 'scrim'
+            AND cs.session_type = 'scrim'
+            AND sr.match_count = canonical_session_match_sets.expected_match_count
+        )
       )
-    )
-    OR
-    (
-      source_system = 'tournament'
-      AND EXISTS (
-        SELECT 1 FROM public.canonical_session_sources css
-        JOIN public.canonical_sessions cs
-          ON cs.id = css.canonical_session_id AND cs.team_id = css.team_id
-        WHERE css.canonical_session_id = canonical_session_match_sets.canonical_session_id
-          AND css.team_id = canonical_session_match_sets.team_id
-          AND css.source_system = 'tournament'
-          AND cs.session_type = 'tournament'
-          AND (
-            SELECT count(*) FROM public.tournament_matches tm
-            WHERE tm.cycle_id = css.tournament_cycle_id AND tm.team_id = css.team_id
-          ) = canonical_session_match_sets.expected_match_count
+      OR
+      (
+        source_system = 'tournament'
+        AND EXISTS (
+          SELECT 1 FROM public.canonical_session_sources css
+          JOIN public.canonical_sessions cs
+            ON cs.id = css.canonical_session_id AND cs.team_id = css.team_id
+          WHERE css.canonical_session_id = canonical_session_match_sets.canonical_session_id
+            AND css.team_id = canonical_session_match_sets.team_id
+            AND css.source_system = 'tournament'
+            AND cs.session_type = 'tournament'
+            AND (
+              SELECT count(*) FROM public.tournament_matches tm
+              WHERE tm.cycle_id = css.tournament_cycle_id AND tm.team_id = css.team_id
+            ) = canonical_session_match_sets.expected_match_count
+        )
       )
     )
     AND EXISTS (
@@ -628,9 +635,6 @@ BEGIN
     AND css.source_system = 'scrim'
   ON CONFLICT (canonical_session_id) DO UPDATE
   SET expected_match_count = EXCLUDED.expected_match_count;
-
-  GET DIAGNOSTICS v_rows = ROW_COUNT;
-  v_inserted := v_inserted + v_rows;
 
   INSERT INTO public.canonical_session_matches (
     team_id, canonical_session_id, match_sequence, source_system,
