@@ -63,8 +63,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
 
-      - name: Verify Evolution Phase 2.2 canonical session migration against disposable PostgreSQL
-        run: bash scripts/verify-evolution-phase-two-2-db.sh
+      - name: Verify Evolution Phase 2.2 canonical session migration against isolated disposable PostgreSQL
+        run: |
+          createdb -h localhost -U postgres squad_os_phase_two_2_ci
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_2_ci bash scripts/verify-evolution-phase-two-2-db.sh
 
       - name: Verify staged B migration against disposable PostgreSQL
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
