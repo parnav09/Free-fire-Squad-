@@ -84,7 +84,7 @@ See [E Phase One.5-C Historical Rollback Disposition Register](./E-PHASE-ONE-5-C
 
 ## D — Tests and validation
 
-Added `scripts/verify-evolution-phase-one-5.mjs`, the C rollback disposition manifest/register, and `scripts/verify-evolution-phase-one-5-c.mjs`; the dedicated B and C suites are wired into `npm run build`.
+Added `scripts/verify-evolution-phase-one-5.mjs`, the C rollback disposition manifest/register, `scripts/verify-evolution-phase-one-5-c.mjs`, and the dedicated D validation suite `scripts/verify-evolution-phase-one-5-d.mjs`; the base, B, C, and D suites are wired into `npm run build`.
 
 The checks cover:
 - timezone validation trigger presence;
@@ -96,7 +96,7 @@ The checks cover:
 
 **Earlier local result:** the original Node source-contract suite passed **6/6**. The new C-specific suite validates all 53 disposition records, unique version coverage, the two intentionally excluded loadout versions, duplicate-name handling, all risk-class recovery rules, and no-destructive-inverse rules. GitHub Actions run #260 (ID 44257295715) on the corrected head passed: typecheck, all configured suites (including C 6/6), and Vite production build.
 
-**Limit:** these are source-contract tests, not a database integration test. CI is green on the corrected head. These are source-contract tests, not a database integration test; the staged B forward/rollback SQL still requires isolated database execution before B/D/E acceptance can be marked complete.
+**D acceptance:** the D suite cross-checks build wiring, B timezone/date invariants, C 53-entry disposition coverage, B forward/rollback scope, and the explicit database/production evidence boundary. D is complete when this suite and the full CI build pass on the exact head commit. **Limit:** these are source-contract tests, not a database integration test; staged B forward/rollback SQL still requires isolated database execution for B and final E acceptance.
 
 ## E — Final Phase One acceptance audit
 
