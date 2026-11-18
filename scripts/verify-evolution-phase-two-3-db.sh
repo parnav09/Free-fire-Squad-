@@ -231,7 +231,7 @@ BEGIN
       scrim_record_id,scrim_source_sequence,source_match_fingerprint,created_by
     ) VALUES (
       'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',bravo_session,99,'scrim',
-      'aa100000-0000-0000-0000-000000000001',1,
+      'aa100000-0000-0000-0000-000000000001',99,
       md5('{"placement":2,"kills":4}'::jsonb::text),
       '30000000-0000-0000-0000-000000000003'
     );
