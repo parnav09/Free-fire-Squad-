@@ -3,7 +3,7 @@
 **Audit date:** 18 Nov 2026  
 **Repository:** `parnav09/Free-fire-Squad-`  
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
-**Scope:** Read-only provenance inventory. This is not a migration plan or approval to change the database.
+**Scope:** Historical read-only provenance inventory. This is not a migration plan or approval to change the database.\n\n> **Recovery update (18 Nov 2026):** the live ledger's stored SQL statements were subsequently recovered verbatim for 53 non-loadout entries and verified 53/53 against committed Git blob hashes. See [the recovered SQL archive](./recovered-migrations/README.md). The two restricted loadout entries were excluded. The classifications below describe what the earlier repository-history sweep found; they are superseded for SQL-source availability, but not for application/rollback proof.
 
 ## What “34 missing files” actually means
 
