@@ -723,6 +723,6 @@ COMMENT ON TABLE public.canonical_session_matches IS
 COMMENT ON TABLE public.canonical_session_match_sets IS
   'Expected match count derived from existing Scrim match_count or existing Tournament match rows. It does not create missing match rows.';
 COMMENT ON VIEW public.canonical_session_match_counts IS
-  'Expected vs actual played match counts. Tournament matches count as played only when their source status is submitted, verified or disputed.';
+  'Expected vs actual played match counts. Tournament rows count as played when a non-scheduled result has both a recorder and placement; draft results count as played.';
 COMMENT ON TABLE public.canonical_session_match_sequence_events IS
   'Append-only audit of canonical match sequence corrections.';
