@@ -48,22 +48,26 @@ test("duplicate active memberships for the same team are treated as ambiguous", 
   ], teamA), null);
 });
 
-test("team timezone validation accepts IANA zones and rejects invalid values", () => {
+test("team timezone validation accepts India Standard Time and its legacy alias only", () => {
   assert.equal(identity.isValidTeamTimezone("Asia/Kolkata"), true);
-  assert.equal(identity.isValidTeamTimezone("America/Los_Angeles"), true);
+  assert.equal(identity.isValidTeamTimezone("Asia/Calcutta"), true);
+  assert.equal(identity.isValidTeamTimezone("America/Los_Angeles"), false);
+  assert.equal(identity.isValidTeamTimezone("UTC"), false);
   assert.equal(identity.isValidTeamTimezone("Not/A_Zone"), false);
   assert.equal(identity.isValidTeamTimezone(" Asia/Kolkata"), false);
 });
 
-test("date boundaries follow the configured team timezone", () => {
+test("date boundaries use India Standard Time independent of device timezone", () => {
   const instant = new Date("2026-11-17T19:00:00.000Z");
   assert.equal(identity.teamDateISO(instant, "Asia/Kolkata"), "2026-11-18");
-  assert.equal(identity.teamDateISO(instant, "America/Los_Angeles"), "2026-11-17");
+  assert.equal(identity.teamDateISO(instant, "Asia/Calcutta"), "2026-11-18");
+  assert.throws(() => identity.teamDateISO(instant, "America/Los_Angeles"), RangeError);
 });
 
-test("invalid dates and invalid timezones fail closed", () => {
+test("invalid dates and unsupported timezones fail closed", () => {
   assert.throws(() => identity.teamDateISO(new Date("invalid"), "Asia/Kolkata"), RangeError);
   assert.throws(() => identity.teamDateISO(new Date(), "Invalid/Zone"), RangeError);
+  assert.throws(() => identity.teamDateISO(new Date(), "UTC"), RangeError);
 });
 
 
