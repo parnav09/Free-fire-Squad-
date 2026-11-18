@@ -65,7 +65,7 @@ jobs:
 
       - name: Verify Evolution Phase 2.2 canonical session migration against isolated disposable PostgreSQL
         run: |
-          createdb -h localhost -U postgres squad_os_phase_two_2_ci
+          PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_2_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_2_ci bash scripts/verify-evolution-phase-two-2-db.sh
 
       - name: Verify staged B migration against disposable PostgreSQL
