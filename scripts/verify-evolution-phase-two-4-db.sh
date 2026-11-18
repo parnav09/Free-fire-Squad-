@@ -662,6 +662,20 @@ BEGIN
     RAISE EXCEPTION 'Player unexpectedly transitioned a canonical session';
   EXCEPTION WHEN SQLSTATE '42501' THEN NULL;
   END;
+  BEGIN
+    PERFORM public.submit_canonical_session_results(
+      v_session,'52000000-0000-0000-0000-000000000003'
+    );
+    RAISE EXCEPTION 'Player unexpectedly submitted session results';
+  EXCEPTION WHEN SQLSTATE '42501' THEN NULL;
+  END;
+  BEGIN
+    PERFORM public.reopen_canonical_session(
+      v_session,7,'verified','Player cannot reopen','53000000-0000-0000-0000-000000000002'
+    );
+    RAISE EXCEPTION 'Player unexpectedly reopened a canonical session';
+  EXCEPTION WHEN SQLSTATE '42501' THEN NULL;
+  END;
   SELECT count(*) INTO v_count FROM public.canonical_session_lifecycle_events
   WHERE canonical_session_id=v_session;
   IF v_count <> 0 THEN RAISE EXCEPTION 'Player can read staff-only lifecycle audit'; END IF;
