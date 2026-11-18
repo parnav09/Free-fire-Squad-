@@ -4,7 +4,7 @@ Use this file when continuing in a new ChatGPT conversation.
 
 ## Exact resume prompt
 
-**Continue Squad OS E Phase One.5-B/C/D/E from PR #115. Read docs/evolution/E-PHASE-ONE-HANDOFF.md, docs/evolution/evolution-phase-one.md, docs/evolution/E-PHASE-ONE-5-MIGRATION-AUDIT.md, and docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md. The team-timezone forward migration and rollback are staged under docs/evolution/staged-migrations; run the added source-contract tests, reconcile active-chain mismatches, and obtain isolated PostgreSQL validation before promotion. Do not apply production SQL, merge, or deploy without explicit authorization and all acceptance gates.**
+**Continue Squad OS Evolution Phase One.5-E final acceptance from PR #115. Read docs/evolution/E-PHASE-ONE-HANDOFF.md, docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md, and docs/evolution/E-PHASE-ONE-5-E-FINAL-AUDIT.md. D source-contract CI is green on run #284; E remains blocked by isolated B SQL execution and unavailable pre-migration baseline/clean replay evidence. Do not claim PASS or touch production without verified acceptance gates.**
 
 ## Naming
 
