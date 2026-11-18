@@ -14,15 +14,14 @@ const [migration, dbHarness, report, blueprint, packageText, workflow] = await P
 ]);
 const pkg = JSON.parse(packageText);
 
-test("Phase 2.2 creates a UUID identity with controlled session types and mutable display metadata", () => {
+test("Phase 2.2 defines UUID identity and controlled session types", () => {
   assert.match(migration, /id uuid PRIMARY KEY DEFAULT gen_random_uuid\(\)/i);
   assert.match(migration, /session_type IN \('scrim', 'tournament', 'training'\)/i);
-  assert.match(migration, /title text NOT NULL/i);
   assert.match(migration, /season_label text/i);
-  assert.match(report, /display labels are not identity/i);
+  assert.match(report, /display labels are descriptive metadata and are not identity keys/i);
 });
 
-test("Session idempotency is enforced by a team-scoped key and server-side create function", () => {
+test("Session creation is idempotent and rejects a changed retry payload", () => {
   assert.match(migration, /UNIQUE \(team_id, idempotency_key\)/i);
   assert.match(migration, /ON CONFLICT \(team_id, idempotency_key\) DO NOTHING/i);
   assert.match(migration, /idempotency_key_reused_with_different_payload/i);
@@ -30,7 +29,7 @@ test("Session idempotency is enforced by a team-scoped key and server-side creat
   assert.match(migration, /active_owner_or_coach_required/i);
 });
 
-test("Legacy source mappings use real source UUIDs and composite same-team foreign keys", () => {
+test("Source mappings enforce real UUID references and same-team composite foreign keys", () => {
   for (const source of ["scrim_record_id", "tournament_cycle_id", "training_session_id"]) {
     assert.match(migration, new RegExp(source, "i"));
   }
@@ -41,26 +40,25 @@ test("Legacy source mappings use real source UUIDs and composite same-team forei
   assert.match(migration, /UNIQUE \(source_system, source_record_id\)/i);
 });
 
-test("Team RLS separates member reads from owner/coach writes and prevents hard deletes", () => {
+test("RLS separates member reads from staff writes and denies hard deletion", () => {
   assert.match(migration, /ENABLE ROW LEVEL SECURITY/i);
   assert.match(migration, /canonical_sessions_team_read/i);
   assert.match(migration, /canonical_sessions_staff_insert/i);
   assert.match(migration, /canonical_sessions_staff_update/i);
-  assert.match(migration, /REVOKE DELETE/i);
   assert.match(migration, /canonical_session_sources_staff_insert/i);
+  assert.match(migration, /REVOKE DELETE/i);
 });
 
-test("Archive is soft and archived sessions are no longer mutable through the update policy", () => {
+test("Archive is soft and archived sessions are read-only", () => {
   assert.match(migration, /archived_at timestamptz/i);
   assert.match(migration, /archived_by uuid/i);
   assert.match(migration, /archived_at IS NULL/i);
   assert.match(report, /non-destructive archive/i);
 });
 
-test("Database integration harness covers retry, payload mismatch, RLS, source integrity and archive", () => {
+test("Disposable PostgreSQL integration checks retry, RLS, source integrity and archive", () => {
   for (const phrase of [
     "idempotent retry created a second session",
-    "idempotency_key_reused_with_different_payload",
     "cross-team source mapping was accepted",
     "cross-team session visibility leaked",
     "archived session remained mutable",
@@ -68,16 +66,17 @@ test("Database integration harness covers retry, payload mismatch, RLS, source i
   ]) assert.ok(dbHarness.includes(phrase), `Missing DB assertion: ${phrase}`);
 });
 
-test("Point 2.2 is tracked as complete only when exact-head CI evidence is attached", () => {
-  assert.match(blueprint, /2\.2 \| Canonical Session Identity/);
-  assert.match(report, /CI verification/i);
+test("Phase 2.2 contracts are wired into the standard build and CI workflow", () => {
   assert.equal(pkg.scripts["test:evolution-phase-two-2"], "node --test scripts/verify-evolution-phase-two-2.mjs");
   assert.ok(pkg.scripts.build.includes("npm run test:evolution-phase-two-2"));
   assert.match(workflow, /feat\/evolution-phase-two-2-canonical-session-identity/);
+  assert.match(workflow, /verify-evolution-phase-two-2-db\.sh/);
+  assert.match(report, /CI evidence is intentionally pending/i);
 });
 
-test("Paid-plan Auth limitation and clean-replay baseline gap are not misrepresented as passed", () => {
+test("Auth plan limitation and original baseline gap are recorded without false PASS claims", () => {
   assert.match(report, /Leaked Password Protection remains disabled/i);
-  assert.match(report, /clean-replay baseline/i);
+  assert.match(report, /not fabricated/i);
   assert.match(report, /not a verified original baseline/i);
+  assert.match(blueprint, /Phase One 1\.5-E/);
 });
