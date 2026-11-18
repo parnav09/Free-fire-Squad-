@@ -10,7 +10,7 @@ This record covers only Evolution Phase One.5-B through .5-E. It does not author
 
 ## B — India-only automatic date/timezone contract
 
-<badge>PASS · DISPOSABLE POSTGRESQL VERIFIED IN CI RUN #337</badge>
+<badge>PASS · DISPOSABLE POSTGRESQL VERIFIED IN CI RUNS #352/#353</badge>
 
 ### Application contract implemented
 
@@ -55,7 +55,7 @@ This record covers only Evolution Phase One.5-B through .5-E. It does not author
 
 ### Remaining acceptance gate
 
-The forward SQL remains staged outside `supabase/migrations/` and has been executed against disposable PostgreSQL 16 in GitHub Actions runs #352/#353 (ID 44275561389). The test passed default/legacy normalization, invalid/blank rejection, restore-path normalization, canonical team-timezone lookup, and preservation of the existing Daily Evaluation trigger/RLS policy. The exact staged rollback also passed and removed only the new timezone trigger/function. This is B runtime proof in CI; production remains unchanged.
+The forward SQL remains staged outside `supabase/migrations/` and has been executed against disposable PostgreSQL 16 in GitHub Actions runs #352/#353 (IDs 44276950260 and 44276957631). The test passed default/legacy normalization, invalid/blank rejection, restore-path normalization, canonical team-timezone lookup, and preservation of the existing Daily Evaluation trigger/RLS policy. The exact staged rollback also passed and removed only the new timezone trigger/function. This is B runtime proof in CI; production remains unchanged.
 
 
 ## C — Rollback
