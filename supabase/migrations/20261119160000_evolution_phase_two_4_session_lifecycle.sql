@@ -285,6 +285,12 @@ BEGIN
       NEW.archived_at := pg_catalog.clock_timestamp();
       NEW.archived_by := v_actor;
       NEW.archive_reason := pg_catalog.btrim(v_reason);
+      IF OLD.lifecycle_status = 'cancelled' THEN
+        NEW.cancelled_at := NULL;
+        NEW.cancelled_by := NULL;
+        NEW.cancellation_reason_code := NULL;
+        NEW.cancellation_reason := NULL;
+      END IF;
     END IF;
   ELSE
     IF NOT (
@@ -503,6 +509,14 @@ BEGIN
     WHERE tm.team_id = v_session.team_id AND tm.user_id = auth.uid()
       AND tm.status = 'active' AND tm.membership_role IN ('owner','coach')
   ) THEN RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501'; END IF;
+  SELECT * INTO v_submission FROM public.canonical_session_result_submissions
+  WHERE canonical_session_id = p_session_id;
+  IF FOUND THEN
+    IF v_submission.idempotency_key <> p_idempotency_key THEN
+      RAISE EXCEPTION 'session_results_already_submitted_with_different_key' USING ERRCODE = '23505';
+    END IF;
+    RETURN v_submission;
+  END IF;
   IF v_session.lifecycle_status <> 'awaiting_results' THEN
     RAISE EXCEPTION 'session_must_await_results_before_submission' USING ERRCODE = '23514';
   END IF;
