@@ -66,5 +66,8 @@ jobs:
       - name: Verify staged B migration against disposable PostgreSQL
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
 
+      - name: Verify staged security trigger ACL hardening
+        run: bash scripts/verify-evolution-security-trigger-acls.sh
+
       - name: Verify typecheck, foundation contracts, character data and production bundle
         run: npm run build
