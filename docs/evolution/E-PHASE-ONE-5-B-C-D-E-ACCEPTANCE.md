@@ -95,9 +95,9 @@ The checks cover:
 - no historical row rewrite;
 - staged SQL remaining outside the active migration directory.
 
-**Earlier local result:** the original Node source-contract suite passed **6/6**. The new C-specific suite validates all 53 disposition records, unique version coverage, the two intentionally excluded loadout versions, duplicate-name handling, and no-destructive-inverse rules. Current-head CI is pending after these changes.
+**Earlier local result:** the original Node source-contract suite passed **6/6**. The new C-specific suite validates all 53 disposition records, unique version coverage, the two intentionally excluded loadout versions, duplicate-name handling, all risk-class recovery rules, and no-destructive-inverse rules. GitHub Actions run #260 (ID 44257295715) on the corrected head passed: typecheck, all configured suites (including C 6/6), and Vite production build.
 
-**Limit:** these are source-contract tests, not a database integration test. CI must pass on the new head, and the forward/rollback SQL must still pass isolated database execution before D can be marked complete.
+**Limit:** these are source-contract tests, not a database integration test. CI is green on the corrected head. These are source-contract tests, not a database integration test; the staged B forward/rollback SQL still requires isolated database execution before B/D/E acceptance can be marked complete.
 
 ## E — Final Phase One acceptance audit
 
