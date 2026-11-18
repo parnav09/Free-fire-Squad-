@@ -19,7 +19,7 @@ const pkg = JSON.parse(packageText);
 test("Phase 2.3 follows the authoritative Point 2.3 Match Identity scope", () => {
   assert.match(blueprint, /38\.3 Point 2\.3 — Match Identity/);
   assert.match(blueprint, /represent each match as a first-class child of a session/i);
-  assert.match(report, /Phase Two\.3 — Canonical Match Identity/);
+  assert.match(report, /Phase 2\.3 — Canonical Match Identity/);
   assert.match(report, /It does not implement session lifecycle \(2\.4\), roster snapshots \(2\.5\)/i);
 });
 
