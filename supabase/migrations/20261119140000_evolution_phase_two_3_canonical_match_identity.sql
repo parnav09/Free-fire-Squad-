@@ -577,7 +577,7 @@ RETURNS public.canonical_session_matches
 LANGUAGE plpgsql
 SECURITY INVOKER
 SET search_path = ''
-AS $
+AS $function$
 DECLARE
   v_match public.canonical_session_matches;
 BEGIN
@@ -611,7 +611,7 @@ BEGIN
 
   RETURN v_match;
 END;
-$$;
+$function$;
 
 REVOKE ALL ON FUNCTION public.correct_canonical_match_sequence(uuid, smallint, text)
   FROM PUBLIC, anon;
@@ -623,7 +623,7 @@ RETURNS integer
 LANGUAGE plpgsql
 SECURITY INVOKER
 SET search_path = ''
-AS $
+AS $function$
 DECLARE
   v_session public.canonical_sessions;
   v_inserted integer := 0;
@@ -713,7 +713,7 @@ BEGIN
   v_inserted := v_inserted + v_rows;
   RETURN v_inserted;
 END;
-$$;
+$function$;
 
 REVOKE ALL ON FUNCTION public.sync_canonical_session_matches(uuid) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.sync_canonical_session_matches(uuid) TO authenticated;
