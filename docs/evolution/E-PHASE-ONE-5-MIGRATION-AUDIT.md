@@ -1,6 +1,6 @@
 # E Phase One.5 — Migration Provenance Audit Checkpoint
 
-**Status:** SQL source recovery completed for 53/55 live ledger entries in the non-loadout scope and all 53 safe-scope migrations are represented in the active chain. Six active-file SQL mismatches and three unmatched files remain under disposition review. Historical rollback is absent (0/53); the new timezone forward/rollback pair is staged only. No database migration or schema change has been applied.
+**Status:** **E Phase One.5-A — Migration Provenance & Schema-History Reconciliation: COMPLETE · VERIFIED (18 Nov 2026).** All 53 in-scope live ledger rows have exact version/name/SQL counterparts in the active migration chain. Direct comparison of live statements[1] against the 53 checked-in migration files passed **53/53**, with zero content mismatches. The active chain has zero missing or extra in-scope migration files and zero duplicate timestamp prefixes. Two loadout ledger rows remain excluded from this scope. The separate unapplied performance-tuning migration is not a historical ledger entry and was not applied. Historical rollback arrays remain empty (0/55); rollback work belongs to 1.5-C and was not started. Clean replay is not claimed. No production migration, schema, data, or migration-history change was made.
 
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
 **PR:** #115 (open, draft; stacked on Phase Zero PR #114)  
@@ -222,3 +222,49 @@ The earlier conclusion that the live migration ledger exposed only version/name 
 - No SQL was applied to Supabase. No active migration was added for the timezone contract. No merge, deployment, or Supabase development branch was created.
 - B and the new-migration portion of C are **DRAFTED**. D is **PENDING CI + isolated database validation**. E is **NOT PASSED** because the six content mismatches/three unmatched files, historical rollback classification, and clean replay/runtime checks remain open.
 - See [B/C/D/E acceptance record](./E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md) for exact gates.
+
+## 11. E Phase One.5-A final reconciliation — COMPLETE · VERIFIED (18 Nov 2026)
+
+This section supersedes the earlier interim counts in Sections 2, 8.5, 9, and 10. Those sections accurately describe earlier checkpoints; the following verification reflects the current branch head and live ledger.
+
+### 11.1 Live ledger and active-chain counts
+
+- Live Supabase migration ledger: **55** version/name rows.
+- In-scope non-loadout ledger rows: **53**.
+- Out-of-scope loadout rows: **2**; their SQL was not opened, copied, or changed for this verification.
+- Active `supabase/migrations/` SQL files: **55** total — 53 exact in-scope historical files, one excluded loadout file, and one separate pending `20261118060000_evolution_phase_1_5_performance_tuning.sql` file. The latter has no matching live ledger row and was not applied or treated as historical provenance.
+- Exact version/name coverage for the 53 in-scope rows: **53/53**. Missing in-scope files: **0**. Extra in-scope files: **0**.
+
+### 11.2 Direct SQL-content verification
+
+For each of the 53 non-loadout ledger rows, the exact SQL text in live `supabase_migrations.schema_migrations.statements[1]` was compared byte-for-byte with the corresponding checked-in file named `<version>_<name>.sql` on `feat/evolution-phase-one-identity-timezone`.
+
+| Batch | Rows compared | Exact matches | Mismatches |
+|---|---:|---:|---:|
+| 1 | 18 | 18 | 0 |
+| 2 | 18 | 18 | 0 |
+| 3 | 17 | 17 | 0 |
+| **Total** | **53** | **53** | **0** |
+
+The archive and active-chain Git blob identities also match for all 53 in-scope files. This is direct source-to-ledger verification, not a semantic-name guess or reconstruction from the current schema.
+
+### 11.3 Naming and ordering anomalies resolved in the in-scope chain
+
+- The former 18 same-name/different-version cases now have active files using the exact live version and migration name.
+- The former 34 live-only name cases are represented by exact recovered source files.
+- The former six same-name SQL-content mismatches are no longer present in the current in-scope active chain.
+- The former three unmatched in-scope files are no longer present as extras in the current in-scope active chain.
+- The duplicate `20261109007000` timestamp prefix is absent from the current active chain.
+- The live ledger's repeated name `daily_score_feedback_private_rls` is retained as two distinct versions (`20261109034550` and `20261109034618`), each with its own exact SQL file. The repeated name is not a duplicate version and neither row was deleted or rewritten.
+
+### 11.4 Automated verification and boundaries
+
+- Current Phase One branch head: `123b674356edb8cdd226316b58f3153f53618d67`.
+- GitHub Actions run #198 (`44246059976`) completed successfully for this head.
+- GitHub's separate Vercel status is a deployment-rate-limit failure; it does not invalidate the SQL-to-ledger comparison. No preview, device QA, merge, or production deployment is claimed.
+- All database inspection was read-only. No migration was applied, no ledger row was inserted/deleted/updated, and no schema/data/function/policy/grant/trigger was changed.
+- The live ledger contains zero stored rollback statements across all 55 rows. That remains a separate 1.5-C concern; no 1.5-C work was started here.
+- Clean-database replay/baseline verification is not claimed here and remains outside 1.5-A.
+- 1.5-B, 1.5-C, 1.5-D, and 1.5-E were not started or changed by this 1.5-A completion.
+
+**1.5-A acceptance result: PASS — COMPLETE · VERIFIED.**
