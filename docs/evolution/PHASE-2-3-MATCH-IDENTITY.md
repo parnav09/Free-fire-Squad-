@@ -43,8 +43,8 @@ Migration: supabase/migrations/20261119140000_evolution_phase_two_3_canonical_ma
 - Expected Scrim count comes from scrim_records.match_count.
 - Expected Tournament count comes from the count of existing tournament_matches rows for that cycle.
 - Actual canonical child-record count comes from rows actually mapped.
-- Actual played count includes source-consistent Scrim JSONB entries and Tournament rows whose source status is submitted, verified or disputed.
-- Scheduled/draft Tournament rows remain expected slots, not played matches.
+- Actual played count includes source-consistent Scrim JSONB entries and Tournament rows with a non-scheduled result state plus both recorded_by and placement. Draft rows with those fields are already played/result-recorded; a scheduled row is not.
+- Scheduled Tournament rows remain unplayed expected slots. Draft rows count as played only when both recorded_by and placement are present.
 - The security-invoker count view never creates placeholders. Missing source rows remain missing.
 
 ### Parent/source backfill
@@ -97,7 +97,7 @@ The integration harness applies the exact Phase 2.2 parent migration followed by
 
 Reason: Phase 2.2 source mappings deliberately use ON DELETE RESTRICT so historical source IDs remain traceable. The current Scrims UI still exposes a Delete Record action, and existing Tournament source deletion may also be blocked after mapping. This is an intentional integrity safeguard, but it changes the outcome of those existing destructive actions. The database integration explicitly proves that deletion is blocked. Point 2.9 must provide the archive/retention UX before rollout; this is not hidden as a completed UI task.
 
-The current live source snapshot implies a backfill of 16 parent sessions and 636 existing child match records (1 Scrim + 15 Tournament cycles; 6 Scrim entries + 630 Tournament rows). Current source statuses imply 6 played Scrim entries and 420 recorded Tournament rows. These are audit-time figures, not hard-coded migration assumptions.
+The current live source snapshot implies a backfill of 16 parent sessions and 636 existing child match records (1 Scrim + 15 Tournament cycles; 6 Scrim entries + 630 Tournament rows). Current source fields imply 6 played Scrim entries and 420 recorded Tournament rows (426 actual played in total). These are audit-time figures, not hard-coded migration assumptions.
 
 ## 8. Deployment boundary and exit gate
 
