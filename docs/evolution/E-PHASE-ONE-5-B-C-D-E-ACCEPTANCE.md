@@ -8,30 +8,43 @@
 
 This record covers only Evolution Phase One.5-B through .5-E. It does not authorize a production migration, migration-ledger edit, merge, deployment, security-policy redesign, retention change, or loadout work. No Supabase development branch was created.
 
-## B — Existing date/timezone contract verification
+## B — India-only automatic date/timezone contract
 
-### Implemented as a staged forward migration
+<badge>IN PROGRESS · ISOLATED DATABASE VERIFICATION PENDING</badge>
 
-`docs/evolution/staged-migrations/20261118070000_team_timezone_contract.sql`
+### Application contract implemented
 
-- Adds a SECURITY INVOKER trigger function validating every inserted/updated `teams.timezone` against PostgreSQL's recognized IANA timezone catalog.
-- Covers `create_team`, both backup-restore paths, and direct timezone updates without rewriting existing SECURITY DEFINER functions.
-- Preserves the existing persisted Daily Evaluation date contract: `daily_scores.score_date` remains derived from `Asia/Kolkata` by the existing `daily_scores_lock_date_anonymous` trigger.
-- Leaves the existing `ds_insert` RLS predicate unchanged; it continues to require `evaluator_id IS NULL`, `can_rate(team_id, player_id)`, and the Asia/Kolkata date.
-- Does not add a second Daily Evaluation trigger, change trigger ordering, change the `ds_insert` policy, or rewrite historical rows.
-- Does not change timezone defaults or the existing app's team-creation argument (`Asia/Kolkata`).
+- The app is India-only and uses Asia/Kolkata (IST, UTC+05:30). Device timezone and location do not affect the evaluation date.
+- Team creation and Team Join use the selected team's canonical India timezone. A member cannot choose a personal or international timezone.
+- Daily Evaluation date is automatic, locked, and not editable/backdatable.
+- Date display uses English international wording, e.g. November 18th 2026.
+- The date refresh is scheduled for the next India midnight, not the phone's local midnight.
+- The date key sent by the client is YYYY-MM-DD in IST. The existing database trigger remains authoritative for persisted score_date.
+- The date is an India calendar day (00:00 to next 00:00 IST), not a rolling 24 hours from when the user opens the form. The separate pending-notice lifecycle (24-hour grace followed by a 24-hour visible pending period) is not changed in this B-only pass.
+
+### Staged forward migration
+
+docs/evolution/staged-migrations/20261118070000_team_timezone_contract.sql
+
+- Adds a SECURITY INVOKER trigger on teams.timezone.
+- Normalizes the existing column's UTC default and legacy Asia/Calcutta alias to Asia/Kolkata.
+- Rejects all non-India timezone values.
+- Checks existing rows before installing the trigger; it fails safely if unexpected timezone values are present.
+- Normalizes the one existing Asia/Calcutta team row to Asia/Kolkata.
+- Does not alter daily_scores, its existing anonymization/date trigger, or ds_insert RLS policy; does not reinterpret historical evaluation dates.
 
 ### Live read-only facts checked
 
-- `teams.timezone` is `NOT NULL` with default `UTC`.
-- Existing live team values: `Asia/Kolkata` (14 teams) and `Asia/Calcutta` (1 team); both are recognized by PostgreSQL's timezone catalog.
-- The current app calls `create_team` with `p_timezone: 'Asia/Kolkata'`.
-- The live `daily_scores_lock_date_anonymous` trigger sets `score_date` using `Asia/Kolkata`, and also nulls evaluator/notes and sets recipient-only visibility.
-- The live `ds_insert` policy independently enforces the same Asia/Kolkata date and retains the evaluator-null and `can_rate` checks.
+- teams.timezone is NOT NULL with default UTC.
+- Existing live team values: Asia/Kolkata (14 teams) and Asia/Calcutta (1 team); no other values.
+- The app's create_team call already supplies Asia/Kolkata.
+- The existing Daily Evaluation trigger and ds_insert policy both enforce Asia/Kolkata.
+- Boundary checks around 00:00 IST pass for both the canonical timezone and legacy alias.
 
-### Not yet accepted
+### Remaining acceptance gate
 
-The SQL remains staged outside `supabase/migrations/`. It has not yet been executed against an isolated PostgreSQL/Supabase-compatible database. A source review and live read-only inspection cannot prove DDL execution, invalid-timezone rejection, valid alias acceptance, or that existing date trigger/RLS behavior remains unchanged at runtime. Do not apply it to production.
+The forward SQL is still staged outside supabase/migrations/. It has not yet been executed against an isolated PostgreSQL/Supabase-compatible database. Runtime verification must prove: default/legacy normalization, rejection of non-India values, Team Join inheritance, and no change to the existing Daily Evaluation trigger/RLS contract. No production migration will be applied as part of this validation.
+
 ## C — Rollback
 
 ### Implemented for the new B migration
