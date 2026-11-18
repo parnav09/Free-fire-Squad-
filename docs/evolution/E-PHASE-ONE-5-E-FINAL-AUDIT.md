@@ -4,63 +4,70 @@
 **Repository:** `parnav09/Free-fire-Squad-`  
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
 **PR:** #115 — open, draft, unmerged  
-**D evidence head:** `0de4ecc9dfd450f8cb2be87bed0cbf299965813b`  
-**E audit CI head:** `c7a58ca4f9f62581a0cd0da162cf53c255299772`
+**Exact-head full CI:** run #337 (ID `44275561389`) on `da5ca832060c30aad309f24ada929dc2499ca75f`
 
 ## Final result
 
 **FINAL ACCEPTANCE: BLOCKED / NOT PASSED**
 
-This is the final acceptance audit for Evolution Phase One.5. It consolidates A–D evidence and checks whether all runtime/database gates have been satisfied. It does not convert source tests or documentation into database proof.
+B's isolated database contract and the staged trigger-function ACL remediation now have passing disposable-PostgreSQL CI evidence. Full acceptance is still blocked by the missing authoritative pre-migration baseline and the outstanding Supabase Auth leaked-password setting / independent RPC review. These are real acceptance gates, not source-test failures.
 
 ## Evidence verified
 
 - Read-only ledger verification: **55 live migration rows**; 53 in-scope; 2 excluded loadout; 55 forward SQL rows; **0 stored rollback statements**.
-- Exact current-head Git tree comparison: **55 active migration files** = 53 exact in-scope version/name matches + one excluded loadout file + one pending performance-tuning migration. Missing in-scope files: 0; extra in-scope files: 0; duplicate active timestamp prefixes: 0. The loadout SQL was not opened.
-- Current production read-only check: the staged `teams_validate_timezone` trigger/function are absent; the existing `daily_scores_lock_date_anonymous` trigger and `ds_insert` policy are present. This confirms B's staged SQL has not been applied to production.
+- Exact Git tree comparison: **55 active migration files** = 53 exact in-scope version/name matches + one excluded loadout file + one pending performance-tuning migration. Missing/extra in-scope files: 0; duplicate active timestamp prefixes: 0. The loadout SQL was not opened.
+- Production read-only check: staged `teams_validate_timezone` trigger/function are absent; existing `daily_scores_lock_date_anonymous` trigger and `ds_insert` policy are present. No staged SQL has been applied to production.
+- Exact-head GitHub Actions run **#337 / 44275561389** passed on `da5ca832060c30aad309f24ada929dc2499ca75f`: disposable PostgreSQL B forward/rollback suite, security trigger ACL suite, typecheck, all configured test suites, and Vite production build.
 
 | Gate | Evidence | Result |
 |---|---|---|
-| 1.5-A — historical SQL provenance | Prior exact live-SQL-to-Git verification: 53/53 in-scope SQL bodies matched byte-for-byte; zero mismatches; two loadout versions excluded | **PASS · prior verified evidence** |
-| Live migration ledger | Read-only current query: 55 rows; 53 in-scope; 2 excluded loadout; 55 rows with forward SQL; 0 rows with rollback SQL | **PASS · read-only evidence** |
-| 1.5-B — application contract | India-only timezone/date contract and dedicated source tests are present; CI history includes the B suite | **PARTIAL · runtime SQL gate open** |
-| 1.5-C — historical rollback disposition | 53/53 in-scope versions have explicit forward-only dispositions, risk classes, and recovery rules; no reverse SQL fabricated | **PASS · documented and machine-checked** |
-| 1.5-D — source-contract tests | Exact-head GitHub Actions run #284 on `0de4ecc9dfd450f8cb2be87bed0cbf299965813b` passed; D suite 6/6; full configured build and Vite production build passed | **PASS · CI verified** |
-| E audit integrity | Dedicated E acceptance audit suite passed 6/6 in GitHub Actions run #315 on exact head `c7a58ca4f9f62581a0cd0da162cf53c255299772`; all configured suites and Vite production build passed | **PASS · CI verified** |
+| 1.5-A — historical SQL provenance | Prior exact live-SQL-to-Git verification: 53/53 in-scope SQL bodies matched byte-for-byte | **PASS** |
+| Live migration ledger | Read-only query: 55 rows; 53 in-scope; 2 excluded loadout; 0 stored rollback statements | **PASS** |
+| 1.5-B — application contract | India-only timezone/date contract and source suite; exact staged forward + rollback SQL executed against disposable PostgreSQL in run #337 | **PASS · CI database verified** |
+| 1.5-C — historical rollback disposition | 53/53 in-scope versions explicitly forward-only with risk class and recovery rule | **PASS · documented and machine-checked** |
+| 1.5-D — source-contract tests | D suite 6/6; full typecheck, configured suites and Vite build passed in run #337 | **PASS · CI verified** |
+| E audit integrity | E suite 6/6 included in full build on exact head run #337 | **PASS · CI verified** |
+| Security trigger ACL remediation | Staged revocations deny API-role EXECUTE; existing Daily Evaluation trigger still executes after revocation in run #337 | **PASS · staged SQL + CI; not production-applied** |
+| Full-chain clean replay | Authoritative pre-migration baseline is not present in repository or available evidence | **BLOCKED** |
 
-## Independent Security-advisor review
+## B isolated database evidence
 
-A read-only Supabase Security Advisor snapshot reported the following existing findings; they were not changed in this phase:
+The workflow now provisions a disposable PostgreSQL 16 service and runs the exact staged SQL files. Run #337 passed:
 
-- 2 INFO findings: RLS enabled with no policies on `account_recovery_otps` and `recovery_email_enrollment_otps`.
-- 4 WARN findings: `anon` can execute `SECURITY DEFINER` functions, including `lock_daily_score_date_and_anonymize()` and three task-lifecycle functions.
-- 22 WARN findings: authenticated users can execute `SECURITY DEFINER` functions. Each function needs intent/authorization review; the advisor result alone does not prove every exposure is exploitable.
-- 1 WARN finding: leaked-password protection is disabled.
+- default `UTC` and legacy `Asia/Calcutta` normalize to `Asia/Kolkata`;
+- non-India and blank values are rejected;
+- restore-path timezone writes are normalized;
+- team timezone lookup remains canonical for join inheritance;
+- the existing Daily Evaluation trigger and `ds_insert` policy survive the forward migration;
+- rollback removes only `teams_validate_timezone` and `validate_team_timezone()`;
+- the existing Daily Evaluation trigger and policy survive rollback.
 
-This is the separate Security workstream. No ACL, RLS, function privilege, or Auth setting was changed under E; independent review/disposition remains required before claiming an overall Phase One security acceptance.
+This verifies B's staged SQL contract in a disposable PostgreSQL fixture. It does not claim that the migration has been applied to the production Supabase database.
 
-## Blocking gates
+## Security findings disposition
 
-1. **B isolated database execution:** the staged timezone forward and rollback SQL have not been executed against an isolated PostgreSQL/Supabase-compatible database. Source tests do not prove trigger behavior, default normalization, invalid-zone rejection, restore-path behavior, or rollback behavior.
-2. **Clean replay baseline:** the original pre-migration baseline schema is unavailable. The recovered migration chain begins after pre-existing tables/functions already existed. A fresh replay cannot be claimed by inventing a baseline or reverse-engineering one from the current production schema.
-3. **Independent runtime/policy verification:** the staged SQL's database behavior and preservation of existing Daily Evaluation trigger/RLS behavior remain unverified in an isolated database.
-4. **Security review:** the advisor findings above require a separate owner/security review and disposition; E did not silently modify existing permissions.
+The read-only Security Advisor snapshot reported 2 INFO, 4 anon SECURITY DEFINER WARN, 22 authenticated SECURITY DEFINER WARN, and 1 leaked-password-protection WARN.
+
+- OTP tables: read-only privilege checks confirm RLS enabled, no policies, and no `anon` or `authenticated` table privileges; `service_role` only. This is intentional private storage, not a client-accessible table.
+- Four trigger-returning functions: live catalog inspection confirmed three are attached to triggers and one is an unattached legacy trigger-returning duplicate. Direct RPC execution is not needed. A staged ACL migration revokes API-role execution; run #337 verifies the revocations and confirms the Daily Evaluation trigger still works.
+- Remaining callable authenticated SECURITY DEFINER RPCs: source/catalog review found pinned `search_path` and an explicit `auth.uid()`, `is_team_owner()`, or `is_team_member()` authorization path. This is a static review, not a substitute for adversarial role-level tests of every RPC.
+- Leaked-password protection remains disabled. This is a Supabase Auth project setting and has not been changed; the available project tools in this workflow do not expose an Auth security-settings write action.
+
+Full details: [E Security Findings Disposition](./E-PHASE-ONE-5-E-SECURITY-REVIEW.md).
+
+## Remaining blocking gates
+
+1. **Authoritative clean replay baseline:** no original pre-migration schema baseline or schema dump is present in the repository/evidence. The recovered migration chain begins after objects already existed. A test fixture is not a substitute for the real baseline. Do not invent a baseline or claim full-chain replay.
+2. **Supabase Auth leaked-password protection:** enable the setting in the Supabase Dashboard under Authentication password/security settings, then rerun Security Advisor.
+3. **Independent adversarial review:** the remaining authenticated SECURITY DEFINER RPCs have source-level auth/ownership/membership predicates and fixed search paths, but still need independent role-level tests before the full security gate can be called PASS.
 
 ## Safety and scope
 
-- Current production migration ledger was inspected read-only; no migration, ledger row, schema, policy, grant, function, trigger, or data was changed.
-- No Supabase development branch exists for this project at the time of this audit. Creating one requires explicit approval of the quoted hourly cost; none was created.
+- Production migration ledger and catalog checks were read-only. No production schema, policy, grant, function, trigger, data, or Auth setting was changed.
+- No Supabase development branch exists; no recurring branch cost was incurred.
 - The two loadout migration versions remain excluded and were not opened or modified.
 - PR #115 remains open, draft, and unmerged.
-- No production migration or deployment was performed.
+- No production deployment or merge was performed.
 - Historical rollback means an explicit forward-only/recovery disposition; it does not mean 53 executable rollback scripts exist.
 
-## Conditions to change E to PASS
-
-- Run the staged B forward/rollback SQL against an approved isolated PostgreSQL/Supabase-compatible database and capture reproducible results for normalization, rejection, restore, join inheritance, existing Daily Evaluation trigger/RLS preservation, and rollback.
-- Obtain the authoritative pre-migration baseline schema and prove clean replay. If that baseline cannot be recovered, record a formally reviewed scope exception; do not fabricate it.
-- Re-run the full CI workflow on the exact final commit and attach the isolated database evidence.
-- Obtain independent review/disposition of the existing Security Advisor findings without widening or weakening access.
-- Only then update this result to PASS. Do not infer final acceptance from the E audit tests passing.
-
-**Conclusion:** A provenance, C historical disposition, D source-contract CI, and the E audit suite have evidence-backed passes. B runtime validation, baseline/clean replay, and independent Security review are not proven, so **Evolution Phase One.5-E remains BLOCKED / NOT PASSED**.
+**Conclusion:** A, B runtime, C, D, E audit integrity, and the staged trigger ACL test have evidence-backed passes. Full Evolution Phase One.5-E remains **BLOCKED / NOT PASSED** until the authoritative clean-replay baseline is supplied (or an independently reviewed scope exception is approved), Auth leaked-password protection is enabled, and the remaining RPC security review is completed.
