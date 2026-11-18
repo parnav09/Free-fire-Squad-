@@ -18,7 +18,8 @@
     "test:evolution-phase-one": "node --test scripts/verify-evolution-phase-one.mjs",
     "test:evolution-phase-one-5": "node --test scripts/verify-evolution-phase-one-5.mjs",
     "test:evolution-phase-one-5-b": "node --test scripts/verify-evolution-phase-one-5-b.mjs",
-    "test:evolution-phase-one-5-c": "node --test scripts/verify-evolution-phase-one-5-c.mjs",\n    "test:evolution-phase-one-5-d": "node --test scripts/verify-evolution-phase-one-5-d.mjs"
+    "test:evolution-phase-one-5-c": "node --test scripts/verify-evolution-phase-one-5-c.mjs",
+    "test:evolution-phase-one-5-d": "node --test scripts/verify-evolution-phase-one-5-d.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.1",
