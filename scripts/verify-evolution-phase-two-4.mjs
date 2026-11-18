@@ -68,6 +68,9 @@ test("Verification requires an immutable result-submission receipt and closure r
   assert.match(migration, /verified_results_required_before_closure/);
   assert.match(migration, /submit_canonical_session_results/);
   assert.match(migration, /canonical_session_result_submission_one_per_session/);
+  assert.match(migration, /GRANT INSERT \(team_id, canonical_session_id, idempotency_key, submitted_by\)/);
+  assert.match(migration, /REVOKE INSERT ON public\.canonical_session_result_submissions FROM PUBLIC, anon, authenticated/);
+  assert.match(harness, /spoof result submission timestamps/);
   assert.match(harness, /Verification without a result submission was accepted/);
   assert.match(harness, /Verified skipped Closed and entered Archived/);
 });
