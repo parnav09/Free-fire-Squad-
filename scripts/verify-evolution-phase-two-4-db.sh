@@ -742,6 +742,9 @@ BEGIN
   IF has_table_privilege('authenticated','public.canonical_session_result_submissions','DELETE') THEN
     RAISE EXCEPTION 'Authenticated role can delete result submission receipts';
   END IF;
+  IF has_column_privilege('authenticated','public.canonical_session_result_submissions','submitted_at','INSERT') THEN
+    RAISE EXCEPTION 'Authenticated role can spoof result submission timestamps';
+  END IF;
   IF has_function_privilege('anon','public.transition_canonical_session(uuid,integer,text,text,uuid,text)','EXECUTE') THEN
     RAISE EXCEPTION 'Anon can execute lifecycle transition RPC';
   END IF;
