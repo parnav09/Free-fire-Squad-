@@ -1755,11 +1755,11 @@ Evolution Version 2 is complete only when:
 
 ### 34A.4 Phase Two detailed tracker — session foundation
 
-**Overall status: OPEN · POINT 2.1 AUDIT COMPLETE · CI VERIFICATION PENDING · POINTS 2.2–2.12 GATED.** Phase Two is opened for its read-only discovery point 2.1. Schema-changing implementation points remain gated until the Phase One 1.5-E carry-over acceptance blockers are resolved or a separate, explicit, documented exception is approved. This preserves the original dependency without blocking safe discovery.
+**Overall status: OPEN · POINT 2.1 AUDIT PASS · CI VERIFIED · POINTS 2.2–2.12 GATED.** Phase Two is opened for its read-only discovery point 2.1. Schema-changing implementation points remain gated until the Phase One 1.5-E carry-over acceptance blockers are resolved or a separate, explicit, documented exception is approved. This preserves the original dependency without blocking safe discovery.
 
 | Subphase | Planned workflow | Status | Acceptance evidence required |
 |---|---|---|---|
-| 2.1 | Existing System Audit — inspect Scrims, Tournament, Training and Planning session/match data and all callers | **Audit complete · CI pending** | `docs/evolution/PHASE-2-1-EXISTING-SYSTEM-AUDIT.md`; live read-only schema/data inventory, caller map, RLS policy inventory, integrity checks and UI design review. |
+| 2.1 | Existing System Audit — inspect Scrims, Tournament, Training and Planning session/match data and all callers | **PASS · audit + exact-head CI verified** | `docs/evolution/PHASE-2-1-EXISTING-SYSTEM-AUDIT.md`; run #371 (`44363393358`) on `bbc4a600d12ecb3b9d86dc2d700d7d113849713a`; 99 tests passed, 0 failed, typecheck and Vite production build passed. |
 | 2.2 | Canonical Session Identity — stable session UUID, team, session type and season association | **Gated · Not started** | One stable session identity; no display label or mutable name used as a key. |
 | 2.3 | Match Identity — individual match records under a parent session | **Gated · Not started** | Stable unique match IDs and correct parent-session relationship; no duplicate match identity. |
 | 2.4 | Session Lifecycle — Draft → Scheduled → In Progress → Awaiting Results → Verified → Closed → Archived | **Gated · Not started** | Validated state transitions, permissions, timestamps and audited amendments. |
@@ -1772,7 +1772,7 @@ Evolution Version 2 is complete only when:
 | 2.11 | Application UI — session, match, roster, role and status workflows | **Gated · Not started** | Responsive UI on laptop/tablet/mobile, correct state handling, and no regression to existing Scrims/Tournament/Training flows. |
 | 2.12 | Regression & Acceptance — historical snapshot, cross-module and device QA | **Gated · Not started** | Stable session/match IDs; roster/roles/substitutions preserved; only verified results aggregated; old sessions unchanged; database and application tests pass. |
 
-**Phase Two dependency rule:** Point 2.1 is read-only and is now complete as an audit deliverable; its source-contract CI verification is pending. Points 2.2–2.12 must not create or apply a competing production session/match model until the Phase One acceptance gate passes or the owner separately approves a documented exception. No production schema/data change, destructive migration, merge, or deployment is authorized by opening this phase.
+**Phase Two dependency rule:** Point 2.1 is read-only and complete as an audit deliverable; exact-head source-contract CI passed (run #371, `44363393358`), with 99 tests passed and 0 failed. Points 2.2–2.12 must not create or apply a competing production session/match model until the Phase One acceptance gate passes or the owner separately approves a documented exception. No production schema/data change, destructive migration, merge, or deployment is authorized by opening this phase.
 
 **Point 2.1 result:** the four existing domains use separate identities (Tournament cycle/match; Scrim record with JSONB matches; Planning plan/task; Training session/participant/result). Fifteen read-only integrity checks found zero current duplicate-slot, duplicate-participant or cross-team mismatch rows. Structural composite-FK, historical role/substitution, and common result-verification gaps are documented for later points. The existing UI has a shared Deep Onyx foundation with distinct Scrims cyan/gold and Planning/Training blue-violet treatments; no new UI belongs in this audit-only point.
 
@@ -1780,7 +1780,7 @@ Evolution Version 2 is complete only when:
 
 - **Phase Zero:** legacy-fix work was CI-verified in the recorded history (18 Foundation, 11 Character-data, and 10 Evolution regression tests; TypeScript/build checks passed). PR #114 remained Draft/open, unmerged and undeployed in the last recorded status; Vercel preview was blocked by a rate limit. No production schema/RLS/grant changes were recorded.
 - **Phase One:** PR #115 contains the identity-foundation work. It remained Draft/unmerged/undeployed in the last recorded status. The 1.1–1.4 code/CI work should not be confused with full Phase One acceptance because 1.5-E is blocked.
-- **Phase Two:** Point 2.1 existing-system audit is complete as a read-only discovery deliverable in PR #118; source-contract CI is pending. No feature UI or production schema change was made. Points 2.2–2.12 remain gated.
+- **Phase Two:** Point 2.1 existing-system audit is PASS in PR #118; exact-head push CI run #371 passed (99 tests, 0 failures, typecheck and Vite build). No feature UI or production schema change was made. Points 2.2–2.12 remain gated.
 - **Production:** this ledger update is documentation only. It does not authorize or report a merge, migration, Supabase write, or Vercel deployment.
 
 ### 34A.2 What counts as PASS
@@ -1838,7 +1838,7 @@ Additional QA issues remain in scope: Positioning vs Map Awareness; rubric scale
 
 This document is the **Evolution Version 2 master blueprint**. This rewrite changes documentation only. It does not implement features, modify Supabase tables/data, reset production data, run migrations, merge the documentation branch, or deploy the app.
 
-**Next action:** review the completed Evolution Phase Two Point 2.1 audit in `docs/evolution/PHASE-2-1-EXISTING-SYSTEM-AUDIT.md` and its CI result. Then proceed to Point 2.2 only when Phase One 1.5-E acceptance passes or a separate documented exception is approved. Do not create a second identity system. Keep Phase One acceptance carry-over gates visible. Do not redesign or migrate timezone as part of the new Evaluation workspace. Authorization/RLS/grants and security hardening remain in the separate Security workstream.
+**Next action:** review the completed Evolution Phase Two Point 2.1 audit in `docs/evolution/PHASE-2-1-EXISTING-SYSTEM-AUDIT.md` and and its exact-head CI PASS (run #371). Then proceed to Point 2.2 only when Phase One 1.5-E acceptance passes or a separate documented exception is approved. Do not create a second identity system. Keep Phase One acceptance carry-over gates visible. Do not redesign or migrate timezone as part of the new Evaluation workspace. Authorization/RLS/grants and security hardening remain in the separate Security workstream.
 
 ---
 
