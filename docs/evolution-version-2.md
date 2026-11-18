@@ -1652,6 +1652,84 @@ Evolution Version 2 is complete only when:
 - migration and production deployment are verified independently;
 - rollback and monitoring are ready.
 
+## 34A. Phase-wise implementation and acceptance status ledger
+
+**Status legend**
+
+- **Implemented:** confirmed present in the earlier code audit; not a claim of current production verification.
+- **Partial:** a related page/model/path exists, but required workflow or correctness conditions are incomplete.
+- **Not Implemented:** no implementation was established in the referenced audit.
+- **Not Verified:** current branch/live database/deployment evidence has not been freshly checked.
+- **Gate: PASS** is allowed only when the phase's acceptance evidence is recorded. A feature being visible in the UI is not a pass.
+- **Gate: NOT PASSED** means known required work remains. **Test result: NOT RUN / NOT VERIFIED** means no current test run is being claimed.
+
+**Evidence baseline:** the statuses below are conservative classifications from the static code-audit reference recorded at the top of this blueprint. They are not a fresh audit of the current branch, live Supabase database, or Vercel production deployment. Phase Zero must refresh this ledger before implementation begins.
+
+| Phase | Workflow / deliverable | App implementation status | Acceptance gate | Evidence / remaining work |
+|---|---|---|---|---|
+| Zero | Existing Evolution code, schema, RLS, RPC, migrations, deployment and data audit | **Partial** | **NOT PASSED · Not Verified** | Earlier static audit exists; fresh branch/live-schema/deployment inventory, provenance reconciliation and full read/write map remain. No destructive changes. |
+| One | Auth UUID ↔ player ↔ team membership identity | **Partial** | **NOT PASSED · Not Verified** | Auth/team/roster structures exist; old P1-as-ID issue and membership contract need revalidation and repair. |
+| One | Current server-side date contract | **Partial** | **NOT PASSED · Not Verified** | Earlier Asia/Kolkata database date enforcement exists. Preserve the existing contract; no timezone redesign. Verify all clients/RPCs use it consistently. |
+| Two | Existing Scrims/Tournament session and match identity adapters | **Partial** | **NOT PASSED · Not Verified** | Competitive match records exist; complete canonical Evolution linkage was not established. |
+| Two | Immutable session roster, participation and per-match role snapshots | **Not Implemented / Not Verified** | **NOT PASSED · Not Tested** | Must be proven against existing schema before adding anything; historical roles must not change with current roster edits. |
+| Two | Verified match result and substitution/amendment history | **Partial / Not Verified** | **NOT PASSED · Not Tested** | Existing match/result workflows exist; canonical verified-state and audit linkage remain to be checked. |
+| Three | Six-dimension canonical rubric and separate Positioning dimension | **Partial** | **NOT PASSED · Known mismatch** | Training's six-dimension rubric existed; Daily Evaluation used five dimensions. Reconcile without silently remapping history. |
+| Three | Rubric versions, role weights, 0-vs-NULL, Not observed, coverage and confidence | **Partial / Not Implemented** | **NOT PASSED · Not Tested** | Existing rubric metadata was inconsistent; versioned scoring/coverage/confidence contract needs implementation and deterministic tests. |
+| Three | Evidence records linked to session/match/round | **Partial** | **NOT PASSED · Not Verified** | Evidence linkage was weak; complete evidence model and privacy tests remain. |
+| Four | Daily Evaluation page and basic five-dimension form | **Implemented (legacy form)** | **NOT PASSED** | Existing page/form and 0–50 display were observed. It is not the Version 2 six-dimension workflow. |
+| Four | No prefilled scores; deliberate 0 vs unanswered / Not observed | **Not Implemented / Defective** | **NOT PASSED · Known defect** | Earlier form defaulted sliders to 5; untouched forms could produce a score. |
+| Four | Correct Auth UUID target, atomic score + feedback + evidence save | **Partial / Not Implemented** | **NOT PASSED · Known gaps** | P1 default identity issue and separate score/feedback writes were observed; transactional RPC and idempotency need proof. |
+| Four | Stable evaluator → target N−1 assignments; self-exclusion in UI and server | **Not Implemented / Not Verified** | **NOT PASSED · Not Tested** | Dynamic cohort assignments, unique keys, server-side self-target rejection and retry tests remain. |
+| Five | Anonymous peer-feedback source and recipient feedback path | **Partial** | **NOT PASSED · Not Verified** | Separate feedback table/path existed; complete cohort eligibility, protected author mapping, sanitized receipt and deanonymization testing were not verified. |
+| Five | Feedback Sent / Feedback Received, low-cohort privacy threshold | **Not Implemented / Not Verified** | **NOT PASSED · Not Tested** | Full inbox, cohort threshold, metadata/log/export protection and recipient-scoped views remain. |
+| Five-B | Evaluation Activity landing/detail page and workflow summary | **Not Implemented** | **NOT PASSED · Not Tested** | New workflow page required. |
+| Five-B | Daily Pending Tracker: 24h grace + next 24h visibility + immediate completion removal | **Not Implemented** | **NOT PASSED · Not Tested** | Server-time boundaries, exact evaluator → target pending pair, no score/feedback leakage, no next-day carry-forward and non-destructive expiry remain. |
+| Five-C | Matches Evaluation from existing Scrims and Tournament records | **Not Implemented** | **NOT PASSED · Not Tested** | New page/adapters and duplicate protection required; must reuse canonical match/session IDs. |
+| Six | One canonical development task model across Planning/Training/Tasks/Evolution | **Partial** | **NOT PASSED · Known gap** | Two task paths existed without guaranteed synchronization. |
+| Six | Acknowledge → complete → reflect → verify → follow-up evaluation | **Partial / Not Implemented** | **NOT PASSED · Not Tested** | Full state machine, conflict handling, drill criteria and evaluation linkage remain. |
+| Seven-A | Member-submitted Weekly Team Review page | **Not Implemented** | **NOT PASSED · Not Tested** | Separate nine-dimension member workflow is new. |
+| Seven-A | One submission per eligible member/team/week; Submitted/Pending and history | **Not Implemented** | **NOT PASSED · Not Tested** | Current-week-only eligibility, uniqueness, privacy-safe status and history remain. Existing team_ratings model is a reuse candidate, not proof of implementation. |
+| Seven-B | Coach-led Weekly Review insights | **Partial** | **NOT PASSED** | Combined weekly insight component existed; review lifecycle was incomplete. |
+| Seven-B | Evidence-backed recommendations, coach approval and immutable published snapshot | **Not Implemented / Partial** | **NOT PASSED · Not Tested** | Draft/review/publish lifecycle, source manifest, no-data handling and reproducibility remain. |
+| Eight | Player Trends page and latest/previous comparison | **Partial** | **NOT PASSED** | Basic latest-versus-previous and recent average existed. |
+| Eight | 7/30/season/custom filters, six dimension trends, confidence and comparability | **Not Implemented / Partial** | **NOT PASSED · Not Tested** | Context-aware trend engine, sample coverage, deterministic ordering and evidence drill-down remain. |
+| Nine | Competitive match analytics | **Implemented (legacy competitive domain)** | **NOT A VERSION 2 PASS** | Matches/points/placements/kills analytics existed. |
+| Nine | Unified development analytics while keeping competitive and development scores separate | **Not Implemented / Partial** | **NOT PASSED · Not Tested** | Development aggregates, role coverage and separation/correlation safeguards remain. |
+| Ten | Realtime subscriptions and basic refresh paths | **Partial** | **NOT PASSED · Known gaps** | Subscriptions existed; stale-column reference and feedback refresh gaps were observed. Revalidate current subscriptions and authorization. |
+| Ten | Durable offline queue, idempotent replay, conflict resolution and outbox | **Not Implemented / Partial** | **NOT PASSED · Not Tested** | Offline conflict handling was incomplete; durable queue/outbox/monitoring need implementation and tests. |
+| Ten | Data-quality monitor and operational alerts | **Not Implemented** | **NOT PASSED · Not Tested** | Orphan, duplicate, stale subscription, outbox and provenance monitors remain. |
+| Eleven | Existing premium dark UI and legacy Evolution screens | **Partial / Implemented by area** | **NOT A VERSION 2 PASS** | Existing UI exists, but Evolution navigation was buried and some controls/layout issues were observed. |
+| Eleven | Four Evaluation cards, 2×2 grid, each with its own detail page | **Not Implemented** | **NOT PASSED · Not Tested** | Blueprint requirement only; implementation not established by the audit. |
+| Eleven | Responsive Laptop + Tablet + Mobile behavior, including requested mobile 2×2 card grid | **Not Verified** | **NOT PASSED · QA NOT RUN** | CSS inspection is not device QA. Need viewport screenshots and interaction checks in portrait/landscape. |
+| Eleven | Accessibility, touch targets, keyboard, safe-area, loading/empty/error/offline states | **Partial / Not Verified** | **NOT PASSED · QA NOT RUN** | Prior slider target and mobile navigation issues were noted; complete interaction and accessibility QA remains. |
+| Twelve | Staging migration dry-run, backup, reconciliation and rollback rehearsal | **Not Implemented / Not Verified** | **NOT PASSED · Not Tested** | No Phase Twelve rollout evidence recorded. |
+| Twelve | Security sign-off, controlled production migration, deploy and smoke verification | **Not Implemented / Not Authorized** | **NOT PASSED · Not Run** | Requires separate Security workstream approval and explicit owner authorization. Blueprint edits do not authorize rollout. |
+
+### 34A.1 Phase roll-up
+
+| Phase | Overall status | Gate |
+|---|---|---|
+| Zero — Legacy audit/fixes | **Partial** | **NOT PASSED** |
+| One — Identity/date contract | **Partial** | **NOT PASSED** |
+| Two — Session/match/roster/role | **Partial** | **NOT PASSED** |
+| Three — Evidence/rubric/scoring | **Partial** | **NOT PASSED** |
+| Four — Daily Evaluation | **Partial (legacy form exists)** | **NOT PASSED** |
+| Five — Anonymous peer feedback | **Partial** | **NOT PASSED** |
+| Five-B — Evaluation Activity / Pending Tracker | **Not Implemented** | **NOT PASSED** |
+| Five-C — Matches Evaluation | **Not Implemented** | **NOT PASSED** |
+| Six — Unified tasks/follow-up | **Partial** | **NOT PASSED** |
+| Seven-A — Weekly Team Review | **Not Implemented** | **NOT PASSED** |
+| Seven-B — Coach-led Weekly Review | **Partial** | **NOT PASSED** |
+| Eight — Player Trends | **Partial** | **NOT PASSED** |
+| Nine — Squad Analytics | **Partial (competitive analytics exists)** | **NOT PASSED** |
+| Ten — Realtime/offline/data quality | **Partial** | **NOT PASSED** |
+| Eleven — UI/accessibility/responsive QA | **Partial / Not Verified** | **NOT PASSED** |
+| Twelve — Controlled rollout | **Not Started** | **NOT PASSED** |
+
+### 34A.2 What counts as PASS
+
+A phase changes to **PASS** only after all its required workflows are implemented and the phase gate has evidence attached: migration/test output where applicable, automated test results, RLS/permission tests, manual QA screenshots or recordings where applicable, and a reviewed handoff. Until then, keep **Not Tested**, **Not Verified**, or **Not Passed** as appropriate. Never infer PASS from a successful build, an existing page, a merged PR, or a blueprint checkbox alone.
+
 ## 34. Current status versus target
 
 This table preserves the earlier audit's status. Evolution Phase Zero revalidates the existing implementation and fixes safe legacy defects; future feature builds remain assigned to their named phases.
