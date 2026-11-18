@@ -119,7 +119,7 @@ test("The Phase 2.4 PostgreSQL integration is wired into the standard build and 
 });
 
 test("Production rollout remains explicitly blocked pending Point 2.9", () => {
-  assert.match(report, /not applied to live Supabase/i);
+  assert.match(report, /No live .*Supabase migration or data backfill has been run/i);
   assert.match(report, /Point 2\.9/i);
   assert.match(report, /No production backfill or Vercel deployment/i);
   assert.match(blueprint, /Production rollout remains gated on Point 2\.9/i);
