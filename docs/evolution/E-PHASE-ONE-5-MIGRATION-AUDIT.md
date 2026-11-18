@@ -176,3 +176,12 @@ The 34 count is an exact-name repository comparison, not evidence of 34 missing 
 - Vercel's separate deployment-rate-limit failure remains; no preview, device QA, or production deployment is claimed.
 
 **E Phase One.5 status: IN PROGRESS / BLOCKED ON SOURCE PROVENANCE.** The current-head CI gate is green, but the migration provenance gate is not met. Do not approve or apply a timezone migration, alter migration history, or claim persisted dates are team-timezone-aware until original SQL/application evidence and a reviewed rollback are available.
+
+
+### Cross-branch 34-entry recovery sweep — 18 Nov 2026
+
+- Compared migration trees on `main`, the Phase Zero base, current Evolution branch, and relevant retained feature branches. `main` contains 24 migration files vs 23 on the Evolution branch. The extra exact-name Character Profiles migration is a documented reconstruction (commit `216a6edf3d1408ea49f008243cfb7ddb6ea32c76`), not the original SQL; it will already be present when the PR is eventually retargeted to `main` after Phase Zero. Thus one of the 34 current-branch filename mismatches is a base-branch artifact, not a missing artifact across all branches.
+- GitHub exact-path history for representative early 7–8 Nov migrations returned no commits; the branch-tree sweep did not recover the original SQL for the early 24.
+- Roster-capacity, task metadata, Daily Evaluation and retention files remain semantic candidates with mismatched live versions and unproven application order.
+- No-op tombstones, guessed aliases, copied candidate SQL, or live ledger edits were not created. They could silently omit required behavior on clean builds or falsely claim historical provenance.
+- This improves the branch inventory but does not resolve original SQL provenance. Keep Phase One.5 blocked pending authoritative source/application evidence and rollback review.
