@@ -159,3 +159,20 @@ These records confirm that some live database changes were made outside the curr
 A dedicated row-by-row register was added at [`E-PHASE-ONE-5-34-LIVE-ONLY-MIGRATIONS.md`](./E-PHASE-ONE-5-34-LIVE-ONLY-MIGRATIONS.md). It lists every live version/name pair and separates: 24 early Nov 7–8 operations without retained SQL/application records; roster-capacity candidates; the task-metadata filename variant; three Daily Evaluation entries with a grouped candidate source; two retention entries; the Character Profiles schema reconstruction; and the singular player-loadout candidate found on a separate feature branch.
 
 The 34 count is an exact-name repository comparison, not evidence of 34 missing database features. The inventory classifies candidates without promoting them to verified mappings. The Character Profiles file is explicitly a reconstruction, not original SQL. The singular loadout candidate has a different timestamp and no exact application record. No migration files were renamed/copied/synthesized, and no database or migration-history changes were made. Original SQL plus application evidence remains required before a provenance row can be marked verified.
+
+
+## 9. Current-head continuation verification and timezone write-path coverage — 18 Nov 2026
+
+- Current PR #115 head ac76497c30b90464ecfb10adc9ded8e1bdfdf48a is open and draft; it remains stacked on Phase Zero PR #114. No merge or retarget was performed.
+- GitHub Actions run #114 (44191983016) for this exact head completed successfully. Its single job passed dependency installation, lockfile pinning, typecheck, configured verification suites, and the Vite production build. This supersedes the earlier pending status for this docs-only checkpoint.
+- Re-read the live Supabase migration ledger: 55 version/name rows remain. Supabase reports no development branches for this project. The ledger still exposes no original SQL body or content hash, and no new exact SQL-to-ledger mapping was recovered.
+- Read-only inspection of the live timezone-related function definitions found additional persisted-timezone write paths:
+  - create_team(p_name, p_description, p_timezone) trims and stores the supplied timezone, defaulting blank input to UTC; it does not validate the value against PostgreSQL's recognized timezone catalog.
+  - restore_team_backup(p_backup) and restore_team_backup_for_team(p_backup, p_team_id) restore teams.timezone from backup JSON with only a blank/null fallback; they do not validate the imported value.
+  - The existing daily_scores BEFORE INSERT trigger still derives score_date using hard-coded Asia/Kolkata; the ds_insert policy independently enforces that same hard-coded date. Both must move together in any future timezone migration.
+- The restore functions are part of the timezone write-path inventory, not permission to change backup behavior in this phase. No function, trigger, policy, grant, schema, data, or migration-history change was made.
+- A complete timezone implementation therefore needs a single server-side IANA validation contract across team creation and both backup-restore paths, plus the Daily Evaluation trigger/policy date contract. Client-side validation alone is insufficient.
+- The provenance blocker remains unchanged: the original SQL/application records for unresolved live migrations are not available in the repository or the live migration ledger. No original SQL was reconstructed from current schema.
+- Vercel's separate deployment-rate-limit failure remains; no preview, device QA, or production deployment is claimed.
+
+**E Phase One.5 status: IN PROGRESS / BLOCKED ON SOURCE PROVENANCE.** The current-head CI gate is green, but the migration provenance gate is not met. Do not approve or apply a timezone migration, alter migration history, or claim persisted dates are team-timezone-aware until original SQL/application evidence and a reviewed rollback are available.
