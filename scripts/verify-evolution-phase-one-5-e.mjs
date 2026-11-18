@@ -47,7 +47,7 @@ test("E cannot be marked PASS while isolated timezone execution and baseline rep
   assert.match(acceptance, /Full Phase One acceptance\s*\|\s*\*\*NOT PASSED\*\*/);
   assert.match(audit, /FINAL ACCEPTANCE: BLOCKED \/ NOT PASSED/);
   assert.match(audit, /pre-migration baseline(?: schema)? is unavailable/i);
-  assert.match(audit, /staged B forward\/rollback SQL has not been executed/i);
+  assert.match(audit, /staged B forward\/rollback SQL have not been executed/i);
 });
 
 test("E final audit keeps production, merge and loadout scope boundaries explicit", () => {
