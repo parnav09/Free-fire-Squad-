@@ -351,6 +351,7 @@ CREATE POLICY canonical_session_match_sets_staff_insert
               WHERE cs.id = canonical_session_match_sets.canonical_session_id
                 AND cs.team_id = canonical_session_match_sets.team_id
                 AND cs.session_type = 'scrim'
+                AND cs.archived_at IS NULL
             )
         )
       )
@@ -365,6 +366,7 @@ CREATE POLICY canonical_session_match_sets_staff_insert
             AND css.team_id = canonical_session_match_sets.team_id
             AND css.source_system = 'tournament'
             AND cs.session_type = 'tournament'
+            AND cs.archived_at IS NULL
             AND (
               SELECT count(*) FROM public.tournament_matches tm
               WHERE tm.cycle_id = css.tournament_cycle_id AND tm.team_id = css.team_id
@@ -396,6 +398,7 @@ CREATE POLICY canonical_session_match_sets_staff_update
             AND css.team_id = canonical_session_match_sets.team_id
             AND css.source_system = 'scrim'
             AND cs.session_type = 'scrim'
+            AND cs.archived_at IS NULL
             AND sr.match_count = canonical_session_match_sets.expected_match_count
         )
       )
@@ -410,6 +413,7 @@ CREATE POLICY canonical_session_match_sets_staff_update
             AND css.team_id = canonical_session_match_sets.team_id
             AND css.source_system = 'tournament'
             AND cs.session_type = 'tournament'
+            AND cs.archived_at IS NULL
             AND (
               SELECT count(*) FROM public.tournament_matches tm
               WHERE tm.cycle_id = css.tournament_cycle_id AND tm.team_id = css.team_id
@@ -485,18 +489,34 @@ CREATE POLICY canonical_session_matches_staff_insert
   );
 CREATE POLICY canonical_session_matches_staff_update
   ON public.canonical_session_matches FOR UPDATE TO authenticated
-  USING (EXISTS (
-    SELECT 1 FROM public.team_members actor
-    WHERE actor.team_id = canonical_session_matches.team_id
-      AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
-      AND actor.membership_role IN ('owner', 'coach')
-  ))
-  WITH CHECK (EXISTS (
-    SELECT 1 FROM public.team_members actor
-    WHERE actor.team_id = canonical_session_matches.team_id
-      AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
-      AND actor.membership_role IN ('owner', 'coach')
-  ));
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.canonical_sessions cs
+      WHERE cs.id = canonical_session_matches.canonical_session_id
+        AND cs.team_id = canonical_session_matches.team_id
+        AND cs.archived_at IS NULL
+    )
+    AND EXISTS (
+      SELECT 1 FROM public.team_members actor
+      WHERE actor.team_id = canonical_session_matches.team_id
+        AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
+        AND actor.membership_role IN ('owner', 'coach')
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.canonical_sessions cs
+      WHERE cs.id = canonical_session_matches.canonical_session_id
+        AND cs.team_id = canonical_session_matches.team_id
+        AND cs.archived_at IS NULL
+    )
+    AND EXISTS (
+      SELECT 1 FROM public.team_members actor
+      WHERE actor.team_id = canonical_session_matches.team_id
+        AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
+        AND actor.membership_role IN ('owner', 'coach')
+    )
+  );
 
 CREATE POLICY canonical_session_match_sequence_events_staff_read
   ON public.canonical_session_match_sequence_events FOR SELECT TO authenticated
