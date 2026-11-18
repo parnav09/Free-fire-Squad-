@@ -392,8 +392,10 @@ BEGIN
   BEGIN
     PERFORM public.correct_canonical_match_sequence(match_id,9::smallint,'Player must not edit order');
     RAISE EXCEPTION 'Player unexpectedly corrected match sequence';
-  EXCEPTION WHEN insufficient_privilege THEN
-    NULL;
+  EXCEPTION WHEN OTHERS THEN
+    IF SQLSTATE <> '42501' AND SQLERRM <> 'canonical_match_not_found' THEN
+      RAISE;
+    END IF;
   END;
   IF (SELECT count(*) FROM public.canonical_session_match_sequence_events) <> 0 THEN
     RAISE EXCEPTION 'Player can read staff-only sequence audit';
