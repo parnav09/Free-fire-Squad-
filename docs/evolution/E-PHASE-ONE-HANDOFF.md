@@ -162,3 +162,11 @@ Use this file when continuing in a new ChatGPT conversation.
 - Future timezone work must cover all three timezone write paths and update the Daily Evaluation trigger/policy consistently, while preserving anonymization and recipient-only feedback behavior. No SQL, schema, data, trigger, policy, grant, function, or migration-history changes were made.
 - Vercel remains separately rate-limited. No preview/device QA, merge, production deployment, or Phase Two work was performed.
 - **E Phase One.5 remains IN PROGRESS / BLOCKED:** exact original SQL/application provenance for unresolved live migrations and rollback evidence are still missing. Do not fabricate source SQL or approve/apply the timezone migration.
+
+
+### Latest recovery finding — 18 Nov 2026
+
+- Cross-branch inspection found `main` has 24 migration files while the current Evolution branch has 23. The additional exact-name Character Profiles file is a documented live-schema reconstruction, not original SQL; after Phase Zero, retargeting this PR to `main` will remove that one base-branch filename discrepancy.
+- GitHub exact-path history and retained branch trees still do not recover the original SQL for the early 24 live entries. Roster-capacity, task metadata, Daily Evaluation and retention files are semantic candidates only; version/application order is unproven.
+- No fabricated/no-op migration files or live database changes were made. Such stubs would mask missing schema on clean builds and misrepresent provenance.
+- Continue to keep E Phase One.5 **IN PROGRESS / BLOCKED ON ORIGINAL SQL + APPLICATION EVIDENCE + ROLLBACK REVIEW**. Do not proceed to Phase Two or deploy.
