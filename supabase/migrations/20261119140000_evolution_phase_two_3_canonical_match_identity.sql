@@ -556,15 +556,15 @@ CREATE OR REPLACE FUNCTION public.correct_canonical_match_sequence(
 RETURNS public.canonical_session_matches
 LANGUAGE plpgsql
 SECURITY INVOKER
-SET search_path = public, pg_temp
-AS $$
+SET search_path = ''
+AS $
 DECLARE
   v_match public.canonical_session_matches;
 BEGIN
   IF auth.uid() IS NULL THEN
     RAISE EXCEPTION 'authentication_required' USING ERRCODE = '28000';
   END IF;
-  IF p_reason IS NULL OR char_length(btrim(p_reason)) NOT BETWEEN 1 AND 500 THEN
+  IF p_reason IS NULL OR pg_catalog.char_length(pg_catalog.btrim(p_reason)) NOT BETWEEN 1 AND 500 THEN
     RAISE EXCEPTION 'sequence_correction_reason_required' USING ERRCODE = '22023';
   END IF;
 
@@ -583,7 +583,7 @@ BEGIN
     RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501';
   END IF;
 
-  PERFORM set_config('app.evolution_match_sequence_reason', btrim(p_reason), true);
+  PERFORM pg_catalog.set_config('app.evolution_match_sequence_reason', pg_catalog.btrim(p_reason), true);
   UPDATE public.canonical_session_matches
   SET match_sequence = p_new_sequence
   WHERE id = p_match_id
@@ -602,8 +602,8 @@ CREATE OR REPLACE FUNCTION public.sync_canonical_session_matches(p_canonical_ses
 RETURNS integer
 LANGUAGE plpgsql
 SECURITY INVOKER
-SET search_path = public, pg_temp
-AS $$
+SET search_path = ''
+AS $
 DECLARE
   v_session public.canonical_sessions;
   v_inserted integer := 0;
@@ -673,9 +673,6 @@ BEGIN
     AND css.source_system = 'tournament'
   ON CONFLICT (canonical_session_id) DO UPDATE
   SET expected_match_count = EXCLUDED.expected_match_count;
-
-  GET DIAGNOSTICS v_rows = ROW_COUNT;
-  v_inserted := v_inserted + v_rows;
 
   INSERT INTO public.canonical_session_matches (
     team_id, canonical_session_id, match_sequence, source_system,
