@@ -84,6 +84,7 @@ Exact-head CI has not yet been reported as passing. The branch is not marked PAS
 - Migration is committed only to the stacked development branch.
 - No live `squad-os` Supabase migration or data backfill has been run.
 - No Vercel production deployment or promotion has been triggered.
+- No production backfill or Vercel deployment has been triggered.
 - No PR #119/#120 merge has been performed.
 - Production remains blocked until Point 2.9 replaces destructive source deletion with non-destructive archive/retention behavior, and the separately required rollout approvals and rehearsals are complete.
 
