@@ -25,7 +25,7 @@ test("E Phase One.5-D: full build runs the base, B, C and D verification suites"
     "npm run test:evolution-phase-one-5-c",
     "npm run test:evolution-phase-one-5-d",
     "vite build",
-  ]) assert.ok(pkg.scripts.build.includes(script), \`build is missing: \${script}\`);
+  ]) assert.ok(pkg.scripts.build.includes(script), "build is missing: " + script);
 });
 
 test("E Phase One.5-D: B verification covers IST-only validation, locked evaluation date and midnight boundary", () => {
@@ -33,10 +33,10 @@ test("E Phase One.5-D: B verification covers IST-only validation, locked evaluat
     "Asia/Kolkata", "Asia/Calcutta", "America/Los_Angeles",
     "India date flips exactly at 00:00 IST",
     "Daily Evaluation auto-selects and locks the India date",
-  ]) assert.ok(bSuite.includes(expected), \`B suite missing: \${expected}\`);
-  assert.match(forward, /NEW\.timezone IN \('UTC', 'Asia\/Calcutta'\)/);
-  assert.match(forward, /Unsupported team timezone/);
-  assert.match(forward, /NEW\.timezone := 'Asia\/Kolkata'/);
+  ]) assert.ok(bSuite.includes(expected), "B suite missing: " + expected);
+  assert.ok(forward.includes("NEW.timezone IN ('UTC', 'Asia/Calcutta')"));
+  assert.ok(forward.includes("Unsupported team timezone"));
+  assert.ok(forward.includes("NEW.timezone := 'Asia/Kolkata'"));
 });
 
 test("E Phase One.5-D: C verification covers all 53 dispositions and the excluded loadout entries", () => {
@@ -44,27 +44,27 @@ test("E Phase One.5-D: C verification covers all 53 dispositions and the exclude
   assert.equal(new Set(manifest.entries.map((entry) => entry.version)).size, 53);
   assert.deepEqual(manifest.excluded_versions, ["20261116115255", "20261116115907"]);
   assert.equal(manifest.live_rollback_statement_count, 0);
-  assert.match(cSuite, /exactly 53 in-scope historical versions/);
-  assert.match(register, /53\/53 in-scope historical migrations explicitly classified/);
+  assert.ok(cSuite.includes("exactly 53 in-scope historical versions"));
+  assert.ok(register.includes("53/53 in-scope historical migrations explicitly classified"));
 });
 
 test("E Phase One.5-D: B forward SQL leaves Daily Evaluation data, trigger and RLS policy unchanged", () => {
   assert.doesNotMatch(forward, /UPDATE\s+public\.daily_scores/i);
   assert.doesNotMatch(forward, /CREATE\s+TRIGGER[\s\S]*?daily_scores/i);
   assert.doesNotMatch(forward, /ALTER\s+POLICY\s+ds_insert/i);
-  assert.match(forward, /Daily Evaluation trigger\/RLS and all historical score rows remain untouched/);
+  assert.ok(forward.includes("Daily Evaluation trigger/RLS and all historical score rows remain untouched"));
 });
 
 test("E Phase One.5-D: B rollback removes only the trigger and function created by B", () => {
-  assert.match(rollback, /DROP TRIGGER IF EXISTS teams_validate_timezone ON public\.teams/);
-  assert.match(rollback, /DROP FUNCTION IF EXISTS public\.validate_team_timezone\(\)/);
+  assert.ok(rollback.includes("DROP TRIGGER IF EXISTS teams_validate_timezone ON public.teams"));
+  assert.ok(rollback.includes("DROP FUNCTION IF EXISTS public.validate_team_timezone();"));
   assert.equal((rollback.match(/\bDROP\b/gi) ?? []).length, 2);
   assert.doesNotMatch(rollback, /daily_scores|ALTER\s+POLICY|DROP\s+TABLE/i);
 });
 
 test("E Phase One.5-D: source-contract verification never claims isolated database or production acceptance", () => {
-  assert.match(acceptance, /Source-contract tests, not a database integration test/);
-  assert.match(acceptance, /isolated database execution/i);
-  assert.match(acceptance, /No production migration will be applied|no production migration is applied/i);
-  assert.match(baseSuite, /staged SQL is not silently promoted/);
+  assert.ok(acceptance.includes("source-contract tests, not a database integration test"));
+  assert.ok(acceptance.toLowerCase().includes("isolated database execution"));
+  assert.ok(/No production migration will be applied|no production migration is applied/i.test(acceptance));
+  assert.ok(baseSuite.includes("staged SQL is not silently promoted"));
 });
