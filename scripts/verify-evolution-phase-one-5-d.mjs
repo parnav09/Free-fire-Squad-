@@ -4,7 +4,7 @@ import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
-const [pkg, forward, rollback, baseSuite, bSuite, cSuite, acceptance] = await Promise.all([
+const [pkgText, forward, rollback, baseSuite, bSuite, cSuite, acceptance] = await Promise.all([
   read("package.json"),
   read("docs/evolution/staged-migrations/20261118070000_team_timezone_contract.sql"),
   read("docs/evolution/staged-migrations/20261118070000_team_timezone_contract.rollback.sql"),
@@ -13,6 +13,7 @@ const [pkg, forward, rollback, baseSuite, bSuite, cSuite, acceptance] = await Pr
   read("scripts/verify-evolution-phase-one-5-c.mjs"),
   read("docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md"),
 ]);
+const pkg = JSON.parse(pkgText);
 const manifest = JSON.parse(await read("docs/evolution/evolution-phase-one-5-c-rollback-manifest.json"));
 const register = await read("docs/evolution/E-PHASE-ONE-5-C-ROLLBACK-REGISTER.md");
 
@@ -31,8 +32,8 @@ test("E Phase One.5-D: full build runs the base, B, C and D verification suites"
 test("E Phase One.5-D: B verification covers IST-only validation, locked evaluation date and midnight boundary", () => {
   for (const expected of [
     "Asia/Kolkata", "Asia/Calcutta", "America/Los_Angeles",
-    "India date flips exactly at 00:00 IST",
-    "Daily Evaluation auto-selects and locks the India date",
+    "India date key flips exactly at 00:00 IST",
+    "Daily Evaluation auto-selects and locks the India date without a date input",
   ]) assert.ok(bSuite.includes(expected), "B suite missing: " + expected);
   assert.ok(forward.includes("NEW.timezone IN ('UTC', 'Asia/Calcutta')"));
   assert.ok(forward.includes("Unsupported team timezone"));
