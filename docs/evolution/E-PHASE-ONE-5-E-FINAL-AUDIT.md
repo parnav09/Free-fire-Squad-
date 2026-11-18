@@ -14,6 +14,8 @@ This is the final acceptance audit for Evolution Phase One.5. It consolidates A�
 
 ## Evidence verified
 
+Read-only ledger verification: **55 live migration rows**; 53 in-scope; 2 excluded loadout; **0 stored rollback statements**.
+
 | Gate | Evidence | Result |
 |---|---|---|
 | 1.5-A — historical SQL provenance | Prior exact live-SQL-to-Git verification: 53/53 in-scope SQL bodies matched byte-for-byte; zero mismatches; two loadout versions excluded | **PASS · prior verified evidence** |
