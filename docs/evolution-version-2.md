@@ -1726,6 +1726,52 @@ Evolution Version 2 is complete only when:
 | Eleven — UI/accessibility/responsive QA | **Partial / Not Verified** | **NOT PASSED** |
 | Twelve — Controlled rollout | **Not Started** | **NOT PASSED** |
 
+### 34A.3 Phase One detailed tracker — identity foundation
+
+**Correct overall reading:** Phase One is **not fully complete**. Subphases **1.1–1.4 were implemented and CI-verified**. Subphase **1.5 is the remaining acceptance blocker**. Therefore, the accurate status is **Phase One foundation (1.1–1.4) complete; Phase One overall NOT PASSED / acceptance blocked**. The earlier roll-up label “Partial” is too broad unless this subphase distinction is shown.
+
+| Subphase | Scope | Status | Evidence / remaining work |
+|---|---|---|---|
+| 1.1 | Stable identity foundation: authenticated user, player identity, team identity mapping | **Implemented · CI verified** | Identity contract work completed in the Phase One branch. |
+| 1.2 | Team loading and explicit active-team context | **Implemented · CI verified** | Auth → Membership → Team loading, explicit team selection, validation and sign-out cleanup were implemented; latest-head CI passed. |
+| 1.3 | Async/race protection for identity and team context | **Implemented · CI verified** | Race-protection work was implemented; recorded GitHub Actions run #68 passed on commit `a34bfa6`. |
+| 1.4 | Session eligibility and capability helpers | **Implemented · CI verified** | Exact authenticated-user/membership UUID/team UUID plus active eligibility, fail-closed clearing, and Owner/Coach capability helpers. Recorded checks and CI runs #82/#85 passed; later Phase One run #101 passed. |
+| 1.5-A | Migration provenance and schema-history reconciliation | **Blocked / Partial** | 53 safe-scope migrations were recovered with exact source matches. Remaining: 6 active SQL mismatches, 3 unmatched files, and no stored rollback SQL for the 53 historical migrations. Clean replay/baseline and database-level policy validation are not proven. |
+| 1.5-B | Existing date/timezone contract verification and staged migration | **Drafted · Not applied · Not DB tested** | SQL contract was staged outside the active Supabase migration chain; preserve the existing timezone behavior and do not redesign it. Isolated-PostgreSQL execution has not been completed. |
+| 1.5-C | Rollback plan for the staged date/timezone change | **Drafted · Not DB tested** | Rollback SQL exists as a draft; isolated rollback rehearsal remains outstanding. |
+| 1.5-D | Source-contract tests | **Partial · Local tests passed** | Six local source-contract tests passed. Database integration, migration execution and policy behavior tests remain. |
+| 1.5-E | Phase One final acceptance audit | **Blocked · NOT PASSED** | Blocked by provenance mismatches, unmatched migration files, missing rollback coverage, missing baseline/clean replay proof, and untested migration/rollback behavior. |
+
+**Phase One branch / delivery boundary:** PR #115 was recorded as Draft and unmerged. The Phase One work was not deployed to production and no Supabase production migration was applied. CI success for 1.1–1.4 does not convert 1.5-E into a pass.
+
+### 34A.4 Phase Two detailed tracker — session foundation
+
+**Overall status: NOT STARTED.** Phase Two was the approved next implementation target, but the recorded handoff explicitly kept it behind Phase One's 1.5-E acceptance gate. No Phase Two implementation or acceptance evidence is recorded. The following twelve entries are the planned work breakdown, not completed code.
+
+| Subphase | Planned workflow | Implementation status | Acceptance evidence required |
+|---|---|---|---|
+| 2.1 | Existing System Audit — inspect Scrims, Tournament, Training and Planning session/match data and all callers | **Not Started** | Data dictionary, read/write map, existing-source mapping, duplicate/orphan report and preserved workflow list. |
+| 2.2 | Canonical Session Identity — stable session UUID, team, session type and season association | **Not Started** | One stable session identity; no display label or mutable name used as a key. |
+| 2.3 | Match Identity — individual match records under a parent session | **Not Started** | Stable unique match IDs and correct parent-session relationship; no duplicate match identity. |
+| 2.4 | Session Lifecycle — Draft → Scheduled → In Progress → Awaiting Results → Verified → Closed → Archived | **Not Started** | Validated state transitions, permissions, timestamps and audited amendments. |
+| 2.5 | Session Roster Snapshot — persist actual participants for the session | **Not Started** | Historical participant set remains unchanged when current team roster changes. |
+| 2.6 | Role Snapshot — preserve each player's role for the session/match | **Not Started** | Historical role context is immutable and tied to the correct player/session/match. |
+| 2.7 | Substitution Tracking — record substitutions and when/where they occurred | **Not Started** | Audited substitution events with effective match/time context; prior roster/role history remains reconstructable. |
+| 2.8 | Result Verification — Draft / Submitted / Verified result states and correction audit | **Not Started** | Only verified results feed official aggregates; corrections are versioned/audited. |
+| 2.9 | Existing Module Integration — connect Scrims, Tournament and Training through adapters | **Not Started** | Existing workflows continue to work and resolve to canonical session/match IDs without parallel identity systems. |
+| 2.10 | Database Integrity — foreign keys, uniqueness, relationships, idempotency and migration tests | **Not Started** | Constraints and retry behavior tested against a disposable/isolated database; rollback documented. |
+| 2.11 | Application UI — session, match, roster, role and status workflows | **Not Started** | Responsive UI on laptop/tablet/mobile, correct state handling, and no regression to existing Scrims/Tournament/Training flows. |
+| 2.12 | Regression & Acceptance — historical snapshot, cross-module and device QA | **Not Started** | Stable session/match IDs; roster/roles/substitutions preserved; only verified results aggregated; old sessions unchanged; database and application tests pass. |
+
+**Phase Two start gate:** do not begin schema-changing Phase Two implementation until Phase One 1.5-E is accepted or the owner explicitly approves a documented exception. A preparatory read-only audit can be planned, but it must not create a competing session/match model or change production data.
+
+### 34A.5 Phase Zero and pull-request status context
+
+- **Phase Zero:** legacy-fix work was CI-verified in the recorded history (18 Foundation, 11 Character-data, and 10 Evolution regression tests; TypeScript/build checks passed). PR #114 remained Draft/open, unmerged and undeployed in the last recorded status; Vercel preview was blocked by a rate limit. No production schema/RLS/grant changes were recorded.
+- **Phase One:** PR #115 contains the identity-foundation work. It remained Draft/unmerged/undeployed in the last recorded status. The 1.1–1.4 code/CI work should not be confused with full Phase One acceptance because 1.5-E is blocked.
+- **Phase Two:** roadmap only; no implementation PR or completed subphase was recorded.
+- **Production:** this ledger update is documentation only. It does not authorize or report a merge, migration, Supabase write, or Vercel deployment.
+
 ### 34A.2 What counts as PASS
 
 A phase changes to **PASS** only after all its required workflows are implemented and the phase gate has evidence attached: migration/test output where applicable, automated test results, RLS/permission tests, manual QA screenshots or recordings where applicable, and a reviewed handoff. Until then, keep **Not Tested**, **Not Verified**, or **Not Passed** as appropriate. Never infer PASS from a successful build, an existing page, a merged PR, or a blueprint checkbox alone.
