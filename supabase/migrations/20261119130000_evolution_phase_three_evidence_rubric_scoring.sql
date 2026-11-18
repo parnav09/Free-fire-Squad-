@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS public.evolution_rubric_versions (
   created_at timestamptz NOT NULL DEFAULT now(),
   activated_at timestamptz,
   CONSTRAINT evolution_rubric_system_scope CHECK ((is_system AND team_id IS NULL) OR (NOT is_system AND team_id IS NOT NULL)),
-  CONSTRAINT evolution_rubric_activation_pair CHECK ((status = 'active') = (activated_at IS NOT NULL)),
+  CONSTRAINT evolution_rubric_activation_pair CHECK ((status = 'draft' AND activated_at IS NULL) OR (status IN ('active', 'retired') AND activated_at IS NOT NULL)),
   CONSTRAINT evolution_rubric_version_team_unique UNIQUE (id, team_id)
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS public.evolution_role_weight_profiles (
   created_at timestamptz NOT NULL DEFAULT now(),
   activated_at timestamptz,
   CONSTRAINT evolution_role_profile_scope CHECK ((is_system AND team_id IS NULL) OR (NOT is_system AND team_id IS NOT NULL)),
-  CONSTRAINT evolution_role_profile_activation_pair CHECK ((status = 'active') = (activated_at IS NOT NULL)),
+  CONSTRAINT evolution_role_profile_activation_pair CHECK ((status = 'draft' AND activated_at IS NULL) OR (status IN ('active', 'retired') AND activated_at IS NOT NULL)),
   CONSTRAINT evolution_role_profile_weights_shape CHECK (
     jsonb_typeof(weights) = 'object'
     AND jsonb_object_length(weights) = 6
@@ -230,10 +230,13 @@ END $$;
 
 GRANT SELECT ON public.evolution_rubric_versions, public.evolution_rubric_dimensions,
   public.evolution_role_weight_profiles TO authenticated;
-GRANT INSERT, UPDATE ON public.evolution_rubric_versions,
-  public.evolution_role_weight_profiles TO authenticated;
-GRANT INSERT, UPDATE ON public.evolution_evidence_items,
-  public.evolution_evidence_dimension_links TO authenticated;
+GRANT INSERT ON public.evolution_rubric_versions,
+  public.evolution_role_weight_profiles, public.evolution_rubric_dimensions TO authenticated;
+GRANT UPDATE (status, activated_at) ON public.evolution_rubric_versions TO authenticated;
+GRANT UPDATE (weights, status, activated_at) ON public.evolution_role_weight_profiles TO authenticated;
+GRANT UPDATE (label, definition, sort_order) ON public.evolution_rubric_dimensions TO authenticated;
+GRANT INSERT, UPDATE (archived_at, archived_by, archive_reason) ON public.evolution_evidence_items TO authenticated;
+GRANT INSERT ON public.evolution_evidence_dimension_links TO authenticated;
 GRANT SELECT ON public.evolution_evidence_items,
   public.evolution_evidence_dimension_links TO authenticated;
 REVOKE DELETE ON public.evolution_rubric_versions, public.evolution_rubric_dimensions,
@@ -252,7 +255,8 @@ CREATE POLICY evolution_rubric_versions_read ON public.evolution_rubric_versions
 CREATE POLICY evolution_rubric_versions_staff_insert ON public.evolution_rubric_versions
   FOR INSERT TO authenticated
   WITH CHECK (
-    NOT is_system AND created_by = (SELECT auth.uid())
+    NOT is_system AND status = 'draft' AND activated_at IS NULL
+    AND created_by = (SELECT auth.uid())
     AND EXISTS (
       SELECT 1 FROM public.team_members tm
       WHERE tm.team_id = evolution_rubric_versions.team_id
@@ -263,7 +267,7 @@ CREATE POLICY evolution_rubric_versions_staff_insert ON public.evolution_rubric_
 CREATE POLICY evolution_rubric_versions_staff_update ON public.evolution_rubric_versions
   FOR UPDATE TO authenticated
   USING (
-    NOT is_system AND status <> 'retired' AND EXISTS (
+    NOT is_system AND status = 'draft' AND EXISTS (
       SELECT 1 FROM public.team_members tm
       WHERE tm.team_id = evolution_rubric_versions.team_id
         AND tm.user_id = (SELECT auth.uid()) AND tm.status = 'active'
@@ -271,7 +275,13 @@ CREATE POLICY evolution_rubric_versions_staff_update ON public.evolution_rubric_
     )
   )
   WITH CHECK (
-    NOT is_system AND EXISTS (
+    NOT is_system AND (
+      (status = 'draft' AND activated_at IS NULL) OR
+      (status = 'active' AND activated_at IS NOT NULL AND 6 = (
+        SELECT count(*) FROM public.evolution_rubric_dimensions d
+        WHERE d.rubric_version_id = evolution_rubric_versions.id
+      ))
+    ) AND EXISTS (
       SELECT 1 FROM public.team_members tm
       WHERE tm.team_id = evolution_rubric_versions.team_id
         AND tm.user_id = (SELECT auth.uid()) AND tm.status = 'active'
@@ -288,6 +298,35 @@ CREATE POLICY evolution_rubric_dimensions_read ON public.evolution_rubric_dimens
         SELECT 1 FROM public.team_members tm
         WHERE tm.team_id = v.team_id AND tm.user_id = (SELECT auth.uid()) AND tm.status = 'active'
       ))
+  ));
+
+CREATE POLICY evolution_rubric_dimensions_staff_insert ON public.evolution_rubric_dimensions
+  FOR INSERT TO authenticated
+  WITH CHECK (EXISTS (
+    SELECT 1 FROM public.evolution_rubric_versions v
+    JOIN public.team_members tm ON tm.team_id = v.team_id
+    WHERE v.id = evolution_rubric_dimensions.rubric_version_id
+      AND v.is_system = false AND v.status = 'draft'
+      AND tm.user_id = (SELECT auth.uid()) AND tm.status = 'active'
+      AND tm.membership_role IN ('owner', 'coach')
+  ));
+CREATE POLICY evolution_rubric_dimensions_staff_update ON public.evolution_rubric_dimensions
+  FOR UPDATE TO authenticated
+  USING (EXISTS (
+    SELECT 1 FROM public.evolution_rubric_versions v
+    JOIN public.team_members tm ON tm.team_id = v.team_id
+    WHERE v.id = evolution_rubric_dimensions.rubric_version_id
+      AND v.is_system = false AND v.status = 'draft'
+      AND tm.user_id = (SELECT auth.uid()) AND tm.status = 'active'
+      AND tm.membership_role IN ('owner', 'coach')
+  ))
+  WITH CHECK (EXISTS (
+    SELECT 1 FROM public.evolution_rubric_versions v
+    JOIN public.team_members tm ON tm.team_id = v.team_id
+    WHERE v.id = evolution_rubric_dimensions.rubric_version_id
+      AND v.is_system = false AND v.status = 'draft'
+      AND tm.user_id = (SELECT auth.uid()) AND tm.status = 'active'
+      AND tm.membership_role IN ('owner', 'coach')
   ));
 
 CREATE POLICY evolution_role_profiles_read ON public.evolution_role_weight_profiles
@@ -326,7 +365,10 @@ CREATE POLICY evolution_role_profiles_staff_update ON public.evolution_role_weig
     )
   )
   WITH CHECK (
-    NOT is_system AND EXISTS (
+    NOT is_system AND (
+      (status = 'draft' AND activated_at IS NULL) OR
+      (status = 'active' AND activated_at IS NOT NULL)
+    ) AND EXISTS (
       SELECT 1 FROM public.team_members tm
       WHERE tm.team_id = evolution_role_weight_profiles.team_id
         AND tm.user_id = (SELECT auth.uid()) AND tm.status = 'active'
@@ -367,7 +409,7 @@ CREATE POLICY evolution_evidence_member_insert ON public.evolution_evidence_item
         )
     )
   );
-CREATE POLICY evolution_evidence_creator_or_staff_update ON public.evolution_evidence_items
+CREATE POLICY evolution_evidence_staff_archive ON public.evolution_evidence_items
   FOR UPDATE TO authenticated
   USING (
     archived_at IS NULL AND EXISTS (
@@ -375,15 +417,12 @@ CREATE POLICY evolution_evidence_creator_or_staff_update ON public.evolution_evi
       WHERE actor.team_id = evolution_evidence_items.team_id
         AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
         AND (
-          evolution_evidence_items.created_by = (SELECT auth.uid())
-          OR actor.membership_role IN ('owner', 'coach')
+          actor.membership_role IN ('owner', 'coach')
         )
     )
   )
   WITH CHECK (
-    created_by = evolution_evidence_items.created_by
-    AND team_id = evolution_evidence_items.team_id
-    AND player_member_id = evolution_evidence_items.player_member_id
+    archived_at IS NOT NULL AND archived_by = (SELECT auth.uid())
     AND EXISTS (
       SELECT 1 FROM public.team_members actor
       WHERE actor.team_id = evolution_evidence_items.team_id
