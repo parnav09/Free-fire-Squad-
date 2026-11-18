@@ -1,41 +1,34 @@
--- Evolution Phase One.5-B: preserve the existing persisted-date contract and
--- validate configured team timezone values at the database boundary.
--- STAGED ONLY: do not move into supabase/migrations or apply until isolated
--- PostgreSQL/Supabase validation is complete.
+-- Evolution Phase One.5-B: India-only date and timezone contract.
+-- STAGED ONLY: validate on an isolated PostgreSQL/Supabase branch before
+-- moving into supabase/migrations. Do not apply directly to production.
 --
--- IMPORTANT: daily_scores.score_date remains Asia/Kolkata. The existing
--- daily_scores_lock_date_anonymous trigger and ds_insert policy are
--- intentionally unchanged. This migration does not convert historical rows,
--- add a second daily_scores trigger, or change date boundaries.
+-- The app uses India Standard Time only (Asia/Kolkata, UTC+05:30).
+-- Asia/Calcutta is accepted solely as a legacy alias for existing teams.
+-- Daily Evaluation remains keyed to the existing Asia/Kolkata trigger/RLS
+-- contract. No daily_scores trigger, policy, or historical row is changed.
 
-CREATE OR REPLACE FUNCTION public.validate_team_timezone()
-RETURNS trigger
-LANGUAGE plpgsql
-SET search_path TO 'pg_catalog', 'public'
-AS $function$
+ALTER TABLE public.teams
+  ALTER COLUMN timezone SET DEFAULT 'Asia/Kolkata';
+
+DO $migration$
 BEGIN
-  IF NEW.timezone IS NULL OR btrim(NEW.timezone) = '' THEN
-    RAISE EXCEPTION 'Team timezone must be a recognized IANA timezone';
-  END IF;
-
-  IF NOT EXISTS (
+  IF EXISTS (
     SELECT 1
-    FROM pg_catalog.pg_timezone_names AS tz
-    WHERE tz.name = NEW.timezone
+    FROM public.teams
+    WHERE timezone NOT IN ('Asia/Kolkata', 'Asia/Calcutta')
   ) THEN
-    RAISE EXCEPTION 'Unrecognized team timezone: %', NEW.timezone;
+    RAISE EXCEPTION
+      'Cannot enforce India-only timezone contract: unsupported team timezone values exist';
   END IF;
-
-  RETURN NEW;
 END;
-$function$;
+$migration$;
 
-DROP TRIGGER IF EXISTS teams_validate_timezone ON public.teams;
-CREATE TRIGGER teams_validate_timezone
-BEFORE INSERT OR UPDATE OF timezone ON public.teams
-FOR EACH ROW
-EXECUTE FUNCTION public.validate_team_timezone();
+ALTER TABLE public.teams
+  ADD CONSTRAINT teams_timezone_india_only
+  CHECK (timezone IN ('Asia/Kolkata', 'Asia/Calcutta')) NOT VALID;
 
--- Deliberately do not alter public.lock_daily_score_date_and_anonymize(),
--- daily_scores triggers, or ds_insert. They remain the source of truth for
--- Asia/Kolkata persisted dates until a separately approved timezone change.
+ALTER TABLE public.teams
+  VALIDATE CONSTRAINT teams_timezone_india_only;
+
+-- Team Join inherits the selected team's timezone; members cannot select
+-- a device-local or international timezone. The alias has the same IST rules.
