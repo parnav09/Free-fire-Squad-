@@ -14,6 +14,32 @@
 
 ---
 
+## Workflow-first product map — authoritative page order
+
+Evolution Version 2 uses one Evaluation workspace with four entry cards arranged as a two-column by two-row grid. Each card opens its own detail page. This is one connected workflow, not four disconnected data systems.
+
+| Order | Evaluation card / page | Purpose |
+|---|---|---|
+| 1 | **Daily Evaluation** | Select other active teammates and submit today's peer evaluations. The signed-in evaluator is never selectable. |
+| 2 | **Weekly Team Review** | Each eligible active member submits one team-level review for the current week using nine team dimensions. This is separate from the coach-led **Weekly Review** snapshot. |
+| 3 | **Matches Evaluation** | Evaluate a selected match from either Scrims or Tournament, using its existing canonical match/session ID. |
+| 4 | **Evaluation Activity** | Show completion and pending work. The Daily Pending Tracker shows overdue evaluator → target pairs only after a 24-hour grace period, then removes each visible item after a further 24 hours. It never shows scores or private feedback. |
+
+### Workflow sequence
+
+1. Open **Evolution → Evaluation** and see the four cards in the order above.
+2. Open **Daily Evaluation**; today's date is supplied automatically by the existing server-side date contract. No date picker or backdated submission is available.
+3. Select eligible teammates. The current user's own player record is excluded before rendering and rejected again by the server.
+4. Complete the required dimensions and private feedback for each selected teammate; save each evaluator-target assignment idempotently.
+5. The system tracks expected, submitted, and pending assignments. After 24 hours without submission, the exact evaluator → target pair enters Evaluation Activity for the next 24 hours.
+6. Open **Weekly Team Review** to submit the current week's team-level review.
+7. Open **Matches Evaluation** and choose a match from Scrims or Tournament.
+8. Open **Evaluation Activity** to see workflow status and the temporary Daily Pending Tracker.
+
+**Privacy boundary:** the temporary overdue tracker is a narrow accountability exception. It may show only evaluator name/slot, target name/slot, evaluation date, and Pending status during its 24-hour display window. It must not show submitted scores, dimension ratings, written feedback, or reviewer identity attached to completed anonymous feedback.
+
+**Expiry boundary:** expiry removes the item from the visible tracker; it does not delete the original evaluation, feedback, assignment/audit provenance, or historical source records. This is a work-queue expiry, not destructive data retention.
+
 # Part I — Product foundation and non-negotiable rules
 
 ## 1. Product definition
@@ -308,6 +334,9 @@ Rules:
 
 ## 6. Daily Evaluation workflow
 
+> **Daily Evaluation selector rule:** the current evaluator is excluded from the target list at render time and rejected server-side. Each eligible evaluator-target pair has its own stable assignment ID. The date is automatic/read-only under the existing date contract; no date picker, backdating, or timezone redesign is part of this change.
+
+
 ### 6.1 Default path
 
 1. Evaluator opens Daily Evolution.
@@ -327,6 +356,28 @@ Rules:
 A standalone/manual evaluation remains available only with a reason. It must not pretend to be linked to a match. It receives a source type such as manual practice observation, and it is labelled as such in trends.
 
 ### 6.3 Form and save safeguards
+
+### 6.4 Daily assignment lifecycle
+
+- For N eligible active players, each evaluator has N−1 target assignments. A five-player cohort therefore has four targets per evaluator and twenty directed assignments in total.
+- Create one stable UUID per team + evaluation date + evaluator + target. Enforce uniqueness and idempotency server-side.
+- Do not generate self-pairs. A self-target must never flash in the selector during loading.
+- A completed assignment is marked Complete only after the server confirms the atomic save.
+- Numeric ratings remain private; team-wide activity displays workflow status only.
+
+### 6.5 Daily Pending Tracker — 24-hour grace + 24-hour visibility
+
+- The first 24 hours after the daily evaluation window begins are the grace period. Unsubmitted assignments remain ordinary Pending and are not listed in the overdue tracker.
+- If still unsubmitted after 24 hours, show the exact outstanding pair in **Evaluation → Evaluation Activity → Daily Pending Tracker**, e.g. **Player 1 → Player 4 — Pending**.
+- Show only evaluator, target, evaluation date, and Pending status. Do not show scores, dimension ratings, or feedback.
+- Keep the row visible for the following 24 hours. If the evaluator completes the assignment during this window, remove it immediately.
+- If still incomplete, automatically remove it from the visible tracker at the end of that second 24-hour window. Do not carry it into the next day's list.
+- Generate each day's cohort independently; yesterday's pending item never blocks today's assignments.
+- Use server timestamps and status, not a client/device timer. Reconcile expiry on page load/focus as well as Realtime updates.
+- Expiry hides only the tracker item. Preserve the underlying assignment/audit record and all submitted source records.
+- Tests must cover the 24h grace boundary, the second 24h expiry boundary, completion during the visible window, no carry-forward, and no self-pairs.
+
+
 
 - No default 5s or any default score.
 - No hard-coded P1.
@@ -436,28 +487,24 @@ Daily Peer Evaluation card:
 - no evaluator identity, initials, avatars, codes, or identifying badge.
 
 Detail screen:
-- separate review cards in non-stable order;
-- each review's total score where valid and all six dimension scores;
-- Not observed visibly distinct from deliberate 0;
-- separate Mistakes observed and Improvement focus notes;
+- separate sanitized feedback cards in non-stable order;
+- **Mistakes observed / what went wrong** and **What to improve next** notes;
 - only safe evidence links;
-- optional aggregate summary only with sample count and coverage;
-- no unexplained merged score;
+- no evaluator identity, numeric rating, dimension score, or reviewer-linked score summary visible to the recipient or other players;
 - no hidden author data in tooltips, accessibility labels, URLs, logs, exports, or filenames.
+- Any future aggregate requires separate approval, cohort-safe thresholds, and must not reveal an individual evaluator's rating.
 
-Card-to-detail navigation should follow the existing Scrims interaction pattern. Returning to the list preserves scroll position.
+### 8.6 Completion states and overdue-tracker exception
 
-### 8.6 Completion and missed-review states
-
-- Before cutoff: Collection in progress / Pending.
-- After cutoff with fewer than expected: Not all peer reviews received.
-- All eligible peers submitted: Complete.
-- Excused/ineligible players are excluded from expected denominator.
-- Recipient may see their own expected/received count.
-- Other teammates see only neutral collection open/closed status; no person-level matrix, reviewer list, missing-player list, or other target's progress count.
-- Coaches may see aggregate cohort coverage only, without reviewer identity.
-- Private reminders go only to the individual with pending work.
-- No public accusation or “Player X failed to review Player Y” event.
+- Before the first 24-hour grace period ends: Collection in progress / Pending.
+- If every expected assignment is submitted: Complete.
+- Excused/ineligible players are excluded from the expected denominator.
+- Each evaluator can see their own outgoing assignment status; each recipient can see only their own sanitized feedback availability.
+- **Evaluation Activity → Daily Pending Tracker** is the sole exception to the general no-person-level-progress rule: after the first 24 hours, it may show the exact outstanding evaluator → target pair for the next 24 hours, as specified in Section 6.5.
+- The tracker shows only unsubmitted assignments. It never shows completed reviewer-target pairs, scores, dimensions, or feedback.
+- At the end of the second 24-hour window, the item automatically disappears from the visible tracker and is not carried into the next day's cohort.
+- Private reminders may go to the individual evaluator with pending work.
+- Do not create a public blame notification or expose any submitted feedback author.
 
 ### 8.7 Link feedback to tasks
 
@@ -634,6 +681,42 @@ Draft → Coach Review → Approved → Published → Archived.
 - Archive is non-destructive and searchable.
 - Every actionable focus can become a linked development task.
 
+## 10A. Weekly Team Review — member-submitted team evaluation
+
+This is a separate page inside the four-card Evaluation workspace. It must not be confused with Section 10's coach-led **Weekly Review**, which produces player-development summaries and immutable review snapshots.
+
+### 10A.1 Submission model
+
+- Each eligible active team member submits one team-level review for the current week.
+- The form evaluates the team's performance as a unit, not one teammate against another.
+- The review period is selected automatically as the current week under the existing date/week policy; users cannot backdate a submission.
+- The page displays the week range and the member's submission state.
+- A member can edit only an unsubmitted draft. A submitted review is immutable except through an audited correction process.
+- Team-wide completion status may show which members have submitted and which remain Pending. It must not expose private narrative or numeric ratings to ordinary teammates unless a separately approved permission policy allows it.
+
+### 10A.2 Canonical team dimensions
+
+Use the existing nine-dimension team-review model where it matches the current database contract; map to existing fields before adding schema. Do not create duplicate parallel ratings if the existing team-ratings table already represents these dimensions.
+
+1. Team Communication
+2. Coordination & Trade Support
+3. IGL Decision Making
+4. Rotation & Zone Control
+5. Role Balance & Execution
+6. Fight Selection
+7. Survival & Placement Management
+8. Utility Management
+9. Match Consistency & Replay Improvement
+
+### 10A.3 Completion and history
+
+- One expected submission per eligible active member per team-week.
+- The activity view shows Submitted / Pending and the week identifier.
+- Previous weeks remain available as history according to existing read permissions.
+- A new week creates a new review period; no prior submission is silently copied forward.
+- Missing submissions remain missing, not zero.
+- Aggregate team results require a documented denominator and minimum sample; do not expose an individual member's rating by inference.
+
 ## 11. Player Trends
 
 ### 11.1 Views and filters
@@ -717,6 +800,18 @@ May place competitive outcomes beside development trends to explore relationship
 ---
 
 # Part VI — Architecture and engineering contracts
+
+### 12.5 Matches Evaluation — Scrims and Tournament
+
+- The Evaluation workspace page is named **Matches Evaluation**, not Tournament Evaluation.
+- The user selects a match from either the existing Scrims match list or Tournament match list.
+- The selected record retains its original canonical session/match ID, event type, date, map/mode, roster snapshot, and result-verification state.
+- Do not create a duplicate match table or a second match identity just for Evaluation.
+- A match evaluation is linked to the exact selected match and participating roster. Non-participants cannot be evaluated as match participants.
+- Competitive placement/elimination points remain in the Competitive Results domain and never become development scores.
+- Scrims and Tournament filters must be explicit so users know which match source they selected.
+- The same match cannot receive duplicate final evaluation submissions for the same evaluator/purpose; enforce idempotency and audited amendments.
+- The 24h + 24h expiry rule applies only to the Daily Pending Tracker.
 
 ## 13. System architecture boundaries
 
@@ -1010,10 +1105,17 @@ Every alert must point to a repairable record/process. Do not auto-correct histo
 
 Keep the existing premium dark Squad OS design language. Do not add decorative charts or hero blocks that displace useful workflow content.
 
-### 20.1 Evolution navigation
+### 20.1 Evolution navigation and Evaluation workspace
 
-- Four main areas: Daily Evaluation, Weekly Review, Player Trends, Squad Analytics.
-- Evolution must be reachable without repeatedly opening mobile “More”; use a dedicated navigation slot or persistent shortcut based on existing nav constraints.
+- Evolution is reachable without repeatedly opening mobile “More”; use a dedicated navigation slot or persistent shortcut based on existing nav constraints.
+- The Evaluation landing page contains exactly four entry cards in a two-column × two-row grid, in this order: **Daily Evaluation**, **Weekly Team Review**, **Matches Evaluation**, **Evaluation Activity**.
+- Each card opens its own detail page; a clear back path returns to the Evaluation landing page without losing relevant context.
+- **Daily Evaluation** handles today's evaluator-to-teammate submissions and self-exclusion.
+- **Weekly Team Review** handles each member's team-level weekly submission; it is not the coach-led Weekly Review.
+- **Matches Evaluation** allows match selection from both Scrims and Tournament.
+- **Evaluation Activity** contains completion states and the 24h-grace/24h-display Daily Pending Tracker.
+- The four cards are separate workflows over shared canonical records, not four duplicated data stores.
+- Existing **Weekly Review**, **Player Trends**, and **Squad Analytics** remain separate Evolution destinations and retain their prior scope.
 - Keep Tasks feedback and improvement tasks accessible from their existing Tasks area.
 - Shared filters/context should be consistent across pages.
 
@@ -1120,21 +1222,27 @@ The implementation must be built as a sequence of complete, testable vertical sl
 ### 23.1 Dependency graph
 
 ```text
-Evolution Phase Zero: legacy code audit + safe bug fixes + future-phase boundary
+Evolution Phase Zero: legacy code/schema audit + safe bug fixes + preserve existing workflows
                     |
-Evolution Phase One: Identity, team membership, timezone
+Evolution Phase One: identity + active membership + existing date contract (no timezone redesign)
                     |
-Evolution Phase Two: Session / match / roster / role snapshot
+Evolution Phase Two: session / match / roster / role snapshots for Scrims and Tournament
                     |
-Evolution Phase Three: Evidence model + canonical rubric + scoring engine
+Evolution Phase Three: evidence + canonical rubric + scoring/privacy contracts
                     |
-Evolution Phase Four: Atomic Daily Evaluation + feedback + audit/outbox
+Evolution Phase Four: Daily Evaluation form + atomic save + self-exclusion + stable N−1 assignments
                     |
-Evolution Phase Five: Peer-review cohorts + anonymity + recipient inbox
+Evolution Phase Five: anonymous recipient feedback + protected author mapping
                     |
-Evolution Phase Six: Canonical development tasks + drills + follow-up
+Evolution Phase Five-B: Evaluation Activity + 24h grace / 24h visible Daily Pending Tracker
                     |
-Evolution Phase Seven: Weekly Review snapshots and approvals
+Evolution Phase Five-C: Matches Evaluation using existing Scrims/Tournament match IDs
+                    |
+Evolution Phase Six: canonical development tasks + drills + follow-up
+                    |
+Evolution Phase Seven-A: Weekly Team Review (member-submitted nine-dimension team review)
+                    |
+Evolution Phase Seven-B: coach-led Weekly Review snapshots and approvals
                     |
 Evolution Phase Eight: Player Trends and comparability engine
                     |
@@ -1142,12 +1250,14 @@ Evolution Phase Nine: Squad Analytics (competitive + development domains)
                     |
 Evolution Phase Ten: Realtime + offline sync + data quality
                     |
-Evolution Phase Eleven: Responsive UI hardening + accessibility + regression QA
+Evolution Phase Eleven: Evaluation four-card navigation + responsive UI + accessibility + regression QA
                     |
-Evolution Phase Twelve: Staging migration + controlled rollout + production verification
+Evolution Phase Twelve: staging migration + controlled rollout + production verification
 ```
 
-Security is a separate workstream and is not implemented inside the Evolution phases. Its independent review is a prerequisite before production rollout. Tests, observability, and documentation cross-cut every Evolution phase. The diagram is the dependency order, not a claim that each phase is a separate deploy or that no safe parallel work is possible.
+Security remains a separate workstream and its independent review is a prerequisite before production rollout. Tests, observability, and documentation cross-cut every phase. This sequence describes dependencies and page/workflow order; it does not authorize a production migration, merge, or deployment.
+
+### 23.2 Why this order is mandatory
 
 ### 23.2 Why this order is mandatory
 
@@ -1262,6 +1372,33 @@ Security is a separate workstream and is not implemented inside the Evolution ph
 
 **Gate:** access tests and deanonymization checks pass; no identity leak in payloads/logs/URLs/exports; cohort denominator is reproducible.
 
+### Evolution Phase Five-B — Evaluation Activity and Daily Pending Tracker
+
+**Build:**
+- the fourth Evaluation workspace page and its activity summary;
+- expected evaluator-target assignment status from the daily cohort;
+- exact evaluator → target pending row, visible only after the first 24-hour grace period;
+- automatic removal from the visible tracker after the next 24 hours;
+- immediate removal from the pending list when the evaluator completes the assignment;
+- no carry-forward into the next daily cohort;
+- server-time expiry and refresh/reconnect behavior.
+
+**Outputs consumed by next phase:** a reliable, expiring workflow-status view that does not expose scores or feedback.
+
+**Gate:** tests prove the 24h grace boundary, 24h visibility boundary, completion during the visible window, automatic expiry, no self-pairs, no score/feedback leakage, and preservation of underlying audit records.
+
+### Evolution Phase Five-C — Matches Evaluation
+
+**Build:**
+- the Matches Evaluation page;
+- selection adapters for existing Scrims and Tournament matches;
+- canonical match/session/roster links;
+- per-match evaluation completion state and duplicate protection.
+
+**Outputs consumed by next phase:** match-linked evaluation records over existing match identities.
+
+**Gate:** a Scrims match and a Tournament match can each be evaluated without creating duplicate match identities or mixing competitive points into development ratings.
+
 ### Evolution Phase Six — Unified development tasks and follow-up
 
 **Build:**
@@ -1275,6 +1412,19 @@ Security is a separate workstream and is not implemented inside the Evolution ph
 **Outputs consumed by next phase:** one task source of truth with outcome history.
 
 **Gate:** task created in any supported workflow appears once across modules; status/version conflicts are handled; follow-up evaluation links to the correct task.
+
+### Evolution Phase Seven-A — Weekly Team Review
+
+**Build:**
+- member-submitted weekly team review page;
+- current-week-only submission window using the existing date policy;
+- nine team dimensions mapped to the existing team-ratings contract where possible;
+- one expected submission per eligible active member per team-week;
+- Submitted/Pending completion status and historical week access.
+
+**Outputs consumed by next phase:** versioned weekly team review records and safe completion coverage.
+
+**Gate:** tests prove one submission per eligible member/week, no backdating, no duplicate rating model, missing is not zero, and private ratings/narratives are not exposed through the completion tracker.
 
 ### Evolution Phase Seven — Weekly Review
 
@@ -1538,7 +1688,7 @@ Additional QA issues remain in scope: Positioning vs Map Awareness; rubric scale
 
 This document is the **Evolution Version 2 master blueprint**. This rewrite changes documentation only. It does not implement features, modify Supabase tables/data, reset production data, run migrations, merge the documentation branch, or deploy the app.
 
-**Next implementation action:** complete Evolution Phase Zero — Legacy Fixes against the actual current repository and live Evolution data. Repair existing Evolution regressions, preserve historical records, and clearly mark incomplete future modules without building their planned functionality. Then begin Evolution Phase One for stable identity, team membership, and timezone. Authorization/RLS/grants and security hardening remain in the separate Security workstream.
+**Next implementation action:** complete Evolution Phase Zero — Legacy Fixes against the actual current repository and live Evolution data. Repair existing Evolution regressions and preserve historical records. Then proceed in dependency order: identity/date-contract verification; Scrims/Tournament session and match linkage; rubric/evidence; Daily Evaluation and self-excluding N−1 assignments; anonymous feedback; the 24h + 24h Pending Tracker; Matches Evaluation; unified tasks; Weekly Team Review; coach-led Weekly Review; Player Trends; Squad Analytics; realtime/offline; responsive QA; and controlled rollout. Do not redesign or migrate timezone as part of the new Evaluation workspace. Authorization/RLS/grants and security hardening remain in the separate Security workstream.
 
 ---
 
@@ -1552,7 +1702,10 @@ The following original requirements remain explicitly represented in this rewrit
 - 0–10 scale, zero vs missing, Not observed, no negative ratings.
 - Versioned role-aware weighted 0–100 scoring.
 - Legacy 37/50 and advanced 82/100 caution.
-- Daily Evaluation workflow and atomic writes.
+- Daily Evaluation workflow, self-excluding teammate selector, unique evaluator-target assignments, atomic writes, and expiring overdue tracker.
+- Four-card Evaluation workspace: Daily Evaluation, Weekly Team Review, Matches Evaluation, Evaluation Activity.
+- Weekly Team Review as a member-submitted nine-dimension team review, separate from coach-led Weekly Review snapshots.
+- Matches Evaluation for both Scrims and Tournament match records.
 - Weekly Review workflow and immutable snapshots.
 - Player Trends with 7/30/season/custom periods and comparability.
 - Squad Analytics with separate competitive/development domains.
