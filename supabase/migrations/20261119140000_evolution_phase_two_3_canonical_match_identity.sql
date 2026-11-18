@@ -309,7 +309,8 @@ REVOKE ALL ON public.canonical_session_match_sets,
 GRANT SELECT ON public.canonical_session_match_sets,
   public.canonical_session_matches,
   public.canonical_session_match_sequence_events TO authenticated;
-GRANT INSERT ON public.canonical_session_matches TO authenticated;
+GRANT INSERT ON public.canonical_session_match_sets,
+  public.canonical_session_matches TO authenticated;
 GRANT UPDATE (expected_match_count) ON public.canonical_session_match_sets TO authenticated;
 GRANT UPDATE (match_sequence) ON public.canonical_session_matches TO authenticated;
 GRANT SELECT ON public.canonical_session_match_counts TO authenticated;
@@ -327,7 +328,8 @@ CREATE POLICY canonical_session_match_sets_team_read
 CREATE POLICY canonical_session_match_sets_staff_insert
   ON public.canonical_session_match_sets FOR INSERT TO authenticated
   WITH CHECK (
-    EXISTS (
+    created_by = (SELECT auth.uid())
+    AND EXISTS (
       SELECT 1 FROM public.team_members actor
       WHERE actor.team_id = canonical_session_match_sets.team_id
         AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
@@ -415,12 +417,12 @@ CREATE POLICY canonical_session_match_sets_staff_update
         )
       )
     )
-    AND EXISTS (
-      SELECT 1 FROM public.team_members actor
-      WHERE actor.team_id = canonical_session_match_sets.team_id
-        AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
-        AND actor.membership_role IN ('owner', 'coach')
-    )
+  )
+  AND EXISTS (
+    SELECT 1 FROM public.team_members actor
+    WHERE actor.team_id = canonical_session_match_sets.team_id
+      AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
+      AND actor.membership_role IN ('owner', 'coach')
   );
 
 CREATE POLICY canonical_session_matches_team_read
