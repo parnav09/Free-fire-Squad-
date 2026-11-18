@@ -205,5 +205,6 @@ Phase One is not complete until:
 - All 53/53 in-scope versions are explicitly classified `forward-only / no automatic rollback`; no reverse SQL was fabricated from the current schema.
 - Preserved the two distinct `daily_score_feedback_private_rls` versions; the two loadout rows remain outside this phase.
 - Added `scripts/verify-evolution-phase-one-5-c.mjs` and wired it into the production build test sequence.
+- GitHub Actions run #260 (44257295715) passed on the corrected head: typecheck, all configured test suites (C: 6/6), and Vite production build. A preceding run exposed one assertion wording mismatch; the assertion was corrected and the superseding run passed.
 - No Supabase schema/data/policy/grant/function/trigger/migration-ledger changes, no production rollback, no merge, and no deployment were performed.
 - **E Phase One.5-C status: COMPLETE · DOCUMENTED · MACHINE-CHECKED.** This is a disposition register, not a claim that 53 executable rollback scripts exist. Any compensation remains a separately reviewed migration.
