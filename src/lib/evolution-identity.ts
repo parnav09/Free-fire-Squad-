@@ -57,40 +57,65 @@ export function resolveActiveTeamIdentity(
   };
 }
 
-/** Validate a configured IANA timezone before it is saved or displayed. */
+export const INDIA_TIMEZONE = "Asia/Kolkata";
+const INDIA_TIMEZONE_ALIASES = new Set([INDIA_TIMEZONE, "Asia/Calcutta"]);
+
+/** Only the India timezone and its legacy IANA alias are valid for this India-only app. */
 export function isValidTeamTimezone(value: unknown): value is string {
-  if (typeof value !== "string" || value.trim() !== value || value.length < 1 || value.length > 64) {
-    return false;
-  }
-  try {
-    new Intl.DateTimeFormat("en-US", { timeZone: value }).format(new Date(0));
-    return true;
-  } catch {
-    return false;
-  }
+  return typeof value === "string" && value.trim() === value && INDIA_TIMEZONE_ALIASES.has(value);
 }
 
-/**
- * Format a date in the configured team timezone.
- * This is a client display utility only; database triggers/RPCs remain
- * authoritative for persisted score dates until their timezone contract is migrated.
- */
-export function teamDateISO(date: Date, timeZone: string): string {
+function assertValidDate(date: Date): void {
   if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
     throw new RangeError("A valid date is required.");
   }
-  if (!isValidTeamTimezone(timeZone)) {
-    throw new RangeError("A valid IANA team timezone is required.");
-  }
+}
 
+/** Stable ISO date for database keys, always calculated in India Standard Time. */
+export function indiaDateISO(date = new Date()): string {
+  assertValidDate(date);
   const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone,
+    timeZone: INDIA_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   }).formatToParts(date);
   const part = (type: string) => parts.find((item) => item.type === type)?.value ?? "";
   return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+/** English international display label, e.g. November 18th 2026. */
+export function indiaDateLabel(date = new Date()): string {
+  assertValidDate(date);
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: INDIA_TIMEZONE,
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).formatToParts(date);
+  const part = (type: string) => parts.find((item) => item.type === type)?.value ?? "";
+  const day = Number(part("day"));
+  const suffix = day % 100 >= 11 && day % 100 <= 13
+    ? "th"
+    : day % 10 === 1 ? "st" : day % 10 === 2 ? "nd" : day % 10 === 3 ? "rd" : "th";
+  return `${part("month")} ${day}${suffix} ${part("year")}`;
+}
+
+/** Milliseconds until the next midnight in India Standard Time (UTC+05:30). */
+export function millisecondsUntilIndiaMidnight(date = new Date()): number {
+  assertValidDate(date);
+  const [year, month, day] = indiaDateISO(date).split("-").map(Number);
+  const nextMidnightUtc = Date.UTC(year, month - 1, day + 1) - (5 * 60 + 30) * 60_000;
+  return Math.max(1_000, nextMidnightUtc - date.getTime());
+}
+
+/** Backward-compatible helper; accepts only India timezone identifiers. */
+export function teamDateISO(date: Date, timeZone: string): string {
+  assertValidDate(date);
+  if (!isValidTeamTimezone(timeZone)) {
+    throw new RangeError("Squad OS supports India Standard Time only.");
+  }
+  return indiaDateISO(date);
 }
 
 
