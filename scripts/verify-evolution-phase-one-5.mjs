@@ -33,8 +33,8 @@ test("E Phase One.5-B: timezone trigger remains SECURITY INVOKER and does not mo
 });
 
 test("E Phase One.5-C: rollback removes only the timezone guard introduced by the forward migration", () => {
-  assert.match(rollback, /DROP TRIGGER IF EXISTS teams_validate_timezone ON public\\.teams/);
-  assert.match(rollback, /DROP FUNCTION IF EXISTS public\\.validate_team_timezone\\(\\)/);
+  assert.match(rollback, /DROP TRIGGER IF EXISTS teams_validate_timezone ON public\.teams/);
+  assert.match(rollback, /DROP FUNCTION IF EXISTS public\.validate_team_timezone\(\)/);
   assert.doesNotMatch(rollback, /daily_scores|ALTER POLICY|set_daily_score_team_local_date/i);
 });
 test("E Phase One.5-C: migration does not rewrite historical evaluation rows", () => {
