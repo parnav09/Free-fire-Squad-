@@ -11,12 +11,13 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "test:foundation": "node --test scripts/verify-foundation.mjs",
-    "build": "npm run typecheck && npm run test:foundation && npm run test:characters && npm run test:evolution && npm run test:evolution-phase-one && npm run test:evolution-phase-one-5 && vite build",
+    "build": "npm run typecheck && npm run test:foundation && npm run test:characters && npm run test:evolution && npm run test:evolution-phase-one && npm run test:evolution-phase-one-5 && npm run test:evolution-phase-one-5-b && vite build",
     "preview": "vite preview",
     "test:characters": "node --test scripts/verify-character-profile.mjs",
     "test:evolution": "node --test scripts/verify-evolution-legacy-fixes.mjs",
     "test:evolution-phase-one": "node --test scripts/verify-evolution-phase-one.mjs",
-    "test:evolution-phase-one-5": "node --test scripts/verify-evolution-phase-one-5.mjs"
+    "test:evolution-phase-one-5": "node --test scripts/verify-evolution-phase-one-5.mjs",
+    "test:evolution-phase-one-5-b": "node --test scripts/verify-evolution-phase-one-5-b.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.1",
