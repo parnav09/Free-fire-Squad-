@@ -53,15 +53,18 @@ test("Daily Evaluation auto-selects and locks the India date without a date inpu
 });
 
 test("staged database migration defaults new teams to IST and rejects non-India zones", () => {
-  assert.match(migration, /ALTER COLUMN timezone SET DEFAULT 'Asia\/Kolkata'/);
-  assert.match(migration, /CHECK \(timezone IN \('Asia\/Kolkata', 'Asia\/Calcutta'\)\)/);
-  assert.match(migration, /VALIDATE CONSTRAINT teams_timezone_india_only/);
+  assert.match(migration, /CREATE OR REPLACE FUNCTION public\.validate_team_timezone\(\)/);
+  assert.match(migration, /CREATE TRIGGER teams_validate_timezone/);
+  assert.match(migration, /NEW\.timezone IN \('UTC', 'Asia\/Calcutta'\)/);
+  assert.match(migration, /NEW\.timezone := 'Asia\/Kolkata'/);
+  assert.match(migration, /Unsupported team timezone/);
   assert.match(migration, /unsupported team timezone values exist/);
+  assert.match(migration, /UPDATE public\.teams[\s\S]*WHERE timezone = 'Asia\/Calcutta'/);
 });
 
 test("staged migration does not rewrite daily scores or alter their existing trigger/RLS contract", () => {
   assert.doesNotMatch(migration, /UPDATE\s+public\.daily_scores/i);
   assert.doesNotMatch(migration, /ALTER\s+POLICY\s+ds_insert/i);
   assert.doesNotMatch(migration, /CREATE\s+TRIGGER.*daily_scores/is);
-  assert.match(migration, /No daily_scores trigger, policy, or historical row is changed/);
+  assert.match(migration, /Daily Evaluation trigger\/RLS and all historical score rows remain untouched/);
 });
