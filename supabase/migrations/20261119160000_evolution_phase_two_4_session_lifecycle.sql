@@ -530,6 +530,25 @@ BEGIN
   IF auth.uid() IS NULL THEN RAISE EXCEPTION 'authentication_required' USING ERRCODE = '28000'; END IF;
   IF p_idempotency_key IS NULL THEN RAISE EXCEPTION 'result_submission_idempotency_key_required' USING ERRCODE = '22023'; END IF;
 
+  -- Authorize from the member-readable row before requesting an UPDATE row lock.
+  SELECT * INTO v_session FROM public.canonical_sessions WHERE id = p_session_id;
+  IF NOT FOUND THEN RAISE EXCEPTION 'canonical_session_not_found' USING ERRCODE = 'P0002'; END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM public.team_members tm
+    WHERE tm.team_id = v_session.team_id AND tm.user_id = auth.uid()
+      AND tm.status = 'active' AND tm.membership_role IN ('owner','coach')
+  ) THEN RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501'; END IF;
+
+  -- An already-recorded receipt remains idempotent after the session advances or archives.
+  SELECT * INTO v_submission FROM public.canonical_session_result_submissions
+  WHERE canonical_session_id = p_session_id;
+  IF FOUND THEN
+    IF v_submission.idempotency_key <> p_idempotency_key THEN
+      RAISE EXCEPTION 'session_results_already_submitted_with_different_key' USING ERRCODE = '23505';
+    END IF;
+    RETURN v_submission;
+  END IF;
+
   SELECT * INTO v_session FROM public.canonical_sessions WHERE id = p_session_id FOR UPDATE;
   IF NOT FOUND THEN RAISE EXCEPTION 'canonical_session_not_found' USING ERRCODE = 'P0002'; END IF;
   IF NOT EXISTS (
@@ -537,6 +556,7 @@ BEGIN
     WHERE tm.team_id = v_session.team_id AND tm.user_id = auth.uid()
       AND tm.status = 'active' AND tm.membership_role IN ('owner','coach')
   ) THEN RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501'; END IF;
+  -- Recheck after the lock to serialize competing submissions.
   SELECT * INTO v_submission FROM public.canonical_session_result_submissions
   WHERE canonical_session_id = p_session_id;
   IF FOUND THEN
