@@ -162,6 +162,10 @@ BEGIN
   IF (SELECT count(*) FROM public.canonical_session_matches) <> 6 THEN
     RAISE EXCEPTION 'canonical child match backfill count mismatch';
   END IF;
+  IF (SELECT jsonb_array_length(matches) FROM public.scrim_records
+      WHERE id='aa100000-0000-0000-0000-000000000001') <> 2 THEN
+    RAISE EXCEPTION 'Legacy Scrim JSONB source was rewritten';
+  END IF;
 
   SELECT canonical_session_id INTO scrim_session
   FROM public.canonical_session_sources
@@ -178,6 +182,12 @@ BEGIN
   SELECT count(*) INTO record_count FROM public.canonical_session_matches WHERE canonical_session_id=scrim_session;
   IF expected_count <> 3 OR record_count <> 2 THEN
     RAISE EXCEPTION 'Scrim expected/actual mismatch: expected %, rows %',expected_count,record_count;
+  END IF;
+
+  SELECT actual_played_match_count INTO played_count
+  FROM public.canonical_session_match_counts WHERE canonical_session_id=scrim_session;
+  IF played_count <> 2 THEN
+    RAISE EXCEPTION 'Source-consistent Scrim entries should count as played, got %',played_count;
   END IF;
 
   SELECT expected_match_count INTO expected_count
@@ -272,6 +282,7 @@ DECLARE
   match_id uuid;
   sync_count integer;
   event_count integer;
+  sequences smallint[];
 BEGIN
   SELECT canonical_session_id INTO scrim_session
   FROM public.canonical_session_sources WHERE source_system='scrim';
@@ -293,6 +304,18 @@ BEGIN
     AND changed_by=auth.uid();
   IF event_count <> 1 THEN
     RAISE EXCEPTION 'Sequence correction audit event missing';
+  END IF;
+
+  BEGIN
+    PERFORM public.correct_canonical_match_sequence(match_id,1,'Duplicate sequence must fail');
+    RAISE EXCEPTION 'Duplicate match sequence was accepted';
+  EXCEPTION WHEN unique_violation THEN
+    NULL;
+  END;
+  SELECT array_agg(match_sequence ORDER BY match_sequence) INTO sequences
+  FROM public.canonical_session_matches WHERE canonical_session_id=scrim_session;
+  IF sequences <> ARRAY[1,4]::smallint[] THEN
+    RAISE EXCEPTION 'Canonical match order is not deterministic after correction';
   END IF;
 
   IF (SELECT count(*) FROM public.canonical_session_matches
