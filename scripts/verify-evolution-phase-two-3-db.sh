@@ -131,12 +131,12 @@ INSERT INTO public.tournament_cycles(
  ('bb200000-0000-0000-0000-000000000003','bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',DATE '2026-11-16',DATE '2026-11-22','Bravo Week','30000000-0000-0000-0000-000000000003');
 
 INSERT INTO public.tournament_matches(
-  id,cycle_id,team_id,match_day,match_number,map_name,placement,kills,points,status
+  id,cycle_id,team_id,match_day,match_number,map_name,placement,kills,points,status,recorded_by
 ) VALUES
- ('aa300000-0000-0000-0000-000000000001','aa200000-0000-0000-0000-000000000002','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',1,1,NULL,NULL,0,0,'scheduled'),
- ('aa300000-0000-0000-0000-000000000002','aa200000-0000-0000-0000-000000000002','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',1,2,'Bermuda',1,5,17,'verified'),
- ('aa300000-0000-0000-0000-000000000003','aa200000-0000-0000-0000-000000000002','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',2,1,NULL,2,3,12,'disputed'),
- ('bb300000-0000-0000-0000-000000000004','bb200000-0000-0000-0000-000000000003','bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',1,1,NULL,NULL,0,0,'scheduled');
+ ('aa300000-0000-0000-0000-000000000001','aa200000-0000-0000-0000-000000000002','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',1,1,NULL,NULL,0,0,'scheduled',NULL),
+ ('aa300000-0000-0000-0000-000000000002','aa200000-0000-0000-0000-000000000002','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',1,2,'Bermuda',1,5,17,'draft','10000000-0000-0000-0000-000000000001'),
+ ('aa300000-0000-0000-0000-000000000003','aa200000-0000-0000-0000-000000000002','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',2,1,NULL,2,3,12,'disputed','10000000-0000-0000-0000-000000000001'),
+ ('bb300000-0000-0000-0000-000000000004','bb200000-0000-0000-0000-000000000003','bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',1,1,NULL,NULL,0,0,'scheduled',NULL);
 SQL
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$SESSION_MIGRATION"
@@ -200,7 +200,7 @@ BEGIN
   SELECT actual_played_match_count INTO played_count
   FROM public.canonical_session_match_counts WHERE canonical_session_id=tournament_session;
   IF played_count <> 2 THEN
-    RAISE EXCEPTION 'Tournament played count should count verified/disputed only, got %',played_count;
+    RAISE EXCEPTION 'Tournament played count should count recorded draft/disputed results, got %',played_count;
   END IF;
 
   SELECT actual_played_match_count INTO played_count
