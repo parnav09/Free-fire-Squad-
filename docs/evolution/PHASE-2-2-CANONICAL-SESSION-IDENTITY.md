@@ -1,6 +1,6 @@
 # Evolution Phase 2.2 — Canonical Session Identity
 
-**Status:** implementation prepared · awaiting exact-head CI and disposable PostgreSQL integration  
+**Status:** PASS for limited development · exact-head CI verified · production trigger ACL hardening applied  
 **Branch:** `feat/evolution-phase-two-2-canonical-session-identity`  
 **Scope:** Point 2.2 only. No match child model, lifecycle workflow, roster/role snapshot, substitutions, result verification, module UI, production app deploy, or production session migration.
 
@@ -80,7 +80,18 @@ The harness creates minimal source-system fixtures and executes the exact migrat
 
 Source-contract suite: `scripts/verify-evolution-phase-two-2.mjs`, wired into `npm run build`.
 
-**CI evidence is intentionally pending until the new branch's exact-head push and PR workflows complete.** A source-contract test alone is not a database integration result.
+**Exact-head CI: PASS**  
+Head: `8d244f3526af5484cb52ab0a03d7420da6ad4546`  
+Push run #395: [44382446442](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44382446442)
+
+- 107 automated tests passed; 0 failed.
+- TypeScript typecheck passed.
+- Phase 2.2 disposable PostgreSQL integration passed.
+- Phase 1.5-B forward/rollback integration passed.
+- Trigger-function ACL integration passed, including the trigger smoke test.
+- Vite production build passed.
+
+The push run is tied to the exact branch head above. Earlier failed runs were superseded by this passing run; they are retained as diagnostic history.
 
 ## 6. Owner-approved limited-development exceptions (19 November 2026)
 
@@ -115,15 +126,12 @@ Official references:
 
 - No canonical session migration is applied to production in Point 2.2.
 - No application deployment, branch merge, production data backfill or UI rollout is performed here.
-- The separate trigger-function ACL hardening is a separate security migration and must have its own exact SQL verification and post-apply ACL/trigger smoke check before it can be called complete.
+- The separate trigger-function ACL hardening was applied to the live Supabase project as migration version `20261118193817` (`revoke_direct_trigger_function_execution`). Post-apply catalog verification confirms all four trigger-only functions are no longer executable by `anon`, `authenticated` or `service_role`; the three installed trigger attachments remain present. The disposable PostgreSQL ACL harness also confirmed the Daily Evaluation trigger still executes after revocation.
+- The post-apply Security Advisor no longer reports these four trigger functions as directly callable. It still reports 18 other authenticated SECURITY DEFINER functions, two RLS-enabled tables without policies, and the leaked-password-protection warning. These are not silently treated as resolved.
 - The leaked-password limitation and missing original baseline remain visible in the Phase One carry-over ledger.
 
 ## 8. Exit decision
 
-Point 2.2 can be marked **PASS for limited development** only after:
-1. exact-head GitHub Actions CI passes;
-2. disposable PostgreSQL integration passes against the committed migration;
-3. the migration and tests are reviewed for team isolation and retry behavior;
-4. the blueprint tracker and PR record carry the exact verified commit and run links.
+Point 2.2 is **PASS for limited development**: the exact-head CI and disposable PostgreSQL gates are green, team isolation and retry behavior are tested, and the blueprint/PR carry the verification evidence.
 
-It does not imply Phase 1.5-E full security acceptance or authorize production rollout.
+This does not imply Phase 1.5-E full security acceptance or authorize production rollout. The canonical session migration remains un-applied to production.
