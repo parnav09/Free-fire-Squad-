@@ -385,7 +385,13 @@ CREATE POLICY canonical_session_match_sets_staff_update
       AND actor.membership_role IN ('owner', 'coach')
   ))
   WITH CHECK (
-    (
+    EXISTS (
+      SELECT 1 FROM public.team_members actor
+      WHERE actor.team_id = canonical_session_match_sets.team_id
+        AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
+        AND actor.membership_role IN ('owner', 'coach')
+    )
+    AND (
       (
         source_system = 'scrim'
         AND EXISTS (
@@ -421,12 +427,6 @@ CREATE POLICY canonical_session_match_sets_staff_update
         )
       )
     )
-  )
-  AND EXISTS (
-    SELECT 1 FROM public.team_members actor
-    WHERE actor.team_id = canonical_session_match_sets.team_id
-      AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
-      AND actor.membership_role IN ('owner', 'coach')
   );
 
 CREATE POLICY canonical_session_matches_team_read
