@@ -214,7 +214,53 @@ BEGIN
         AND source_match_fingerprint IS NOT NULL) <> 2 THEN
     RAISE EXCEPTION 'Scrim array source fingerprints missing';
   END IF;
-END $$;
+
+  BEGIN
+    INSERT INTO public.canonical_session_matches(
+      team_id,canonical_session_id,match_sequence,source_system,
+      scrim_record_id,scrim_source_sequence,source_match_fingerprint,created_by
+    ) VALUES (
+      'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',bravo_session,99,'scrim',
+      'aa100000-0000-0000-0000-000000000001',1,
+      md5('{"placement":2,"kills":4}'::jsonb::text),
+      '30000000-0000-0000-0000-000000000003'
+    );
+    RAISE EXCEPTION 'Cross-team source FK accepted a Scrim match';
+  EXCEPTION WHEN foreign_key_violation THEN
+    NULL;
+  END;
+
+  BEGIN
+    INSERT INTO public.canonical_session_matches(
+      team_id,canonical_session_id,match_sequence,source_system,
+      scrim_record_id,scrim_source_sequence,source_match_fingerprint,created_by
+    ) VALUES (
+      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',scrim_session,99,'scrim',
+      'aa100000-0000-0000-0000-000000000001',1,
+      md5('{"placement":2,"kills":4}'::jsonb::text),
+      '10000000-0000-0000-0000-000000000001'
+    );
+    RAISE EXCEPTION 'One Scrim source item was attached to two canonical matches';
+  EXCEPTION WHEN unique_violation THEN
+    NULL;
+  END;
+
+  BEGIN
+    DELETE FROM public.scrim_records
+    WHERE id='aa100000-0000-0000-0000-000000000001';
+    RAISE EXCEPTION 'Mapped Scrim source was destructively deleted';
+  EXCEPTION WHEN foreign_key_violation THEN
+    NULL;
+  END;
+
+  BEGIN
+    DELETE FROM public.tournament_cycles
+    WHERE id='aa200000-0000-0000-0000-000000000002';
+    RAISE EXCEPTION 'Mapped Tournament source was destructively deleted';
+  EXCEPTION WHEN foreign_key_violation THEN
+    NULL;
+  END;
+END $;
 
 -- Team A Owner exercises the guarded source sync and correction RPCs.
 SET ROLE authenticated;
