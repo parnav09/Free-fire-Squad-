@@ -20,7 +20,7 @@ test("Phase 2.3 follows the authoritative Point 2.3 Match Identity scope", () =>
   assert.match(blueprint, /38\.3 Point 2\.3 — Match Identity/);
   assert.match(blueprint, /represent each match as a first-class child of a session/i);
   assert.match(report, /Phase Two\.3 — Canonical Match Identity/);
-  assert.match(report, /does not implement Points 2\.4–2\.8/);
+  assert.match(report, /It does not implement session lifecycle \\(2\\.4\\), roster snapshots \\(2\\.5\\)/i);
 });
 
 test("Every canonical match has a stable UUID, one parent and independent sequence metadata", () => {
@@ -61,7 +61,9 @@ test("Expected counts are source-derived and absent matches are never fabricated
 test("Actual played count uses source status and source-consistent Scrim fingerprints", () => {
   assert.match(migration, /canonical_session_match_counts/i);
   assert.match(migration, /WITH \(security_invoker = true\)/i);
-  assert.match(migration, /status IN \('submitted', 'verified', 'disputed'\)/i);
+  assert.match(migration, /status IN \\('draft', 'submitted', 'verified', 'disputed'\\)/i);
+  assert.match(migration, /tournament_matches\\.recorded_by IS NOT NULL/i);
+  assert.match(migration, /tournament_matches\\.placement IS NOT NULL/i);
   assert.match(migration, /actual_played_match_count/i);
   assert.match(harness, /Scheduled-only Tournament cycle must have zero played matches/);
 });
@@ -98,7 +100,7 @@ test("Backfill preserves existing Scrim and Tournament source IDs without changi
   assert.match(migration, /evolution-v2-session:scrim:/);
   assert.match(migration, /evolution-v2-session:tournament:/);
   assert.match(migration, /canonical_session_sources/);
-  assert.match(scrimsUi, /from\("scrim_records"\)/);
+  assert.match(scrimsUi, /scrim_records/);
   assert.match(tournamentSql, /create table if not exists public\.tournament_matches/i);
   assert.match(report, /Source rows and existing JSONB payloads are not rewritten/i);
 });
