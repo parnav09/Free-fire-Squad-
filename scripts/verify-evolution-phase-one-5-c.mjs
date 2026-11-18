@@ -22,6 +22,12 @@ test("E Phase One.5-C: every historical migration has a reasoned forward-only di
   }
 });
 
+test("E Phase One.5-C: every declared risk class has an explicit recovery rule", () => {
+  for (const riskClass of new Set(manifest.entries.map((entry) => entry.risk_class))) {
+    assert.ok(report.includes(`\`${riskClass}\``), `Missing handling for risk class: ${riskClass}`);
+  }
+});
+
 test("E Phase One.5-C: duplicate migration names remain distinct versioned records", () => {
   const duplicates = manifest.entries.filter((entry) => entry.name === "daily_score_feedback_private_rls");
   assert.deepEqual(duplicates.map((entry) => entry.version), ["20261109034550", "20261109034618"]);
