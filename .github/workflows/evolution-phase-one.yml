@@ -17,7 +17,23 @@ jobs:
   foundation:
     name: Typecheck, tests and production build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: squad_os_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d squad_os_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/squad_os_ci
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,6 +57,14 @@ jobs:
           path: package-lock.json
           if-no-files-found: error
           retention-days: 1
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+
+      - name: Verify staged B migration against disposable PostgreSQL
+        run: bash scripts/verify-evolution-phase-one-5-b-db.sh
 
       - name: Verify typecheck, foundation contracts, character data and production bundle
         run: npm run build
