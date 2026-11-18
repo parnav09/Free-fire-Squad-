@@ -80,14 +80,14 @@ test("security ACL fix is least-privilege and preserves trigger execution", () =
   assert.match(securityReview, /intentional private storage/i);
   assert.match(securityReview, /four trigger-returning functions/i);
   assert.match(securityReview, /Leaked-password protection/i);
-  assert.match(audit, /staged trigger ACL remediation/i);
+  assert.match(audit, /staged trigger-function ACL remediation/i);
 });
 
 test("E records the remaining clean-replay and Auth gates instead of falsely passing", () => {
   assert.match(acceptance, /Isolated clean replay\s*\|\s*Not run/i);
   assert.match(acceptance, /Full Phase One acceptance\s*\|\s*\*\*NOT PASSED\*\*/);
   assert.match(audit, /FINAL ACCEPTANCE: BLOCKED \/ NOT PASSED/);
-  assert.match(audit, /authoritative pre-migration baseline is not present/i);
+  assert.match(audit, /no original pre-migration schema baseline/i);
   assert.match(audit, /leaked-password protection remains disabled/i);
   assert.match(securityReview, /Overall Security acceptance is not PASS yet/i);
 });
