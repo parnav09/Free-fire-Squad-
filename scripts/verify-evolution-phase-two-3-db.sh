@@ -100,7 +100,7 @@ CREATE TABLE public.training_sessions (
 GRANT SELECT ON public.training_sessions TO authenticated;
 SQL
 
--- Source rows exist before the canonical-session and match backfill runs.
+# Source rows exist before the canonical-session and match backfill runs.
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 INSERT INTO auth.users(id) VALUES
  ('10000000-0000-0000-0000-000000000001'),
