@@ -255,7 +255,7 @@ BEGIN
       RAISE EXCEPTION 'verified_results_required_before_closure' USING ERRCODE = '23514';
     END IF;
     IF NEW.lifecycle_status = 'cancelled' THEN
-      IF v_cancel_code NOT IN ('cancelled','no_show','other') THEN
+      IF v_cancel_code IS NULL OR v_cancel_code NOT IN ('cancelled','no_show','other') THEN
         RAISE EXCEPTION 'cancellation_reason_code_required' USING ERRCODE = '22023';
       END IF;
       IF v_cancel_code = 'no_show' AND OLD.lifecycle_status <> 'scheduled' THEN
