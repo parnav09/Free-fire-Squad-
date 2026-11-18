@@ -1,6 +1,6 @@
 # E Phase One.5 — Migration Provenance Audit Checkpoint
 
-**Status:** IN PROGRESS — read-only audit completed for the current live migration ledger, current branch inventory, and the existing Daily Evaluation date-writing path. Migration provenance is **not reconciled**. No database migration or schema change has been applied.
+**Status:** SQL source recovery completed for 53/55 live ledger entries in the non-loadout scope. The recovered SQL is archived and hash-verified; active migration-chain reconciliation, rollback design, and clean-database replay remain incomplete. No database migration or schema change has been applied.
 
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
 **PR:** #115 (open, draft; stacked on Phase Zero PR #114)  
@@ -185,3 +185,28 @@ The 34 count is an exact-name repository comparison, not evidence of 34 missing 
 - Roster-capacity, task metadata, Daily Evaluation and retention files remain semantic candidates with mismatched live versions and unproven application order.
 - No-op tombstones, guessed aliases, copied candidate SQL, or live ledger edits were not created. They could silently omit required behavior on clean builds or falsely claim historical provenance.
 - This improves the branch inventory but does not resolve original SQL provenance. Keep Phase One.5 blocked pending authoritative source/application evidence and rollback review.
+
+
+## 10. Verbatim SQL source recovery and content verification — 18 Nov 2026
+
+The earlier conclusion that the live migration ledger exposed only version/name metadata was incomplete. Read-only inspection of `supabase_migrations.schema_migrations` found these columns: `version`, `statements`, `name`, `created_by`, `idempotency_key`, and `rollback`.
+
+- All 55 live ledger rows have stored SQL statements.
+- All 55 rows have zero stored rollback statements.
+- Recovered 53 complete SQL entries verbatim from the live `statements` arrays into `docs/evolution/recovered-migrations/`.
+- Deliberately excluded the two `player_character_loadouts` / `player_character_loadout` entries because loadout is restricted scope. Their SQL was not opened or archived.
+- The archive includes a README and a manifest containing each live version/name, statement count, and SQL character count. It is outside `supabase/migrations/`, so it is not an active Supabase migration directory.
+- Independent verification recomputed each Git blob SHA-1 from the exact live SQL statement bytes and compared it with the committed Git tree. **53/53 recovered SQL files matched exactly; zero mismatches.**
+- Compared all 22 current non-loadout migration files against live ledger SQL by migration name: 13 files are byte-identical to a live statement; 6 same-name files differ from the live statement(s); 3 files have no same-name live ledger row. This is a content comparison, not just a timestamp/name comparison.
+- The two same-prefix `20261109007000` files and the duplicate live `daily_score_feedback_private_rls` name remain explicitly unresolved in the active migration chain. Both distinct live Daily Evaluation feedback SQL statements are preserved separately in the archive.
+- The current active `supabase/migrations/` directory was not renamed, deleted, overwritten, or expanded. No live database change or migration replay was performed.
+
+### Remaining gates
+
+1. Reconcile the 6 same-name SQL mismatches and 3 name-mismatched repository files against the exact recovered source; decide which active files should be replaced or retired only after dependency/order review.
+2. Review the duplicate live migration name and duplicate repository timestamp prefix.
+3. Keep the two loadout entries outside this recovery scope.
+4. Design and review rollback SQL separately: the live ledger contains no rollback statements.
+5. Run a clean-database replay and schema/behavior verification in an isolated development database. The project currently has no Supabase development branches; no paid/chargeable branch was created.
+
+**Result:** original SQL source is now recovered and content-verified for 53 live migrations. E Phase One.5 is still **IN PROGRESS**, not complete: active-chain reconciliation, rollback, and clean replay remain unverified. No Phase Two implementation, Security changes, retention changes, merge, or production deployment was performed.
