@@ -20,6 +20,12 @@ ALTER TABLE public.canonical_sessions
   ADD COLUMN IF NOT EXISTS cancellation_reason_code text,
   ADD COLUMN IF NOT EXISTS cancellation_reason text;
 
+-- Preserve any pre-existing soft-archive state using only explicit legacy archive
+-- metadata. Do not invent a prior status or synthetic lifecycle audit event.
+UPDATE public.canonical_sessions
+SET lifecycle_status = 'archived'
+WHERE archived_at IS NOT NULL AND lifecycle_status = 'draft';
+
 DO $constraints$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'canonical_sessions_lifecycle_status_check') THEN
