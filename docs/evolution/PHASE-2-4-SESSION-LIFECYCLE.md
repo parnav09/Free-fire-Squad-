@@ -11,7 +11,7 @@
 
 Point 2.4 adds a lifecycle to the existing canonical session identity. It does not rewrite Scrims, Tournament or Training source rows, does not change Planning source records or JSONB match payloads, and does not introduce roster/role snapshots, substitutions, or the complete result-correction workflow. Those remain Points 2.5–2.9 and 2.8 respectively.
 
-The migration is additive. Existing canonical sessions are initialized to `draft` at lifecycle version zero. No source row, canonical match UUID, match sequence or historical result is generated or rewritten.
+The migration is additive. Existing unarchived canonical sessions initialize to `draft` at lifecycle version zero. Any session already carrying explicit legacy `archived_at` metadata is preserved as `archived`; no synthetic prior-state audit event is invented because the historical transition is not available. No source row, canonical match UUID, match sequence or historical result is generated or rewritten.
 
 ## 2. Lifecycle contract
 
