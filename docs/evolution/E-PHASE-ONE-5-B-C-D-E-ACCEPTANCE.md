@@ -14,36 +14,49 @@ This record covers only Evolution Phase One.5-B through .5-E. It does not author
 
 ### Application contract implemented
 
-- The app is India-only and uses Asia/Kolkata (IST, UTC+05:30). Device timezone and location do not affect the evaluation date.
-- Team creation and Team Join use the selected team's canonical India timezone. A member cannot choose a personal or international timezone.
-- Daily Evaluation date is automatic, locked, and not editable/backdatable.
-- Date display uses English international wording, e.g. November 18th 2026.
-- The date refresh is scheduled for the next India midnight, not the phone's local midnight.
-- The date key sent by the client is YYYY-MM-DD in IST. The existing database trigger remains authoritative for persisted score_date.
-- The date is an India calendar day (00:00 to next 00:00 IST), not a rolling 24 hours from when the user opens the form. The separate pending-notice lifecycle (24-hour grace followed by a 24-hour visible pending period) is not changed in this B-only pass.
+- Squad OS is India-only and uses the canonical timezone `Asia/Kolkata` (IST, UTC+05:30). A member's device timezone/location never selects the app date.
+- The legacy IANA alias `Asia/Calcutta` is accepted only for backward compatibility and resolves to the same India date; all other timezone identifiers are rejected.
+- Team creation passes `Asia/Kolkata`. Team Join attaches the member to the selected team; timezone remains a property of that team, not of the joining member.
+- Daily Evaluation date is automatically selected, locked, and not editable or backdatable.
+- Date display uses English international wording, e.g. `November 18th 2026`.
+- The UI refreshes at the next India midnight, not device-local midnight.
+- The client date key is `YYYY-MM-DD` in IST. The existing database trigger and `ds_insert` policy remain authoritative for persisted `score_date`.
+- A Daily Evaluation date is an India calendar day (00:00 to next 00:00 IST), not a rolling 24 hours from form-open time. The separate pending-notice lifecycle is outside this B-only work and was not changed.
 
 ### Staged forward migration
 
-docs/evolution/staged-migrations/20261118070000_team_timezone_contract.sql
+`docs/evolution/staged-migrations/20261118070000_team_timezone_contract.sql`
 
-- Adds a SECURITY INVOKER trigger on teams.timezone.
-- Normalizes the existing column's UTC default and legacy Asia/Calcutta alias to Asia/Kolkata.
-- Rejects all non-India timezone values.
-- Checks existing rows before installing the trigger; it fails safely if unexpected timezone values are present.
-- Normalizes the one existing Asia/Calcutta team row to Asia/Kolkata.
-- Does not alter daily_scores, its existing anonymization/date trigger, or ds_insert RLS policy; does not reinterpret historical evaluation dates.
+- Adds a `BEFORE INSERT OR UPDATE OF timezone` trigger on `public.teams`; its PL/pgSQL function uses PostgreSQL's default SECURITY INVOKER behavior and does not use SECURITY DEFINER.
+- The physical `teams.timezone` column default remains `UTC`. The trigger intercepts that default on INSERT and stores `Asia/Kolkata`; it also normalizes `Asia/Calcutta` to `Asia/Kolkata`.
+- Rejects null/blank values and every non-India timezone identifier.
+- Checks existing rows before trigger installation and fails safely if an unsupported value is present.
+- Normalizes the one existing legacy `Asia/Calcutta` team row to `Asia/Kolkata` when the migration is executed.
+- Because the trigger guards writes to the team row, it covers team creation and restore paths that write `teams.timezone`; Team Join inherits the already-selected team's timezone and does not set a member-specific timezone.
+- Does not alter `daily_scores`, its existing date/anonymization trigger, or the `ds_insert` RLS policy; it does not reinterpret historical evaluation dates.
 
 ### Live read-only facts checked
 
-- teams.timezone is NOT NULL with default UTC.
-- Existing live team values: Asia/Kolkata (14 teams) and Asia/Calcutta (1 team); no other values.
-- The app's create_team call already supplies Asia/Kolkata.
-- The existing Daily Evaluation trigger and ds_insert policy both enforce Asia/Kolkata.
-- Boundary checks around 00:00 IST pass for both the canonical timezone and legacy alias.
+- `teams.timezone` is NOT NULL with physical column default `UTC`.
+- Existing live team values: `Asia/Kolkata` (14 teams) and `Asia/Calcutta` (1 team); no other values.
+- The live `create_team` function uses its `p_timezone` argument and the app already supplies `Asia/Kolkata`.
+- Existing team table triggers do not currently include the new timezone-validation trigger.
+- The existing Daily Evaluation trigger and `ds_insert` policy both enforce `Asia/Kolkata`.
+- Read-only boundary checks around 00:00 IST pass for both the canonical timezone and legacy alias.
+
+### Automated verification
+
+- Updated the legacy Evolution tests that still expected the removed `kolkataDateISO()` helper.
+- Updated the Phase One timezone tests to enforce India-only behavior rather than accepting arbitrary IANA zones.
+- Updated the earlier 1.5-B source-contract tests to match the current B-only design: the team timezone is guarded, while the existing Daily Evaluation trigger/RLS contract is deliberately untouched.
+- Dedicated B suite: **7/7 passed**.
+- GitHub Actions run **#236** on commit `12b420e74fa9d7dcc802a4e96c762b0316c2ab12`: typecheck, all configured test suites, and Vite production build **passed**.
+- The Vercel status check remains a separate build-rate-limit failure; no Vercel deployment is claimed.
 
 ### Remaining acceptance gate
 
-The forward SQL is still staged outside supabase/migrations/. It has not yet been executed against an isolated PostgreSQL/Supabase-compatible database. Runtime verification must prove: default/legacy normalization, rejection of non-India values, Team Join inheritance, and no change to the existing Daily Evaluation trigger/RLS contract. No production migration will be applied as part of this validation.
+The forward SQL is still staged outside `supabase/migrations/`. It has not yet been executed against an isolated PostgreSQL/Supabase-compatible database. Runtime verification must prove: default/legacy normalization, rejection of non-India values, restore-path behavior, Team Join inheritance, and no change to the existing Daily Evaluation trigger/RLS contract. No production migration will be applied as part of this validation.
+
 
 ## C — Rollback
 
