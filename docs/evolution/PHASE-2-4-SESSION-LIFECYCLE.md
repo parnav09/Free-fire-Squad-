@@ -9,7 +9,7 @@
 
 ## 1. Scope boundary
 
-Point 2.4 adds a lifecycle to the existing canonical session identity. It does not change Scrims, Tournament, Training or Planning source records, does not rewrite JSONB match payloads, and does not introduce roster/role snapshots, substitutions, or the complete result-correction workflow. Those remain Points 2.5–2.9 and 2.8 respectively.
+Point 2.4 adds a lifecycle to the existing canonical session identity. It does not rewrite Scrims, Tournament or Training source rows, does not change Planning source records or JSONB match payloads, and does not introduce roster/role snapshots, substitutions, or the complete result-correction workflow. Those remain Points 2.5–2.9 and 2.8 respectively.
 
 The migration is additive. Existing canonical sessions are initialized to `draft` at lifecycle version zero. No source row, canonical match UUID, match sequence or historical result is generated or rewritten.
 
