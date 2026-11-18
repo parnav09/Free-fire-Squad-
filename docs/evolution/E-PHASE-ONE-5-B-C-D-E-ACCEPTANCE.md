@@ -8,28 +8,30 @@
 
 This record covers only Evolution Phase One.5-B through .5-E. It does not authorize a production migration, migration-ledger edit, merge, deployment, security-policy redesign, retention change, or loadout work. No Supabase development branch was created.
 
-## B — Team timezone server contract
+## B — Existing date/timezone contract verification
 
 ### Implemented as a staged forward migration
 
 `docs/evolution/staged-migrations/20261118070000_team_timezone_contract.sql`
 
-- Adds a SECURITY INVOKER trigger function validating every inserted/updated `teams.timezone` against PostgreSQL's recognized timezone catalog. This covers `create_team`, both backup-restore functions, and direct timezone updates without rewriting those existing SECURITY DEFINER functions.
-- Adds a second Daily Evaluation BEFORE INSERT trigger. PostgreSQL fires same-kind triggers alphabetically; `trg_daily_scores_team_timezone_date` follows the existing `daily_scores_lock_date_anonymous` trigger, so it replaces only the hard-coded date after the existing anonymization behavior runs.
-- Updates only the `ds_insert` date predicate to use the selected team's timezone. It retains `evaluator_id IS NULL` and `can_rate(team_id, player_id)`.
-- Does not rewrite historical Daily Evaluation rows or change the existing anonymization function.
+- Adds a SECURITY INVOKER trigger function validating every inserted/updated `teams.timezone` against PostgreSQL's recognized IANA timezone catalog.
+- Covers `create_team`, both backup-restore paths, and direct timezone updates without rewriting existing SECURITY DEFINER functions.
+- Preserves the existing persisted Daily Evaluation date contract: `daily_scores.score_date` remains derived from `Asia/Kolkata` by the existing `daily_scores_lock_date_anonymous` trigger.
+- Leaves the existing `ds_insert` RLS predicate unchanged; it continues to require `evaluator_id IS NULL`, `can_rate(team_id, player_id)`, and the Asia/Kolkata date.
+- Does not add a second Daily Evaluation trigger, change trigger ordering, change the `ds_insert` policy, or rewrite historical rows.
+- Does not change timezone defaults or the existing app's team-creation argument (`Asia/Kolkata`).
 
 ### Live read-only facts checked
 
-- `teams.timezone` is NOT NULL with default `UTC`.
-- Existing live team values: `Asia/Kolkata` (14 teams) and `Asia/Calcutta` (1 team); both are present in `pg_timezone_names`.
-- Existing Daily Evaluation trigger is `daily_scores_lock_date_anonymous`; it currently sets Asia/Kolkata and also anonymizes evaluator/notes and sets recipient-only visibility.
-- Existing `ds_insert` policy independently enforces Asia/Kolkata.
+- `teams.timezone` is `NOT NULL` with default `UTC`.
+- Existing live team values: `Asia/Kolkata` (14 teams) and `Asia/Calcutta` (1 team); both are recognized by PostgreSQL's timezone catalog.
+- The current app calls `create_team` with `p_timezone: 'Asia/Kolkata'`.
+- The live `daily_scores_lock_date_anonymous` trigger sets `score_date` using `Asia/Kolkata`, and also nulls evaluator/notes and sets recipient-only visibility.
+- The live `ds_insert` policy independently enforces the same Asia/Kolkata date and retains the evaluator-null and `can_rate` checks.
 
 ### Not yet accepted
 
-The SQL is staged outside `supabase/migrations/` because it has not been executed against an isolated PostgreSQL/Supabase-compatible database. A static test cannot prove trigger ordering, policy parsing, RLS visibility, or runtime behavior. Do not apply it yet.
-
+The SQL remains staged outside `supabase/migrations/`. It has not yet been executed against an isolated PostgreSQL/Supabase-compatible database. A source review and live read-only inspection cannot prove DDL execution, invalid-timezone rejection, valid alias acceptance, or that existing date trigger/RLS behavior remains unchanged at runtime. Do not apply it to production.
 ## C — Rollback
 
 ### Implemented for the new B migration
