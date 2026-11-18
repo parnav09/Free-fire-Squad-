@@ -1710,8 +1710,8 @@ Evolution Version 2 is complete only when:
 | Phase | Overall status | Gate |
 |---|---|---|
 | Zero — Legacy audit/fixes | **Partial** | **NOT PASSED** |
-| One — Identity/date contract | **Partial** | **NOT PASSED** |
-| Two — Session/match/roster/role | **Partial** | **NOT PASSED** |
+| One — Identity/date contract | **Implementation closed · Acceptance pending** | **NOT PASSED · 1.5-E carry-over gates open** |
+| Two — Session/match/roster/role | **OPEN · 2.1 read-only audit authorized; implementation gated** | **NOT STARTED · No implementation evidence** |
 | Three — Evidence/rubric/scoring | **Partial** | **NOT PASSED** |
 | Four — Daily Evaluation | **Partial (legacy form exists)** | **NOT PASSED** |
 | Five — Anonymous peer feedback | **Partial** | **NOT PASSED** |
@@ -1728,42 +1728,51 @@ Evolution Version 2 is complete only when:
 
 ### 34A.3 Phase One detailed tracker — identity foundation
 
-**Correct overall reading:** Phase One is **not fully complete**. Subphases **1.1–1.4 were implemented and CI-verified**, and **1.5-A Migration Provenance & Schema-History Reconciliation is now COMPLETE · VERIFIED**. Subphases **1.5-B, 1.5-C, 1.5-D, and 1.5-E remain incomplete/not started as applicable**. Therefore, the accurate status is **Phase One foundation (1.1–1.4) plus 1.5-A complete; Phase One overall NOT PASSED / acceptance blocked**.
+**Status as of 18 November 2026: IMPLEMENTATION CLOSED · ACCEPTANCE PENDING.** The identity/date-contract implementation work and exact-head CI are complete. Phase One is being administratively closed as an implementation workstream at the owner's direction; this is not a claim that its final acceptance gate passed. The remaining 1.5-E items are carried forward as explicit acceptance blockers and must not be silently dropped.
 
 | Subphase | Scope | Status | Evidence / remaining work |
 |---|---|---|---|
 | 1.1 | Stable identity foundation: authenticated user, player identity, team identity mapping | **Implemented · CI verified** | Identity contract work completed in the Phase One branch. |
-| 1.2 | Team loading and explicit active-team context | **Implemented · CI verified** | Auth → Membership → Team loading, explicit team selection, validation and sign-out cleanup were implemented; latest-head CI passed. |
-| 1.3 | Async/race protection for identity and team context | **Implemented · CI verified** | Race-protection work was implemented; recorded GitHub Actions run #68 passed on commit `a34bfa6`. |
-| 1.4 | Session eligibility and capability helpers | **Implemented · CI verified** | Exact authenticated-user/membership UUID/team UUID plus active eligibility, fail-closed clearing, and Owner/Coach capability helpers. Recorded checks and CI runs #82/#85 passed; later Phase One run #101 passed. |
-| 1.5-A | Migration provenance and schema-history reconciliation | **Complete · Verified** | Live ledger 55 rows; 53 in-scope non-loadout rows map 1:1 to active migration files by exact version/name. Direct live SQL-to-file comparison passed 53/53 with zero mismatches; zero missing/extra in-scope files and zero duplicate timestamp prefixes. Two loadout rows excluded. Rollback and clean-replay work are separate gates, not 1.5-A. Evidence: Phase One migration audit Section 11. |
-| 1.5-B | Existing date/timezone contract verification and staged migration | **Drafted · Not applied · Not DB tested** | SQL contract was staged outside the active Supabase migration chain; preserve the existing timezone behavior and do not redesign it. Isolated-PostgreSQL execution has not been completed. |
-| 1.5-C | Rollback plan for the staged date/timezone change | **Drafted · Not DB tested** | Rollback SQL exists as a draft; isolated rollback rehearsal remains outstanding. |
-| 1.5-D | Source-contract tests | **Partial · Local tests passed** | Six local source-contract tests passed. Database integration, migration execution and policy behavior tests remain. |
-| 1.5-E | Phase One final acceptance audit | **Blocked · NOT PASSED** | Blocked by provenance mismatches, unmatched migration files, missing rollback coverage, missing baseline/clean replay proof, and untested migration/rollback behavior. |
+| 1.2 | Team loading and explicit active-team context | **Implemented · CI verified** | Auth → Membership → Team loading, explicit team selection, validation and sign-out cleanup; latest-head CI passed. |
+| 1.3 | Async/race protection for identity and team context | **Implemented · CI verified** | Race-protection work implemented; earlier recorded GitHub Actions run #68 passed on commit `a34bfa6`. |
+| 1.4 | Session eligibility and capability helpers | **Implemented · CI verified** | Authenticated-user/membership UUID/team UUID plus active eligibility, fail-closed clearing, and Owner/Coach capability helpers; recorded checks and CI passed. |
+| 1.5-A | Migration provenance and schema-history reconciliation | **Complete · Verified** | Live ledger 55 rows; 53 in-scope non-loadout rows map 1:1 to active migration files by exact version/name. Direct live SQL-to-file comparison passed 53/53 with zero mismatches; zero missing/extra in-scope files and zero duplicate timestamp prefixes. Two loadout rows excluded. |
+| 1.5-B | Existing date/timezone contract verification and staged migration | **Implemented · Disposable-PostgreSQL CI verified** | India-only date contract and staged timezone trigger tested against PostgreSQL 16. Seven B tests passed, including forward/rollback behavior. No production migration applied. |
+| 1.5-C | Historical migration rollback disposition | **Complete · CI/source verified** | Live ledger read-only audit: 55 rows total; 53 in-scope historical rows; 0 stored rollback statements. All 53 explicitly classified forward-only/no automatic rollback with risk class and recovery rationale. No destructive inverse SQL fabricated. |
+| 1.5-D | Source-contract tests and security ACL staging | **Implemented · CI verified** | Six D source-contract tests passed. Staged least-privilege ACL SQL for four trigger-returning SECURITY DEFINER functions passed disposable PostgreSQL role/trigger checks; not production-applied. |
+| 1.5-E | Phase One final acceptance audit | **Blocked · NOT PASSED** | Three acceptance gates remain: (1) authoritative original pre-migration schema baseline/clean-replay proof unavailable; (2) Supabase Auth leaked-password protection remains disabled; (3) independent adversarial role-level tests for remaining authenticated SECURITY DEFINER RPCs outstanding. Trigger ACL SQL is staged and CI-verified, not production-applied. |
 
-**Phase One branch / delivery boundary:** PR #115 was recorded as Draft and unmerged. The Phase One work was not deployed to production and no Supabase production migration was applied. CI success for 1.1–1.4 does not convert 1.5-E into a pass.
+**Exact-head CI evidence:** commit `6b03de65e9e00c20b62d890fd343b58edc18cc2c`; push run #364 (44277415151) and pull-request run #365 (44277425324) both passed. 91 tests passed, 0 failed; typecheck and Vite production build passed.
+
+**Carry-over acceptance register (must remain open):**
+1. Obtain the authoritative pre-migration schema baseline or approve a separately reviewed, evidence-backed baseline exception. Never fabricate a baseline fixture and call it original.
+2. Enable Supabase Auth leaked-password protection in the Dashboard and rerun Security Advisor.
+3. Complete independent adversarial role-level authorization tests for the remaining authenticated SECURITY DEFINER RPCs.
+4. Re-run the final acceptance audit and attach evidence for all three gates.
+5. Keep staged trigger-function ACL remediation unapplied to production until separately reviewed and authorized.
+
+**Delivery boundary:** PR #115 remains Draft/open and unmerged, stacked on prerequisite PR #114. No production deployment, production migration, production ACL/RLS/schema/data change, or Auth setting change is claimed. Closing the Phase One implementation workstream does not close PR #115 or waive its acceptance blockers.
 
 ### 34A.4 Phase Two detailed tracker — session foundation
 
-**Overall status: NOT STARTED.** Phase Two was the approved next implementation target, but the recorded handoff explicitly kept it behind Phase One's 1.5-E acceptance gate. No Phase Two implementation or acceptance evidence is recorded. The following twelve entries are the planned work breakdown, not completed code.
+**Overall status: OPEN · BLUEPRINT APPROVED · IMPLEMENTATION NOT YET STARTED.** Phase Two is opened for its read-only discovery point 2.1. Schema-changing implementation points remain gated until the Phase One 1.5-E carry-over acceptance blockers are resolved or a separate, explicit, documented exception is approved. This preserves the original dependency without blocking safe discovery.
 
-| Subphase | Planned workflow | Implementation status | Acceptance evidence required |
+| Subphase | Planned workflow | Status | Acceptance evidence required |
 |---|---|---|---|
-| 2.1 | Existing System Audit — inspect Scrims, Tournament, Training and Planning session/match data and all callers | **Not Started** | Data dictionary, read/write map, existing-source mapping, duplicate/orphan report and preserved workflow list. |
-| 2.2 | Canonical Session Identity — stable session UUID, team, session type and season association | **Not Started** | One stable session identity; no display label or mutable name used as a key. |
-| 2.3 | Match Identity — individual match records under a parent session | **Not Started** | Stable unique match IDs and correct parent-session relationship; no duplicate match identity. |
-| 2.4 | Session Lifecycle — Draft → Scheduled → In Progress → Awaiting Results → Verified → Closed → Archived | **Not Started** | Validated state transitions, permissions, timestamps and audited amendments. |
-| 2.5 | Session Roster Snapshot — persist actual participants for the session | **Not Started** | Historical participant set remains unchanged when current team roster changes. |
-| 2.6 | Role Snapshot — preserve each player's role for the session/match | **Not Started** | Historical role context is immutable and tied to the correct player/session/match. |
-| 2.7 | Substitution Tracking — record substitutions and when/where they occurred | **Not Started** | Audited substitution events with effective match/time context; prior roster/role history remains reconstructable. |
-| 2.8 | Result Verification — Draft / Submitted / Verified result states and correction audit | **Not Started** | Only verified results feed official aggregates; corrections are versioned/audited. |
-| 2.9 | Existing Module Integration — connect Scrims, Tournament and Training through adapters | **Not Started** | Existing workflows continue to work and resolve to canonical session/match IDs without parallel identity systems. |
-| 2.10 | Database Integrity — foreign keys, uniqueness, relationships, idempotency and migration tests | **Not Started** | Constraints and retry behavior tested against a disposable/isolated database; rollback documented. |
-| 2.11 | Application UI — session, match, roster, role and status workflows | **Not Started** | Responsive UI on laptop/tablet/mobile, correct state handling, and no regression to existing Scrims/Tournament/Training flows. |
-| 2.12 | Regression & Acceptance — historical snapshot, cross-module and device QA | **Not Started** | Stable session/match IDs; roster/roles/substitutions preserved; only verified results aggregated; old sessions unchanged; database and application tests pass. |
+| 2.1 | Existing System Audit — inspect Scrims, Tournament, Training and Planning session/match data and all callers | **OPEN · Read-only audit authorized** | Data dictionary, read/write map, existing-source mapping, duplicate/orphan report and preserved workflow list. |
+| 2.2 | Canonical Session Identity — stable session UUID, team, session type and season association | **Gated · Not started** | One stable session identity; no display label or mutable name used as a key. |
+| 2.3 | Match Identity — individual match records under a parent session | **Gated · Not started** | Stable unique match IDs and correct parent-session relationship; no duplicate match identity. |
+| 2.4 | Session Lifecycle — Draft → Scheduled → In Progress → Awaiting Results → Verified → Closed → Archived | **Gated · Not started** | Validated state transitions, permissions, timestamps and audited amendments. |
+| 2.5 | Session Roster Snapshot — persist actual participants for the session | **Gated · Not started** | Historical participant set remains unchanged when current team roster changes. |
+| 2.6 | Role Snapshot — preserve each player's role for the session/match | **Gated · Not started** | Historical role context is immutable and tied to the correct player/session/match. |
+| 2.7 | Substitution Tracking — record substitutions and when/where they occurred | **Gated · Not started** | Audited substitution events with effective match/time context; prior roster/role history remains reconstructable. |
+| 2.8 | Result Verification — Draft / Submitted / Verified result states and correction audit | **Gated · Not started** | Only verified results feed official aggregates; corrections are versioned/audited. |
+| 2.9 | Existing Module Integration — connect Scrims, Tournament and Training through adapters | **Gated · Not started** | Existing workflows continue to work and resolve to canonical session/match IDs without parallel identity systems. |
+| 2.10 | Database Integrity — foreign keys, uniqueness, relationships, idempotency and migration tests | **Gated · Not started** | Constraints and retry behavior tested against a disposable/isolated database; rollback documented. |
+| 2.11 | Application UI — session, match, roster, role and status workflows | **Gated · Not started** | Responsive UI on laptop/tablet/mobile, correct state handling, and no regression to existing Scrims/Tournament/Training flows. |
+| 2.12 | Regression & Acceptance — historical snapshot, cross-module and device QA | **Gated · Not started** | Stable session/match IDs; roster/roles/substitutions preserved; only verified results aggregated; old sessions unchanged; database and application tests pass. |
 
-**Phase Two start gate:** do not begin schema-changing Phase Two implementation until Phase One 1.5-E is accepted or the owner explicitly approves a documented exception. A preparatory read-only audit can be planned, but it must not create a competing session/match model or change production data.
+**Phase Two dependency rule:** Point 2.1 is read-only and may proceed while Phase One acceptance is pending. Points 2.2–2.12 must not create or apply a competing production session/match model until the Phase One acceptance gate passes or the owner separately approves a documented exception. No production schema/data change, destructive migration, merge, or deployment is authorized by opening this phase.
 
 ### 34A.5 Phase Zero and pull-request status context
 
@@ -1827,9 +1836,214 @@ Additional QA issues remain in scope: Positioning vs Map Awareness; rubric scale
 
 This document is the **Evolution Version 2 master blueprint**. This rewrite changes documentation only. It does not implement features, modify Supabase tables/data, reset production data, run migrations, merge the documentation branch, or deploy the app.
 
-**Next implementation action:** complete Evolution Phase Zero — Legacy Fixes against the actual current repository and live Evolution data. Repair existing Evolution regressions and preserve historical records. Then proceed in dependency order: identity/date-contract verification; Scrims/Tournament session and match linkage; rubric/evidence; Daily Evaluation and self-excluding N−1 assignments; anonymous feedback; the 24h + 24h Pending Tracker; Matches Evaluation; unified tasks; Weekly Team Review; coach-led Weekly Review; Player Trends; Squad Analytics; realtime/offline; responsive QA; and controlled rollout. Do not redesign or migrate timezone as part of the new Evaluation workspace. Authorization/RLS/grants and security hardening remain in the separate Security workstream.
+**Next action:** begin Evolution Phase Two, Point 2.1 — a strictly read-only audit of existing Scrims, Tournament, Training and Planning session/match data, relationships, callers, and historical records. Do not create a second identity system. Keep Phase One 1.5-E acceptance carry-over gates visible and resolve them in parallel. Phase Two points 2.2–2.12 remain gated until Phase One acceptance passes or a separate documented exception is approved. Do not redesign or migrate timezone as part of the new Evaluation workspace. Authorization/RLS/grants and security hardening remain in the separate Security workstream.
 
 ---
+
+## 38. Evolution Phase Two — detailed implementation blueprint
+
+**Phase objective:** establish one trustworthy, immutable, auditable identity chain for every competitive or training session and each match inside it. Phase Two supplies the session/match context consumed by later Evidence, Evaluation, scoring, trends, and analytics phases. It does not build the Evaluation rubric or replace official tournament scoring.
+
+### 38.1 Point 2.1 — Existing System Audit (read-only first)
+
+**Purpose:** discover the real current data model before designing migrations.
+
+Work items:
+1. Inspect Scrims, Tournament, Training, and Planning UI routes, forms, hooks, services, RPCs, tables, views, triggers, and edge functions.
+2. Trace every create, edit, delete/archive, result-entry, roster-selection, role-selection, and list/detail read path.
+3. Inventory current identifiers: UUIDs, legacy numeric IDs, display labels, date-based keys, tournament/week labels, and any implicit match indexes.
+4. Map parent/child relationships: team → session/event → match → participant/role → result/evidence.
+5. Identify duplicate, orphaned, null, ambiguous, and cross-team references using read-only queries and non-production fixtures.
+6. Document lifecycle semantics already used by each module; distinguish true persisted state from UI-only status.
+7. Record existing access rules and identify which roles can create, edit, verify, close, archive, or correct records.
+8. Capture baseline behavior and regression paths for existing Scrims, Tournament, Training, and Planning.
+9. Produce a data dictionary, relationship diagram, caller/read-write matrix, compatibility matrix, and risk register.
+10. Recommend reuse/adapters versus migration only after evidence is collected.
+
+Deliverables: audit report; schema/data dictionary; relationship map; module caller matrix; duplicate/orphan report; current workflow screenshots or reproducible test notes; migration-risk register; explicit no-change confirmation.
+
+Acceptance: every existing session/match source is accounted for; every write/read caller is mapped; no production data changed; no new schema or competing model created; ambiguous records are listed rather than guessed.
+
+### 38.2 Point 2.2 — Canonical Session Identity
+
+Purpose: define one stable parent identity for each Scrim block, Tournament event/week, or Training session.
+
+Work items:
+1. Define canonical session UUID as the internal primary identity.
+2. Associate each session with exactly one team and a controlled session type.
+3. Store season/tournament association where applicable without encoding it into the primary key.
+4. Keep human-readable title, date, lobby label, week number, and display order as mutable attributes—not identity.
+5. Define source-system references for legacy Scrims/Tournament/Training records.
+6. Enforce tenant/team ownership and prevent cross-team linking.
+7. Specify create idempotency so retries do not create duplicate sessions.
+8. Define archive behavior without deleting historical records.
+
+Acceptance: one canonical UUID per session; unique source mapping; team-scoped foreign keys; idempotent create; no display string used as a key; migration mapping reviewed before writes.
+
+### 38.3 Point 2.3 — Match Identity
+
+Purpose: represent each match as a first-class child of a session.
+
+Work items:
+1. Define stable match UUID and parent session UUID.
+2. Store match sequence/order separately from match identity.
+3. Support expected match count and actual played match count without fabricating missing matches.
+4. Preserve mode/map/round metadata only where the source actually provides it.
+5. Define uniqueness for session + match sequence while allowing audited correction of sequence metadata.
+6. Map existing Scrim and Tournament match rows to canonical IDs.
+7. Preserve external/source IDs for traceability.
+8. Ensure one match cannot be attached to two sessions.
+
+Acceptance: every match has one parent; duplicate match identity is rejected; ordering is deterministic; legacy references remain traceable; missing matches remain missing rather than auto-created as played records.
+
+### 38.4 Point 2.4 — Session Lifecycle
+
+Canonical lifecycle: **Draft → Scheduled → In Progress → Awaiting Results → Verified → Closed → Archived**.
+
+Work items:
+1. Define permitted transitions and disallowed shortcuts.
+2. Define who may perform each transition (Owner/Coach/authorized organizer; member permissions only where explicitly needed).
+3. Store transition timestamps and actor identity.
+4. Require results to be submitted before verification; require verification before closure.
+5. Define cancellation/no-show handling without mislabeling it as a played match.
+6. Permit reopening only through an audited correction path.
+7. Define archive as non-destructive and read-only for ordinary users.
+8. Make lifecycle transitions atomic and idempotent.
+
+Acceptance: transition matrix tested; unauthorized transitions rejected server-side; timestamps and actors recorded; archived sessions cannot be silently edited; no invalid transition can bypass result verification.
+
+### 38.5 Point 2.5 — Session Roster Snapshot
+
+Purpose: preserve who actually participated, not merely who is currently on the team.
+
+Work items:
+1. Snapshot eligible team members at session creation or roster lock.
+2. Record actual participation per match where the source supports it.
+3. Distinguish invited/selected, confirmed, participated, absent, and substituted states.
+4. Preserve player UUID and team membership provenance.
+5. Define handling for a player who later leaves the team or changes IGN.
+6. Prevent later roster edits from rewriting historical participants.
+7. Support team-size/session-type constraints as configuration, not hard-coded assumptions.
+
+Acceptance: historical roster is reproducible after current roster changes; each participant resolves to the correct player identity; no duplicate participant per match; absent is not confused with participated.
+
+### 38.6 Point 2.6 — Role Snapshot
+
+Purpose: preserve the role actually played in each session/match.
+
+Work items:
+1. Snapshot role ID/name and role-definition version at session or match lock.
+2. Support the team's role taxonomy without treating P1/P2/P3/P4 labels as identity.
+3. Permit a player to perform different roles in different matches.
+4. Record role changes with effective match/time context.
+5. Keep current roster role edits separate from historical snapshots.
+6. Define unknown/unassigned role handling without guessing.
+
+Acceptance: old sessions retain the role originally played; role history is reconstructable; role changes do not overwrite prior match context; unknown role remains explicitly unknown.
+
+### 38.7 Point 2.7 — Substitution Tracking
+
+Purpose: record lineup changes during a session without destroying the original lineup.
+
+Work items:
+1. Record outgoing and incoming player identities.
+2. Link substitution to session and, when available, match and effective time/round.
+3. Record actor, reason/category if supplied, and source provenance.
+4. Capture role transfer or role reassignment separately from player replacement.
+5. Support multiple substitutions in order.
+6. Validate that a substitution does not create overlapping active participation unless the ruleset permits it.
+7. Preserve the pre- and post-substitution lineup as reconstructable snapshots.
+
+Acceptance: substitution timeline is ordered and auditable; active lineup at any supported point can be reconstructed; no historical participant/role row is silently overwritten.
+
+### 38.8 Point 2.8 — Result Verification and Correction Audit
+
+Purpose: separate raw submission from trusted/official result data.
+
+Work items:
+1. Define result states: Draft, Submitted, Verified, Corrected/Amended, Rejected where applicable.
+2. Store result source, submitter, verifier, and timestamps.
+3. Define a verification checklist appropriate to Scrim, Tournament, and Training sources.
+4. Keep raw submitted values and verified values distinguishable.
+5. Require authorized verifier for trusted status.
+6. Implement append-only correction/amendment history with reason and actor.
+7. Prevent unverified results from entering official aggregates.
+8. Never infer kills, placement, survival, or match events from incomplete data.
+
+Acceptance: only verified results feed official competitive aggregates; corrections preserve prior values and audit history; unverified data is visibly marked; permissions are tested.
+
+### 38.9 Point 2.9 — Existing Module Integration
+
+Purpose: connect existing modules to canonical IDs without breaking their workflows.
+
+Work items:
+1. Define adapters for Scrims, Tournament, and Training.
+2. Preserve existing screens and expected actions unless a separately approved UI change is required.
+3. Resolve existing records to canonical session/match IDs through explicit mapping.
+4. Avoid duplicate writes and parallel source-of-truth tables.
+5. Keep Planning as a scheduling/planning surface; promote a planned item to a session through an explicit transition.
+6. Ensure old deep links and route parameters resolve safely or show a recoverable not-found state.
+7. Add compatibility tests for existing callers before removing any legacy path.
+
+Acceptance: existing workflows pass regression tests; each source maps to one canonical session/match; no duplicate source of truth; Planning does not create phantom played matches.
+
+### 38.10 Point 2.10 — Database Integrity and Migration Safety
+
+Work items:
+1. Design normalized tables and constraints only after Point 2.1 audit is accepted.
+2. Add team-scoped foreign keys, unique constraints, check constraints, and indexes.
+3. Define transaction boundaries for session creation, match creation, roster lock, role snapshot, substitution, and result verification.
+4. Define idempotency keys for retryable writes.
+5. Add RLS and server-side authorization tests for each role and team boundary.
+6. Build disposable PostgreSQL/Supabase-compatible migration tests where possible.
+7. Test forward migration, rollback or forward-only recovery plan, and historical-data reconciliation.
+8. Prove no orphan or duplicate relationships after migration.
+9. Avoid production execution until staging evidence and explicit rollout approval.
+
+Acceptance: constraints prevent invalid relationships; retries are safe; cross-team access tests fail closed; forward and recovery paths are tested; no unexplained data loss or orphan rows.
+
+### 38.11 Point 2.11 — Application UI
+
+Work items:
+1. Session list with filters for type, season, status, and date.
+2. Session detail with matches, roster, roles, substitutions, and result status.
+3. Create/edit flows constrained by lifecycle and permissions.
+4. Match detail with clear parent-session context.
+5. Roster and role snapshot editing before lock; audited change path after lock.
+6. Result submission and verification surfaces with visible provenance.
+7. Empty, loading, error, permission-denied, archived, and offline states.
+8. Responsive behavior for Android/mobile, tablet, and desktop; preserve premium dark UI.
+9. Accessible touch targets, keyboard focus, labels, and clear validation.
+10. Avoid UI controls that imply an action the backend does not support.
+
+Acceptance: each action matches its permission and lifecycle rule; no accidental double-submit; mobile/tablet/desktop interactions verified; no regression in Scrims, Tournament, Training, or Planning.
+
+### 38.12 Point 2.12 — Regression and Phase Acceptance
+
+Required test groups:
+1. Canonical identity uniqueness and team isolation.
+2. Session-to-match parent/child integrity.
+3. Lifecycle transition and authorization matrix.
+4. Historical roster immutability after roster edits.
+5. Role snapshot immutability and role changes across matches.
+6. Substitution ordering and lineup reconstruction.
+7. Result submission, verification, correction, and aggregate eligibility.
+8. Idempotent retries and concurrent writes.
+9. Migration forward/recovery and historical reconciliation.
+10. Existing Scrims/Tournament/Training/Planning regression.
+11. RLS and adversarial cross-team access tests.
+12. Android/mobile, tablet, desktop responsive and accessibility QA.
+
+Phase Two Definition of Done:
+- All twelve points have explicit implementation and acceptance evidence.
+- Canonical session and match IDs are used by all integrated modules.
+- Historical roster, role, substitution, and result provenance are preserved.
+- Only verified results feed official competitive aggregates.
+- No duplicate session/match source of truth exists.
+- Database constraints, RLS, and idempotency tests pass.
+- Existing workflows remain functional.
+- Phase One acceptance carry-over is resolved or formally excepted without weakening security.
+- No production migration/deployment occurs without separate rollout approval.
 
 # Appendix A — Requirement preservation checklist
 
