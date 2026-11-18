@@ -100,6 +100,8 @@ The checks cover:
 
 ## E — Final Phase One acceptance audit
 
+The current-head final audit and its machine-checkable guard suite are recorded in [E Phase One.5-E Final Acceptance Audit](./E-PHASE-ONE-5-E-FINAL-AUDIT.md). E remains **BLOCKED / NOT PASSED** until isolated B SQL execution and authoritative baseline/clean-replay evidence are supplied.
+
 | Gate | Result |
 |---|---|
 | Identity/membership E Phase One.1–.4 | Implemented; prior CI verified |
@@ -119,4 +121,4 @@ The checks cover:
 3. Any future historical compensation must be implemented as a new reviewed migration with isolated tests; no automatic historical rollback is approved.
 4. Re-run the full build/CI and Phase One acceptance checklist against the resulting exact commit.
 
-**Current result:** B's forward SQL and C's rollback for that new migration are drafted; D's automated source-contract checks are added. E correctly remains **BLOCKED / NOT COMPLETE** until database validation and historical migration disposition pass. No production database or deployment changes were made.
+**Current result:** C historical rollback disposition is complete (53/53) and D source-contract CI passed on the exact head. B's staged forward/rollback SQL remains unexecuted in an isolated database; the pre-migration baseline required for clean replay is unavailable. E therefore remains **BLOCKED / NOT PASSED**. No production database or deployment changes were made.
