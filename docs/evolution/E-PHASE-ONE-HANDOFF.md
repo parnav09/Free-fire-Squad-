@@ -4,7 +4,7 @@ Use this file when continuing in a new ChatGPT conversation.
 
 ## Exact resume prompt
 
-**Continue Squad OS Evolution Phase One.5-E final acceptance from PR #115. Read docs/evolution/E-PHASE-ONE-HANDOFF.md, docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md, and docs/evolution/E-PHASE-ONE-5-E-FINAL-AUDIT.md. D source-contract CI is green on run #284; E remains blocked by isolated B SQL execution and unavailable pre-migration baseline/clean replay evidence. Do not claim PASS or touch production without verified acceptance gates.**
+**Continue Squad OS Evolution Phase One.5-E final acceptance from PR #115. Read docs/evolution/E-PHASE-ONE-HANDOFF.md, docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md, and docs/evolution/E-PHASE-ONE-5-E-FINAL-AUDIT.md. D suite passed 6/6 (run #284); E audit suite passed 5/5 (run #304). Final E remains blocked by isolated B SQL execution, unavailable pre-migration baseline/clean replay, and separate Security review. Do not claim PASS or touch production without verified acceptance gates.**
 
 ## Naming
 
