@@ -64,10 +64,9 @@ The forward SQL is still staged outside `supabase/migrations/`. It has not yet b
 
 `docs/evolution/staged-migrations/20261118070000_team_timezone_contract.rollback.sql`
 
-- Restores the exact previous `ds_insert` Asia/Kolkata predicate.
-- Drops only the two new triggers and their two new functions.
-- Does not delete or rewrite historical rows.
-- Does not replace or drop the pre-existing anonymization trigger/function.
+- Drops only `teams_validate_timezone` and `validate_team_timezone()`, the objects created by the B forward migration.
+- Leaves the existing Daily Evaluation triggers, functions, `ds_insert` policy, and historical score rows untouched; the forward migration does not modify them.
+- Leaves the one legacy team timezone normalized to `Asia/Kolkata` rather than reintroducing the deprecated alias during rollback.
 
 ### Historical rollback disposition — COMPLETE
 
