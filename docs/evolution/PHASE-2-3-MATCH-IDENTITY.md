@@ -19,7 +19,7 @@ The live FF Squad database was inspected using aggregate-only queries:
 | Source | Existing parents | Existing match rows | Source state |
 |---|---:|---:|---|
 | Scrim records | 1 | 6 embedded JSONB entries | expected count 6; array count 6; 0 mismatches |
-| Tournament cycles | 15 | 630 rows | 420 draft, 210 scheduled, 0 submitted/verified/disputed |
+| Tournament cycles | 15 | 630 rows | 420 draft, 210 scheduled; all 420 draft rows have a placement and recorded_by; 0 submitted/verified/disputed |
 | Tournament map metadata | — | 630 rows | map_name is NULL on all 630 rows |
 
 The Tournament source currently has 42 existing match rows per cycle. The migration does not hard-code 42; it derives expected count from each cycle's actual existing rows. The existing Scrim UI stores only placement/kills per match, so it does not provide a native per-match UUID or map/mode fields.
@@ -97,7 +97,7 @@ The integration harness applies the exact Phase 2.2 parent migration followed by
 
 Reason: Phase 2.2 source mappings deliberately use ON DELETE RESTRICT so historical source IDs remain traceable. The current Scrims UI still exposes a Delete Record action, and existing Tournament source deletion may also be blocked after mapping. This is an intentional integrity safeguard, but it changes the outcome of those existing destructive actions. The database integration explicitly proves that deletion is blocked. Point 2.9 must provide the archive/retention UX before rollout; this is not hidden as a completed UI task.
 
-The current live source snapshot implies a backfill of 16 parent sessions and 636 existing child match records (1 Scrim + 15 Tournament cycles; 6 Scrim entries + 630 Tournament rows). Current source statuses imply 6 played Scrim entries and 0 played Tournament rows. These are audit-time figures, not hard-coded migration assumptions.
+The current live source snapshot implies a backfill of 16 parent sessions and 636 existing child match records (1 Scrim + 15 Tournament cycles; 6 Scrim entries + 630 Tournament rows). Current source statuses imply 6 played Scrim entries and 420 recorded Tournament rows. These are audit-time figures, not hard-coded migration assumptions.
 
 ## 8. Deployment boundary and exit gate
 
