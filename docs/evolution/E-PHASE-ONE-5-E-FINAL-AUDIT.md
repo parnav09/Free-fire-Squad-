@@ -4,7 +4,7 @@
 **Repository:** `parnav09/Free-fire-Squad-`  
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
 **PR:** #115 — open, draft, unmerged  
-**Exact-head full CI:** run #337 (ID `44275561389`) on `da5ca832060c30aad309f24ada929dc2499ca75f`
+**Exact-head full CI:** push run #352 (ID `44276950260`) and pull-request run #353 (ID `44276957631`) on `0a24ce6fd9811ef53b0e8d39b3dbd54597fe4426`
 
 ## Final result
 
@@ -17,16 +17,16 @@ B's isolated database contract and the staged trigger-function ACL remediation n
 - Read-only ledger verification: **55 live migration rows**; 53 in-scope; 2 excluded loadout; 55 forward SQL rows; **0 stored rollback statements**.
 - Exact Git tree comparison: **55 active migration files** = 53 exact in-scope version/name matches + one excluded loadout file + one pending performance-tuning migration. Missing/extra in-scope files: 0; duplicate active timestamp prefixes: 0. The loadout SQL was not opened.
 - Production read-only check: staged `teams_validate_timezone` trigger/function are absent; existing `daily_scores_lock_date_anonymous` trigger and `ds_insert` policy are present. No staged SQL has been applied to production.
-- Exact-head GitHub Actions run **#337 / 44275561389** passed on `da5ca832060c30aad309f24ada929dc2499ca75f`: disposable PostgreSQL B forward/rollback suite, security trigger ACL suite, typecheck, all configured test suites, and Vite production build.
+- Exact-head GitHub Actions push run **#352 / 44276950260** and pull-request run **#353 / 44276957631** passed on `0a24ce6fd9811ef53b0e8d39b3dbd54597fe4426`: disposable PostgreSQL B forward/rollback suite, security trigger ACL suite, typecheck, all configured test suites, and Vite production build.
 
 | Gate | Evidence | Result |
 |---|---|---|
 | 1.5-A — historical SQL provenance | Prior exact live-SQL-to-Git verification: 53/53 in-scope SQL bodies matched byte-for-byte | **PASS** |
 | Live migration ledger | Read-only query: 55 rows; 53 in-scope; 2 excluded loadout; 0 stored rollback statements | **PASS** |
-| 1.5-B — application contract | India-only timezone/date contract and source suite; exact staged forward + rollback SQL executed against disposable PostgreSQL in run #337 | **PASS · CI database verified** |
+| 1.5-B — application contract | India-only timezone/date contract and source suite; exact staged forward + rollback SQL executed against disposable PostgreSQL in runs #352/#353 | **PASS · CI database verified** |
 | 1.5-C — historical rollback disposition | 53/53 in-scope versions explicitly forward-only with risk class and recovery rule | **PASS · documented and machine-checked** |
 | 1.5-D — source-contract tests | D suite 6/6; full typecheck, configured suites and Vite build passed in run #337 | **PASS · CI verified** |
-| E audit integrity | E suite 6/6 included in full build on exact head run #337 | **PASS · CI verified** |
+| E audit integrity | E suite 7/7 included in full build on exact head run #337 | **PASS · CI verified** |
 | Security trigger ACL remediation | Staged revocations deny API-role EXECUTE; existing Daily Evaluation trigger still executes after revocation in run #337 | **PASS · staged SQL + CI; not production-applied** |
 | Full-chain clean replay | Authoritative pre-migration baseline is not present in repository or available evidence | **BLOCKED** |
 
