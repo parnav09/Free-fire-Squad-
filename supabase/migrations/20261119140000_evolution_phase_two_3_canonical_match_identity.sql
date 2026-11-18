@@ -286,7 +286,9 @@ SELECT
     )
     OR (
       matches.source_system = 'tournament'
-      AND tournament_matches.status IN ('submitted', 'verified', 'disputed')
+      AND tournament_matches.status IN ('draft', 'submitted', 'verified', 'disputed')
+        AND tournament_matches.recorded_by IS NOT NULL
+        AND tournament_matches.placement IS NOT NULL
     )
   )::integer AS actual_played_match_count
 FROM public.canonical_sessions cs
