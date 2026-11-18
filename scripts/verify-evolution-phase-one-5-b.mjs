@@ -52,7 +52,7 @@ test("Daily Evaluation auto-selects and locks the India date without a date inpu
   assert.match(appSource, /score_date:evalDate/);
 });
 
-test("staged database migration defaults new teams to IST and rejects non-India zones", () => {
+test("staged migration normalizes database-default and legacy timezone values to IST and rejects other zones", () => {
   assert.match(migration, /CREATE OR REPLACE FUNCTION public\.validate_team_timezone\(\)/);
   assert.match(migration, /CREATE TRIGGER teams_validate_timezone/);
   assert.match(migration, /NEW\.timezone IN \('UTC', 'Asia\/Calcutta'\)/);
