@@ -297,7 +297,7 @@ BEGIN
 
   SELECT id INTO match_id FROM public.canonical_session_matches
   WHERE canonical_session_id=scrim_session AND match_sequence=2;
-  PERFORM public.correct_canonical_match_sequence(match_id,4,'Corrected source sequence after replay review');
+  PERFORM public.correct_canonical_match_sequence(match_id,4::smallint,'Corrected source sequence after replay review');
   SELECT count(*) INTO event_count FROM public.canonical_session_match_sequence_events
   WHERE canonical_session_match_id=match_id AND previous_sequence=2 AND new_sequence=4
     AND reason='Corrected source sequence after replay review'
@@ -307,7 +307,7 @@ BEGIN
   END IF;
 
   BEGIN
-    PERFORM public.correct_canonical_match_sequence(match_id,1,'Duplicate sequence must fail');
+    PERFORM public.correct_canonical_match_sequence(match_id,1::smallint,'Duplicate sequence must fail');
     RAISE EXCEPTION 'Duplicate match sequence was accepted';
   EXCEPTION WHEN unique_violation THEN
     NULL;
