@@ -1,6 +1,6 @@
 # Evolution Phase One — Identity, Membership, Timezone
 
-**Status:** IN PROGRESS — E Phase One.1–.4 implemented and CI verified. E Phase One.5 read-only audit started; migration provenance is not reconciled and no timezone migration design is approved. Server-side timezone migration and final acceptance checks remain open.  
+**Status:** IN PROGRESS — E Phase One.1–.4 implemented. E Phase One.5-B forward SQL and .5-C rollback are drafted in staged-migrations; .5-D source-contract tests are added to build. No database integration validation has run. E Phase One.5-E acceptance is NOT PASSED because active-chain disposition, historical rollback classification, and isolated replay remain open.  
 **Parent:** Evolution Phase Zero — Legacy Fixes (branch chore/evolution-phase-zero-one-naming, PR #114).  
 **Branch:** feat/evolution-phase-one-identity-timezone  
 **Scope:** stable Auth UUID, team membership identity, active membership selection, team timezone validation/date boundaries, session eligibility primitives, and permission-test helpers. Authorization/RLS/grants remain in the separate Security workstream.
@@ -183,3 +183,15 @@ Phase One is not complete until:
 - A complete future timezone change must validate timezone values in all three write paths and update the trigger/policy as one consistent contract. Preserve existing anonymization and recipient-only feedback semantics; do not rewrite historical scores.
 - No Supabase schema/data/trigger/policy/grant/function/migration-history change, merge, production deployment, preview QA, Security implementation, retention change, or Phase Two work occurred.
 - **E Phase One.5 remains IN PROGRESS / BLOCKED on original SQL/application provenance and rollback evidence.**
+
+
+## E Phase One.5-B/C/D/E — implementation checkpoint (18 Nov 2026)
+
+- Read-only Supabase inspection confirmed `teams.timezone` is NOT NULL with default UTC; current values are Asia/Kolkata (14 teams) and Asia/Calcutta (1 team), both recognized by `pg_timezone_names`.
+- Confirmed the existing `daily_scores_lock_date_anonymous` BEFORE INSERT trigger sets Asia/Kolkata and also anonymizes evaluator/notes and enforces recipient-only visibility. The `ds_insert` policy independently enforces Asia/Kolkata.
+- Added a staged forward migration at `docs/evolution/staged-migrations/20261118070000_team_timezone_contract.sql`. It validates all writes to `teams.timezone` with a SECURITY INVOKER trigger; adds a later-sorting Daily Evaluation date trigger that uses the selected team's timezone; and changes only the `ds_insert` date predicate while preserving `evaluator_id IS NULL` and `can_rate(team_id, player_id)`.
+- Added its rollback at `docs/evolution/staged-migrations/20261118070000_team_timezone_contract.rollback.sql`. It restores the exact former Asia/Kolkata policy predicate and removes only the new trigger/functions. It does not alter historical scores or the existing anonymization trigger.
+- Added `scripts/verify-evolution-phase-one-5.mjs` and wired `npm run test:evolution-phase-one-5` into `npm run build`. These are source-contract tests; they do not replace PostgreSQL execution/RLS testing.
+- Added [Phase One.5-B/C/D/E acceptance record](./E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md).
+- The forward SQL remains outside `supabase/migrations/` and has not been applied. No production schema/data/RLS/function/trigger/ledger changes, Supabase branch, merge, or deployment occurred.
+- **Status:** B drafted; C rollback drafted for the new B migration only; D tests added but CI/database execution pending; E acceptance NOT PASSED. Historical ledger has 0/53 rollback statements, six active-file SQL mismatches and three unmatched files still need disposition, and clean replay remains blocked by missing original baseline.
