@@ -172,3 +172,14 @@ Phase One is not complete until:
 - Exact-name mismatch is not proof of missing database functionality. Semantic matches and files found on other branches are explicitly marked as candidates until original SQL and application records are verified.
 - No migration source was invented, renamed, copied, or applied. No Supabase schema, data, trigger, RLS, grant, function, or migration-history change was made.
 - Phase One.5 remains blocked on original SQL/application evidence and rollback review. Phase Two has not started.
+
+
+### E Phase One.5 — latest verification and timezone write-path inventory (18 Nov 2026)
+
+- Current PR #115 head ac76497c30b90464ecfb10adc9ded8e1bdfdf48a is open/draft and stacked on Phase Zero PR #114.
+- GitHub Actions run #114 (44191983016) passed for the exact current head: dependency setup, lockfile pinning, typecheck, configured verification suites, and Vite production build.
+- Re-read the live Supabase migration ledger: 55 version/name rows. No Supabase development branches are present. The ledger exposes version/name metadata only, not original SQL bodies or content hashes; unresolved provenance remains blocked.
+- Read-only inspection expanded the timezone write-path inventory: create_team, restore_team_backup, and restore_team_backup_for_team all write teams.timezone without server-side IANA validation. Daily Evaluation date persistence remains hard-coded to Asia/Kolkata in both the BEFORE INSERT trigger and ds_insert policy.
+- A complete future timezone change must validate timezone values in all three write paths and update the trigger/policy as one consistent contract. Preserve existing anonymization and recipient-only feedback semantics; do not rewrite historical scores.
+- No Supabase schema/data/trigger/policy/grant/function/migration-history change, merge, production deployment, preview QA, Security implementation, retention change, or Phase Two work occurred.
+- **E Phase One.5 remains IN PROGRESS / BLOCKED on original SQL/application provenance and rollback evidence.**
