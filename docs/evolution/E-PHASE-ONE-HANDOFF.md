@@ -151,3 +151,14 @@ Use this file when continuing in a new ChatGPT conversation.
 - The register distinguishes 24 early entries with no retained SQL/application record, probable semantic candidates, grouped Daily Evaluation source candidates, the separate-branch Character Profiles reconstruction, and the separate-branch singular loadout candidate.
 - This fixes the inventory/documentation gap, not the underlying SQL provenance gap. No original SQL was fabricated; no migration file or live ledger row was changed; no schema/RLS/grant/function/data change was made.
 - E Phase One.5 remains IN PROGRESS pending original SQL and application records, followed by rollback review. Security stays separate; destructive retention stays paused; Phase Two remains unstarted.
+
+
+## E Phase One.5 — latest continuation verification (18 Nov 2026)
+
+- Re-verified PR #115 at head ac76497c30b90464ecfb10adc9ded8e1bdfdf48a: open, draft, and stacked on Phase Zero PR #114.
+- GitHub Actions run #114 (44191983016) completed successfully for this exact head: dependency setup, lockfile pinning, typecheck, configured verification suites, and Vite production build all passed.
+- Re-read the live Supabase ledger (55 version/name rows); no Supabase development branches are present. The ledger does not expose original SQL bodies or hashes, so unresolved provenance remains blocked.
+- Additional read-only timezone write-path inspection found create_team, restore_team_backup, and restore_team_backup_for_team all write teams.timezone without server-side IANA validation. The Daily Evaluation trigger and ds_insert policy both still hard-code Asia/Kolkata.
+- Future timezone work must cover all three timezone write paths and update the Daily Evaluation trigger/policy consistently, while preserving anonymization and recipient-only feedback behavior. No SQL, schema, data, trigger, policy, grant, function, or migration-history changes were made.
+- Vercel remains separately rate-limited. No preview/device QA, merge, production deployment, or Phase Two work was performed.
+- **E Phase One.5 remains IN PROGRESS / BLOCKED:** exact original SQL/application provenance for unresolved live migrations and rollback evidence are still missing. Do not fabricate source SQL or approve/apply the timezone migration.
