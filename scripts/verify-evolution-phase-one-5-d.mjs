@@ -65,7 +65,7 @@ test("E Phase One.5-D: B rollback removes only the trigger and function created 
 
 test("E Phase One.5-D: source-contract verification never claims isolated database or production acceptance", () => {
   assert.ok(acceptance.includes("the D suite itself is a source-contract suite, not a database integration suite"));
-  assert.ok(acceptance.toLowerCase().includes("isolated database execution"));
+  assert.ok(acceptance.toLowerCase().includes("disposable postgresql"));
   assert.ok(/No production migration or deployment was performed|No production migration will be applied|no production migration is applied/i.test(acceptance));
   assert.ok(baseSuite.includes("staged SQL is not silently promoted"));
 });
