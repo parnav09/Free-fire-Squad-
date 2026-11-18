@@ -26,7 +26,7 @@ Migration: `supabase/migrations/20261119120000_evolution_phase_two_2_canonical_s
 - Mutable title/date/schedule/season metadata.
 - Required per-team UUID idempotency key.
 - Authenticated creator provenance.
-- Soft archive fields; no hard-delete grant or policy.
+- Soft archive fields; no hard-delete grant or policy. Archive is non-destructive: archived sessions remain stored and read-only through normal application permissions.
 - Composite unique key `(id, team_id)` for tenant-safe child references.
 
 ### `public.canonical_session_sources`
@@ -87,7 +87,7 @@ Source-contract suite: `scripts/verify-evolution-phase-two-2.mjs`, wired into `n
 The owner asked to continue development without waiting for a Pro-plan upgrade or a production-scale rollout. This is a limited-development exception, not a claim that Phase 1.5-E has passed.
 
 ### 6.1 Supabase leaked-password protection
-- **Disposition:** accepted outstanding limitation; leave disabled.
+- **Disposition:** accepted outstanding limitation; leave disabled. Leaked Password Protection remains disabled until a Pro-plan upgrade is possible.
 - **Reason:** the project is on the Free plan; Supabase documents leaked-password protection as Pro and above.
 - **What the control does:** Supabase Auth checks new/changed passwords against the Have I Been Pwned Pwned Passwords service and rejects known-compromised passwords.
 - **Residual risk:** Auth does not block a user from choosing a password already present in breach data. This increases exposure to password reuse and credential-stuffing attempts. It does not mean the project's password database has itself been leaked.
