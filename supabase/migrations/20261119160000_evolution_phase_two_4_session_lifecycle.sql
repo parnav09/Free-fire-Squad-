@@ -550,7 +550,10 @@ GRANT EXECUTE ON FUNCTION public.submit_canonical_session_results(uuid,uuid)
   TO authenticated;
 
 GRANT SELECT ON public.canonical_session_lifecycle_events TO authenticated;
-GRANT SELECT, INSERT ON public.canonical_session_result_submissions TO authenticated;
+GRANT SELECT ON public.canonical_session_result_submissions TO authenticated;
+REVOKE INSERT ON public.canonical_session_result_submissions FROM PUBLIC, anon, authenticated;
+GRANT INSERT (team_id, canonical_session_id, idempotency_key, submitted_by)
+  ON public.canonical_session_result_submissions TO authenticated;
 REVOKE UPDATE, DELETE ON public.canonical_session_lifecycle_events FROM PUBLIC, anon, authenticated;
 REVOKE INSERT, UPDATE, DELETE ON public.canonical_session_lifecycle_events FROM anon, authenticated;
 REVOKE UPDATE, DELETE ON public.canonical_session_result_submissions FROM anon, authenticated;
