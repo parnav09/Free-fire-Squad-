@@ -105,8 +105,8 @@ The checks cover:
 |---|---|
 | Identity/membership E Phase One.1–.4 | Implemented; prior CI verified |
 | Original SQL recovery for 53 safe-scope entries | 53/53 byte/hash verified |
-| Active migration-chain reconciliation | Incomplete: six same-name content mismatches and three unmatched active files still require disposition |
-| Historical rollback coverage | Incomplete: 0/53 rollback statements in live ledger |
+| Active migration-chain reconciliation | **Complete · verified: 53/53 exact in-scope matches; zero missing/extra in-scope files** |
+| Historical rollback disposition | **Complete · 53/53 explicitly forward-only; 0/53 automatic rollback statements** |
 | New timezone forward migration | Drafted and staged; not DB-executed |
 | New timezone rollback | Drafted; not DB-executed |
 | Isolated clean replay | Not run; original pre-migration baseline unavailable |
@@ -115,10 +115,9 @@ The checks cover:
 
 ## Exact remaining blockers
 
-1. Reconcile the six active-file SQL mismatches and three unmatched files against the recovered archive, preserving dependency order and not replaying already-applied production migrations.
-2. Recover or formally classify the pre-existing baseline required for clean replay.
-3. Validate the staged forward migration and rollback in an isolated PostgreSQL/Supabase-compatible database, including authenticated RLS behavior and at least two timezones around date boundaries.
-4. Review rollback/compensation strategy for historical forward-only migrations.
-5. Re-run the full build/CI and the Phase One acceptance checklist against the resulting exact commit.
+1. The pre-migration baseline needed for a clean replay is unavailable; do not invent it or claim a clean replay.
+2. The staged B timezone forward/rollback SQL still needs isolated PostgreSQL/Supabase-compatible execution and runtime validation; this is a separate B acceptance gate, not a C historical-disposition blocker.
+3. Any future historical compensation must be implemented as a new reviewed migration with isolated tests; no automatic historical rollback is approved.
+4. Re-run the full build/CI and Phase One acceptance checklist against the resulting exact commit.
 
 **Current result:** B's forward SQL and C's rollback for that new migration are drafted; D's automated source-contract checks are added. E correctly remains **BLOCKED / NOT COMPLETE** until database validation and historical migration disposition pass. No production database or deployment changes were made.
