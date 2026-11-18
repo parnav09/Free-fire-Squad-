@@ -25,9 +25,9 @@ B's isolated database contract and the staged trigger-function ACL remediation n
 | Live migration ledger | Read-only query: 55 rows; 53 in-scope; 2 excluded loadout; 0 stored rollback statements | **PASS** |
 | 1.5-B — application contract | India-only timezone/date contract and source suite; exact staged forward + rollback SQL executed against disposable PostgreSQL in runs #352/#353 | **PASS · CI database verified** |
 | 1.5-C — historical rollback disposition | 53/53 in-scope versions explicitly forward-only with risk class and recovery rule | **PASS · documented and machine-checked** |
-| 1.5-D — source-contract tests | D suite 6/6; full typecheck, configured suites and Vite build passed in run #337 | **PASS · CI verified** |
-| E audit integrity | E suite 7/7 included in full build on exact head run #337 | **PASS · CI verified** |
-| Security trigger ACL remediation | Staged revocations deny API-role EXECUTE; existing Daily Evaluation trigger still executes after revocation in run #337 | **PASS · staged SQL + CI; not production-applied** |
+| 1.5-D — source-contract tests | D suite 6/6; full typecheck, configured suites and Vite build passed in runs #352/#353 | **PASS · CI verified** |
+| E audit integrity | E suite 7/7 included in full build on exact head runs #352/#353 | **PASS · CI verified** |
+| Security trigger ACL remediation | Staged revocations deny API-role EXECUTE; existing Daily Evaluation trigger still executes after revocation in runs #352/#353 | **PASS · staged SQL + CI; not production-applied** |
 | Full-chain clean replay | Authoritative pre-migration baseline is not present in repository or available evidence | **BLOCKED** |
 
 ## B isolated database evidence
@@ -49,7 +49,7 @@ This verifies B's staged SQL contract in a disposable PostgreSQL fixture. It doe
 The read-only Security Advisor snapshot reported 2 INFO, 4 anon SECURITY DEFINER WARN, 22 authenticated SECURITY DEFINER WARN, and 1 leaked-password-protection WARN.
 
 - OTP tables: read-only privilege checks confirm RLS enabled, no policies, and no `anon` or `authenticated` table privileges; `service_role` only. This is intentional private storage, not a client-accessible table.
-- Four trigger-returning functions: live catalog inspection confirmed three are attached to triggers and one is an unattached legacy trigger-returning duplicate. Direct RPC execution is not needed. A staged ACL migration revokes API-role execution; run #337 verifies the revocations and confirms the Daily Evaluation trigger still works.
+- Four trigger-returning functions: live catalog inspection confirmed three are attached to triggers and one is an unattached legacy trigger-returning duplicate. Direct RPC execution is not needed. A staged ACL migration revokes API-role execution; runs #352/#353 verifies the revocations and confirms the Daily Evaluation trigger still works.
 - Remaining callable authenticated SECURITY DEFINER RPCs: source/catalog review found pinned `search_path` and an explicit `auth.uid()`, `is_team_owner()`, or `is_team_member()` authorization path. This is a static review, not a substitute for adversarial role-level tests of every RPC.
 - Leaked-password protection remains disabled. This is a Supabase Auth project setting and has not been changed; the available project tools in this workflow do not expose an Auth security-settings write action.
 
