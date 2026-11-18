@@ -196,7 +196,7 @@ All audited session/match/planning/training tables have RLS enabled in the live 
 | Practice tasks | Active team members | Owner/Coach; IGL management policy; assigned player update of own task | More complex policy overlap; role-level adversarial tests are not part of 2.1 |
 | Training drills | Active team members; global templates where `is_template=true` and team_id is null | Active Owner/Coach | Template read is separate |
 | Training sessions/participants/results | Active team members | Active Owner/Coach | Participant/result write is staff-scoped |
-| Scrim records | Active team members | Owner creates/updates/deletes own record | Current update/delete policies check owner_id; they do not also repeat active-membership predicate |
+| Scrim records | Active team members | Owner creates/updates/deletes own record | Update policy checks owner_id plus active membership; delete policy checks owner_id only |
 | Scrim team reviews | Active team members | Active member insert; author can delete own | Insert policy checks parent Scrim team equality; no update policy found |
 
 **Boundary:** this is a catalog/policy-source inventory, not an adversarial permission test. Phase One 1.5-E's outstanding role-level security tests remain open. No permission policy was modified.
