@@ -459,9 +459,11 @@ BEGIN
   END IF;
   IF EXISTS (
     SELECT 1 FROM public.canonical_sessions
-    WHERE lifecycle_status <> 'draft' OR lifecycle_version <> 0
+    WHERE lifecycle_version <> 0
+      OR (archived_at IS NULL AND lifecycle_status <> 'draft')
+      OR (archived_at IS NOT NULL AND lifecycle_status <> 'archived')
   ) THEN
-    RAISE EXCEPTION 'Existing canonical sessions were not conservatively initialized to Draft';
+    RAISE EXCEPTION 'Existing canonical session lifecycle state was not conservatively initialized';
   END IF;
   SELECT canonical_session_id INTO v_session
   FROM public.canonical_session_sources WHERE source_system='scrim';
