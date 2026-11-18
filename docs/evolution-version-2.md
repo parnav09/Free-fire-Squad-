@@ -336,26 +336,38 @@ Rules:
 
 > **Daily Evaluation selector rule:** the current evaluator is excluded from the target list at render time and rejected server-side. Each eligible evaluator-target pair has its own stable assignment ID. The date is automatic/read-only under the existing date contract; no date picker, backdating, or timezone redesign is part of this change.
 
-
 ### 6.1 Default path
 
-1. Evaluator opens Daily Evolution.
-2. Selects an existing session/match; session context, team, map/mode, and roster are prefilled.
-3. Selects an eligible player from the session roster.
-4. The role used in that session is shown and locked unless an authorized correction is made.
-5. Evaluator rates each of six dimensions or explicitly selects Not observed with a reason.
-6. Adds dimension-linked or overall evidence.
-7. Adds separate notes: **Mistakes observed / what went wrong** and **What to improve next**.
-8. Preview shows score (if eligible), coverage, context, rubric version, and privacy visibility.
-9. Submit commits evaluation, dimension scores, evidence links, feedback, audit event, and outbox events atomically.
-10. Player receives permitted feedback and may acknowledge it.
-11. Evaluator cannot silently rewrite a submitted evaluation; corrections use an amendment flow.
+1. Evaluator opens **Evolution → Evaluation → Daily Evaluation**.
+2. Selects an existing session/match where applicable; session context, team, map/mode, and roster are prefilled.
+3. The server supplies today's date using the existing date/time contract. The page has no date picker and rejects client-supplied past/future dates.
+4. The eligible active teammate list is loaded from the daily cohort. The signed-in evaluator's own UUID is excluded from the selector; the server independently rejects self-target attempts.
+5. Evaluator selects each teammate to review. Every evaluator-target pair receives its own stable assignment ID and idempotency key; one teammate's submission cannot mark another target complete.
+6. The role/context used in the linked session is shown from the roster snapshot where applicable.
+7. Evaluator rates each canonical rubric dimension or explicitly selects Not observed with a reason.
+8. Adds permitted evidence and separate private notes: **Mistakes observed / what went wrong** and **What to improve next**.
+9. Preview shows the evaluator's own entered values and a visibility notice. Numeric ratings are not exposed to other players through the team activity tracker or recipient feedback view.
+10. Submit commits the evaluation, scores, evidence links, feedback, audit event, and outbox events atomically.
+11. The recipient receives only sanitized feedback permitted by the anonymity/privacy policy. The evaluator can see their own submission status.
+12. The assignment changes to Complete only after the server confirms commit. A retry reuses the same idempotency key.
+13. Evaluator cannot silently rewrite a submitted evaluation; corrections use an audited amendment flow.
 
 ### 6.2 Manual evaluation path
 
 A standalone/manual evaluation remains available only with a reason. It must not pretend to be linked to a match. It receives a source type such as manual practice observation, and it is labelled as such in trends.
 
 ### 6.3 Form and save safeguards
+
+- No default 5s or any default score.
+- No hard-coded P1.
+- No save until player, context, and every required dimension state are valid.
+- Prevent double-submit visually, but rely on server idempotency for correctness.
+- A retry uses the same idempotency key for the same intended action.
+- If a required child insert fails, the entire transaction rolls back.
+- Return the saved canonical record and version to the client.
+- Show Pending / Saved / Failed / Conflict states.
+- Do not show success until the server confirms commit.
+- Offline submission is queued and marked Pending; it is not considered official until server validation succeeds.
 
 ### 6.4 Daily assignment lifecycle
 
@@ -376,19 +388,6 @@ A standalone/manual evaluation remains available only with a reason. It must not
 - Use server timestamps and status, not a client/device timer. Reconcile expiry on page load/focus as well as Realtime updates.
 - Expiry hides only the tracker item. Preserve the underlying assignment/audit record and all submitted source records.
 - Tests must cover the 24h grace boundary, the second 24h expiry boundary, completion during the visible window, no carry-forward, and no self-pairs.
-
-
-
-- No default 5s or any default score.
-- No hard-coded P1.
-- No save until player, context, and every required dimension state are valid.
-- Prevent double-submit visually, but rely on server idempotency for correctness.
-- A retry uses the same idempotency key for the same intended action.
-- If a required child insert fails, the entire transaction rolls back.
-- Return the saved canonical record and version to the client.
-- Show Pending / Saved / Failed / Conflict states.
-- Do not show success until the server confirms commit.
-- Offline submission is queued and marked Pending; it is not considered official until server validation succeeds.
 
 ## 7. Feedback model
 
