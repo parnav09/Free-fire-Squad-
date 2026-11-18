@@ -37,6 +37,8 @@ test("E final audit preserves the 53-entry historical provenance and rollback ev
 test("E final audit carries forward the latest exact-head D CI evidence", () => {
   assert.match(audit, /run #284/i);
   assert.ok(audit.includes("0de4ecc9dfd450f8cb2be87bed0cbf299965813b"));
+  assert.match(audit, /E acceptance audit suite passed 6\/6 in GitHub Actions run #315/i);
+  assert.ok(audit.includes("c7a58ca4f9f62581a0cd0da162cf53c255299772"));
   assert.match(audit, /D suite:? 6\/6/i);
   assert.ok(dSuite.includes("E Phase One.5-D"));
 });
