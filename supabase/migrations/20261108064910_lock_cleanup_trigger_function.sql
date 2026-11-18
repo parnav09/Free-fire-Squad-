@@ -1,0 +1,1 @@
+revoke all on function public.cancel_empty_team_cleanup() from public, anon, authenticated;
