@@ -43,6 +43,18 @@ test("Raw submissions and verified values are stored separately with append-only
   assert.match(harness, /Prior and corrected raw versions were not both preserved/);
 });
 
+test("First-time direct submissions authorize the guarded result-root insert", () => {
+  const submissionRpc = migration
+    .split("CREATE OR REPLACE FUNCTION public.submit_canonical_session_result(")[1]
+    .split("$function$;")[0];
+  const rootAuthorization = submissionRpc.indexOf("set_config('app.evolution_result_write','root',true)");
+  const resultInsert = submissionRpc.indexOf("INSERT INTO public.canonical_session_results");
+  assert.ok(rootAuthorization >= 0, "submission RPC must set the guarded root-write context");
+  assert.ok(resultInsert >= 0, "submission RPC must create a canonical result when no draft exists");
+  assert.ok(rootAuthorization < resultInsert, "root-write context must be set before the guarded insert");
+  assert.match(harness, /v_result1:=public\.submit_canonical_session_result\(/);
+});
+
 test("Source-specific checklists and explicit no-inference assertions are mandatory", () => {
   assert.match(migration, /source_identity_confirmed/);
   assert.match(migration, /match_identity_confirmed/);
