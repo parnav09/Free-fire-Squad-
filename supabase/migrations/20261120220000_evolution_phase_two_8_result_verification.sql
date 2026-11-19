@@ -39,8 +39,14 @@ CREATE TABLE IF NOT EXISTS public.canonical_session_result_versions (
   raw_submitted_values jsonb NOT NULL CHECK (jsonb_typeof(raw_submitted_values)='object' AND raw_submitted_values <> '{}'::jsonb),
   correction_reason text CHECK (correction_reason IS NULL OR char_length(btrim(correction_reason)) BETWEEN 1 AND 500),
   idempotency_key uuid NOT NULL,
-  submitted_by uuid NOT NULL REFERENCES auth.users(id) ON DELETE RESTRICT,
-  submitted_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+  recorded_by uuid NOT NULL REFERENCES auth.users(id) ON DELETE RESTRICT,
+  recorded_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+  submitted_by uuid REFERENCES auth.users(id) ON DELETE RESTRICT,
+  submitted_at timestamptz,
+  CONSTRAINT canonical_session_result_version_submission_timestamp CHECK (
+    (version_kind='draft' AND submitted_by IS NULL AND submitted_at IS NULL)
+    OR (version_kind IN ('submission','amendment') AND submitted_by IS NOT NULL AND submitted_at IS NOT NULL)
+  ),
   CONSTRAINT canonical_session_result_versions_result_team_fk
     FOREIGN KEY (result_id,team_id) REFERENCES public.canonical_session_results(id,team_id) ON DELETE RESTRICT,
   CONSTRAINT canonical_session_result_versions_version_unique UNIQUE(result_id,team_id,version_no),
@@ -210,7 +216,7 @@ BEGIN
   v_version_no:=v_result.current_version_no+1;
   PERFORM pg_catalog.set_config('app.evolution_result_write','append',true);
   INSERT INTO public.canonical_session_result_versions(result_id,team_id,version_no,version_kind,
-    result_source,source_reference,raw_submitted_values,idempotency_key,submitted_by)
+    result_source,source_reference,raw_submitted_values,idempotency_key,recorded_by)
   VALUES(v_result.id,v_result.team_id,v_version_no,'draft',p_result_source,p_source_reference,
     p_raw_values,p_idempotency_key,auth.uid()) RETURNING * INTO v_version;
   INSERT INTO public.canonical_session_result_events(result_id,team_id,version_no,event_kind,
@@ -297,9 +303,9 @@ BEGIN
 
   PERFORM pg_catalog.set_config('app.evolution_result_write','append',true);
   INSERT INTO public.canonical_session_result_versions(result_id,team_id,version_no,version_kind,
-    result_source,source_reference,raw_submitted_values,correction_reason,idempotency_key,submitted_by)
+    result_source,source_reference,raw_submitted_values,correction_reason,idempotency_key,recorded_by,submitted_by,submitted_at)
   VALUES(v_result.id,v_result.team_id,v_version_no,v_kind,p_result_source,p_source_reference,
-    p_raw_values,nullif(pg_catalog.btrim(coalesce(p_correction_reason,'')),''),p_idempotency_key,auth.uid())
+    p_raw_values,nullif(pg_catalog.btrim(coalesce(p_correction_reason,'')),''),p_idempotency_key,auth.uid(),auth.uid(),clock_timestamp())
   RETURNING * INTO v_version;
   INSERT INTO public.canonical_session_result_events(result_id,team_id,version_no,event_kind,
     previous_status,new_status,reason,idempotency_key,changed_by)
