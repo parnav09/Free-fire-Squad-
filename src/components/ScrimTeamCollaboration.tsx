@@ -18,6 +18,7 @@ type TeamMember = {
   display_name?: string;
   assigned_role?: string | null;
   membership_role?: string;
+  status?: string;
 };
 type CommentRow = {
   id: string;
@@ -252,7 +253,7 @@ export default function ScrimTeamCollaboration({
             <div className="scrims-task-grid">
               <label>Assign to<select value={taskAssignee} onChange={(event) => setTaskAssignee(event.target.value)}>
                 <option value="">Unassigned</option>
-                {members.map((member) => <option key={member.user_id} value={member.user_id}>{member.display_name || "Team member"}</option>)}
+                {members.filter((member) => member.status === "active").map((member) => <option key={member.user_id} value={member.user_id}>{member.display_name || "Team member"}</option>)}
               </select></label>
               <label>Due date<input type="date" value={taskDueDate} onChange={(event) => setTaskDueDate(event.target.value)}/></label>
               <label>Related review<select value={taskSource} onChange={(event) => setTaskSource(event.target.value)}>
