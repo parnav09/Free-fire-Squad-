@@ -106,11 +106,11 @@ BEGIN
   END IF;
 
   PERFORM public.configure_canonical_session_roster_policy(
-    v_session.team_id,'scrim',2,3,false
+    v_session.team_id,'scrim',2::smallint,3::smallint,false
   );
   -- Session-type policies are configuration, not a fixed 4-player assumption.
   PERFORM public.configure_canonical_session_roster_policy(
-    v_session.team_id,'training',1,1,true
+    v_session.team_id,'training',1::smallint,1::smallint,true
   );
 
   PERFORM public.transition_canonical_session(
