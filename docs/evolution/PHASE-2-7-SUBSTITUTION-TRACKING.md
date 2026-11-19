@@ -39,4 +39,4 @@ A substitution is one atomic replacement within one canonical match and one lock
 
 ## Scope boundary
 
-Point 2.7 does not verify or correct match results (Point 2.8), integrate existing Scrims/Tournament/Training screens (Point 2.9), or add application UI. It does not run the migration on live Supabase, merge a PR, or deploy Vercel. Production rollout remains separately gated.
+Point 2.7 does not verify or correct match results (Point 2.8), integrate existing Scrims/Tournament/Training screens (Point 2.9), or add application UI. No live Supabase migration, PR merge, or Vercel production deployment is performed. Production rollout remains separately gated.
