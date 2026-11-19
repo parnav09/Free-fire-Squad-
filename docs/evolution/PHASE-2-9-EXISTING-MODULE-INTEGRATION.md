@@ -18,7 +18,7 @@ One server-authoritative RPC, `public.integrate_canonical_source(team_id, source
 - Training: one canonical `training` session per `training_sessions.id`; no competitive match rows are fabricated.
 - Planning: `practice_plans` are not canonical sessions. The user must explicitly choose **Promote to Training**; the action creates a linked `training_sessions` row with `plan_id`, then integrates that Training source. The plan remains available as its own planning record.
 
-The RPC is SECURITY INVOKER, checks active Owner/Coach membership, locks the source row before checking its mapping, derives a deterministic team/source idempotency key, and writes the canonical session plus source mapping in one transaction. Repeated calls return the same canonical session and safely re-run the existing match synchronizer. Direct source tables remain the legacy module's editable records; no parallel result or source-of-truth table is introduced.
+The RPC is SECURITY INVOKER, checks active Owner/Coach membership, takes a source-scoped transaction advisory lock before checking its mapping, derives a deterministic team/source idempotency key, and writes the canonical session plus source mapping in one transaction. Repeated calls return the same canonical session and safely re-run the existing match synchronizer. Direct source tables remain the legacy module's editable records; no parallel result or source-of-truth table is introduced.
 
 ## Application integration
 
