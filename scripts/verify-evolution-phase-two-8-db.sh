@@ -151,6 +151,13 @@ BEGIN
   IF v_result1.status<>'amended' THEN RAISE EXCEPTION 'Verified correction did not enter amended state'; END IF;
   PERFORM public.transition_canonical_session(v_session.id,5,'verified','Re-verify amended results',
     '90000000-0000-0000-8000-000000000316',NULL);
+  v_result1:=public.submit_canonical_session_result(
+    v_session.id,v_match1,'official_scorecard','scorecard://match-1',
+    '{"placement":1,"kills":5}'::jsonb,'90000000-0000-0000-8000-000000000306',NULL
+  );
+  IF v_result1.status<>'amended' OR v_result1.current_version_no<>2 THEN
+    RAISE EXCEPTION 'Exact submission retry failed after lifecycle verification';
+  END IF;
   SELECT count(*) INTO v_count FROM public.canonical_verified_competitive_match_results
     WHERE canonical_session_id=v_session.id;
   IF v_count<>2 THEN RAISE EXCEPTION 'Amended result was not restored to verified aggregate eligibility'; END IF;
@@ -208,6 +215,11 @@ BEGIN
   IF v_result.status<>'amended' THEN RAISE EXCEPTION 'Corrected training result did not reach amended state'; END IF;
   PERFORM public.transition_canonical_session(v_session.id,3,'verified','Verify corrected training result',
     '90000000-0000-0000-8000-000000000330',NULL);
+  v_result:=public.reject_canonical_session_result(v_result.id,
+    'Training activity evidence did not match the submitted record','90000000-0000-0000-8000-000000000327');
+  IF v_result.status<>'amended' THEN
+    RAISE EXCEPTION 'Exact rejection retry failed after lifecycle verification';
+  END IF;
   SELECT count(*) INTO v_count FROM public.canonical_verified_training_results
     WHERE canonical_session_id=v_session.id;
   IF v_count<>1 THEN RAISE EXCEPTION 'Verified training result missing from training view'; END IF;
