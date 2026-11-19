@@ -382,8 +382,9 @@ RESET ROLE;
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
 DO $$
-DECLARE v_member uuid; v_count integer;
+DECLARE v_member uuid; v_count integer; v_before integer;
 BEGIN
+  SELECT count(*) INTO v_before FROM public.canonical_session_match_participation_events;
   SELECT id INTO v_member FROM public.canonical_session_roster_members
   WHERE player_user_id='10000000-0000-0000-0000-000000000001'
   LIMIT 1;
@@ -400,7 +401,7 @@ BEGIN
   EXCEPTION WHEN SQLSTATE '42501' THEN NULL;
   END;
   SELECT count(*) INTO v_count FROM public.canonical_session_match_participation_events;
-  IF v_count <> 0 THEN RAISE EXCEPTION 'Player unexpectedly read staff-only participation audit'; END IF;
+  IF v_count <> v_before THEN RAISE EXCEPTION 'Direct writes unexpectedly changed participation audit'; END IF;
 END $$;
 RESET ROLE;
 
