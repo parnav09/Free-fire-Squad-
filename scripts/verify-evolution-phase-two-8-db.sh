@@ -139,7 +139,7 @@ BEGIN
   IF v_count<>2 THEN RAISE EXCEPTION 'Prior and corrected raw versions were not both preserved'; END IF;
   SELECT count(*) INTO v_count FROM public.canonical_session_result_events
     WHERE result_id=v_result1.id AND event_kind IN ('submitted','verified');
-  IF v_count<>3 THEN RAISE EXCEPTION 'Correction event history is incomplete'; END IF;
+  IF v_count<>4 THEN RAISE EXCEPTION 'Correction event history is incomplete'; END IF;
 END $$;
 RESET ROLE;
 
@@ -170,11 +170,22 @@ BEGIN
     v_session.id,NULL,'training_log','training://session-1',
     '{"drill":"rotation review","completed":true}'::jsonb,'90000000-0000-0000-8000-000000000326',NULL
   );
+  v_result:=public.reject_canonical_session_result(v_result.id,
+    'Training activity evidence did not match the submitted record','90000000-0000-0000-8000-000000000327');
+  IF v_result.status<>'rejected' THEN RAISE EXCEPTION 'Rejected result state was not recorded'; END IF;
+  SELECT count(*) INTO v_count FROM public.canonical_verified_training_results
+    WHERE canonical_session_id=v_session.id;
+  IF v_count<>0 THEN RAISE EXCEPTION 'Rejected training result leaked into trusted training view'; END IF;
+  v_result:=public.submit_canonical_session_result(
+    v_session.id,NULL,'training_log','training://session-1-revised',
+    '{"drill":"rotation review","completed":true}'::jsonb,'90000000-0000-0000-8000-000000000328',
+    'Corrected training activity source record'
+  );
   v_result:=public.verify_canonical_session_result(v_result.id,
     '{"drill":"rotation review","completed":true}'::jsonb,
     '{"source_identity_confirmed":true,"activity_confirmed":true,"participants_confirmed":true,"no_inferred_values":true}'::jsonb,
-    'Checked against training log','90000000-0000-0000-8000-000000000327');
-  IF v_result.status<>'verified' THEN RAISE EXCEPTION 'Training result did not reach verified state'; END IF;
+    'Checked corrected training log','90000000-0000-0000-8000-000000000329');
+  IF v_result.status<>'amended' THEN RAISE EXCEPTION 'Corrected training result did not reach amended state'; END IF;
   SELECT count(*) INTO v_count FROM public.canonical_verified_training_results
     WHERE canonical_session_id=v_session.id;
   IF v_count<>1 THEN RAISE EXCEPTION 'Verified training result missing from training view'; END IF;
