@@ -64,6 +64,7 @@ test("Role transfer is an explicit, separately audited event", () => {
   assert.match(migration, /canonical_session_substitution_role_transfer_source_unassigned/);
   assert.match(report, /Role transfer is opt-in and separate from replacement/);
   assert.match(harness, /Role transfer was not recorded separately/);
+  assert.match(harness, /Incoming player did not receive the transferred role|Role transfer was not recorded separately or applied to incoming player/);
   assert.match(harness, /Incoming player did not receive the transferred role/);
 });
 
