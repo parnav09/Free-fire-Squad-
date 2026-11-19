@@ -14,7 +14,7 @@ VALUES (
   'aa200000-0000-0000-0000-000000000020',
   'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   '10000000-0000-0000-0000-000000000001',
-  DATE '2026-11-22',2,
+  DATE '2026-11-22',3,
   '[{"placement":1,"kills":5},{"placement":3,"kills":2}]'::jsonb
 );
 
