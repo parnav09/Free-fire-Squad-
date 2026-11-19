@@ -80,7 +80,7 @@ INSERT INTO public.scrim_records(
 
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
-DO $
+DO $$
 DECLARE
   v_session public.canonical_sessions;
   v_sync integer;
