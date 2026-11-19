@@ -26,7 +26,7 @@ test("Point 2.5 maps only to the Session Roster Snapshot blueprint contract", ()
 test("The migration is additive and does not fabricate historical rosters", () => {
   assert.match(migration, /Additive only\. No historical roster\/participation is inferred/);
   assert.doesNotMatch(migration, /INSERT INTO public\.canonical_session_rosters\s+SELECT/i);
-  assert.match(report, /No automatic historical roster backfill/);
+  assert.match(report, /No historical roster or participation rows are fabricated during migration/);
   assert.match(harness, /fabricated historical roster snapshots/);
 });
 
@@ -132,7 +132,7 @@ test("The Phase 2.5 PostgreSQL integration and source audit are part of exact-he
 });
 
 test("Production rollout remains gated on Point 2.9 and separate approval", () => {
-  assert.match(report, /No production Supabase migration or Vercel deployment/);
+  assert.match(report, /No live .*Supabase migration/);\n  assert.match(report, /No Vercel production deployment/);
   assert.match(report, /Point 2\.9/);
   assert.match(blueprint, /No production migration\/deployment occurs without separate rollout approval/i);
 });
