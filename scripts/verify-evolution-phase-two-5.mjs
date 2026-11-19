@@ -97,7 +97,7 @@ test("Participant corrections are reasoned, idempotent and append-only audited",
   assert.match(migration, /participation_idempotency_key_reused_with_different_payload/);
   assert.match(migration, /closed_session_participation_is_read_only/);
   assert.match(migration, /canonical_match_participation_correction_rpc_required/);
-  assert.match(report, /ordered substitution timeline and role transfer belong to Point 2\\.7/);
+  assert.match(report, /ordered substitution timeline and role transfer belong to Point 2\.7/);
   assert.match(harness, /Player was replaced before match start/);
 });
 
