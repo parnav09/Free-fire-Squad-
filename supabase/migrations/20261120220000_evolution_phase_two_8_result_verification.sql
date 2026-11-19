@@ -255,8 +255,6 @@ BEGIN
   IF NOT EXISTS(SELECT 1 FROM public.team_members tm WHERE tm.team_id=v_session.team_id
     AND tm.user_id=auth.uid() AND tm.status='active' AND tm.membership_role IN ('owner','coach'))
   THEN RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE='42501'; END IF;
-  IF v_session.archived_at IS NOT NULL OR v_session.lifecycle_status<>'awaiting_results'
-  THEN RAISE EXCEPTION 'canonical_result_submission_requires_awaiting_results' USING ERRCODE='23514'; END IF;
   IF (v_session.session_type='training' AND p_match_id IS NOT NULL)
     OR (v_session.session_type IN ('scrim','tournament') AND p_match_id IS NULL)
   THEN RAISE EXCEPTION 'canonical_result_target_scope_invalid' USING ERRCODE='22023'; END IF;
@@ -292,6 +290,8 @@ BEGIN
     THEN RAISE EXCEPTION 'canonical_result_idempotency_conflict' USING ERRCODE='22023'; END IF;
     RETURN v_result;
   END IF;
+  IF v_session.archived_at IS NOT NULL OR v_session.lifecycle_status<>'awaiting_results'
+  THEN RAISE EXCEPTION 'canonical_result_submission_requires_awaiting_results' USING ERRCODE='23514'; END IF;
   IF v_result.status='submitted' THEN RAISE EXCEPTION 'canonical_result_already_pending_verification' USING ERRCODE='23514'; END IF;
   IF EXISTS(SELECT 1 FROM public.canonical_session_result_versions
       WHERE result_id=v_result.id AND version_kind IN ('submission','amendment'))
@@ -407,8 +407,6 @@ BEGIN
     AND tm.user_id=auth.uid() AND tm.status='active' AND tm.membership_role IN ('owner','coach'))
   THEN RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE='42501'; END IF;
   SELECT * INTO v_session FROM public.canonical_sessions WHERE id=v_result.canonical_session_id;
-  IF v_session.archived_at IS NOT NULL OR v_session.lifecycle_status<>'awaiting_results'
-  THEN RAISE EXCEPTION 'canonical_result_rejection_session_state_invalid' USING ERRCODE='23514'; END IF;
   SELECT * INTO v_event FROM public.canonical_session_result_events
     WHERE result_id=v_result.id AND idempotency_key=p_idempotency_key;
   IF FOUND THEN
@@ -416,6 +414,8 @@ BEGIN
     THEN RAISE EXCEPTION 'canonical_result_rejection_idempotency_conflict' USING ERRCODE='22023'; END IF;
     RETURN v_result;
   END IF;
+  IF v_session.archived_at IS NOT NULL OR v_session.lifecycle_status<>'awaiting_results'
+  THEN RAISE EXCEPTION 'canonical_result_rejection_session_state_invalid' USING ERRCODE='23514'; END IF;
   IF v_result.status<>'submitted' THEN RAISE EXCEPTION 'canonical_result_requires_submitted_state' USING ERRCODE='23514'; END IF;
   PERFORM pg_catalog.set_config('app.evolution_result_write','append',true);
   INSERT INTO public.canonical_session_result_events(result_id,team_id,version_no,event_kind,
