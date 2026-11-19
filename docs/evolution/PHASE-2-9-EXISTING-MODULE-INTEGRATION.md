@@ -3,7 +3,7 @@
 **Blueprint mapping:** Evolution Version 2, §38.9 Point 2.9  
 **Branch:** `feat/evolution-phase-two-9-module-integration`  
 **Parent:** `feat/evolution-phase-two-8-result-verification`  
-**Status:** Implementation staged · exact-head CI and isolated PostgreSQL acceptance pending
+**Status:** PASS · development implementation + exact-head CI verified; production rollout remains gated on Points 2.10–2.12 and explicit approval
 
 ## Scope
 
@@ -45,7 +45,7 @@ Existing Training player evaluations remain player/session records. Point 2.9 do
 - Isolated PostgreSQL integration: `scripts/verify-evolution-phase-two-9-db.sh`
 - PostgreSQL integration replays the full Phase 2.2–2.8 chain, then verifies Scrim mapping/idempotency, Tournament cycle and match mapping, Training mapping without phantom matches, explicit Planning-to-Training promotion, team/role authorization, and RPC ACLs.
 - `npm run build` includes the Phase 2.9 source contract and existing Phase 2.1–2.8 tests, typecheck and Vite production bundle.
-- Phase 2.9 is not PASS until the exact branch-head GitHub Actions run is green, including the isolated PostgreSQL job and complete build.
+- Exact branch-head commit `f52462981e7b921641ae8f0a551d7ab49c3aed5d` passed both push run [#598](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44611190815) and PR run [#599](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44611200506). The isolated PostgreSQL adapter integration, inherited Phase 2.2–2.8 chain, staged B migration, trigger ACL checks, source contracts, typecheck and Vite production build all passed.
 
 ## Known boundary
 
