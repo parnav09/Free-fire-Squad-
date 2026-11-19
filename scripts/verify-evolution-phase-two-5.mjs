@@ -37,7 +37,7 @@ test("Roster identity preserves player UUID and membership provenance without li
   assert.match(migration, /player_number_snapshot smallint/);
   assert.match(migration, /membership_role_snapshot text NOT NULL/);
   assert.match(migration, /UNIQUE \(canonical_session_id, player_user_id\)/);
-  assert.match(report, /not retained as live FKs/i);
+  assert.match(report, /not foreign keys to .*team_members.*auth\.users/i);
   assert.match(harness, /Historical roster changed after member leave/);
   assert.match(harness, /Historical roster changed after IGN\/slot edit/);
 });
