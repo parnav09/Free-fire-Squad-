@@ -233,13 +233,12 @@ RESET ROLE;
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','20000000-0000-0000-0000-000000000002',false);
 DO $$
-DECLARE v_result uuid; v_session uuid; v_count integer;
+DECLARE v_session uuid; v_count integer;
 BEGIN
-  SELECT r.id,r.canonical_session_id INTO v_result,v_session
-  FROM public.canonical_session_results r
-  JOIN public.canonical_sessions s ON s.id=r.canonical_session_id
-  WHERE s.title='Result Verification Test' LIMIT 1;
-  SELECT count(*) INTO v_count FROM public.canonical_session_results WHERE id=v_result;
+  SELECT id INTO v_session FROM public.canonical_sessions
+  WHERE title='Result Verification Test' LIMIT 1;
+  SELECT count(*) INTO v_count FROM public.canonical_session_results
+  WHERE canonical_session_id=v_session;
   IF v_count<>0 THEN RAISE EXCEPTION 'Player can read staff-only result audit'; END IF;
   BEGIN
     PERFORM public.submit_canonical_session_result(v_session,
