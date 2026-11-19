@@ -62,7 +62,7 @@ export default function App() {
   const [week, setWeek] = useState(() => safeStorageGetItem("squad-os-week") || currentISOWeekKey());
   const [day, setDay] = useState(() => { const value=Number(safeStorageGetItem("squad-os-day")||1); return Number.isInteger(value)&&value>=1&&value<=7?value:1; });
   const [scoreboardExpanded, setScoreboardExpanded] = useState(false);
-  const [matches, setMatches] = useState<Record<string, { placement: number; kills: number }>>(() => readLocalRecord("squad-os-matches", {}));
+  const [matches, setMatches] = useState<Record<string, { placement: number | null; kills: number }>>(() => readLocalRecord("squad-os-matches", {}));
   const [killDrafts, setKillDrafts] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState("");
   useEffect(() => { if (!notice) return; const timer = window.setTimeout(() => setNotice(""), 7000); return () => window.clearTimeout(timer); }, [notice]);
@@ -526,17 +526,25 @@ export default function App() {
         .upsert({ team_id: teamSnapshot.id, cycle_start: start, cycle_end: end.toISOString().slice(0, 10), title: "Weekly Tournament", status: "active", created_by: userId }, { onConflict: "team_id,cycle_start" })
         .select("id").single();
       if (cycleErr || !cycle) throw cycleErr || new Error("Could not open the current tournament cycle.");
-      const rows = Object.entries(matchSnapshot)
-        .filter(([key]) => key.startsWith(`${weekSnapshot}-D`))
-        .flatMap(([key, match]) => {
-          const parsed = key.match(/-D(\d+)-M(\d+)$/);
-          return parsed ? [{
-            cycle_id: cycle.id, team_id: teamSnapshot.id, match_day: Number(parsed[1]), match_number: Number(parsed[2]),
-            placement: match.placement, kills: match.kills,
-            points: (match.placement === 1 ? 12 : match.placement === 2 ? 9 : match.placement === 3 ? 8 : match.placement === 4 ? 7 : match.placement === 5 ? 6 : match.placement === 6 ? 5 : match.placement === 7 ? 4 : match.placement === 8 ? 3 : match.placement === 9 ? 2 : match.placement === 10 ? 1 : 0) + match.kills,
-            status: "draft", recorded_by: userId,
-          }] : [];
+      const rows: Array<Record<string, unknown>> = [];
+      for (const [key, match] of Object.entries(matchSnapshot).filter(([entry]) => entry.startsWith(weekSnapshot + "-D"))) {
+        const parsed = key.match(/-D(\\d+)-M(\\d+)$/);
+        if (!parsed) continue;
+        const matchDay = Number(parsed[1]);
+        const matchNumber = Number(parsed[2]);
+        if (match.placement === null && match.kills === 0) {
+          const { error } = await supabase!.from("tournament_matches").delete()
+            .eq("cycle_id", cycle.id).eq("match_day", matchDay).eq("match_number", matchNumber);
+          if (error) throw error;
+          continue;
+        }
+        const placementPoints = match.placement === 1 ? 12 : match.placement === 2 ? 9 : match.placement === 3 ? 8 : match.placement === 4 ? 7 : match.placement === 5 ? 6 : match.placement === 6 ? 5 : match.placement === 7 ? 4 : match.placement === 8 ? 3 : match.placement === 9 ? 2 : match.placement === 10 ? 1 : 0;
+        rows.push({
+          cycle_id: cycle.id, team_id: teamSnapshot.id, match_day: matchDay, match_number: matchNumber,
+          placement: match.placement, kills: match.kills, points: placementPoints + match.kills,
+          status: "draft", recorded_by: userId,
         });
+      }
       if (rows.length) {
         const { error } = await supabase!.from("tournament_matches").upsert(rows, { onConflict: "cycle_id,match_day,match_number" });
         if (error) throw error;
@@ -596,7 +604,7 @@ export default function App() {
       flushPendingMatchSync();
     };
   }, []);
-  useEffect(()=>{ if(!supabase||!signedIn||!team)return; setConnection("Syncing…"); let cancelled=false; (async()=>{ try { const start=weekMonday(week); const {data:cycle}=await supabase.from("tournament_cycles").select("id").eq("team_id",team.id).eq("cycle_start",start).maybeSingle(); if(!cycle){if(!cancelled){setSharedMatches([]);setMatchesHydratedKey(`${team.id}:${week}`);setConnection("Signed in · cloud sync active");}return;} const {data,error}=await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id",cycle.id).order("match_day").order("match_number"); if(error)throw error; if(!cancelled){setSharedMatches(data||[]);setMatches(prev=>({...prev,...Object.fromEntries((data||[]).filter(row=>row.placement!==null||(row.kills??0)>0).map(row=>[`${week}-D${row.match_day}-M${row.match_number}`,{placement:row.placement??12,kills:row.kills??0}]))}));setMatchesHydratedKey(`${team.id}:${week}`);setConnection("Signed in · cloud sync active");}}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Shared scoreboard unavailable.");}} })(); return()=>{cancelled=true}; },[signedIn,team?.id,week]);
+  useEffect(()=>{ if(!supabase||!signedIn||!team)return; setConnection("Syncing…"); let cancelled=false; (async()=>{ try { const start=weekMonday(week); const {data:cycle}=await supabase.from("tournament_cycles").select("id").eq("team_id",team.id).eq("cycle_start",start).maybeSingle(); if(!cycle){if(!cancelled){setSharedMatches([]);setMatchesHydratedKey(`${team.id}:${week}`);setConnection("Signed in · cloud sync active");}return;} const {data,error}=await supabase.from("tournament_matches").select("match_day,match_number,placement,kills,points,status").eq("cycle_id",cycle.id).order("match_day").order("match_number"); if(error)throw error; if(!cancelled){setSharedMatches(data||[]);setMatches(prev=>({...prev,...Object.fromEntries((data||[]).filter(row=>row.placement!==null||(row.kills??0)>0).map(row=>[`${week}-D${row.match_day}-M${row.match_number}`,{placement:row.placement??null,kills:row.kills??0}]))}));setMatchesHydratedKey(`${team.id}:${week}`);setConnection("Signed in · cloud sync active");}}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Shared scoreboard unavailable.");}} })(); return()=>{cancelled=true}; },[signedIn,team?.id,week]);
   const refreshSharedMatches = async () => {
     if (!supabase || !team) return;
     setConnection("Syncing…");
@@ -665,9 +673,22 @@ export default function App() {
   const analyticsMatches = signedIn && team ? sharedMatches.filter(m=>m.placement!==null || m.kills>0) : Object.values(matches);
   const totalMatches = analyticsMatches.length;
   const points = analyticsMatches.reduce((sum, m) => sum + (m.placement === 1 ? 12 : m.placement === 2 ? 9 : m.placement === 3 ? 8 : m.placement === 4 ? 7 : m.placement === 5 ? 6 : m.placement === 6 ? 5 : m.placement === 7 ? 4 : m.placement === 8 ? 3 : m.placement === 9 ? 2 : m.placement === 10 ? 1 : 0) + m.kills, 0);
-  const saveMatch = (slot: string, field: "placement" | "kills", value: number) => {
-    const next = { ...(matches[slot] || { placement: 12, kills: 0 }), [field]: value };
+  const saveMatch = (slot: string, field: "placement" | "kills", value: number | null) => {
+    const next = { ...(matches[slot] || { placement: null, kills: 0 }), [field]: value };
     setMatches(prev => ({ ...prev, [slot]: next }));
+    const parsed = slot.match(/-D(\\d+)-M(\\d+)$/);
+    if (parsed && signedIn && team) {
+      const matchDay = Number(parsed[1]);
+      const matchNumber = Number(parsed[2]);
+      const pointsForPlacement = next.placement === 1 ? 12 : next.placement === 2 ? 9 : next.placement === 3 ? 8 : next.placement === 4 ? 7 : next.placement === 5 ? 6 : next.placement === 6 ? 5 : next.placement === 7 ? 4 : next.placement === 8 ? 3 : next.placement === 9 ? 2 : next.placement === 10 ? 1 : 0;
+      setSharedMatches(previous => {
+        const row = { match_day: matchDay, match_number: matchNumber, placement: next.placement, kills: next.kills, points: pointsForPlacement + next.kills, status: "draft" };
+        const exists = previous.some(item => item.match_day === matchDay && item.match_number === matchNumber);
+        return exists
+          ? previous.map(item => item.match_day === matchDay && item.match_number === matchNumber ? row : item)
+          : [...previous, row].sort((a,b) => a.match_day-b.match_day || a.match_number-b.match_number);
+      });
+    }
   };
 
   const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
@@ -795,10 +816,10 @@ export default function App() {
 
           {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} canAssignTasks={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))} language={drillLanguage} onLanguageChange={changeDrillLanguage}/></Suspense>}
           {section==="Evolution"&&<><div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · EVOLUTION</div><h2>One place for improvement</h2></div><span className="phase-pill">4 MODULES</span></div><p className="intro">Evaluation, weekly review, player trends and squad analytics stay together. Use the module you need; all records remain team-shared.</p><div className="evolution-hub-grid">{[{title:"Daily Evaluation",desc:"Record communication, coordination, decisions, role execution and map awareness.",to:"Evaluation",icon:"◎"},{title:"Weekly Review",desc:"Review assigned work, roster pulse and improvement focus.",to:"Weekly Review",icon:"↗"},{title:"Player Trends",desc:"Compare recent player scores and track progression.",to:"Player Trends",icon:"⌁"},{title:"Squad Analytics",desc:"Inspect match records and team performance metrics.",to:"Analytics",icon:"▥"}].map(x=><button key={x.to} className="evolution-hub-card" onClick={()=>setSection(x.to as Section)}><span className="evolution-hub-icon">{x.icon}</span><strong>{x.title}</strong><small>{x.desc}</small><span className="evolution-hub-link">Open module →</span></button>)}</div></>}
-          {section==="Tournament" && <><div className="matches-section-tabs" role="tablist" aria-label="Matches sections"><button role="tab" aria-selected={matchesTab==="Scrims"} className={matchesTab==="Scrims"?"active":""} onClick={()=>setMatchesTab("Scrims")}>Scrims</button><button role="tab" aria-selected={matchesTab==="Tournament"} className={matchesTab==="Tournament"?"active":""} onClick={()=>setMatchesTab("Tournament")}>Tournaments</button></div>{matchesTab==="Scrims"?<Suspense fallback={<div className="pt-loading">Opening scrims workspace…</div>}> <ScrimsSection supabase={supabase} teamId={team?.id||""} userId={sessionUserId} teamMembers={teamMembers as Array<{user_id:string;display_name?:string}>}/> </Suspense>:<>
+          {section==="Tournament" && <><div className="matches-section-tabs" role="tablist" aria-label="Matches sections"><button role="tab" aria-selected={matchesTab==="Scrims"} className={matchesTab==="Scrims"?"active":""} onClick={()=>setMatchesTab("Scrims")}>Scrims</button><button role="tab" aria-selected={matchesTab==="Tournament"} className={matchesTab==="Tournament"?"active":""} onClick={()=>setMatchesTab("Tournament")}>Tournaments</button></div>{matchesTab==="Scrims"?<Suspense fallback={<div className="pt-loading">Opening scrims workspace…</div>}> <ScrimsSection supabase={supabase} teamId={team?.id||""} userId={sessionUserId} teamMembers={teamMembers}/> </Suspense>:<>
             <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><span className="phase-pill">42 MATCH SLOTS</span></div>
             <div className="toolbar"><label>Week <input value={week} onChange={e=>setWeek(e.target.value)} placeholder="YYYY-W##"/></label><label>Day <select value={day} onChange={e=>setDay(Number(e.target.value))}>{Array.from({length:7},(_,i)=><option value={i+1} key={i}>Day {i+1} · {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][i]}</option>)}</select></label></div>
-            <div className="match-grid">{Array.from({length:6},(_,i)=>{const key=week+"-D"+day+"-M"+(i+1);const remote=sharedMatches.find(x=>x.match_day===day&&x.match_number===i+1);const m=(signedIn&&team&&remote)?{placement:remote.placement??12,kills:remote.kills??0}:(matches[key]||{placement:12,kills:0});return <article className="match-card" key={key}><div className="card-index">MATCH 0{i+1}</div><h3>Match {i+1}</h3><label>Placement<select value={m.placement} disabled={!!team&&!(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))} onChange={e=>saveMatch(key,"placement",Number(e.target.value))}>{Array.from({length:12},(_,j)=><option key={j} value={j+1}>{j+1===12?"12+ / Other":j+1}</option>)}</select></label><label>Kills<input type="text" inputMode="numeric" pattern="[0-9]*" minLength={1} value={killDrafts[key] ?? String(m.kills)} disabled={!!team&&!(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))} onChange={e=>{const raw=e.target.value;setKillDrafts(prev=>({...prev,[key]:raw}));}} onBlur={e=>{const raw=e.currentTarget.value;if(raw!==""){saveMatch(key,"kills",Math.max(0,Number(raw)));}setKillDrafts(prev=>{const next={...prev};delete next[key];return next;});}} onKeyDown={e=>{if(e.key==="Enter"){e.currentTarget.blur();}}}/></label></article>})}</div>
+            <div className="match-grid">{Array.from({length:6},(_,i)=>{const key=week+"-D"+day+"-M"+(i+1);const remote=sharedMatches.find(x=>x.match_day===day&&x.match_number===i+1);const m=(signedIn&&team&&remote)?{placement:remote.placement,kills:remote.kills??0}:(matches[key]||{placement:null,kills:0});return <article className="match-card" key={key}><div className="card-index">MATCH 0{i+1}</div><h3>Match {i+1}</h3><label>Placement<select value={m.placement??""} disabled={!!team&&!(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))} onChange={e=>saveMatch(key,"placement",e.target.value===""?null:Number(e.target.value))}><option value="">Unscored</option>{Array.from({length:12},(_,j)=><option key={j} value={j+1}>{j+1===12?"12+ / Other":j+1}</option>)}</select></label><label>Kills<input type="text" inputMode="numeric" pattern="[0-9]*" value={killDrafts[key] ?? String(m.kills)} disabled={!!team&&!(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))} onChange={e=>{const raw=e.target.value;setKillDrafts(prev=>({...prev,[key]:raw.replace(/[^0-9]/g,"")}));}} onBlur={e=>{const raw=e.currentTarget.value;saveMatch(key,"kills",raw===""?0:Math.max(0,Math.floor(Number(raw)||0)));setKillDrafts(prev=>{const next={...prev};delete next[key];return next;});}} onKeyDown={e=>{if(e.key==="Enter"){e.currentTarget.blur();}}}/></label></article>})}</div>
             {signedIn&&team&&<section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">TEAM SCOREBOARD</div><div className="scoreboard-head">
               <div><h3>Shared results · {sharedMatches.filter(m => m.placement != null).length}/42 scored slots</h3><p>Weekly team scoreboard · 7 days × 6 matches</p></div>
               <div className="scoreboard-actions"><button className="secondary-button score-action" onClick={refreshSharedMatches}>↻ Refresh</button><button className="score-more-button" onClick={() => setScoreboardExpanded(true)} aria-label="More scoreboard details"><span>More</span><b>⋯</b></button></div>
