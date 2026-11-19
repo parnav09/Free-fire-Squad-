@@ -51,6 +51,10 @@ test("Team roster capacity and session-type constraints are configurable and sna
   assert.match(migration, /minimum_players_snapshot smallint/);
   assert.match(migration, /maximum_players_snapshot smallint/);
   assert.match(migration, /configure_canonical_session_roster_policy/);
+  assert.match(migration, /GRANT SELECT ON public\.canonical_session_roster_policies TO authenticated/);
+  assert.doesNotMatch(migration, /GRANT SELECT, INSERT, UPDATE ON public\.canonical_session_roster_policies/);
+  assert.match(migration, /configure_canonical_session_roster_policy[\s\S]*?SECURITY DEFINER/);
+  assert.match(harness, /Direct roster policy write bypassed the configuration RPC/);
   assert.match(harness, /'training',1::smallint,1::smallint,true/);
   assert.match(harness, /'scrim',2::smallint,3::smallint,false/);
 });

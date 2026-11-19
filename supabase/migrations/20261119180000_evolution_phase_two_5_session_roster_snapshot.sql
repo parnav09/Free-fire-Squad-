@@ -171,7 +171,7 @@ REVOKE ALL ON public.canonical_session_roster_policies,
   public.canonical_session_match_participation_events
   FROM PUBLIC, anon, authenticated;
 
-GRANT SELECT, INSERT, UPDATE ON public.canonical_session_roster_policies TO authenticated;
+GRANT SELECT ON public.canonical_session_roster_policies TO authenticated;
 GRANT SELECT, INSERT ON public.canonical_session_rosters TO authenticated;
 GRANT SELECT, INSERT, UPDATE (selection_status) ON public.canonical_session_roster_members TO authenticated;
 GRANT SELECT ON public.canonical_session_roster_member_events TO authenticated;
@@ -188,31 +188,6 @@ CREATE POLICY canonical_session_roster_policies_staff_read
       AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
       AND actor.membership_role IN ('owner','coach')
   ));
-DROP POLICY IF EXISTS canonical_session_roster_policies_staff_insert ON public.canonical_session_roster_policies;
-CREATE POLICY canonical_session_roster_policies_staff_insert
-  ON public.canonical_session_roster_policies FOR INSERT TO authenticated
-  WITH CHECK (updated_by = (SELECT auth.uid()) AND EXISTS (
-    SELECT 1 FROM public.team_members actor
-    WHERE actor.team_id = canonical_session_roster_policies.team_id
-      AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
-      AND actor.membership_role IN ('owner','coach')
-  ));
-DROP POLICY IF EXISTS canonical_session_roster_policies_staff_update ON public.canonical_session_roster_policies;
-CREATE POLICY canonical_session_roster_policies_staff_update
-  ON public.canonical_session_roster_policies FOR UPDATE TO authenticated
-  USING (EXISTS (
-    SELECT 1 FROM public.team_members actor
-    WHERE actor.team_id = canonical_session_roster_policies.team_id
-      AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
-      AND actor.membership_role IN ('owner','coach')
-  ))
-  WITH CHECK (updated_by = (SELECT auth.uid()) AND EXISTS (
-    SELECT 1 FROM public.team_members actor
-    WHERE actor.team_id = canonical_session_roster_policies.team_id
-      AND actor.user_id = (SELECT auth.uid()) AND actor.status = 'active'
-      AND actor.membership_role IN ('owner','coach')
-  ));
-
 DROP POLICY IF EXISTS canonical_session_rosters_team_read ON public.canonical_session_rosters;
 CREATE POLICY canonical_session_rosters_team_read
   ON public.canonical_session_rosters FOR SELECT TO authenticated
@@ -480,7 +455,7 @@ CREATE OR REPLACE FUNCTION public.configure_canonical_session_roster_policy(
 )
 RETURNS public.canonical_session_roster_policies
 LANGUAGE plpgsql
-SECURITY INVOKER
+SECURITY DEFINER
 SET search_path = ''
 AS $function$
 DECLARE

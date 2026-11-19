@@ -113,6 +113,14 @@ BEGIN
     v_session.team_id,'training',1::smallint,1::smallint,true
   );
 
+  BEGIN
+    UPDATE public.canonical_session_roster_policies
+    SET maximum_players=4
+    WHERE team_id=v_session.team_id AND session_type='scrim';
+    RAISE EXCEPTION 'Direct roster policy write bypassed the configuration RPC';
+  EXCEPTION WHEN SQLSTATE '42501' THEN NULL;
+  END;
+
   PERFORM public.transition_canonical_session(
     v_session.id,0,'scheduled','Schedule roster snapshot test',
     '90000000-0000-0000-8000-000000000002',NULL
@@ -407,6 +415,9 @@ RESET ROLE;
 
 DO $$
 BEGIN
+  IF has_table_privilege('authenticated','public.canonical_session_roster_policies','INSERT')
+    OR has_table_privilege('authenticated','public.canonical_session_roster_policies','UPDATE')
+  THEN RAISE EXCEPTION 'Authenticated role can bypass the roster policy configuration RPC'; END IF;
   IF has_table_privilege('authenticated','public.canonical_session_rosters','UPDATE')
     OR has_table_privilege('authenticated','public.canonical_session_rosters','DELETE')
   THEN RAISE EXCEPTION 'Authenticated role can mutate roster snapshot headers'; END IF;

@@ -26,7 +26,7 @@ The player UUID and membership UUID are stored as historical values, not foreign
 - Maximum selected players.
 - Whether the full configured roster is required.
 
-`configure_canonical_session_roster_policy` is an Owner/Coach SECURITY INVOKER RPC. It validates the policy against the team's existing `roster_capacity` setting (with the existing fifth-player/default capacity behavior as fallback). There is no hard-coded four-player session rule.
+`configure_canonical_session_roster_policy` is an Owner/Coach SECURITY DEFINER RPC; direct table INSERT/UPDATE privileges are withheld so the capacity validation cannot be bypassed. It validates the policy against the team's existing `roster_capacity` setting (with the existing fifth-player/default capacity behavior as fallback). There is no hard-coded four-player session rule.
 
 The locked roster header stores the team capacity and session-type policy values that were effective at lock time. Later team setting or policy changes cannot rewrite that historical configuration.
 
