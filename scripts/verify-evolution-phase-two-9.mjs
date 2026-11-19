@@ -8,7 +8,8 @@ test("Phase 2.9 exposes one server-authoritative, idempotent source adapter", as
   const sql = await read("../supabase/migrations/20261120230000_evolution_phase_two_9_existing_module_integration.sql");
   assert.match(sql, /FUNCTION public\.integrate_canonical_source\(\s*p_team_id uuid,\s*p_source_system text,\s*p_source_record_id uuid/s);
   assert.match(sql, /SECURITY INVOKER/);
-  assert.match(sql, /pg_advisory_xact_lock/);\n  assert.match(sql, /hashtextextended/);
+  assert.match(sql, /pg_advisory_xact_lock/);
+  assert.match(sql, /hashtextextended/);
   assert.match(sql, /canonical_session_sources/);
   assert.match(sql, /md5\([\s\S]*p_team_id::text[\s\S]*p_source_system[\s\S]*p_source_record_id::text[\s\S]*\)::uuid/);
   assert.match(sql, /sync_canonical_session_matches\(v_session\.id\)/);
