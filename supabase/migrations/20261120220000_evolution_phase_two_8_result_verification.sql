@@ -287,10 +287,13 @@ BEGIN
     RETURN v_result;
   END IF;
   IF v_result.status='submitted' THEN RAISE EXCEPTION 'canonical_result_already_pending_verification' USING ERRCODE='23514'; END IF;
-  IF v_result.current_version_no>0 AND (p_correction_reason IS NULL OR char_length(btrim(p_correction_reason)) NOT BETWEEN 1 AND 500)
+  IF EXISTS(SELECT 1 FROM public.canonical_session_result_versions
+      WHERE result_id=v_result.id AND version_kind IN ('submission','amendment'))
+    AND (p_correction_reason IS NULL OR char_length(btrim(p_correction_reason)) NOT BETWEEN 1 AND 500)
   THEN RAISE EXCEPTION 'canonical_result_correction_reason_required' USING ERRCODE='22023'; END IF;
   v_version_no:=v_result.current_version_no+1;
-  v_kind:=CASE WHEN v_version_no=1 THEN 'submission' ELSE 'amendment' END;
+  v_kind:=CASE WHEN EXISTS(SELECT 1 FROM public.canonical_session_result_versions
+    WHERE result_id=v_result.id AND version_kind IN ('submission','amendment')) THEN 'amendment' ELSE 'submission' END;
 
   PERFORM pg_catalog.set_config('app.evolution_result_write','append',true);
   INSERT INTO public.canonical_session_result_versions(result_id,team_id,version_no,version_kind,
@@ -365,7 +368,7 @@ BEGIN
 
   SELECT * INTO v_version FROM public.canonical_session_result_versions
     WHERE result_id=v_result.id AND version_no=v_result.current_version_no;
-  v_next_status:=CASE WHEN v_version.version_no=1 THEN 'verified' ELSE 'amended' END;
+  v_next_status:=CASE WHEN v_version.version_kind='amendment' THEN 'amended' ELSE 'verified' END;
   PERFORM pg_catalog.set_config('app.evolution_result_write','append',true);
   INSERT INTO public.canonical_session_result_events(result_id,team_id,version_no,event_kind,
     previous_status,new_status,verified_values,verification_checklist,reason,idempotency_key,changed_by)
