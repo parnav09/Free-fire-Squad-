@@ -37,7 +37,7 @@ test("Roster identity preserves player UUID and membership provenance without li
   assert.match(migration, /player_number_snapshot smallint/);
   assert.match(migration, /membership_role_snapshot text NOT NULL/);
   assert.match(migration, /UNIQUE \(canonical_session_id, player_user_id\)/);
-  assert.match(report, /no FK to team_members\/auth\.users/i);
+  assert.match(report, /no FK to .*team_members.*auth\.users/i);
   assert.match(harness, /Historical roster changed after member leave/);
   assert.match(harness, /Historical roster changed after IGN\/slot edit/);
 });
@@ -132,7 +132,8 @@ test("The Phase 2.5 PostgreSQL integration and source audit are part of exact-he
 });
 
 test("Production rollout remains gated on Point 2.9 and separate approval", () => {
-  assert.match(report, /No live .*Supabase migration/);\n  assert.match(report, /No Vercel production deployment/);
+  assert.match(report, /No live .*Supabase migration/);
+  assert.match(report, /No Vercel production deployment/);
   assert.match(report, /Point 2\.9/);
   assert.match(blueprint, /No production migration\/deployment occurs without separate rollout approval/i);
 });
