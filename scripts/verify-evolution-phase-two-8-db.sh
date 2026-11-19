@@ -34,6 +34,7 @@ BEGIN
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','scrim','Result Verification Test',
     '90000000-0000-0000-8000-000000000301',DATE '2026-11-23',NULL,NULL
   );
+  PERFORM pg_catalog.set_config('app.test_result_session_id',v_session.id::text,false);
   INSERT INTO public.canonical_session_sources(team_id,canonical_session_id,source_system,scrim_record_id,created_by)
   VALUES(v_session.team_id,v_session.id,'scrim',
     'aa200000-0000-0000-0000-000000000020',auth.uid());
@@ -235,8 +236,7 @@ SELECT set_config('request.jwt.claim.sub','20000000-0000-0000-0000-000000000002'
 DO $$
 DECLARE v_session uuid; v_count integer;
 BEGIN
-  SELECT id INTO v_session FROM public.canonical_sessions
-  WHERE title='Result Verification Test' LIMIT 1;
+  v_session:=pg_catalog.current_setting('app.test_result_session_id')::uuid;
   SELECT count(*) INTO v_count FROM public.canonical_session_results
   WHERE canonical_session_id=v_session;
   IF v_count<>0 THEN RAISE EXCEPTION 'Player can read staff-only result audit'; END IF;
