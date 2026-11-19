@@ -21,6 +21,9 @@ assert.match(scrims, /from\("scrim_personal_reviews"\)/);
 assert.doesNotMatch(scrims, /from\("scrim_records"\)\.select\("\*"\)/);
 assert.match(scrims, /This reflection is private to the record owner/);
 assert.match(scrims, /Average match placement/);
+assert.match(scrims, /type MatchRow = \{ placement: number \| null; kills: number \}/);
+assert.match(scrims, /onChange\(null\)/);
+assert.match(scrims, /scoredPlacements\.length/);
 assert.match(scrims, /ScrimTeamCollaboration/);
 
 assert.match(collaboration, /scrim_team_review_comments/);
