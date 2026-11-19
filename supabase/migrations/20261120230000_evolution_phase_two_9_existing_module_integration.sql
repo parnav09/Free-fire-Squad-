@@ -28,7 +28,7 @@ BEGIN
   IF auth.uid() IS NULL THEN
     RAISE EXCEPTION 'authentication_required' USING ERRCODE = '28000';
   END IF;
-  IF p_team_id IS NULL OR p_source_record_id IS NULL
+  IF p_team_id IS NULL OR p_source_record_id IS NULL OR p_source_system IS NULL
     OR p_source_system NOT IN ('scrim','tournament','training')
   THEN
     RAISE EXCEPTION 'canonical_source_arguments_invalid' USING ERRCODE = '22023';
