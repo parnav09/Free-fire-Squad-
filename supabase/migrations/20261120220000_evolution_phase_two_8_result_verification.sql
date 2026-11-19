@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS public.canonical_session_result_versions (
   submitted_at timestamptz NOT NULL DEFAULT clock_timestamp(),
   CONSTRAINT canonical_session_result_versions_result_team_fk
     FOREIGN KEY (result_id,team_id) REFERENCES public.canonical_session_results(id,team_id) ON DELETE RESTRICT,
-  CONSTRAINT canonical_session_result_versions_version_unique UNIQUE(result_id,version_no),
+  CONSTRAINT canonical_session_result_versions_version_unique UNIQUE(result_id,team_id,version_no),
   CONSTRAINT canonical_session_result_versions_idempotency_unique UNIQUE(result_id,idempotency_key),
   CONSTRAINT canonical_session_result_versions_id_team_unique UNIQUE(id,result_id,team_id)
 );
@@ -161,7 +161,7 @@ DECLARE
 BEGIN
   IF auth.uid() IS NULL THEN RAISE EXCEPTION 'authentication_required' USING ERRCODE='28000'; END IF;
   IF p_idempotency_key IS NULL OR p_raw_values IS NULL OR jsonb_typeof(p_raw_values)<>'object'
-    OR p_raw_values='{}'::jsonb OR p_result_source NOT IN ('official_scorecard','coach_report','team_record','training_log','other')
+    OR p_raw_values='{}'::jsonb OR p_result_source IS NULL OR p_result_source NOT IN ('official_scorecard','coach_report','team_record','training_log','other')
     OR (p_source_reference IS NOT NULL AND char_length(p_source_reference)>500)
   THEN RAISE EXCEPTION 'canonical_result_draft_arguments_invalid' USING ERRCODE='22023'; END IF;
   SELECT * INTO v_session FROM public.canonical_sessions WHERE id=p_session_id FOR UPDATE;
@@ -182,6 +182,7 @@ BEGIN
     WHERE cm.id=p_match_id AND cm.canonical_session_id=v_session.id AND cm.team_id=v_session.team_id)
   THEN RAISE EXCEPTION 'canonical_result_match_session_mismatch' USING ERRCODE='23503'; END IF;
 
+  PERFORM pg_catalog.set_config('app.evolution_result_write','root',true);
   IF p_match_id IS NULL THEN
     INSERT INTO public.canonical_session_results(team_id,canonical_session_id,canonical_session_match_id,created_by)
     VALUES(v_session.team_id,v_session.id,NULL,auth.uid())
@@ -239,7 +240,7 @@ DECLARE
 BEGIN
   IF auth.uid() IS NULL THEN RAISE EXCEPTION 'authentication_required' USING ERRCODE='28000'; END IF;
   IF p_idempotency_key IS NULL OR p_raw_values IS NULL OR jsonb_typeof(p_raw_values)<>'object'
-    OR p_raw_values='{}'::jsonb OR p_result_source NOT IN ('official_scorecard','coach_report','team_record','training_log','other')
+    OR p_raw_values='{}'::jsonb OR p_result_source IS NULL OR p_result_source NOT IN ('official_scorecard','coach_report','team_record','training_log','other')
     OR (p_source_reference IS NOT NULL AND char_length(p_source_reference)>500)
     OR (p_correction_reason IS NOT NULL AND char_length(btrim(p_correction_reason)) NOT BETWEEN 1 AND 500)
   THEN RAISE EXCEPTION 'canonical_result_submission_arguments_invalid' USING ERRCODE='22023'; END IF;
