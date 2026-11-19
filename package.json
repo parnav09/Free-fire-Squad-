@@ -11,7 +11,7 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "test:foundation": "node --test scripts/verify-foundation.mjs",
-    "build": "npm run typecheck && npm run test:foundation && npm run test:characters && npm run test:evolution && npm run test:evolution-phase-one && npm run test:evolution-phase-one-5 && npm run test:evolution-phase-one-5-b && npm run test:evolution-phase-one-5-c && npm run test:evolution-phase-one-5-d && npm run test:evolution-phase-one-5-e && npm run test:evolution-phase-two-1 && npm run test:evolution-phase-two-2 && npm run test:evolution-phase-two-3 && npm run test:evolution-phase-two-4 && npm run test:evolution-phase-two-5 && vite build",
+    "build": "npm run typecheck && npm run test:foundation && npm run test:characters && npm run test:evolution && npm run test:evolution-phase-one && npm run test:evolution-phase-one-5 && npm run test:evolution-phase-one-5-b && npm run test:evolution-phase-one-5-c && npm run test:evolution-phase-one-5-d && npm run test:evolution-phase-one-5-e && npm run test:evolution-phase-two-1 && npm run test:evolution-phase-two-2 && npm run test:evolution-phase-two-3 && npm run test:evolution-phase-two-4 && npm run test:evolution-phase-two-5 && npm run test:evolution-phase-two-6 && vite build",
     "preview": "vite preview",
     "test:characters": "node --test scripts/verify-character-profile.mjs",
     "test:evolution": "node --test scripts/verify-evolution-legacy-fixes.mjs",
@@ -25,7 +25,8 @@
     "test:evolution-phase-two-2": "node --test scripts/verify-evolution-phase-two-2.mjs",
     "test:evolution-phase-two-3": "node --test scripts/verify-evolution-phase-two-3.mjs",
     "test:evolution-phase-two-4": "node --test scripts/verify-evolution-phase-two-4.mjs",
-    "test:evolution-phase-two-5": "node --test scripts/verify-evolution-phase-two-5.mjs"
+    "test:evolution-phase-two-5": "node --test scripts/verify-evolution-phase-two-5.mjs",
+    "test:evolution-phase-two-6": "node --test scripts/verify-evolution-phase-two-6.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.1",
