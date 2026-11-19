@@ -53,8 +53,7 @@ VALUES (
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
 
-DO $
-DECLARE
+DO $phase29$DECLARE
   s record;
   s_retry record;
   t record;
@@ -107,7 +106,7 @@ BEGIN
   SELECT count(*) INTO n FROM public.canonical_session_sources
     WHERE source_record_id='aa290000-0000-0000-0000-000000000003';
   IF n<>0 THEN RAISE EXCEPTION 'Planning plan itself was incorrectly promoted as a played session'; END IF;
-END $$;
+END $phase29$;
 RESET ROLE;
 
 -- A regular player cannot create canonical mappings for staff-managed sources.
