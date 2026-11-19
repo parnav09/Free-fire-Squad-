@@ -129,6 +129,10 @@ BEGIN
   -- remains in history, but the pending correction temporarily leaves aggregates.
   PERFORM public.reopen_canonical_session(v_session.id,4,'awaiting_results',
     'Correct source scorecard after verification','90000000-0000-0000-8000-000000000313');
+  IF (SELECT lifecycle_status FROM public.canonical_sessions WHERE id=v_session.id)<>'awaiting_results'
+    OR (SELECT results_verified_at FROM public.canonical_sessions WHERE id=v_session.id) IS NOT NULL
+    OR (SELECT awaiting_results_at FROM public.canonical_sessions WHERE id=v_session.id) IS NULL
+  THEN RAISE EXCEPTION 'Audited result correction reopen did not reset lifecycle verification metadata'; END IF;
   v_result1:=public.submit_canonical_session_result(
     v_session.id,v_match1,'official_scorecard','scorecard://match-1-revised',
     '{"placement":2,"kills":5}'::jsonb,'90000000-0000-0000-8000-000000000314',
