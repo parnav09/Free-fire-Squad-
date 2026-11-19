@@ -1,14 +1,14 @@
 -- Keep personal post-Scrim reflections private while enabling shared team discussion and follow-up.
 -- This migration is repository-only until the migration history is reconciled and production rollout is approved.
 
-do $
+do $$
 begin
   if not exists (select 1 from pg_constraint where conname='scrim_records_scope_unique') then
     alter table public.scrim_records
       add constraint scrim_records_scope_unique unique (id, team_id, owner_id);
   end if;
 end
-$;
+$$;
 
 create table if not exists public.scrim_personal_reviews (
   id uuid primary key default gen_random_uuid(),
@@ -117,14 +117,14 @@ create policy "owners delete own scrim personal reviews"
 on public.scrim_personal_reviews for delete to authenticated
 using (owner_id = (select auth.uid()));
 
-do $
+do $$
 begin
   if not exists (select 1 from pg_constraint where conname='scrim_team_reviews_scope_unique') then
     alter table public.scrim_team_reviews
       add constraint scrim_team_reviews_scope_unique unique (id, scrim_id, team_id);
   end if;
 end
-$;
+$$;
 
 create table if not exists public.scrim_team_review_comments (
   id uuid primary key default gen_random_uuid(),
@@ -193,7 +193,7 @@ create table if not exists public.scrim_review_tasks (
   status text not null default 'open' check (status in ('open','in_progress','done','cancelled')),
   due_date date,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
 
 create index if not exists scrim_review_tasks_team_status_idx
