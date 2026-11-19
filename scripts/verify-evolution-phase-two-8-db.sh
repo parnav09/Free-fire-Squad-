@@ -14,7 +14,7 @@ VALUES (
   'aa200000-0000-0000-0000-000000000020',
   'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   '10000000-0000-0000-0000-000000000001',
-  DATE '2026-11-22',3,
+  DATE '2026-11-23',3,
   '[{"placement":1,"kills":5},{"placement":3,"kills":2}]'::jsonb
 );
 
@@ -32,7 +32,7 @@ DECLARE
 BEGIN
   v_session:=public.create_canonical_session(
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','scrim','Result Verification Test',
-    '90000000-0000-0000-8000-000000000301',DATE '2026-11-22',NULL,NULL
+    '90000000-0000-0000-8000-000000000301',DATE '2026-11-23',NULL,NULL
   );
   INSERT INTO public.canonical_session_sources(team_id,canonical_session_id,source_system,scrim_record_id,created_by)
   VALUES(v_session.team_id,v_session.id,'scrim',
@@ -170,7 +170,7 @@ DECLARE
 BEGIN
   v_session:=public.create_canonical_session(
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','training','Training Result Verification Test',
-    '90000000-0000-0000-8000-000000000321',DATE '2026-11-22',NULL,NULL
+    '90000000-0000-0000-8000-000000000321',DATE '2026-11-23',NULL,NULL
   );
   PERFORM public.transition_canonical_session(v_session.id,0,'scheduled','Schedule training result',
     '90000000-0000-0000-8000-000000000322',NULL);
