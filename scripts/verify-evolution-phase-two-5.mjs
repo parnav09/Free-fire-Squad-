@@ -114,7 +114,7 @@ test("Team RLS and role checks prevent player writes and cross-team roster discl
 test("Historical roster and participation audit cannot be directly mutated or deleted", () => {
   assert.match(migration, /REVOKE INSERT, UPDATE, DELETE ON public\.canonical_session_roster_member_events/);
   assert.match(migration, /REVOKE INSERT, UPDATE, DELETE ON public\.canonical_session_match_participation_events/);
-  assert.match(migration, /REVOKE DELETE ON public\.canonical_session_rosters/);
+  assert.match(migration, /REVOKE DELETE ON public\.canonical_session_roster_policies,[\s\S]*public\.canonical_session_rosters/);
   assert.match(migration, /evolution_private\.guard_canonical_session_roster_member/);
   assert.match(migration, /evolution_private\.audit_canonical_session_roster_member/);
   assert.match(migration, /evolution_private\.guard_canonical_session_match_participant/);
