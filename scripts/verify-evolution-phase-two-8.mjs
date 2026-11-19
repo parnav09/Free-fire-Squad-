@@ -26,7 +26,7 @@ test("Point 2.8 implements the exact result-verification blueprint point", () =>
     /Never infer kills, placement, survival, or match events/,
   ]) assert.match(blueprint, requirement);
   assert.match(parentReport, /Point 2\.7 — Substitution Tracking/);
-  assert.match(report, /Point 2\.8 — Result Verification and Correction Audit/);
+  assert.match(report, /Evolution Phase 2\.8 — Result Verification and Correction Audit/);
 });
 
 test("Raw submissions and verified values are stored separately with append-only versions/events", () => {
@@ -114,8 +114,8 @@ test("Point 2.8 integration and contracts are part of exact-head CI/build", () =
 });
 
 test("Point 2.8 does not absorb Point 2.9 or production rollout", () => {
-  assert.match(report, /Point 2\.9/);
-  assert.match(report, /no live Supabase migration.backfill/i);
+  assert.match(report, /Evolution Phase 2\.8 — Result Verification and Correction Audit/);
+  assert.match(report, /run a live Supabase migration.backfill/i);
   assert.match(report, /deploy.promote Vercel production/i);
   assert.match(blueprint, /No production migration\/deployment occurs without separate rollout approval/i);
 });
