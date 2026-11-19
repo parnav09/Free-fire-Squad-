@@ -471,3 +471,37 @@
 .scrims-heading>div{min-width:0}
 @media(max-width:600px){.scrims-back-top{min-height:44px;padding:10px 14px;margin-bottom:10px;font-size:14px}}
 @media(min-width:601px){.scrims-back-top{min-height:38px;padding:8px 12px}}
+
+
+/* Team analytics and review collaboration */
+.scrims-analytics-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.scrims-analytics-strip>div{min-width:0;padding:13px 15px;border:1px solid #293a54;border-radius:12px;background:linear-gradient(145deg,#121e30,#0d1524)}
+.scrims-analytics-strip small{display:block;color:#93a8c6;font-size:11px;line-height:1.4}
+.scrims-analytics-strip strong{display:block;margin-top:6px;color:#eaf3ff;font-size:20px;font-variant-numeric:tabular-nums}
+.scrims-collaboration{display:flex;flex-direction:column;gap:16px;border-top:1px solid #26364e;padding-top:15px}
+.scrims-collab-section{display:flex;flex-direction:column;gap:12px;min-width:0}
+.scrims-collab-notice{margin:0;padding:9px 11px;border:1px solid #2c5068;border-radius:9px;color:#aeeafa;background:#102337;font-size:12px;overflow-wrap:anywhere}
+.scrims-discussion-card,.scrims-task-card{display:flex;flex-direction:column;gap:10px;min-width:0;padding:12px;border:1px solid #293a54;border-radius:12px;background:#111d2e}
+.scrims-discussion-title{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.scrims-discussion-title strong{font-size:13px;overflow-wrap:anywhere}
+.scrims-discussion-title span{flex:none;color:#91d9e9;font-size:10px}
+.scrims-comment-list{display:flex;flex-direction:column;gap:7px}
+.scrims-comment{padding:9px 10px;border-radius:9px;background:#0b1422;border:1px solid #23334b}
+.scrims-comment p{margin:0;color:#d1deef;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.scrims-comment small,.scrims-task-main small{display:block;margin-top:5px;color:#8fa3c0;font-size:10px}
+.scrims-comment-entry{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.scrims-comment-entry input{min-width:0}
+.scrims-task-form{display:flex;flex-direction:column;gap:10px;padding:13px;border:1px solid #293a54;border-radius:12px;background:#101a2b}
+.scrims-task-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.scrims-task-list{display:flex;flex-direction:column;gap:9px}
+.scrims-task-card{flex-direction:row;align-items:center;justify-content:space-between}
+.scrims-task-main{min-width:0;flex:1}
+.scrims-task-main strong{font-size:13px;overflow-wrap:anywhere}
+.scrims-task-main p{margin:5px 0 0;color:#b5c6de;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.scrims-task-controls{display:flex;align-items:center;gap:8px;flex:none}
+.scrims-task-controls select{min-width:118px}
+.scrims-task-delete{border:1px solid #563044;border-radius:8px;padding:8px 10px;background:#281a24;color:#ff9eae;font-size:11px;cursor:pointer}
+.scrims-task-delete:disabled,.scrims-task-controls select:disabled{opacity:.55;cursor:not-allowed}
+.scrims-task-controls select:focus-visible,.scrims-task-delete:focus-visible,.scrims-comment-entry button:focus-visible{outline:2px solid #66d9f3;outline-offset:2px}
+@media(max-width:700px){.scrims-analytics-strip{grid-template-columns:1fr}.scrims-task-grid{grid-template-columns:1fr}.scrims-task-card{align-items:stretch;flex-direction:column}.scrims-task-controls{width:100%}.scrims-task-controls select{flex:1;min-width:0}}
+@media(max-width:520px){.scrims-comment-entry{grid-template-columns:1fr}.scrims-comment-entry button{width:100%}.scrims-task-form{padding:10px}.scrims-discussion-card,.scrims-task-card{padding:10px}}
