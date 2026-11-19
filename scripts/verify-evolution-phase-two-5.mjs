@@ -20,7 +20,7 @@ test("Point 2.5 maps only to the Session Roster Snapshot blueprint contract", ()
   assert.match(blueprint, /Snapshot eligible team members at session creation or roster lock/);
   assert.match(blueprint, /Record actual participation per match where the source supports it/);
   assert.match(report, /Point 2\.5 — Session Roster Snapshot/);
-  assert.match(parentReport, /does not introduce roster, role, substitution/i);
+  assert.match(parentReport, /Scope: Canonical session lifecycle/i);
 });
 
 test("The migration is additive and does not fabricate historical rosters", () => {
@@ -51,8 +51,8 @@ test("Team roster capacity and session-type constraints are configurable and sna
   assert.match(migration, /minimum_players_snapshot smallint/);
   assert.match(migration, /maximum_players_snapshot smallint/);
   assert.match(migration, /configure_canonical_session_roster_policy/);
-  assert.match(harness, /'training',1,1,true/);
-  assert.match(harness, /'scrim',2,3,false/);
+  assert.match(harness, /'training',1::smallint,1::smallint,true/);
+  assert.match(harness, /'scrim',2::smallint,3::smallint,false/);
 });
 
 test("Roster locking captures every eligible active player and supports invited, selected and confirmed states", () => {
