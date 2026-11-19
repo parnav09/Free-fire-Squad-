@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { getTeamUiCapabilities, indiaDateISO, indiaDateLabel, millisecondsUntilIndiaMidnight, resolveActiveTeamIdentity, resolveTeamSessionEligibility } from "./lib/evolution-identity";
 import { createLatestRequestGuard } from "./lib/latest-request-guard";
+import { integrateCanonicalSource } from "./lib/canonical-module-integration";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
 
@@ -699,7 +700,12 @@ export default function App() {
         const { error } = await supabase!.from("tournament_matches").upsert(rows, { onConflict: "cycle_id,match_day,match_number" });
         if (error) throw error;
       }
-      if (activeMatchScopeRef.current === `${teamSnapshot.id}:${weekSnapshot}`) setConnection("Signed in · cloud sync active");
+      const canonical = await integrateCanonicalSource(supabase!, teamSnapshot.id, "tournament", cycle.id);
+      if (activeMatchScopeRef.current === `${teamSnapshot.id}:${weekSnapshot}`) {
+        setConnection(canonical.linked
+          ? "Signed in · cloud + canonical sync active"
+          : "Signed in · legacy sync active · canonical link pending");
+      }
     } catch {
       if (activeMatchScopeRef.current === `${teamSnapshot.id}:${weekSnapshot}`) setConnection("Signed in · sync retry needed");
     }
@@ -879,7 +885,7 @@ export default function App() {
   };
 
   const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
-  const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
+  const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error|pending/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
   const nav: Section[] = ["Players", "Tournament", "StratForge", "Assignments", "Evolution", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
   const mainNav: Section[] = ["Players", "Tournament", "StratForge", "Assignments"];
