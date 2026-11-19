@@ -115,7 +115,7 @@ test("Point 2.8 integration and contracts are part of exact-head CI/build", () =
 
 test("Point 2.8 does not absorb Point 2.9 or production rollout", () => {
   assert.match(report, /Point 2\.9/);
-  assert.match(report, /No live Supabase migration/);
-  assert.match(report, /No Vercel production deployment/);
+  assert.match(report, /no live Supabase migration\\/backfill/i);
+  assert.match(report, /deploy\\/promote Vercel production/i);
   assert.match(blueprint, /No production migration\/deployment occurs without separate rollout approval/i);
 });
