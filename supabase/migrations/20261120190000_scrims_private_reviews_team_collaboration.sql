@@ -290,6 +290,15 @@ with check (
       and sr.team_id = scrim_review_tasks.team_id
   )
   and (
+    scrim_review_tasks.assigned_to is null
+    or exists (
+      select 1 from public.team_members assignee
+      where assignee.team_id = scrim_review_tasks.team_id
+        and assignee.user_id = scrim_review_tasks.assigned_to
+        and assignee.status = 'active'
+    )
+  )
+  and (
     scrim_review_tasks.source_review_id is null
     or exists (
       select 1 from public.scrim_team_reviews tr
