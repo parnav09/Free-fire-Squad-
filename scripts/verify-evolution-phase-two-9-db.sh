@@ -8,9 +8,6 @@ DATABASE_URL="$DATABASE_URL" bash "$ROOT/scripts/verify-evolution-phase-two-8-db
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$ROOT/supabase/migrations/20261120230000_evolution_phase_two_9_existing_module_integration.sql"
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
-SET ROLE authenticated;
-SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
-
 INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date,match_count,matches)
 VALUES (
   'aa290000-0000-0000-0000-000000000001',
@@ -53,7 +50,10 @@ VALUES (
   '10000000-0000-0000-0000-000000000001'
 );
 
-DO $$
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
+
+DO $
 DECLARE
   s record;
   s_retry record;
