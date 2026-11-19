@@ -737,7 +737,7 @@ SELECT set_config('request.jwt.claim.sub','50000000-0000-0000-0000-000000000005'
 DO $$
 DECLARE v_match uuid; v_out uuid; v_in uuid; v_count integer;
 BEGIN
-  SELECT id INTO v_match FROM public.canonical_session_matches cm
+  SELECT cm.id INTO v_match FROM public.canonical_session_matches cm
     JOIN public.canonical_sessions cs ON cs.id=cm.canonical_session_id
     WHERE cs.title='Substitution Tracking Test' ORDER BY cm.match_sequence LIMIT 1;
   SELECT id INTO v_out FROM public.canonical_session_roster_members
