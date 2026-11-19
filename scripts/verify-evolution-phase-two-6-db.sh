@@ -433,7 +433,7 @@ BEGIN
   WHERE canonical_session_id=v_session ORDER BY match_sequence LIMIT 1;
   SELECT count(*) INTO v_count FROM public.canonical_session_match_roles
   WHERE canonical_session_id=v_session;
-  IF v_count <> 7 THEN RAISE EXCEPTION 'Player cannot read their team's match role snapshots'; END IF;
+  IF v_count <> 7 THEN RAISE EXCEPTION 'Player cannot read the team match role snapshots'; END IF;
   SELECT id INTO v_owner_roster FROM public.canonical_session_roster_members
   WHERE canonical_session_id=v_session AND player_user_id='10000000-0000-0000-0000-000000000001';
   SELECT id INTO v_secondary FROM public.canonical_team_role_definitions
