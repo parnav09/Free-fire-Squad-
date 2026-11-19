@@ -8,7 +8,6 @@ DATABASE_URL="$DATABASE_URL" bash "$ROOT/scripts/verify-evolution-phase-two-8-db
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$ROOT/supabase/migrations/20261120230000_evolution_phase_two_9_existing_module_integration.sql"
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 -- Phase 2.2 starts from minimal source-table fixtures. Add only the Planning/Training
 -- columns required to exercise the Point 2.9 explicit promotion adapter.
 CREATE TABLE public.practice_plans (
@@ -33,6 +32,8 @@ ALTER TABLE public.training_sessions
   ADD COLUMN IF NOT EXISTS instructions text NOT NULL DEFAULT '',
   ADD COLUMN IF NOT EXISTS created_by uuid REFERENCES auth.users(id);
 SQL
+
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date,match_count,matches)
 VALUES (
   'aa290000-0000-0000-0000-000000000001',
