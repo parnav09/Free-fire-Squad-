@@ -38,6 +38,6 @@ assert.match(app, /saveMatch\(key,"kills",raw===""\?0:/);
 
 console.log("Scrims privacy, collaboration, analytics and Tournament edge-case contracts: PASS");
 
-assert.equal(migration.split("do $$\nbegin").length - 1, 3, "all migration DO blocks must use valid dollar delimiters");
-assert.ok(!migration.includes("do $\nbegin"), "malformed single-dollar DO block found");
-assert.ok(!migration.includes("default now(),\n);"), "trailing comma in table definition found");
+assert.equal(migration.split("do $$").length - 1, 3, "all migration DO blocks must use valid dollar delimiters");
+assert.equal(migration.split("$$;").length - 1, 3, "all migration DO blocks must close their dollar delimiters");
+assert.doesNotMatch(migration, /updated_at timestamptz not null default now\(\),\s*\);/, "trailing comma in table definition found");
