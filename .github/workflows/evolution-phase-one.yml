@@ -2,9 +2,9 @@ name: SQUAD OS — Evolution Phase One & Phase Two.1 Audit CI
 
 on:
   push:
-    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot]
+    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking]
   pull_request:
-    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot]
+    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking]
 
 permissions:
   contents: read
