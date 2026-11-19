@@ -27,7 +27,7 @@ No kills, placement, survival, match event or Training metric is inferred or def
 4. Verification requires an active Owner/Coach, a submitted result, explicit verified values, a non-empty reason, and exactly the required source-specific checklist keys set to true.
 5. Competitive checklist: source identity, match identity, values reviewed, and no inferred values. Training checklist: source identity, activity, participants, and no inferred values.
 6. Rejection is an append-only decision with actor, timestamp and reason. A rejected result is excluded from trusted aggregates.
-7. Corrections create a new immutable version and require a correction reason. Until that version is verified, the affected result is excluded from the trusted aggregate view; the previous raw version and verification event remain preserved.
+7. Corrections to a verified session use the audited lifecycle reopen edge from `verified` to `awaiting_results`; prior verification timestamps are cleared. The correction creates a new immutable version and requires a reason. Until that version is verified, the affected result is excluded from the trusted aggregate view; the previous raw version and verification event remain preserved.
 8. Verification of a correction moves the current state to `amended`. Only the current verified/amended version is exposed to its corresponding trusted view.
 9. Session lifecycle transition to `verified` requires at least one result record and every result record for that session to be verified/amended. Pending, draft or rejected result records block that transition.
 10. Team-scoped RLS, Owner/Coach authorization, idempotency, append-only triggers and revoked direct writes protect all result history.
