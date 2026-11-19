@@ -20,7 +20,7 @@ test("Point 2.5 maps only to the Session Roster Snapshot blueprint contract", ()
   assert.match(blueprint, /Snapshot eligible team members at session creation or roster lock/);
   assert.match(blueprint, /Record actual participation per match where the source supports it/);
   assert.match(report, /Point 2\.5 — Session Roster Snapshot/);
-  assert.match(parentReport, /Scope: Canonical session lifecycle/i);
+  assert.match(parentReport, /Canonical Session Lifecycle/i);
 });
 
 test("The migration is additive and does not fabricate historical rosters", () => {
