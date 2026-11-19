@@ -467,6 +467,147 @@ WHERE s.session_type='training' AND r.canonical_session_match_id IS NULL
 GRANT SELECT ON public.canonical_verified_competitive_match_results,
   public.canonical_verified_training_results TO authenticated;
 
+CREATE OR REPLACE FUNCTION evolution_private.guard_canonical_session_lifecycle()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $function$
+DECLARE
+  v_action text := pg_catalog.current_setting('app.evolution_session_lifecycle_action', true);
+  v_reason text := pg_catalog.current_setting('app.evolution_session_lifecycle_reason', true);
+  v_cancel_code text := pg_catalog.current_setting('app.evolution_session_cancellation_code', true);
+  v_actor uuid := auth.uid();
+BEGIN
+  IF ROW(
+    NEW.lifecycle_status, NEW.lifecycle_version,
+    NEW.lifecycle_scheduled_at, NEW.lifecycle_scheduled_by,
+    NEW.started_at, NEW.started_by, NEW.awaiting_results_at, NEW.awaiting_results_by,
+    NEW.results_verified_at, NEW.results_verified_by, NEW.closed_at, NEW.closed_by,
+    NEW.cancelled_at, NEW.cancelled_by, NEW.cancellation_reason_code, NEW.cancellation_reason,
+    NEW.archived_at, NEW.archived_by, NEW.archive_reason
+  ) IS NOT DISTINCT FROM ROW(
+    OLD.lifecycle_status, OLD.lifecycle_version,
+    OLD.lifecycle_scheduled_at, OLD.lifecycle_scheduled_by,
+    OLD.started_at, OLD.started_by, OLD.awaiting_results_at, OLD.awaiting_results_by,
+    OLD.results_verified_at, OLD.results_verified_by, OLD.closed_at, OLD.closed_by,
+    OLD.cancelled_at, OLD.cancelled_by, OLD.cancellation_reason_code, OLD.cancellation_reason,
+    OLD.archived_at, OLD.archived_by, OLD.archive_reason
+  ) THEN
+    RETURN NEW;
+  END IF;
+
+  IF v_actor IS NULL OR v_action NOT IN ('transition','reopen')
+    OR NEW.lifecycle_status IS NOT DISTINCT FROM OLD.lifecycle_status
+    OR NEW.lifecycle_version <> OLD.lifecycle_version + 1
+    OR v_reason IS NULL OR pg_catalog.char_length(pg_catalog.btrim(v_reason)) NOT BETWEEN 1 AND 500
+  THEN
+    RAISE EXCEPTION 'canonical_session_lifecycle_rpc_required' USING ERRCODE = '42501';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM public.team_members tm
+    WHERE tm.team_id = OLD.team_id AND tm.user_id = v_actor
+      AND tm.status = 'active' AND tm.membership_role IN ('owner','coach')
+  ) THEN
+    RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501';
+  END IF;
+
+  IF v_action = 'transition' THEN
+    IF NOT (
+      (OLD.lifecycle_status = 'draft' AND NEW.lifecycle_status = 'scheduled')
+      OR (OLD.lifecycle_status = 'scheduled' AND NEW.lifecycle_status = 'in_progress')
+      OR (OLD.lifecycle_status = 'in_progress' AND NEW.lifecycle_status = 'awaiting_results')
+      OR (OLD.lifecycle_status = 'awaiting_results' AND NEW.lifecycle_status = 'verified')
+      OR (OLD.lifecycle_status = 'verified' AND NEW.lifecycle_status = 'closed')
+      OR (OLD.lifecycle_status IN ('draft','scheduled') AND NEW.lifecycle_status = 'cancelled')
+      OR (OLD.lifecycle_status IN ('closed','cancelled') AND NEW.lifecycle_status = 'archived')
+    ) THEN
+      RAISE EXCEPTION 'invalid_canonical_session_transition' USING ERRCODE = '22023';
+    END IF;
+    IF NEW.lifecycle_status = 'verified' AND NOT EXISTS (
+      SELECT 1 FROM public.canonical_session_result_submissions rs
+      WHERE rs.canonical_session_id = OLD.id AND rs.team_id = OLD.team_id
+    ) THEN
+      RAISE EXCEPTION 'session_results_submission_required_before_verification' USING ERRCODE = '23514';
+    END IF;
+    IF NEW.lifecycle_status = 'closed' AND OLD.results_verified_at IS NULL THEN
+      RAISE EXCEPTION 'verified_results_required_before_closure' USING ERRCODE = '23514';
+    END IF;
+    IF NEW.lifecycle_status = 'cancelled' THEN
+      IF v_cancel_code IS NULL OR v_cancel_code NOT IN ('cancelled','no_show','other') THEN
+        RAISE EXCEPTION 'cancellation_reason_code_required' USING ERRCODE = '22023';
+      END IF;
+      IF v_cancel_code = 'no_show' AND OLD.lifecycle_status <> 'scheduled' THEN
+        RAISE EXCEPTION 'no_show_requires_scheduled_session' USING ERRCODE = '22023';
+      END IF;
+      NEW.cancelled_at := pg_catalog.clock_timestamp();
+      NEW.cancelled_by := v_actor;
+      NEW.cancellation_reason_code := v_cancel_code;
+      NEW.cancellation_reason := pg_catalog.btrim(v_reason);
+    END IF;
+    IF NEW.lifecycle_status = 'scheduled' THEN
+      NEW.lifecycle_scheduled_at := pg_catalog.clock_timestamp();
+      NEW.lifecycle_scheduled_by := v_actor;
+    ELSIF NEW.lifecycle_status = 'in_progress' THEN
+      NEW.started_at := pg_catalog.clock_timestamp();
+      NEW.started_by := v_actor;
+    ELSIF NEW.lifecycle_status = 'awaiting_results' THEN
+      NEW.awaiting_results_at := pg_catalog.clock_timestamp();
+      NEW.awaiting_results_by := v_actor;
+    ELSIF NEW.lifecycle_status = 'verified' THEN
+      NEW.results_verified_at := pg_catalog.clock_timestamp();
+      NEW.results_verified_by := v_actor;
+    ELSIF NEW.lifecycle_status = 'closed' THEN
+      NEW.closed_at := pg_catalog.clock_timestamp();
+      NEW.closed_by := v_actor;
+    ELSIF NEW.lifecycle_status = 'archived' THEN
+      NEW.archived_at := pg_catalog.clock_timestamp();
+      NEW.archived_by := v_actor;
+      NEW.archive_reason := pg_catalog.btrim(v_reason);
+      IF OLD.lifecycle_status = 'cancelled' THEN
+        NEW.cancelled_at := NULL;
+        NEW.cancelled_by := NULL;
+        NEW.cancellation_reason_code := NULL;
+        NEW.cancellation_reason := NULL;
+      END IF;
+    END IF;
+  ELSE
+    IF NOT (
+      (OLD.lifecycle_status = 'closed' AND NEW.lifecycle_status = 'verified')
+      OR (OLD.lifecycle_status = 'verified' AND NEW.lifecycle_status = 'awaiting_results')
+      OR (OLD.lifecycle_status = 'archived' AND NEW.lifecycle_status = 'closed')
+      OR (OLD.lifecycle_status = 'cancelled' AND NEW.lifecycle_status = 'scheduled')
+    ) THEN
+      RAISE EXCEPTION 'invalid_canonical_session_reopen' USING ERRCODE = '22023';
+    END IF;
+    IF OLD.lifecycle_status = 'verified' THEN
+      NEW.results_verified_at := NULL;
+      NEW.results_verified_by := NULL;
+      NEW.awaiting_results_at := pg_catalog.clock_timestamp();
+      NEW.awaiting_results_by := v_actor;
+    ELSIF OLD.lifecycle_status = 'closed' THEN
+      NEW.closed_at := NULL;
+      NEW.closed_by := NULL;
+    ELSIF OLD.lifecycle_status = 'archived' THEN
+      NEW.archived_at := NULL;
+      NEW.archived_by := NULL;
+      NEW.archive_reason := NULL;
+    ELSIF OLD.lifecycle_status = 'cancelled' THEN
+      NEW.cancelled_at := NULL;
+      NEW.cancelled_by := NULL;
+      NEW.cancellation_reason_code := NULL;
+      NEW.cancellation_reason := NULL;
+      NEW.lifecycle_scheduled_at := pg_catalog.clock_timestamp();
+      NEW.lifecycle_scheduled_by := v_actor;
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$function$;
+
+REVOKE ALL ON FUNCTION evolution_private.guard_canonical_session_lifecycle() FROM PUBLIC,anon,authenticated;
+
 CREATE OR REPLACE FUNCTION public.transition_canonical_session(
   p_session_id uuid,
   p_expected_version integer,
