@@ -37,7 +37,7 @@ test("Roster identity preserves player UUID and membership provenance without li
   assert.match(migration, /player_number_snapshot smallint/);
   assert.match(migration, /membership_role_snapshot text NOT NULL/);
   assert.match(migration, /UNIQUE \(canonical_session_id, player_user_id\)/);
-  assert.match(report, /no FK to .*team_members.*auth\.users/i);
+  assert.match(report, /not retained as live FKs/i);
   assert.match(harness, /Historical roster changed after member leave/);
   assert.match(harness, /Historical roster changed after IGN\/slot edit/);
 });
@@ -97,7 +97,7 @@ test("Participant corrections are reasoned, idempotent and append-only audited",
   assert.match(migration, /participation_idempotency_key_reused_with_different_payload/);
   assert.match(migration, /closed_session_participation_is_read_only/);
   assert.match(migration, /canonical_match_participation_correction_rpc_required/);
-  assert.match(report, /Substitution linkage itself remains Point 2\.7/);
+  assert.match(report, /ordered substitution timeline and role transfer belong to Point 2\\.7/);
   assert.match(harness, /Player was replaced before match start/);
 });
 
