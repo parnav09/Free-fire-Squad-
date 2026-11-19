@@ -368,7 +368,7 @@ BEGIN
   ELSE
     v_required_keys:=ARRAY['source_identity_confirmed','match_identity_confirmed','values_reviewed','no_inferred_values'];
   END IF;
-  IF jsonb_object_length(p_checklist)<>4 OR EXISTS(
+  IF (SELECT count(*) FROM jsonb_object_keys(p_checklist))<>4 OR EXISTS(
     SELECT 1 FROM unnest(v_required_keys) k WHERE p_checklist->k IS DISTINCT FROM 'true'::jsonb
   ) THEN RAISE EXCEPTION 'canonical_result_verification_checklist_incomplete' USING ERRCODE='23514'; END IF;
 
