@@ -88,11 +88,16 @@ jobs:
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_6_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_6_ci bash scripts/verify-evolution-phase-two-6-db.sh
 
+      - name: Verify Evolution Phase Two.7 substitution tracking against isolated disposable PostgreSQL
+        run: |
+          PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_7_ci
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_7_ci bash scripts/verify-evolution-phase-two-7-db.sh
+
       - name: Verify staged B migration against disposable PostgreSQL
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
 
       - name: Verify staged security trigger ACL hardening
         run: bash scripts/verify-evolution-security-trigger-acls.sh
 
-      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.6 audits and production bundle
+      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.7 audits and production bundle
         run: npm run build
