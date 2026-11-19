@@ -74,6 +74,13 @@ BEGIN
   IF v_result2.current_version_no<>2 OR v_result2.status<>'submitted' THEN
     RAISE EXCEPTION 'Draft-to-submitted transition was not preserved';
   END IF;
+  v_result1:=public.submit_canonical_session_result(
+    v_session.id,v_match1,'official_scorecard','scorecard://match-1',
+    '{"placement":1,"kills":5}'::jsonb,'90000000-0000-0000-8000-000000000306',NULL
+  );
+  IF v_result1.current_version_no<>1 THEN
+    RAISE EXCEPTION 'Exact result submission retry created a duplicate version';
+  END IF;
   SELECT count(*) INTO v_count FROM public.canonical_session_result_submissions
     WHERE canonical_session_id=v_session.id;
   IF v_count<>1 THEN RAISE EXCEPTION 'Session result submission receipt was not reused'; END IF;
@@ -102,6 +109,13 @@ BEGIN
     '{"placement":3,"kills":2}'::jsonb,
     '{"source_identity_confirmed":true,"match_identity_confirmed":true,"values_reviewed":true,"no_inferred_values":true}'::jsonb,
     'Checked against submitted scorecard','90000000-0000-0000-8000-000000000311');
+  v_result1:=public.verify_canonical_session_result(v_result1.id,
+    '{"placement":1,"kills":5}'::jsonb,
+    '{"source_identity_confirmed":true,"match_identity_confirmed":true,"values_reviewed":true,"no_inferred_values":true}'::jsonb,
+    'Checked against submitted scorecard','90000000-0000-0000-8000-000000000310');
+  IF v_result1.status<>'verified' THEN
+    RAISE EXCEPTION 'Exact verification retry did not return the original decision';
+  END IF;
   IF v_result1.status<>'verified' OR v_result2.status<>'verified' THEN
     RAISE EXCEPTION 'Verified result states were not recorded';
   END IF;
