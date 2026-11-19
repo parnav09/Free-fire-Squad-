@@ -8,6 +8,31 @@ DATABASE_URL="$DATABASE_URL" bash "$ROOT/scripts/verify-evolution-phase-two-8-db
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$ROOT/supabase/migrations/20261120230000_evolution_phase_two_9_existing_module_integration.sql"
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+-- Phase 2.2 starts from minimal source-table fixtures. Add only the Planning/Training
+-- columns required to exercise the Point 2.9 explicit promotion adapter.
+CREATE TABLE public.practice_plans (
+  id uuid PRIMARY KEY,
+  team_id uuid NOT NULL REFERENCES public.teams(id),
+  title text NOT NULL,
+  plan_date date NOT NULL,
+  plan_type text NOT NULL,
+  focus text NOT NULL DEFAULT '',
+  objectives text[] NOT NULL DEFAULT '{}',
+  planned_minutes integer NOT NULL DEFAULT 0,
+  notes text NOT NULL DEFAULT '',
+  created_by uuid REFERENCES auth.users(id),
+  status text NOT NULL DEFAULT 'scheduled'
+);
+ALTER TABLE public.training_sessions
+  ADD COLUMN IF NOT EXISTS plan_id uuid REFERENCES public.practice_plans(id),
+  ADD COLUMN IF NOT EXISTS title text NOT NULL DEFAULT 'Training fixture',
+  ADD COLUMN IF NOT EXISTS session_type text NOT NULL DEFAULT 'squad',
+  ADD COLUMN IF NOT EXISTS scheduled_at timestamptz,
+  ADD COLUMN IF NOT EXISTS duration_minutes integer NOT NULL DEFAULT 15,
+  ADD COLUMN IF NOT EXISTS instructions text NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS created_by uuid REFERENCES auth.users(id);
+SQL
 INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date,match_count,matches)
 VALUES (
   'aa290000-0000-0000-0000-000000000001',
