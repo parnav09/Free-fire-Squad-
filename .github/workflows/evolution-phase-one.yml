@@ -2,9 +2,9 @@ name: SQUAD OS — Evolution Phase One & Phase Two.1 Audit CI
 
 on:
   push:
-    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot]
+    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot]
   pull_request:
-    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle]
+    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot]
 
 permissions:
   contents: read
@@ -83,11 +83,16 @@ jobs:
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_5_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_5_ci bash scripts/verify-evolution-phase-two-5-db.sh
 
+      - name: Verify Evolution Phase Two.6 role snapshot against isolated disposable PostgreSQL
+        run: |
+          PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_6_ci
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_6_ci bash scripts/verify-evolution-phase-two-6-db.sh
+
       - name: Verify staged B migration against disposable PostgreSQL
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
 
       - name: Verify staged security trigger ACL hardening
         run: bash scripts/verify-evolution-security-trigger-acls.sh
 
-      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.5 audits and production bundle
+      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.6 audits and production bundle
         run: npm run build
