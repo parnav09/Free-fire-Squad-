@@ -297,8 +297,10 @@ BEGIN
       <> 'substituted'
   THEN RAISE EXCEPTION 'Substituted participation state was not persisted'; END IF;
 
-  SELECT count(*) INTO v_count FROM public.canonical_session_match_participation_events
-  WHERE canonical_session_match_id=v_match;
+  SELECT count(*) INTO v_count
+  FROM public.canonical_session_match_participation_events e
+  JOIN public.canonical_session_match_participants p ON p.id=e.participant_id
+  WHERE p.canonical_session_match_id=v_match;
   IF v_count <> 4 THEN RAISE EXCEPTION 'Participation audit event count mismatch: %',v_count; END IF;
 END $$;
 RESET ROLE;
