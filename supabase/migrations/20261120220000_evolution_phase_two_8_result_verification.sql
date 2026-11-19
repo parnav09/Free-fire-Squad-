@@ -266,6 +266,7 @@ BEGIN
     WHERE cm.id=p_match_id AND cm.canonical_session_id=v_session.id AND cm.team_id=v_session.team_id)
   THEN RAISE EXCEPTION 'canonical_result_match_session_mismatch' USING ERRCODE='23503'; END IF;
 
+  PERFORM pg_catalog.set_config('app.evolution_result_write','root',true);
   IF p_match_id IS NULL THEN
     INSERT INTO public.canonical_session_results(team_id,canonical_session_id,canonical_session_match_id,created_by)
     VALUES(v_session.team_id,v_session.id,NULL,auth.uid())
