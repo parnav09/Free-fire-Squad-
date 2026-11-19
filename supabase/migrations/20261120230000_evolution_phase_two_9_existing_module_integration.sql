@@ -41,21 +41,24 @@ BEGIN
     RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501';
   END IF;
 
-  -- Lock the source row before checking its mapping. Concurrent retries for the
-  -- same source serialize here, preventing parallel canonical sessions.
+  -- A source-scoped transaction advisory lock serializes retries without
+  -- requiring UPDATE privileges on legacy source tables.
+  PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(
+    p_team_id::text || ':' || p_source_system || ':' || p_source_record_id::text, 0
+  ));
   IF p_source_system = 'scrim' THEN
     SELECT 'Scrim · ' || sr.scrim_date::text, sr.scrim_date, NULL::timestamptz
       INTO v_title, v_session_date, v_scheduled_at
     FROM public.scrim_records sr
     WHERE sr.id = p_source_record_id AND sr.team_id = p_team_id
-    FOR UPDATE;
+    ;
   ELSIF p_source_system = 'tournament' THEN
     SELECT COALESCE(NULLIF(pg_catalog.btrim(tc.title),''),'Tournament cycle'),
       tc.cycle_start, NULL::timestamptz
       INTO v_title, v_session_date, v_scheduled_at
     FROM public.tournament_cycles tc
     WHERE tc.id = p_source_record_id AND tc.team_id = p_team_id
-    FOR UPDATE;
+    ;
   ELSE
     SELECT ts.title,
       CASE WHEN ts.scheduled_at IS NULL THEN NULL
@@ -64,7 +67,7 @@ BEGIN
       INTO v_title, v_session_date, v_scheduled_at
     FROM public.training_sessions ts
     WHERE ts.id = p_source_record_id AND ts.team_id = p_team_id
-    FOR UPDATE;
+    ;
   END IF;
   IF NOT FOUND THEN
     RAISE EXCEPTION 'canonical_source_record_not_found' USING ERRCODE = 'P0002';
