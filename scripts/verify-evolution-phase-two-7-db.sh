@@ -666,7 +666,6 @@ BEGIN
     OR v_first.incoming_player_user_id <> '50000000-0000-0000-0000-000000000005'
   THEN RAISE EXCEPTION 'First substitution identities/order are incorrect'; END IF;
 
-  SELECT participation_status INTO v_count FROM public.canonical_session_match_participants WHERE id=v_sniper_participant;
   IF (SELECT participation_status FROM public.canonical_session_match_participants WHERE id=v_sniper_participant) <> 'substituted'
   THEN RAISE EXCEPTION 'Substitution test did not mark outgoing player substituted'; END IF;
   IF (SELECT participation_status FROM public.canonical_session_match_participants WHERE canonical_session_match_id=v_match AND roster_member_id=v_unknown) <> 'participated'
