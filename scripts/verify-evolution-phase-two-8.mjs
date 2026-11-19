@@ -65,6 +65,8 @@ test("Only current verified competitive records are exposed to aggregate consume
 test("Canonical lifecycle cannot be verified while any result remains unverified", () => {
   assert.match(migration, /canonical_session_requires_verified_result_records/);
   assert.match(migration, /canonical_session_has_unverified_result_records/);
+  assert.match(migration, /OLD.lifecycle_status = 'verified' AND NEW.lifecycle_status = 'awaiting_results'/);
+  assert.match(migration, /canonical_result_rejection_session_state_invalid/);
   assert.match(harness, /Session verified while match results were still unverified/);
 });
 
