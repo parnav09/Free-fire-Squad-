@@ -12,7 +12,7 @@ Point 2.8 creates one result workflow per canonical Scrim/Tournament match, and 
 ## Stored facts
 
 - `canonical_session_results`: current state and pointer for one match result or one Training session result. States are `draft`, `submitted`, `verified`, `amended`, and `rejected`.
-- `canonical_session_result_versions`: append-only raw submissions, source/provenance, submitter, server timestamp, idempotency key and correction reason. Drafts, initial submissions and amendments are distinct version kinds.
+- `canonical_session_result_versions`: append-only raw submissions, source/provenance, recorder and recording timestamp; actual submissions additionally carry submitter and submission timestamp. Drafts, initial submissions and amendments are distinct version kinds.
 - `canonical_session_result_events`: append-only draft, submission, verification and rejection events. A verification event stores verified values separately from raw values, the source-specific checklist, verifier, server timestamp and reason.
 - `canonical_verified_competitive_match_results`: a security-invoker view containing only the current verified/amended Scrim/Tournament match version.
 - `canonical_verified_training_results`: separate verified Training evidence; it is never exposed as competitive match aggregate input.
