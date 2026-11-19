@@ -53,7 +53,8 @@ VALUES (
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
 
-DO $phase29$DECLARE
+DO $phase29$
+DECLARE
   s record;
   s_retry record;
   t record;
