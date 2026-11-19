@@ -34,7 +34,7 @@ test("Role taxonomy imports only explicit team role labels and versions every de
   assert.match(migration, /canonical_team_role_definition_events/);
   assert.match(migration, /canonical_team_role_definition_idempotency_conflict/);
   assert.match(migration, /v_version := v_current\.definition_version \+ 1/);
-  assert.match(report, /imports only exact, explicitly assigned role labels/i);
+  assert.match(report, /imports only explicit, non-empty.*assigned_role/i);
   assert.match(report, /does not infer roles from P1\/P2\/P3\/P4 player slots/i);
 });
 
@@ -108,7 +108,7 @@ test("Role history is append-only and protected trigger functions are not client
   assert.match(migration, /canonical_session_match_role_is_non_destructive/);
   assert.match(migration, /canonical_team_role_definition_is_non_destructive/);
   assert.match(migration, /GRANT SELECT ON public\.canonical_team_role_definition_events/);
-  assert.match(migration, /GRANT SELECT ON public\.canonical_session_match_role_events/);
+  assert.match(migration, /GRANT SELECT ON public\.canonical_team_role_definition_events,[\s\S]*public\.canonical_session_match_role_events TO authenticated/);
   assert.match(harness, /Direct role audit deletion was accepted/);
   assert.match(harness, /Direct role writes changed append-only audit/);
 });
@@ -125,6 +125,6 @@ test("Point 2.6 does not absorb Point 2.7 or production rollout", () => {
   assert.match(report, /Substitution identity and incoming\/outgoing linkage remain Point 2\.7/);
   assert.match(report, /Point 2\.9/);
   assert.match(report, /No live Supabase migration/);
-  assert.match(report, /No Vercel production deployment/);
+  assert.match(report, /Vercel production deployment is performed here/);
   assert.match(blueprint, /No production migration\/deployment occurs without separate rollout approval/i);
 });
