@@ -350,9 +350,6 @@ BEGIN
   IF NOT EXISTS(SELECT 1 FROM public.team_members tm WHERE tm.team_id=v_result.team_id
     AND tm.user_id=auth.uid() AND tm.status='active' AND tm.membership_role IN ('owner','coach'))
   THEN RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE='42501'; END IF;
-  SELECT * INTO v_session FROM public.canonical_sessions WHERE id=v_result.canonical_session_id;
-  IF v_session.archived_at IS NOT NULL OR v_session.lifecycle_status<>'awaiting_results'
-  THEN RAISE EXCEPTION 'canonical_result_rejection_session_state_invalid' USING ERRCODE='23514'; END IF;
   SELECT * INTO v_event FROM public.canonical_session_result_events
     WHERE result_id=v_result.id AND idempotency_key=p_idempotency_key;
   IF FOUND THEN
@@ -409,6 +406,9 @@ BEGIN
   IF NOT EXISTS(SELECT 1 FROM public.team_members tm WHERE tm.team_id=v_result.team_id
     AND tm.user_id=auth.uid() AND tm.status='active' AND tm.membership_role IN ('owner','coach'))
   THEN RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE='42501'; END IF;
+  SELECT * INTO v_session FROM public.canonical_sessions WHERE id=v_result.canonical_session_id;
+  IF v_session.archived_at IS NOT NULL OR v_session.lifecycle_status<>'awaiting_results'
+  THEN RAISE EXCEPTION 'canonical_result_rejection_session_state_invalid' USING ERRCODE='23514'; END IF;
   SELECT * INTO v_event FROM public.canonical_session_result_events
     WHERE result_id=v_result.id AND idempotency_key=p_idempotency_key;
   IF FOUND THEN
