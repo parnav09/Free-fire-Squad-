@@ -32,6 +32,9 @@ test("Point 2.8 implements the exact result-verification blueprint point", () =>
 test("Raw submissions and verified values are stored separately with append-only versions/events", () => {
   assert.match(migration, /canonical_session_result_versions/);
   assert.match(migration, /raw_submitted_values jsonb NOT NULL/);
+  assert.match(migration, /recorded_by uuid NOT NULL/);
+  assert.match(migration, /submitted_at timestamptz/);
+  assert.match(migration, /version_kind='draft' AND submitted_by IS NULL AND submitted_at IS NULL/);
   assert.match(migration, /verified_values jsonb/);
   assert.match(migration, /canonical_session_result_events/);
   assert.match(migration, /version_kind IN \('draft','submission','amendment'\)/);
