@@ -1,6 +1,6 @@
 # Evolution Phase One.5-E — Final Acceptance Audit
 
-**Audit date:** 18 November 2026  
+**Audit date:** 20 November 2026  
 **Repository:** `parnav09/Free-fire-Squad-`  
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
 **PR:** #115 — open, draft, unmerged  
@@ -10,7 +10,7 @@
 
 **FINAL ACCEPTANCE: BLOCKED / NOT PASSED**
 
-B's isolated database contract and the staged trigger-function ACL remediation now have passing disposable-PostgreSQL CI evidence. Full acceptance is still blocked by the missing authoritative pre-migration baseline and the outstanding Supabase Auth leaked-password setting / independent RPC review. These are real acceptance gates, not source-test failures.
+B's isolated database contract and the staged trigger-function ACL remediation have passing disposable-PostgreSQL CI evidence. The 18 callable authenticated SECURITY DEFINER signatures have now passed adversarial role-level runtime checks under the actual `authenticated` database role. The paid-only leaked-password setting is excluded from this requested scope. Full acceptance remains blocked by the missing authoritative pre-migration schema baseline; no synthetic baseline has been substituted.
 
 ## Evidence verified
 
@@ -28,6 +28,8 @@ B's isolated database contract and the staged trigger-function ACL remediation n
 | 1.5-D — source-contract tests | D suite 6/6; full typecheck, configured suites and Vite build passed in runs #352/#353 | **PASS · CI verified** |
 | E audit integrity | E suite 7/7 included in full build on exact head runs #352/#353 | **PASS · CI verified** |
 | Security trigger ACL remediation | Staged revocations deny API-role EXECUTE; existing Daily Evaluation trigger still executes after revocation in runs #352/#353 | **PASS · staged SQL + CI; not production-applied** |
+| Callable authenticated SECURITY DEFINER RPC authorization | Adversarial runtime checks under `SET LOCAL ROLE authenticated`; all 18 callable signatures denied unauthorized access or returned empty/false scoped results; transaction rollback verified | **PASS · 18/18 runtime role tests** |
+| Paid-only leaked-password protection | Supabase Auth setting is unavailable on the current plan and explicitly excluded from this acceptance scope | **EXCLUDED · no workaround** |
 | Full-chain clean replay | Authoritative pre-migration baseline is not present in repository or available evidence | **BLOCKED** |
 
 ## B isolated database evidence
@@ -50,8 +52,8 @@ The read-only Security Advisor snapshot reported 2 INFO, 4 anon SECURITY DEFINER
 
 - OTP tables: read-only privilege checks confirm RLS enabled, no policies, and no `anon` or `authenticated` table privileges; `service_role` only. This is intentional private storage, not a client-accessible table.
 - Four trigger-returning functions: live catalog inspection confirmed three are attached to triggers and one is an unattached legacy trigger-returning duplicate. Direct RPC execution is not needed. A staged ACL migration revokes API-role execution; runs #352/#353 verifies the revocations and confirms the Daily Evaluation trigger still works.
-- Remaining callable authenticated SECURITY DEFINER RPCs: source/catalog review found pinned `search_path` and an explicit `auth.uid()`, `is_team_owner()`, or `is_team_member()` authorization path. This is a static review, not a substitute for adversarial role-level tests of every RPC.
-- Leaked-password protection remains disabled. This is a Supabase Auth project setting and has not been changed; the available project tools in this workflow do not expose an Auth security-settings write action.
+- Remaining callable authenticated SECURITY DEFINER RPCs: source/catalog review found pinned `search_path` and an explicit `auth.uid()`, `is_team_owner()`, or `is_team_member()` authorization path. Adversarial role-level runtime checks subsequently passed for all 18 callable signatures. See [Adversarial RPC Tests](./E-PHASE-ONE-5-E-ADVERSARIAL-RPC-TESTS.md) for the exact matrix and rollback evidence.
+- Leaked-password protection remains disabled and is explicitly excluded because it is paid-only on the current plan. No workaround or equivalent protection is claimed.
 
 Full details: [E Security Findings Disposition](./E-PHASE-ONE-5-E-SECURITY-REVIEW.md).
 
@@ -59,15 +61,15 @@ Full details: [E Security Findings Disposition](./E-PHASE-ONE-5-E-SECURITY-REVIE
 
 1. **Authoritative clean replay baseline:** no original pre-migration schema baseline or schema dump is present in the repository/evidence. The recovered migration chain begins after objects already existed. A test fixture is not a substitute for the real baseline. Do not invent a baseline or claim full-chain replay.
 2. **Supabase Auth leaked-password protection:** enable the setting in the Supabase Dashboard under Authentication password/security settings, then rerun Security Advisor.
-3. **Independent adversarial review:** the remaining authenticated SECURITY DEFINER RPCs have source-level auth/ownership/membership predicates and fixed search paths, but still need independent role-level tests before the full security gate can be called PASS.
+3. **Paid-only Auth setting:** leaked-password protection is excluded from the requested scope; it is not treated as an implementation blocker.
 
 ## Safety and scope
 
-- Production migration ledger and catalog checks were read-only. No production schema, policy, grant, function, trigger, data, or Auth setting was changed.
+- Production migration ledger and catalog checks were read-only. The adversarial RPC checks ran inside explicit transactions and rolled back, including the temporary join-request fixture; a follow-up read confirmed zero join-request rows remained. No production schema, policy, grant, function, trigger, persistent data, or Auth setting was changed.
 - No Supabase development branch exists; no recurring branch cost was incurred.
 - The two loadout migration versions remain excluded and were not opened or modified.
 - PR #115 remains open, draft, and unmerged.
 - No production deployment or merge was performed.
 - Historical rollback means an explicit forward-only/recovery disposition; it does not mean 53 executable rollback scripts exist.
 
-**Conclusion:** A, B runtime, C, D, E audit integrity, and the staged trigger ACL test have evidence-backed passes. Full Evolution Phase One.5-E remains **BLOCKED / NOT PASSED** until the authoritative clean-replay baseline is supplied (or an independently reviewed scope exception is approved), Auth leaked-password protection is enabled, and the remaining RPC security review is completed.
+**Conclusion:** A, B runtime, C, D, E audit integrity, staged trigger ACL integration, and adversarial runtime authorization for all 18 callable RPC signatures have evidence-backed passes. Paid-only leaked-password protection is excluded from this scope. Full Evolution Phase One.5-E remains **BLOCKED / NOT PASSED** solely because the authoritative original pre-migration schema baseline is unavailable. Do not fabricate it; supply the original baseline or approve an independently reviewed current-state baseline exception.
