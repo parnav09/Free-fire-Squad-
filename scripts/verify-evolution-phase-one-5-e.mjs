@@ -12,6 +12,7 @@ const [
   phaseOne,
   dSuite,
   securityReview,
+  rpcTestReport,
   workflow,
   bDbScript,
   securityAclScript,
@@ -24,6 +25,7 @@ const [
   read("docs/evolution/evolution-phase-one.md"),
   read("scripts/verify-evolution-phase-one-5-d.mjs"),
   read("docs/evolution/E-PHASE-ONE-5-E-SECURITY-REVIEW.md"),
+  read("docs/evolution/E-PHASE-ONE-5-E-ADVERSARIAL-RPC-TESTS.md"),
   read(".github/workflows/evolution-phase-one.yml"),
   read("scripts/verify-evolution-phase-one-5-b-db.sh"),
   read("scripts/verify-evolution-security-trigger-acls.sh"),
@@ -91,6 +93,15 @@ test("E records the remaining clean-replay and Auth gates instead of falsely pas
   assert.match(audit, /no original pre-migration schema baseline/i);
   assert.match(audit, /leaked-password protection remains disabled/i);
   assert.match(securityReview, /Overall Security acceptance is not PASS yet/i);
+});
+
+test("adversarial runtime authorization evidence covers all callable RPC signatures", () => {
+  assert.match(rpcTestReport, /18\/18 callable authenticated SECURITY DEFINER signatures/);
+  assert.match(rpcTestReport, /SET LOCAL ROLE authenticated/);
+  assert.match(rpcTestReport, /ROLLBACK/);
+  assert.match(rpcTestReport, /team_join_requests.*0 rows/s);
+  assert.match(securityReview, /18 callable function signatures passed/);
+  assert.match(audit, /18 callable function signatures/);
 });
 
 test("E final audit keeps production, merge and loadout scope boundaries explicit", () => {
