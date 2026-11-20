@@ -137,7 +137,7 @@ BEGIN
     END IF;
   END IF;
 
-  IF TG_TABLE_NAME='practice_tasks' AND NEW.block_id IS NOT NULL THEN
+  IF TG_TABLE_NAME='practice_tasks' AND NEW.block_id IS NOT NULL AND NEW.plan_id IS NOT NULL THEN
     SELECT b.plan_id INTO v_block_plan_id FROM public.practice_plan_blocks b
     WHERE b.id=NEW.block_id AND b.team_id=NEW.team_id;
     IF FOUND AND v_block_plan_id IS DISTINCT FROM NEW.plan_id THEN
