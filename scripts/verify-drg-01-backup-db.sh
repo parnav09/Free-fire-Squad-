@@ -127,7 +127,7 @@ INSERT INTO public.daily_drills(
   'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   DATE '2026-11-20',
   '10000000-0000-0000-0000-000000000001',
-  'Comms review','communication',25,true,18,20,
+  'Comms review','communication',25,true,9,10,
   '10000000-0000-0000-0000-000000000001',
   'Preserved player drill result','Callout timing'
 );
