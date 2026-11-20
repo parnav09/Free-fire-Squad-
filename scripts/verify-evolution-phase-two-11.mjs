@@ -42,7 +42,7 @@ test("UI fails closed for staff-only actions and offline writes", async () => {
   assert.match(component,/disabled=\{!isOnline/);
   assert.match(component,/No writes are queued or silently replayed/);
   assert.match(component,/setVerifyChecks\(\{\}\)/);
-  assert.match(component,/setSubOut\("";?\)setSubIn\("";?\)/);
+  assert.match(component,/setSubOut\("");setSubIn\("")/);
 });
 test("Responsive UI and accessibility states are present", async () => {
   const css = await read("../src/components/CanonicalSessionsWorkspace.css");
