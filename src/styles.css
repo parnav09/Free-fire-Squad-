@@ -1274,3 +1274,21 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
 .loadout-status{margin:0;color:#8ee7c2;font-size:12px;line-height:1.5}
 .roster-character-loadout .primary-button{min-height:44px;width:100%}
 .roster-character-loadout select:focus-visible,.roster-character-loadout textarea:focus-visible{outline:2px solid #70d8ed;outline-offset:2px}
+
+
+/* RESET-01: small status marker; existing workspace layout remains unchanged. */
+.reset-coming-soon-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 999px;
+  color: #aeb9ca;
+  background: rgba(148, 163, 184, 0.08);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
