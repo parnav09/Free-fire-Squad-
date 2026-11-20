@@ -49,7 +49,7 @@ test("Disposable PostgreSQL harness remains mandatory for database points 2.2–
   for (const point of ["2","3","4","5","6","7","8","9","10"]) {
     assert.ok(workflow.includes(`verify-evolution-phase-two-${point}-db.sh`), `Missing PostgreSQL integration for Point 2.${point}`);
   }
-  assert.match(workflow, /image: postgres:16/);
+  assert.match(workflow, /Install and start disposable PostgreSQL 16|image: postgres:16/);
   assert.match(workflow, /DATABASE_URL: postgresql:\/\/postgres:postgres@localhost:5432\/squad_os_ci/);
   assert.match(workflow, /createdb -h localhost -U postgres squad_os_phase_two_10_ci/);
 });
