@@ -28,6 +28,8 @@ test("each dimension has a canonical label, definition and explicit order", () =
     "Role Execution",
   ]) assert.ok(registrySource.includes('label: "' + label + '"'));
   assert.match(registrySource, /sortOrder: 6/);
+  assert.match(registrySource, /lifecycleStatus: "active"/);
+  assert.match(registrySource, /applicableRoleKeys: CANONICAL_ROLE_KEYS/);
   assert.match(registrySource, /definition:/);
 });
 
