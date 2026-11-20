@@ -1,6 +1,6 @@
 # Evolution Phase One.5-B/C/D/E — Implementation and Acceptance Record
 
-**Date:** 18 Nov 2026  
+**Date:** 20 Nov 2026  
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
 **PR:** #115 (draft; stacked on Phase Zero PR #114)
 
@@ -100,7 +100,7 @@ The checks cover:
 
 ## E — Final Phase One acceptance audit
 
-The current-head final audit and its machine-checkable guard suite are recorded in [E Phase One.5-E Final Acceptance Audit](./E-PHASE-ONE-5-E-FINAL-AUDIT.md). B runtime execution is now verified in CI. E remains **BLOCKED / NOT PASSED** because the authoritative baseline/clean-replay evidence is unavailable and security gates remain open.
+The current-head final audit and its machine-checkable guard suite are recorded in [E Phase One.5-E Final Acceptance Audit](./E-PHASE-ONE-5-E-FINAL-AUDIT.md). B runtime execution is verified in CI, and all 18 callable authenticated SECURITY DEFINER signatures have passed adversarial role-level runtime checks. The paid-only leaked-password setting is excluded from this scope. E remains **BLOCKED / NOT PASSED** because the authoritative baseline/clean-replay evidence is unavailable.
 
 | Gate | Result |
 |---|---|
@@ -112,14 +112,16 @@ The current-head final audit and its machine-checkable guard suite are recorded 
 | New timezone rollback | **Disposable PostgreSQL CI PASS** · runs #352/#353; staged, not production-applied |
 | Isolated clean replay | Not run; original pre-migration baseline unavailable |
 | Runtime timezone/RLS verification | **PASS in disposable PostgreSQL CI** · runs #352/#353 |
+| Callable authenticated RPC authorization | **PASS · 18/18 signatures passed adversarial role-level runtime tests with transaction rollback** |
+| Paid-only leaked-password protection | **EXCLUDED · not a current-plan acceptance requirement** |
 | Full Phase One acceptance | **NOT PASSED** |
 
 ## Exact remaining blockers
 
 1. The pre-migration baseline needed for a clean replay is unavailable; do not invent it or claim a clean replay.
 2. The authoritative pre-migration baseline is unavailable, so full-chain clean replay cannot be claimed.
-3. Security review is partially closed: OTP tables are verified service-only; four trigger-returning functions have staged least-privilege ACL fixes with CI proof; the remaining authenticated RPCs have static auth/ownership/membership checks but need adversarial role-level tests; leaked-password protection remains disabled and needs the Supabase Auth setting enabled.
+3. The paid-only leaked-password protection setting remains disabled and is excluded from this user-approved scope; no workaround is claimed.
 4. Any future historical compensation must be implemented as a new reviewed migration with isolated tests; no automatic historical rollback is approved.
 5. Re-run the full build/CI and Phase One acceptance checklist against the resulting exact commit.
 
-**Current result:** C historical rollback disposition is complete (53/53). Exact-head CI runs #352/#353 passed B disposable-PostgreSQL forward/rollback tests, security trigger ACL tests, all configured suites (including D 6/6 and E 7/7), typecheck, and Vite production build. The pre-migration baseline required for full clean replay is unavailable; Auth leaked-password protection and adversarial RPC review remain open. E therefore remains **BLOCKED / NOT PASSED**. No production database or deployment changes were made.
+**Current result:** C historical rollback disposition is complete (53/53). Exact-head CI runs #352/#353 passed B disposable-PostgreSQL forward/rollback tests, security trigger ACL tests, all configured suites (including D 6/6 and E 7/7), typecheck, and Vite production build. All 18 callable RPC signatures subsequently passed adversarial runtime authorization checks with rollback. The paid-only leaked-password setting is excluded. The original pre-migration baseline required for full clean replay remains unavailable, so E remains **BLOCKED / NOT PASSED**. No production database or deployment changes were made.
