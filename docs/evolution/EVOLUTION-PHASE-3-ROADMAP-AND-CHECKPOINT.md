@@ -262,16 +262,16 @@ Current Evolution Phase: 3
 Current point: 3.1 Existing Evaluation System Audit
 Current subtask: Read-only inventory, legacy crosswalk, branch/CI audit, gap-to-target report
 Last verified completed point: 3.1 audit deliverables authored; CI pending exact audit PR head
-Current status: AUDIT REPORT COMPLETE — CI PENDING
+Current status: AUDIT REPORT COMPLETE — CI BLOCKED BY RUNNER STARTUP
 Active branch: feat/evolution-phase-three-1-existing-evaluation-audit
-Active PR: to be created after audit contract and build registration
-Last known commit: f5b81ecd39478a24d0b0f25e9f26c491431c90c3 (audit contract test; audit report commit 52e6f2f6b13ad94b55c48534311c777054e8f2b3)
-Last successful checks: audit source-contract tests are registered; exact PR CI not yet run
-Failing/pending checks: none recorded for this roadmap document
+Active PR: #131 — https://github.com/parnav09/Free-fire-Squad-/pull/131 (Draft, unmerged)
+Last known commit: a9f9964085dc9c66254e1fd8cd7a6ea4bd1dd5e3 (PR #131 exact head)
+Last successful checks: none verified on the exact PR #131 head
+Failing/pending checks: GitHub Actions run #44735966399 failed twice with an empty job step list (runner startup); Vercel status is build-rate-limit failure
 Files changed: docs/evolution/PHASE-3-1-EXISTING-EVALUATION-SYSTEM-AUDIT.md; scripts/verify-evolution-phase-three-1.mjs; package.json; this roadmap checkpoint
 Migrations created/applied: none
 Production changes: none
-Next action: obtain exact-head CI for the 3.1 audit PR; then resolve Phase 2.12 and the pre-existing canonical scoring branch blockers before 3.2 implementation
+Next action: restore/retry GitHub Actions runner availability and obtain a green exact-head CI run for PR #131; then resolve Phase 2.12 and the pre-existing canonical scoring branch blockers before 3.2 implementation
 Open blockers/decisions:
 - Legacy product Phase 3 numbering is explicitly separated from Evolution Phase Three.
 - Canonical six dimensions are reconciled to the Evolution Version 2 blueprint: communication, coordination_trade_support, decision_making, positioning, map_awareness_rotation, role_execution.
