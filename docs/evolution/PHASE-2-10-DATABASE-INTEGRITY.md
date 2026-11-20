@@ -46,6 +46,29 @@ No legacy row is updated, deleted, or synthesized. Existing single-column FKs an
 - The isolated DB harness is wired into GitHub Actions using a local disposable PostgreSQL 16 instance on the hosted runner; the source contract is included in `npm run build`.
 - Current source-contract/build verification passes on the latest Vercel Preview. The PostgreSQL harness has **not** executed because recent GitHub Actions jobs #642, #660, #664 and #692 each failed before their first runner step, with no step list or logs. This is a runner-startup failure, not a passing or failing database test.
 
+## Live read-only data preflight
+
+**Captured:** 20 November 2026  
+**Project:** `xaixnqvyoswcvvkydrmh`  
+**Execution:** read-only aggregate SQL; no row or schema writes
+
+A live preflight checked all 19 integrity predicates introduced or relied upon by this point:
+
+- Tournament match → cycle/team identity
+- Planning block → plan/team identity
+- Training session → plan/team identity
+- Practice task → plan, block, block-owning plan, member and source-session identity
+- Training participant → session and member identity
+- Training result → session and optional member identity
+- Scrim team review → Scrim/team identity
+- Planning block and Training session → linked drill existence and team/template compatibility
+- Scrim JSONB match-array length → `match_count`
+- NULL-player Training session/attempt duplicate detection
+
+**Result: 19/19 predicates returned zero existing violations.** In particular, the live Scrim array-count check and NULL-player duplicate check both returned zero.
+
+This is a production-data preflight only. It does **not** execute the Phase 2.10 migration, prove PostgreSQL trigger/FK behavior, or replace the isolated disposable-PostgreSQL integration harness. No production migration or backfill was applied.
+
 ## Rollback
 
 The migration is additive and performs no data rewrite. Before later points depend on these constraints, rollback can be executed in one reviewed transaction by dropping the four triggers (training_sessions_team_drill_guard, practice_plan_blocks_team_drill_guard, practice_tasks_plan_block_guard, training_drills_reassignment_guard), the helper function evolution_private.guard_team_scoped_training_references(), all composite FKs introduced above, the Scrim count check, the NULL-player unique index, and the child/parent indexes listed in the migration. Do not drop the evolution_private schema because earlier Evolution points may own objects in it. Production rollback is never automatic and requires fresh preflight plus explicit approval.
