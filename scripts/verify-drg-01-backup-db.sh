@@ -330,6 +330,27 @@ BEGIN
 END
 $restore$;
 
+-- A second-level child without team_id cannot be scoped safely; export must flag it, not omit it silently.
+RESET ROLE;
+CREATE TABLE public.drg_backup_unscoped_descendant (
+  id uuid PRIMARY KEY,
+  event_id uuid NOT NULL REFERENCES public.drg_backup_fixture_events(id) ON DELETE CASCADE
+);
+INSERT INTO public.drg_backup_unscoped_descendant(id,event_id)
+VALUES ('de700000-0000-0000-0000-000000000001','de400000-0000-0000-0000-000000000001');
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
+DO $unsupported$
+DECLARE backup jsonb;
+BEGIN
+  backup:=public.get_team_backup_for_team('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
+  IF COALESCE((backup->'coverage_report'->>'complete')::boolean,true) IS NOT FALSE
+    OR NOT ((backup->'coverage_report'->'unsupported_child_tables') ? 'drg_backup_unscoped_descendant') THEN
+    RAISE EXCEPTION 'DRG-01 unsupported descendant was silently omitted';
+  END IF;
+END
+$unsupported$;
+
 -- A partially deployed optional Phase 3 schema must never be reported as complete.
 RESET ROLE;
 CREATE TABLE public.evolution_rubric_versions (
