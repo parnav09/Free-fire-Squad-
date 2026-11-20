@@ -243,6 +243,48 @@ REVOKE DELETE ON public.evolution_rubric_versions, public.evolution_rubric_dimen
   public.evolution_role_weight_profiles, public.evolution_evidence_items,
   public.evolution_evidence_dimension_links FROM anon, authenticated;
 
+-- Keep the cross-table activation invariant out of the RLS policy graph.
+-- The former policy queried rubric_dimensions while that table's SELECT policy
+-- queried rubric_versions, causing PostgreSQL's infinite RLS recursion error.
+-- This private trigger function checks only the invariant and returns no data.
+CREATE SCHEMA IF NOT EXISTS private;
+REVOKE ALL ON SCHEMA private FROM PUBLIC, anon, authenticated;
+
+CREATE OR REPLACE FUNCTION private.enforce_evolution_rubric_dimensions_before_activation()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $function$
+DECLARE
+  actual_dimension_count integer;
+BEGIN
+  IF NEW.status = 'active' AND OLD.status IS DISTINCT FROM NEW.status THEN
+    SELECT count(*)
+      INTO actual_dimension_count
+      FROM public.evolution_rubric_dimensions d
+      WHERE d.rubric_version_id = NEW.id;
+
+    IF actual_dimension_count <> 6 THEN
+      RAISE EXCEPTION
+        'A rubric version requires exactly 6 dimensions before activation (found %)',
+        actual_dimension_count
+        USING ERRCODE = '23514';
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$function$;
+
+REVOKE ALL ON FUNCTION private.enforce_evolution_rubric_dimensions_before_activation()
+  FROM PUBLIC, anon, authenticated;
+
+CREATE TRIGGER evolution_rubric_dimensions_before_activation
+  BEFORE UPDATE OF status ON public.evolution_rubric_versions
+  FOR EACH ROW
+  EXECUTE FUNCTION private.enforce_evolution_rubric_dimensions_before_activation();
+
 CREATE POLICY evolution_rubric_versions_read ON public.evolution_rubric_versions
   FOR SELECT TO authenticated
   USING (
@@ -277,10 +319,7 @@ CREATE POLICY evolution_rubric_versions_staff_update ON public.evolution_rubric_
   WITH CHECK (
     NOT is_system AND (
       (status = 'draft' AND activated_at IS NULL) OR
-      (status = 'active' AND activated_at IS NOT NULL AND 6 = (
-        SELECT count(*) FROM public.evolution_rubric_dimensions d
-        WHERE d.rubric_version_id = evolution_rubric_versions.id
-      ))
+      (status = 'active' AND activated_at IS NOT NULL)
     ) AND EXISTS (
       SELECT 1 FROM public.team_members tm
       WHERE tm.team_id = evolution_rubric_versions.team_id
