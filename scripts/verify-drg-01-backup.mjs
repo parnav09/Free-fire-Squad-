@@ -87,13 +87,13 @@ test("App exports v2 coverage details and refuses unsafe v1 or incomplete restor
   assert.match(app, /restored_tables/);
 });
 
-test("Disposable PostgreSQL integration verifies export, restore, team remapping and FK-only children", async () => {
+test("Disposable PostgreSQL integration verifies export, restore, same-team restore and FK-only children", async () => {
   const script = await read("../scripts/verify-drg-01-backup-db.sh");
   assert.match(script, /verify-evolution-phase-two-10-db\.sh/);
   assert.match(script, /DRG-01 expected complete export/);
   assert.match(script, /FK-only child discovery or team scoping failed/);
   assert.match(script, /restore_team_backup_for_team/);
-  assert.match(script, /current target owner identity was not retained/);
+  assert.match(script, /current team owner identity was not retained/);
   assert.match(script, /partial Phase 3 schema was silently reported complete/);
   assert.match(script, /DRG-01 complete team backup export\/restore PostgreSQL integration PASS/);
 });
