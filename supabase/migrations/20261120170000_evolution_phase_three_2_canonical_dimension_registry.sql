@@ -143,6 +143,39 @@ BEGIN
   END IF;
 END $$;
 
+-- Prevent new rubric definitions from using a retired canonical dimension.
+CREATE OR REPLACE FUNCTION evolution_private.enforce_active_evolution_dimension_registry()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $function$
+DECLARE
+  dimension_status text;
+BEGIN
+  SELECT r.lifecycle_status
+    INTO dimension_status
+    FROM public.evolution_dimension_registry r
+    WHERE r.dimension_key = NEW.dimension_key;
+
+  IF dimension_status IS DISTINCT FROM 'active' THEN
+    RAISE EXCEPTION 'Canonical dimension % is not active', NEW.dimension_key
+      USING ERRCODE = '23514';
+  END IF;
+
+  RETURN NEW;
+END;
+$function$;
+
+REVOKE ALL ON FUNCTION evolution_private.enforce_active_evolution_dimension_registry()
+  FROM PUBLIC, anon, authenticated;
+
+CREATE TRIGGER evolution_rubric_dimension_requires_active_registry
+  BEFORE INSERT OR UPDATE OF dimension_key, registry_definition_version
+  ON public.evolution_rubric_dimensions
+  FOR EACH ROW
+  EXECUTE FUNCTION evolution_private.enforce_active_evolution_dimension_registry();
+
 CREATE INDEX IF NOT EXISTS evolution_dimension_alias_lookup_idx
   ON public.evolution_dimension_aliases (source_system, legacy_key);
 
