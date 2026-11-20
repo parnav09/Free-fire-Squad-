@@ -78,3 +78,8 @@ Supabase project: `FF Squad` (`xaixnqvyoswcvvkydrmh`), status `ACTIVE_HEALTHY`.
 ## Current implementation branch
 
 `reset/01-clean-restart-preserve-blueprints`, based on `feat/drg-03-safe-restore-data-recovery` so the evolution documents and the DRG-03 audit/spec are retained. This branch contains the initial Coming Soon gate; production has not been changed.
+
+
+## Deployment gate
+
+A preview deployment was requested for the reset branch but Vercel rejected it with the account's `api-deployments-free-per-day` limit (retry window: 24 hours). The Git commit status also reports the Vercel check as failed with `build-rate-limit`. Therefore the reset branch has not passed a build, and no destructive production database/Auth/storage/Edge Function changes will run until a build can be verified and the Coming Soon UI can be safely released.
