@@ -33,6 +33,8 @@ test("global drill templates remain valid and cross-team custom drill links are 
   assert.match(sql, /NEW\.is_template AND NEW\.team_id IS NULL/);
   assert.match(sql, /training_drills_reassignment_guard/);
   assert.match(sql, /practice_task_block_does_not_belong_to_plan/);
+  assert.match(sql, /IF TG_TABLE_NAME='practice_tasks' AND NEW\.block_id IS NOT NULL THEN/);
+  assert.doesNotMatch(sql, /NEW\.block_id IS NOT NULL AND NEW\.plan_id IS NOT NULL/);
 });
 
 test("Scrim match counts and NULL-player Training attempts have database uniqueness", async () => {
