@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.evolution_dimension_registry (
   )),
   lifecycle_status text NOT NULL DEFAULT 'active'
     CHECK (lifecycle_status IN ('active', 'retired')),
-  sort_order smallint NOT NULL UNIQUE CHECK (sort_order BETWEEN 1 AND 6),
+  sort_order smallint NOT NULL CHECK (sort_order BETWEEN 1 AND 32767),
   created_at timestamptz NOT NULL DEFAULT now(),
   retired_at timestamptz,
   CONSTRAINT evolution_dimension_registry_retirement_pair
@@ -53,6 +53,10 @@ VALUES
   ('map_awareness_rotation', 'active', 5),
   ('role_execution', 'active', 6)
 ON CONFLICT (dimension_key) DO NOTHING;
+
+CREATE UNIQUE INDEX IF NOT EXISTS evolution_dimension_registry_active_order_uidx
+  ON public.evolution_dimension_registry (sort_order)
+  WHERE lifecycle_status = 'active';
 
 INSERT INTO public.evolution_dimension_definition_versions (
   dimension_key, definition_version, canonical_label, definition, applicable_role_keys,
