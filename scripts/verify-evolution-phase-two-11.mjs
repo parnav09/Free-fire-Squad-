@@ -57,6 +57,8 @@ test("Responsive UI and accessibility states are present", async () => {
 
 
 test("Session list and detail requests cannot publish stale data after team or selection changes", async () => {
+  const app = await read("../src/App.tsx");
+  assert.match(app, /<CanonicalSessionsWorkspace key=\{team\?\.id\|\|"no-team"\}/);
   const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
   assert.match(component, /listRequestRef=useRef\(0\),detailRequestRef=useRef\(0\)/);
   assert.match(component, /requestId!==listRequestRef\.current/);
