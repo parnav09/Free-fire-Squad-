@@ -1028,7 +1028,7 @@ BEGIN
     v_total := v_total + pg_catalog.jsonb_array_length(COALESCE(v_rows,'[]'::jsonb));
   END LOOP;
 
-  v_content_checksum := pg_catalog.md5(v_tables::text);
+  v_content_checksum := pg_catalog.md5(pg_catalog.jsonb_build_object('team',v_team,'tables',v_tables)::text);
 
   v_complete := pg_catalog.cardinality(v_missing_required) = 0
     AND pg_catalog.cardinality(v_missing_canonical) = 0
@@ -1138,7 +1138,7 @@ BEGIN
   IF pg_catalog.jsonb_typeof(v_tables) IS DISTINCT FROM 'object' THEN
     RAISE EXCEPTION 'backup_tables_object_missing' USING ERRCODE = '22023';
   END IF;
-  IF p_backup->'coverage_report'->>'content_checksum' IS DISTINCT FROM pg_catalog.md5(v_tables::text) THEN
+  IF p_backup->'coverage_report'->>'content_checksum' IS DISTINCT FROM pg_catalog.md5(pg_catalog.jsonb_build_object('team',p_backup->'team','tables',v_tables)::text) THEN
     RAISE EXCEPTION 'backup_content_checksum_mismatch' USING ERRCODE = '22023';
   END IF;
 
