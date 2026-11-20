@@ -2,7 +2,7 @@ name: SQUAD OS — Evolution Phase One & Phase Two.1 Audit CI
 
 on:
   push:
-    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification, feat/evolution-phase-two-9-module-integration, feat/evolution-phase-two-10-database-integrity]
+    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification, feat/evolution-phase-two-9-module-integration, feat/evolution-phase-two-10-database-integrity, feat/evolution-phase-two-11-application-ui]
   pull_request:
     branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification, feat/evolution-phase-two-9-module-integration, feat/evolution-phase-two-10-database-integrity]
 
@@ -14,7 +14,7 @@ concurrency:
 jobs:
   foundation:
     name: Typecheck, tests and production build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/squad_os_ci
@@ -83,5 +83,5 @@ jobs:
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
       - name: Verify staged security trigger ACL hardening
         run: bash scripts/verify-evolution-security-trigger-acls.sh
-      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.10 audits and production bundle
+      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.11 audits and production bundle
         run: npm run build
