@@ -893,29 +893,18 @@ DECLARE
 BEGIN
   SELECT COALESCE(
     pg_catalog.string_agg(
-      pg_catalog.format('%s.%s:%s:%s:%s', c.table_name, c.column_name,
-        c.udt_name, c.is_nullable, COALESCE(c.column_default,'')),
-      E'\n' ORDER BY c.table_name, c.ordinal_position
-    ), ''
-  )
-  INTO v_columns
-  FROM information_schema.columns c
-  WHERE c.table_schema = 'public' AND c.table_name = ANY(p_tables);
-
-  SELECT COALESCE(
-    pg_catalog.string_agg(
-      pg_catalog.format('%s:%s:%s.%s:%s', child.relname, fk.conname,
-        parent_ns.nspname, parent.relname, pg_catalog.pg_get_constraintdef(fk.oid)),
-      E'\n' ORDER BY child.relname, fk.conname
+      pg_catalog.format('%s:%s:%s:%s', child.relname, constraint_row.conname,
+        constraint_row.contype, pg_catalog.pg_get_constraintdef(constraint_row.oid)),
+      E'\\n' ORDER BY child.relname, constraint_row.conname
     ), ''
   )
   INTO v_constraints
-  FROM pg_catalog.pg_constraint fk
-  JOIN pg_catalog.pg_class child ON child.oid = fk.conrelid
+  FROM pg_catalog.pg_constraint constraint_row
+  JOIN pg_catalog.pg_class child ON child.oid = constraint_row.conrelid
   JOIN pg_catalog.pg_namespace child_ns ON child_ns.oid = child.relnamespace
-  JOIN pg_catalog.pg_class parent ON parent.oid = fk.confrelid
-  JOIN pg_catalog.pg_namespace parent_ns ON parent_ns.oid = parent.relnamespace
-  WHERE child_ns.nspname = 'public' AND child.relname = ANY(p_tables);
+  WHERE child_ns.nspname = 'public'
+    AND child.relname = ANY(p_tables)
+    AND constraint_row.contype IN ('p','u','f','c','x');
 
   RETURN pg_catalog.md5(v_columns || E'\n' || v_constraints);
 END;
@@ -971,6 +960,7 @@ DECLARE
   v_fingerprint text;
   v_total bigint := 0;
   v_complete boolean;
+  v_phase_three_present boolean := false;
 BEGIN
   IF v_user IS NULL THEN RAISE EXCEPTION 'authentication_required' USING ERRCODE = '28000'; END IF;
   IF p_team_id IS NULL OR NOT EXISTS (
@@ -1009,6 +999,7 @@ BEGIN
     ORDER BY expected
   );
   v_unsupported := evolution_private.team_backup_unsupported_child_tables(v_table_names);
+  v_phase_three_present := v_table_names && v_phase_three_candidate;
   v_fingerprint := evolution_private.team_backup_schema_fingerprint(v_table_names);
 
   FOREACH v_table IN ARRAY v_table_names LOOP
@@ -1032,6 +1023,7 @@ BEGIN
   v_complete := pg_catalog.cardinality(v_missing_required) = 0
     AND pg_catalog.cardinality(v_missing_canonical) = 0
     AND pg_catalog.cardinality(v_unsupported) = 0
+    AND (NOT v_phase_three_present OR pg_catalog.cardinality(v_missing_phase_three) = 0)
     AND v_exported_tables = v_table_names;
 
   RETURN pg_catalog.jsonb_build_object(
@@ -1051,6 +1043,7 @@ BEGIN
       'missing_canonical_evolution_tables',pg_catalog.to_jsonb(v_missing_canonical),
       'unsupported_child_tables',pg_catalog.to_jsonb(v_unsupported),
       'schema_fingerprint',v_fingerprint,
+      'phase_three_schema_present',v_phase_three_present,
       'known_phase_three_candidate_tables',pg_catalog.to_jsonb(v_phase_three_candidate),
       'missing_phase_three_candidate_tables',pg_catalog.to_jsonb(v_missing_phase_three),
       'unpersisted_capabilities',pg_catalog.to_jsonb(ARRAY[
