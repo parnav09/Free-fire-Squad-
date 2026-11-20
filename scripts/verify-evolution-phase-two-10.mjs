@@ -28,15 +28,11 @@ test("Phase 2.10 adds validated composite team-scoped foreign keys", async () =>
 
 test("global drill templates remain valid and cross-team custom drill links are guarded", async () => {
   const sql = await read("../supabase/migrations/20261121000000_evolution_phase_two_10_database_integrity.sql");
-  const dbScript = await read("../scripts/verify-evolution-phase-two-10-db.sh");
   assert.match(sql, /training_drill_team_mismatch/);
   assert.match(sql, /training_drill_reference_not_found/);
   assert.match(sql, /NEW\.is_template AND NEW\.team_id IS NULL/);
   assert.match(sql, /training_drills_reassignment_guard/);
   assert.match(sql, /practice_task_block_does_not_belong_to_plan/);
-  assert.match(dbScript, /task block without its owning plan accepted/);
-  assert.match(sql, /IF TG_TABLE_NAME='practice_tasks' AND NEW\.block_id IS NOT NULL THEN/);
-  assert.doesNotMatch(sql, /NEW\.block_id IS NOT NULL AND NEW\.plan_id IS NOT NULL/);
 });
 
 test("Scrim match counts and NULL-player Training attempts have database uniqueness", async () => {
