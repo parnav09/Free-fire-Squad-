@@ -60,8 +60,7 @@ Full details: [E Security Findings Disposition](./E-PHASE-ONE-5-E-SECURITY-REVIE
 ## Remaining blocking gates
 
 1. **Authoritative clean replay baseline:** no original pre-migration schema baseline or schema dump is present in the repository/evidence. The recovered migration chain begins after objects already existed. A test fixture is not a substitute for the real baseline. Do not invent a baseline or claim full-chain replay.
-2. **Supabase Auth leaked-password protection:** enable the setting in the Supabase Dashboard under Authentication password/security settings, then rerun Security Advisor.
-3. **Paid-only Auth setting:** leaked-password protection is excluded from the requested scope; it is not treated as an implementation blocker.
+2. **Paid-only Auth setting:** leaked-password protection remains disabled and is excluded from the requested scope; it is not treated as an implementation blocker.
 
 ## Safety and scope
 
