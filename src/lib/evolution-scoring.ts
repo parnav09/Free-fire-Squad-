@@ -1,13 +1,7 @@
-export const CANONICAL_DIMENSIONS = [
-  "communication",
-  "coordination_trade_support",
-  "decision_making",
-  "positioning",
-  "map_awareness_rotation",
-  "role_execution",
-] as const;
+import { CANONICAL_DIMENSION_KEYS, type CanonicalDimensionKey } from "./evolution-dimensions";
 
-export type CanonicalDimension = (typeof CANONICAL_DIMENSIONS)[number];
+export const CANONICAL_DIMENSIONS = CANONICAL_DIMENSION_KEYS;
+export type CanonicalDimension = CanonicalDimensionKey;
 export type DimensionObservation =
   | { status: "rated"; value: number }
   | { status: "not_observed"; reason: string };
