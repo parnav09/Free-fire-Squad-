@@ -159,6 +159,12 @@ CREATE TABLE public.drg_backup_fixture_events (
   fixture_id uuid NOT NULL REFERENCES public.drg_backup_fixture(id) ON DELETE CASCADE,
   event_note text NOT NULL
 );
+-- A table that references teams(id) directly but has no team_id must also be included.
+CREATE TABLE public.drg_backup_team_root_child (
+  id uuid PRIMARY KEY,
+  team_ref uuid NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
+  note text NOT NULL
+);
 
 INSERT INTO public.canonical_sessions(
   id,team_id,session_type,title,idempotency_key,created_by
@@ -185,6 +191,9 @@ INSERT INTO public.drg_backup_fixture(id,team_id,canonical_session_id) VALUES
 INSERT INTO public.drg_backup_fixture_events(id,fixture_id,event_note) VALUES
  ('de400000-0000-0000-0000-000000000001','de300000-0000-0000-0000-000000000001','Alpha child event'),
  ('de400000-0000-0000-0000-000000000002','de300000-0000-0000-0000-000000000002','Bravo child event');
+INSERT INTO public.drg_backup_team_root_child(id,team_ref,note) VALUES
+ ('de600000-0000-0000-0000-000000000001','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','Alpha team-root child'),
+ ('de600000-0000-0000-0000-000000000002','bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','Bravo team-root child');
 SQL
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$ROOT/supabase/migrations/20261121010000_drg_01_complete_team_backup.sql"
@@ -221,7 +230,8 @@ BEGIN
     RAISE EXCEPTION 'DRG-01 required team/player/Evolution tables are missing from manifest';
   END IF;
   IF jsonb_array_length(backup->'tables'->'drg_backup_fixture')<>1
-    OR jsonb_array_length(backup->'tables'->'drg_backup_fixture_events')<>1 THEN
+    OR jsonb_array_length(backup->'tables'->'drg_backup_fixture_events')<>1
+    OR jsonb_array_length(backup->'tables'->'drg_backup_team_root_child')<>1 THEN
     RAISE EXCEPTION 'DRG-01 FK-only child discovery or team scoping failed';
   END IF;
   IF backup->'tables'->'drg_backup_fixture'->0->>'id'<>'de300000-0000-0000-0000-000000000001'
@@ -310,8 +320,12 @@ BEGIN
     WHERE id='de100000-0000-0000-0000-000000000001'
       AND team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
   ) THEN RAISE EXCEPTION 'DRG-01 canonical Evolution session ID/team mapping failed'; END IF;
-  IF NOT EXISTS (SELECT 1 FROM public.drg_backup_fixture WHERE id='de300000-0000-0000-0000-000000000002' AND team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb') THEN
+  IF NOT EXISTS (SELECT 1 FROM public.drg_backup_fixture WHERE id='de300000-0000-0000-0000-000000000002' AND team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb')
+    OR NOT EXISTS (SELECT 1 FROM public.drg_backup_team_root_child WHERE id='de600000-0000-0000-0000-000000000002' AND team_ref='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb') THEN
     RAISE EXCEPTION 'DRG-01 restore crossed into another team';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM public.drg_backup_team_root_child WHERE id='de600000-0000-0000-0000-000000000001' AND team_ref='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') THEN
+    RAISE EXCEPTION 'DRG-01 direct teams(id) child was not restored';
   END IF;
 END
 $restore$;
