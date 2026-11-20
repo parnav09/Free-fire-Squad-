@@ -53,7 +53,7 @@ Restore is owner-only and targets one explicitly selected team. It:
 7. Restores append-only Evolution history only through a private, transaction-bound restore capability. The capability cannot be set by a client-controlled session variable alone.
 8. Returns restored table names, row count, schema fingerprint and owner-remap status.
 
-A failure rolls back the database restore transaction. Version-1 backups are deliberately rejected because their coverage cannot be proven.
+A failure rolls back the database restore transaction. The normal recovery path restores the backup to its original team ID; restoring into a newly created team with a different ID is a separate migration/transfer scenario and is not part of the current acceptance contract. Version-1 backups are deliberately rejected because their coverage cannot be proven.
 
 ## 4. Exclusions and boundaries
 
@@ -74,7 +74,7 @@ A computed score that has never been persisted as a database record cannot be re
 ## 6. Verification plan
 
 - Source-contract suite: `npm run test:backup`, included in `npm run build`.
-- PostgreSQL integration: `scripts/verify-drg-01-backup-db.sh`, which replays the verified disposable Phase 2.10 database chain, applies DRG-01, exports a complete team backup, validates FK-only child discovery, restores over a second team, checks ID/relationship preservation and owner identity, then verifies partial Phase 3 detection.
+- PostgreSQL integration: `scripts/verify-drg-01-backup-db.sh`, which replays the verified disposable Phase 2.10 database chain, applies DRG-01, exports a complete team backup, validates FK-only child discovery, restores over existing rows in the same team and proves another team's rows remain untouched, checks ID/relationship preservation and owner identity, then verifies partial Phase 3 detection.
 - GitHub Actions runs that integration in a separate disposable database named `squad_os_drg_01_ci`.
 
 **Acceptance remains pending until GitHub Actions actually completes the PostgreSQL integration successfully.** A source-level test or Vercel build alone is not database restore verification.
