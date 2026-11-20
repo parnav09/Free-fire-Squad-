@@ -6,7 +6,7 @@
 
 ## Method
 
-The checks used the live function definitions under the actual PostgreSQL `authenticated` role with a synthetic non-member JWT subject. Every test ran inside an explicit transaction and ended with `ROLLBACK`. No production migration, policy, grant, Auth setting, or persistent application row was changed.
+The checks used the live function definitions after explicitly executing `SET LOCAL ROLE authenticated`, with a synthetic non-member JWT subject. Every test ran inside an explicit transaction and ended with `ROLLBACK`. No production migration, policy, grant, Auth setting, or persistent application row was changed.
 
 A temporary pending join-request fixture was inserted only inside a transaction to exercise `review_team_join_request` with a real target row. The transaction was rolled back, and a follow-up read confirmed `team_join_requests` returned to **0 rows**.
 
