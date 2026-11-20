@@ -29,17 +29,25 @@ The complete feature should make it possible to:
 - expose the complete workflow in responsive app UI;
 - integrate with existing Scrims, Tournament, Training, Player and Evaluation modules without competing sources of truth.
 
-## 2. Proposed canonical dimensions — audit before locking
+## 2. Canonical dimensions — reconciled by Point 3.1 audit
 
-The initial proposed six dimensions are:
-1. Coordination — squad coordination and synchronization.
-2. Communication — clarity, accuracy, timing and acknowledgement of information/callouts.
-3. Trade Support — teammate support and trade-window contribution.
-4. Decision Making — situational judgment and fight/retreat/rotation decisions.
-5. Positioning — positioning, angles, rotations and tactical placement.
-6. Consistency — repeatability across observed matches/sessions.
+The initial six-dimension suggestion in this roadmap is superseded by the more detailed Evolution Version 2 canonical rubric already specified on the unmerged Evolution blueprint and implemented as a candidate on branch `feat/evolution-phase-two-3-evidence-rubric-scoring`.
 
-Important: existing project docs already mention other evaluation shapes (including five 0–10 categories and a nine-category/90-point team evaluation). These six dimensions are a proposed Evolution Phase 3 target, not yet a verified canonical truth. Point 3.1 must compare all existing rubrics, stored fields and user-approved requirements. Do not discard, silently rename, or duplicate existing categories. Produce a mapping/reconciliation decision and obtain user direction if semantics materially conflict.
+Canonical stable keys:
+1. `communication` — Communication.
+2. `coordination_trade_support` — Coordination & Trade Support.
+3. `decision_making` — Decision Making.
+4. `positioning` — Positioning.
+5. `map_awareness_rotation` — Map Awareness & Rotation.
+6. `role_execution` — Role Execution.
+
+The source blueprint explicitly separates Positioning from Map Awareness & Rotation and requires role scoring to use the role actually played. This replaces the earlier proposal that split Coordination and Trade Support and used Consistency as a standalone dimension. Consistency remains a longitudinal trend/derived measure, not a canonical per-evaluation dimension, unless a future approved rubric version changes this.
+
+Scoring normalization is reconciled to the existing Evolution blueprint: `weighted_average(valid 0–10 ratings) × 10`. Zero is a valid observed rating; Not Observed is a separate explicit state with a reason and is excluded from the observed-weight denominator. No min-max remapping is authorized.
+
+Legacy Daily Evaluation (five dimensions), standard Training (five dimensions), and advanced Training (six dimensions) remain separate historical models. Point 3.1 documents a candidate crosswalk but does not authorize automatic backfill, conversion, or comparability claims. Preserve all original values and source provenance.
+
+The detailed blueprint and candidate implementation are not merged into main. Treat this as the canonical Evolution design to reuse after review, not as a production/live contract.
 
 ## 3. Detailed implementation points
 
@@ -251,24 +259,26 @@ Two small independent points may be combined only when their dependencies are al
 ## 6. Persistent progress checkpoint (update after every work session)
 
 Current Evolution Phase: 3
-Current point: NOT STARTED (roadmap documented only)
-Current subtask: None
-Last verified completed point: None
-Current status: ROADMAP ONLY
-Active branch: docs/evolution-phase-three-roadmap-checkpoint
-Active PR: none created by this document
-Last known commit: record actual commit SHA after implementation begins
-Last successful checks: none for this roadmap document
+Current point: 3.1 Existing Evaluation System Audit
+Current subtask: Read-only inventory, legacy crosswalk, branch/CI audit, gap-to-target report
+Last verified completed point: 3.1 audit deliverables authored; CI pending exact audit PR head
+Current status: AUDIT REPORT COMPLETE — CI PENDING
+Active branch: feat/evolution-phase-three-1-existing-evaluation-audit
+Active PR: to be created after audit contract and build registration
+Last known commit: f5b81ecd39478a24d0b0f25e9f26c491431c90c3 (audit contract test; audit report commit 52e6f2f6b13ad94b55c48534311c777054e8f2b3)
+Last successful checks: audit source-contract tests are registered; exact PR CI not yet run
 Failing/pending checks: none recorded for this roadmap document
-Files changed: this roadmap document only
+Files changed: docs/evolution/PHASE-3-1-EXISTING-EVALUATION-SYSTEM-AUDIT.md; scripts/verify-evolution-phase-three-1.mjs; package.json; this roadmap checkpoint
 Migrations created/applied: none
 Production changes: none
-Next action: execute 3.1 Existing Evaluation System Audit
+Next action: obtain exact-head CI for the 3.1 audit PR; then resolve Phase 2.12 and the pre-existing canonical scoring branch blockers before 3.2 implementation
 Open blockers/decisions:
-- Reconcile this Evolution Phase 3 roadmap with older product Phase 2/3 blueprints.
-- Confirm canonical dimension mapping against existing five-category and nine-category evaluation models.
-- Decide and document 1–10 to 0–100 normalization only after audit.
-- Confirm rubric/role applicability and minimum evidence thresholds.
+- Legacy product Phase 3 numbering is explicitly separated from Evolution Phase Three.
+- Canonical six dimensions are reconciled to the Evolution Version 2 blueprint: communication, coordination_trade_support, decision_making, positioning, map_awareness_rotation, role_execution.
+- Normalization is specified as weighted average × 10; minimum observed-dimension threshold is currently 4 in the unmerged candidate rubric and remains subject to final rubric acceptance.
+- Existing legacy models remain non-comparable unless a reviewed mapping proves equivalence.
+- Existing candidate Phase Three database integration fails due recursive RLS policy evaluation; active role-weight immutability and match/role evidence linkage also need correction.
+- Phase 2.12 acceptance remains blocked; canonical downstream implementation must not be treated as fully integrated until its DB and device QA gates are resolved.
 
 Update this checkpoint with exact facts after each implementation session. Never infer completion from a plan, commit title, PR title or code presence alone.
 
