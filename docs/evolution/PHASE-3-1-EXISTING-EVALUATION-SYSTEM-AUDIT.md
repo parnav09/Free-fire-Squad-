@@ -113,7 +113,7 @@ The open PR #114 proposes incomplete-row exclusion and deterministic recomputati
 
 ### 2.5 Competitive Analytics separation
 
-The current Evolution/Analytics product scope distinguishes competitive tournament results from player-development evaluation. Preserve this boundary: placements, kills and tournament points must not be added to an internal player-development score.
+AnalyticsSection.tsx consumes only match-history inputs (totalMatches, points, analyticsMatches and rosterSize) and calculates placement + kill points and a match-form forecast. It does not consume player-development scores, so the inspected implementation keeps these metric families separate; player-development analytics are not implemented in that component.
 
 **Status:** SEPARATION PRESENT IN CURRENT PRODUCT DIRECTION; full player-development analytics remain future work.
 
@@ -292,8 +292,8 @@ The Evolution master blueprint docs/evolution-version-2.md and the candidate Pha
 
 ## 10. Final 3.1 status
 
-**3.1 Existing Evaluation System Audit: AUDIT COMPLETE — CI PENDING ON THIS AUDIT PR.**
+**3.1 Existing Evaluation System Audit: AUDIT COMPLETE — CI BLOCKED BY GITHUB RUNNER STARTUP ON THIS PR HEAD.**
 
-The existing systems, data shapes, scales, visibility boundaries, unmerged candidate implementation, naming conflicts, Phase 2 dependencies, migration risks and concrete blockers are now documented. The separate canonical scoring branch is explicitly **NOT PASS**: its exact-head database integration failed with recursive RLS policy evaluation. That failure must be repaired in its own implementation scope; it is not hidden or counted as a 3.1 audit pass.
+The existing systems, data shapes, scales, visibility boundaries, unmerged candidate implementation, naming conflicts, Phase 2 dependencies, migration risks and concrete blockers are now documented. The separate canonical scoring branch is explicitly **NOT PASS**: its exact-head database integration failed with recursive RLS policy evaluation. The 3.1 audit PR's exact head also has a GitHub Actions job failure with zero executed steps; two retries ended the same way, so the audit test/build result is unverified rather than passed. Vercel also reports the existing build-rate-limit failure. These infrastructure failures are not counted as successful CI and are not evidence of a source-test failure.
 
 **Next point:** 3.2 Canonical Dimension Registry, after the Phase 2 acceptance dependency is resolved and the existing unmerged registry is reviewed/reused rather than duplicated.
