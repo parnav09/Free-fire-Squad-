@@ -212,7 +212,7 @@ BEGIN
 END $$;
 
 -- Phase 3.2 canonical registry contract.
-DO $
+DO $$
 DECLARE
   registry_count integer;
   definition_count integer;
@@ -244,10 +244,10 @@ BEGIN
   ) THEN
     RAISE EXCEPTION 'non-equivalent legacy category was incorrectly aliased';
   END IF;
-END $;
+END $$;
 
 RESET ROLE;
-DO $
+DO $$
 BEGIN
   IF has_table_privilege('authenticated','public.evolution_evidence_items','DELETE') THEN
     RAISE EXCEPTION 'authenticated role unexpectedly has evidence DELETE';
