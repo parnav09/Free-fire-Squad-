@@ -28,6 +28,8 @@ test("Backup inventory discovers team_id tables and FK-only child records withou
   const sql = await read("../supabase/migrations/20261121010000_drg_01_complete_team_backup.sql");
   assert.match(sql, /a\.attname = 'team_id'/);
   assert.match(sql, /direct_children AS/);
+  assert.match(sql, /parent\.relname = 'teams'/);
+  assert.match(sql, /CASE WHEN parent\.relname = 'teams' THEN 'id' ELSE 'team_id' END/);
   assert.match(sql, /team_backup_unsupported_child_tables/);
   assert.match(sql, /unsupported_child_tables/);
   assert.match(sql, /v_exported_tables = v_table_names/);
@@ -94,6 +96,7 @@ test("Disposable PostgreSQL integration verifies export, restore, same-team rest
   assert.match(script, /verify-evolution-phase-two-10-db\.sh/);
   assert.match(script, /DRG-01 expected complete export/);
   assert.match(script, /FK-only child discovery or team scoping failed/);
+  assert.match(script, /direct teams\(id\) child was not restored/);
   assert.match(script, /restore_team_backup_for_team/);
   assert.match(script, /corrupted payload was not rejected/);
   assert.match(script, /current team owner identity was not retained/);
