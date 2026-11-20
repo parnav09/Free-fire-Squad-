@@ -1136,12 +1136,39 @@ BEGIN
   END IF;
 
   v_current_tables := evolution_private.team_backup_table_names();
+  IF EXISTS (
+    SELECT 1 FROM unnest(ARRAY[
+      'team_members','team_settings','team_join_requests','team_ratings',
+      'team_data_retention_settings','daily_drills','daily_scores','daily_score_feedback',
+      'player_drill_assignments','player_nicknames','player_character_loadouts',
+      'training_log','training_session_notes','training_drills','practice_plans',
+      'practice_plan_blocks','practice_tasks','practice_task_events','training_sessions',
+      'training_session_participants','training_results','scrim_records','scrim_team_reviews',
+      'tournament_cycles','tournament_matches',
+      'canonical_sessions','canonical_session_sources','canonical_session_match_sets',
+      'canonical_session_matches','canonical_session_match_sequence_events',
+      'canonical_session_lifecycle_events','canonical_session_result_submissions',
+      'canonical_session_roster_policies','canonical_session_rosters',
+      'canonical_session_roster_members','canonical_session_roster_member_events',
+      'canonical_session_match_participants','canonical_session_match_participation_events',
+      'canonical_team_role_definitions','canonical_team_role_definition_events',
+      'canonical_session_match_roles','canonical_session_match_role_events',
+      'canonical_session_substitutions','canonical_session_substitution_role_transfers',
+      'canonical_session_results','canonical_session_result_versions','canonical_session_result_events'
+    ]::text[]) required(table_name)
+    WHERE NOT required.table_name = ANY(v_current_tables)
+  ) THEN
+    RAISE EXCEPTION 'current_schema_missing_required_backup_tables_export_not_complete' USING ERRCODE = '22023';
+  END IF;
   v_backup_tables := ARRAY(
-    SELECT value FROM pg_catalog.jsonb_array_elements_text(p_backup->'coverage_report'->'included_tables') value
-    ORDER BY value
+    SELECT included.value
+    FROM pg_catalog.jsonb_array_elements_text(p_backup->'coverage_report'->'included_tables') AS included(value)
+    ORDER BY included.value
   );
   v_payload_tables := ARRAY(
-    SELECT key FROM pg_catalog.jsonb_object_keys(v_tables) key ORDER BY key
+    SELECT payload.key
+    FROM pg_catalog.jsonb_object_keys(v_tables) AS payload(key)
+    ORDER BY payload.key
   );
   IF v_backup_tables IS DISTINCT FROM v_current_tables
     OR v_payload_tables IS DISTINCT FROM v_current_tables
@@ -1161,15 +1188,15 @@ BEGIN
   IF pg_catalog.jsonb_typeof(v_tables->'team_members') IS DISTINCT FROM 'array' THEN
     RAISE EXCEPTION 'backup_roster_missing' USING ERRCODE = '22023';
   END IF;
-  SELECT value INTO v_owner_row
-  FROM pg_catalog.jsonb_array_elements(v_tables->'team_members') value
-  WHERE value->>'membership_role' = 'owner'
-    AND value->>'user_id' = v_backup_owner::text
+  SELECT roster.value INTO v_owner_row
+  FROM pg_catalog.jsonb_array_elements(v_tables->'team_members') AS roster(value)
+  WHERE roster.value->>'membership_role' = 'owner'
+    AND roster.value->>'user_id' = v_backup_owner::text
   LIMIT 1;
   IF v_owner_row IS NULL OR (
-    SELECT count(*) FROM pg_catalog.jsonb_array_elements(v_tables->'team_members') value
-    WHERE value->>'membership_role' = 'owner'
-      AND value->>'user_id' = v_backup_owner::text
+    SELECT count(*) FROM pg_catalog.jsonb_array_elements(v_tables->'team_members') AS roster(value)
+    WHERE roster.value->>'membership_role' = 'owner'
+      AND roster.value->>'user_id' = v_backup_owner::text
   ) <> 1 THEN
     RAISE EXCEPTION 'backup_must_contain_exactly_one_original_owner_membership' USING ERRCODE = '22023';
   END IF;
