@@ -36,6 +36,8 @@ test("Backup inventory discovers team_id tables and FK-only child records withou
   assert.match(sql, /'complete',v_complete/);
   assert.match(sql, /'content_checksum',v_content_checksum/);
   assert.match(sql, /backup_content_checksum_mismatch/);
+  assert.match(sql, /jsonb_build_object\('team',v_team,'tables',v_tables\)/);
+  assert.match(sql, /jsonb_build_object\('team',p_backup->'team','tables',v_tables\)/);
 });
 
 test("Backup completeness fails closed for partially present Phase 3 schemas", async () => {
