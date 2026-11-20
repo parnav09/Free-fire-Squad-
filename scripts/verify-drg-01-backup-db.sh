@@ -133,14 +133,14 @@ BEGIN
 END
 $export$;
 
--- Restore Alpha's complete graph over Bravo, retaining Bravo's authenticated owner identity.
+-- Restore Alpha's own backup over its existing rows, retaining its authenticated owner and proving Bravo remains isolated.
 RESET ROLE;
 SET ROLE authenticated;
-SELECT set_config('request.jwt.claim.sub','20000000-0000-0000-0000-000000000002',false);
+SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
 INSERT INTO drg_restore_result(payload)
 SELECT public.restore_team_backup_for_team(
   (SELECT payload FROM drg_backup_result),
-  'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
 );
 
 DO $restore$
@@ -154,7 +154,7 @@ BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM public.drg_backup_fixture
     WHERE id='de300000-0000-0000-0000-000000000001'
-      AND team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'
+      AND team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
       AND canonical_session_id='de100000-0000-0000-0000-000000000001'
   ) THEN RAISE EXCEPTION 'DRG-01 parent IDs or team remapping were not preserved'; END IF;
   IF NOT EXISTS (
@@ -164,15 +164,18 @@ BEGIN
   ) THEN RAISE EXCEPTION 'DRG-01 FK-only child record was not restored'; END IF;
   IF NOT EXISTS (
     SELECT 1 FROM public.team_members
-    WHERE team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'
-      AND user_id='20000000-0000-0000-0000-000000000002'
+    WHERE team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
+      AND user_id='10000000-0000-0000-0000-000000000001'
       AND membership_role='owner' AND status='active'
-  ) THEN RAISE EXCEPTION 'DRG-01 current target owner identity was not retained'; END IF;
+  ) THEN RAISE EXCEPTION 'DRG-01 current team owner identity was not retained'; END IF;
   IF NOT EXISTS (
     SELECT 1 FROM public.canonical_sessions
     WHERE id='de100000-0000-0000-0000-000000000001'
-      AND team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'
+      AND team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
   ) THEN RAISE EXCEPTION 'DRG-01 canonical Evolution session ID/team mapping failed'; END IF;
+  IF NOT EXISTS (SELECT 1 FROM public.drg_backup_fixture WHERE id='de300000-0000-0000-0000-000000000002' AND team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb') THEN
+    RAISE EXCEPTION 'DRG-01 restore crossed into another team';
+  END IF;
 END
 $restore$;
 
