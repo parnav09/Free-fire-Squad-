@@ -32,6 +32,8 @@ test("Backup inventory discovers team_id tables and FK-only child records withou
   assert.match(sql, /unsupported_child_tables/);
   assert.match(sql, /v_exported_tables = v_table_names/);
   assert.match(sql, /'complete',v_complete/);
+  assert.match(sql, /'content_checksum',v_content_checksum/);
+  assert.match(sql, /backup_content_checksum_mismatch/);
 });
 
 test("Backup completeness fails closed for partially present Phase 3 schemas", async () => {
@@ -93,6 +95,7 @@ test("Disposable PostgreSQL integration verifies export, restore, same-team rest
   assert.match(script, /DRG-01 expected complete export/);
   assert.match(script, /FK-only child discovery or team scoping failed/);
   assert.match(script, /restore_team_backup_for_team/);
+  assert.match(script, /corrupted payload was not rejected/);
   assert.match(script, /current team owner identity was not retained/);
   assert.match(script, /partial Phase 3 schema was silently reported complete/);
   assert.match(script, /DRG-01 complete team backup export\/restore PostgreSQL integration PASS/);
