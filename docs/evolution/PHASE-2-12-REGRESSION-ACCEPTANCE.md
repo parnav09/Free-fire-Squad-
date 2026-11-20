@@ -11,7 +11,7 @@
 - Adds a cross-point regression contract covering all Phase Two test registrations, migration ordering, disposable PostgreSQL CI wiring, the canonical Sessions UI RPC boundary, offline/permission fail-closed behavior, responsive/accessibility safeguards, and CI branch triggers.
 - Keeps Points 2.11 and 2.12 schema-free; no new migration is introduced.
 - Makes the acceptance report explicit about evidence that exists versus evidence still missing.
-- Keeps the database integration harness on a disposable PostgreSQL 16 service; no paid database branch or live Supabase operation is introduced.
+- Keeps the database integration harness on a local disposable PostgreSQL 16 instance installed on the GitHub-hosted runner; no paid database branch or live Supabase operation is introduced.
 
 ## Regression coverage
 
@@ -31,21 +31,23 @@ It checks:
 
 | Gate | Current evidence | Status |
 |---|---|---|
-| Earlier source-contract suites | Full `npm run build` completed on exact preview commit `6f3dfd4436f0772d715ce91c7445c7e3d5c631d4`; all registered commands completed without stopping the build | **PASS (source/build layer)** |
-| TypeScript + production bundle | Vercel Preview for exact commit `6f3dfd4436f0772d715ce91c7445c7e3d5c631d4` reached READY; `tsc --noEmit` and Vite production build completed | **PASS** |
-| Phase 2.10 source contract | 4/4 passed on the preceding preview; rerun is part of the successful full build chain on this commit | **PASS (source contract only)** |
+| Earlier source-contract suites | Full `npm run build` completed on exact preview commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec`; all registered commands completed without stopping the build | **PASS (source/build layer)** |
+| TypeScript + production bundle | Vercel Preview for exact commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` reached READY; `tsc --noEmit` and Vite production build completed | **PASS** |
+| Phase 2.10 source contract | 4/4 passed on exact preview commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` | **PASS (source contract only)** |
 | Phase 2.10 PostgreSQL integration | GitHub Actions job fails before runner steps; no DB test output exists | **BLOCKED** |
-| Phase 2.11 source contract | 6/6 passed on the preceding preview; rerun is part of the successful full build chain on this commit | **PASS (source contract only)** |
+| Phase 2.11 source contract | 6/6 passed on exact preview commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` | **PASS (source contract only)** |
 | Phase 2.11 browser/database end-to-end | No live/staging migration-backed environment was used | **NOT VERIFIED** |
 | Android, tablet and desktop interaction QA | Manual Android, tablet and desktop QA requires real device/browser interaction; a bundle build is not device QA | **PENDING** |
 | Historical snapshot and cross-module runtime regression | Requires disposable DB integration execution and representative authenticated flows | **PENDING** |
 
 ## Final acceptance blockers
 
-1. Restore a working free GitHub Actions runner execution path and obtain a successful isolated PostgreSQL replay for Points 2.2–2.10. A failed job with no steps/logs is not evidence of database correctness.
+1. Restore a working GitHub Actions runner execution path and obtain a successful isolated PostgreSQL replay for Points 2.2–2.10. Runs #642, #660, #664 and #692 created a job but failed before any runner step; each has an empty step list and no logs. A failed job with no steps/logs is not evidence of database correctness.
 2. Run authenticated end-to-end flows against a disposable/staging database using the exact staged migrations, including Owner/Coach/member permission boundaries and cross-team isolation.
 3. Complete manual Android, tablet and desktop QA by exercising the Sessions workspace on an Android phone, tablet-sized viewport, and desktop; record browser/device, viewport, scenarios, and outcomes.
 4. Verify historical source mappings and snapshot immutability across existing Tournament, Scrim, Planning and Training records using disposable fixtures.
+
+During the latest Phase 2.10 integrity review, a real gap was found: a task could reference a plan block while `plan_id` was NULL. The trigger now enforces the block's owning plan whenever `block_id` is set, and the disposable PostgreSQL harness includes a regression case for this. The source contract and full Vercel build pass; the database assertion still awaits a runner that starts.
 
 ## Production boundary
 
