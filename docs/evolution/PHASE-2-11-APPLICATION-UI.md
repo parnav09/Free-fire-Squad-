@@ -25,7 +25,7 @@
 - The UI never fabricates missing match rows, result values or roster records.
 - Only Owner/Coach controls are rendered; server-side RLS/RPC authorization remains authoritative.
 - Offline mode is read-only; no unsupported queue/replay behavior is implied.
-- Team changes clear the prior team list immediately; list/detail requests use generation guards so stale responses cannot overwrite a newer team or selected session.
+- The workspace is keyed by team UUID so team changes remount it without carrying prior-team state; list/detail requests also use generation guards so stale responses cannot overwrite a newer team or selected session.
 - Result verification requires a non-empty verified JSON object, all four server-defined checklist keys and a reason.
 - Session verification is disabled until every expected match (or the single Training session result) is verified/amended; the session-level result receipt is submitted before the verified lifecycle transition.
 - No schema migration or live Supabase write is part of this UI point.
