@@ -252,25 +252,18 @@ export default function App() {
     return()=>{window.removeEventListener("online",onOnline);window.removeEventListener("offline",onOffline);};
   }, []);
 
+  // RESET-01: disable legacy app backend workflows while the workspace is rebuilt.
+  // CharacterDatabase has its own read-only connection to the protected character_profiles table.
   useEffect(() => {
-    let active = true;
-    import("./lib/supabase/client")
-      .then(({ supabase: client }) => {
-        if (active) {
-          setSupabase(client);
-          setSupabaseReady(true);
-        }
-      })
-      .catch(() => {
-        if (active) setConnection("Offline");
-      });
-    return () => { active = false; };
+    setSupabase(null);
+    setSupabaseReady(true);
+    setConnection("Coming soon");
   }, []);
 
   useEffect(() => {
     let alive = true;
     if (!supabase) {
-      if (supabaseReady) setConnection("Not configured");
+      if (supabaseReady) setConnection("Coming soon");
       return;
     }
     supabase.auth.getSession().then(({ data, error }) => {
@@ -908,7 +901,27 @@ export default function App() {
   const mainNav: Section[] = ["Players", "Tournament", "StratForge", "Assignments"];
   const mobileNavLabel: Record<string,string> = {Players:"Players",Tournament:"Matches",StratForge:"Forge",Assignments:"Tasks",Evaluation:"Eval", "Weekly Review":"Review","Player Trends":"Trends",Analytics:"Stats",Profile:"Profile",Settings:"Settings","Training Legacy":"Legacy"};
   const navIcon: Record<string,string> = {Players:"♙",Tournament:"◷",StratForge:"◈",Assignments:"✓",Evaluation:"◎","Weekly Review":"↗","Player Trends":"⌁",Analytics:"▥",Evolution:"⌁",Sessions:"◷",Profile:"♙",Settings:"⚙","Training Legacy":"◫"};
-  const onboarding=!signedIn||!team;
+  // RESET-01: render the existing shell without requiring a deleted testing account or team.
+  const onboarding=false;
+  const resetNavigationSelector=".sidebar, .mobile-bottom-nav, .mobile-more-backdrop, .mobile-more-sheet, .combat-nexus-character-card, .combat-nexus-pets";
+  const showComingSoon=(event: React.MouseEvent<HTMLElement>)=>{
+    const target=event.target as HTMLElement;
+    if(target.closest(resetNavigationSelector))return;
+    if(target.closest("button, input, select, textarea, [role='button']")){
+      event.preventDefault();
+      event.stopPropagation();
+      setNotice("Coming Soon — this workspace will be rebuilt.");
+    }
+  };
+  const blockComingSoonInput=(event: React.FormEvent<HTMLElement>)=>{
+    const target=event.target as HTMLElement;
+    if(target.closest(resetNavigationSelector))return;
+    if(target.closest("input, select, textarea")){
+      event.preventDefault();
+      event.stopPropagation();
+      setNotice("Coming Soon — this workspace will be rebuilt.");
+    }
+  };
   if (combatNexusView && !onboarding) {
     const isCharacters = combatNexusView === "characters";
     const isPets = combatNexusView === "pets";
@@ -945,7 +958,7 @@ export default function App() {
   }
 
   return (
-    <main className="app-shell">
+    <main className="app-shell" onClickCapture={showComingSoon} onChangeCapture={blockComingSoonInput}>
       <aside className="sidebar">
         <div className="brand-mark">S</div><div className="brand-copy"><span className="brand-name">SQUAD OS</span><span className="brand-caption">TEAM OPERATIONS</span></div>
         <div className="sidebar-divider"/>{!onboarding&&<><div className="nav-label">WORKSPACE</div>
@@ -954,7 +967,7 @@ export default function App() {
       </aside>
       {!onboarding&&<><nav className="mobile-bottom-nav" aria-label="Main navigation">{mainNav.map(n=><button key={n} className={section===n?"mobile-nav-active":""} aria-current={section===n?"page":undefined} onClick={()=>{setSection(n);setMobileMore(false);}}><span className="mobile-nav-icon">{navIcon[n]}</span><small>{mobileNavLabel[n]}</small></button>)}<button className={mobileMore||(!mainNav.includes(section)&&section!=="Overview")?"mobile-nav-active":""} aria-expanded={mobileMore} onClick={()=>setMobileMore(v=>!v)}><span className="mobile-nav-icon">☰</span><small>More</small></button></nav>{mobileMore&&<div className="mobile-more-backdrop" onClick={()=>setMobileMore(false)}><section className="mobile-more-sheet" aria-label="More sections" onClick={e=>e.stopPropagation()}><header><strong>All workspaces</strong><button aria-label="Close menu" onClick={()=>setMobileMore(false)}>×</button></header><div className="mobile-more-grid">{nav.filter(n=>!mainNav.includes(n)).map(n=><button key={n} className={section===n?"mobile-more-active":""} onClick={()=>{setSection(n);setMobileMore(false);}}><span>{navIcon[n]}</span>{n==="Evaluation"||n==="Weekly Review"||n==="Player Trends"||n==="Analytics"?"Evolution · "+n:n}</button>)}</div></section></div>}</>}
       <section className="main-panel">
-        <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><div className={"sync-indicator sync-"+syncState} role="status" aria-live="polite" aria-label={"Team sync status: "+syncLabel} title={"Team sync status: "+syncLabel}><i/><span>{syncLabel}</span></div></header>
+        <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><span className="reset-coming-soon-pill">COMING SOON</span><div className={"sync-indicator sync-"+syncState} role="status" aria-live="polite" aria-label={"Team sync status: "+syncLabel} title={"Team sync status: "+syncLabel}><i/><span>{syncLabel}</span></div></header>
         <div className="content">
           {onboarding?<>
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>
