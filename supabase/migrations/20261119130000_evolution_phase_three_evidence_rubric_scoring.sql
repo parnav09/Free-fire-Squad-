@@ -247,10 +247,10 @@ REVOKE DELETE ON public.evolution_rubric_versions, public.evolution_rubric_dimen
 -- The former policy queried rubric_dimensions while that table's SELECT policy
 -- queried rubric_versions, causing PostgreSQL's infinite RLS recursion error.
 -- This private trigger function checks only the invariant and returns no data.
-CREATE SCHEMA IF NOT EXISTS private;
-REVOKE ALL ON SCHEMA private FROM PUBLIC, anon, authenticated;
+CREATE SCHEMA IF NOT EXISTS evolution_private;
+REVOKE ALL ON SCHEMA evolution_private FROM PUBLIC, anon, authenticated;
 
-CREATE OR REPLACE FUNCTION private.enforce_evolution_rubric_dimensions_before_activation()
+CREATE OR REPLACE FUNCTION evolution_private.enforce_evolution_rubric_dimensions_before_activation()
 RETURNS trigger
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -277,13 +277,13 @@ BEGIN
 END;
 $function$;
 
-REVOKE ALL ON FUNCTION private.enforce_evolution_rubric_dimensions_before_activation()
+REVOKE ALL ON FUNCTION evolution_private.enforce_evolution_rubric_dimensions_before_activation()
   FROM PUBLIC, anon, authenticated;
 
 CREATE TRIGGER evolution_rubric_dimensions_before_activation
   BEFORE UPDATE OF status ON public.evolution_rubric_versions
   FOR EACH ROW
-  EXECUTE FUNCTION private.enforce_evolution_rubric_dimensions_before_activation();
+  EXECUTE FUNCTION evolution_private.enforce_evolution_rubric_dimensions_before_activation();
 
 CREATE POLICY evolution_rubric_versions_read ON public.evolution_rubric_versions
   FOR SELECT TO authenticated
