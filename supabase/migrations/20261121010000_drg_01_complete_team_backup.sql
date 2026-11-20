@@ -958,6 +958,7 @@ DECLARE
     'evolution_evidence_dimension_links'
   ];
   v_fingerprint text;
+  v_content_checksum text;
   v_total bigint := 0;
   v_complete boolean;
   v_phase_three_present boolean := false;
@@ -1020,6 +1021,8 @@ BEGIN
     v_total := v_total + pg_catalog.jsonb_array_length(COALESCE(v_rows,'[]'::jsonb));
   END LOOP;
 
+  v_content_checksum := pg_catalog.md5(v_tables::text);
+
   v_complete := pg_catalog.cardinality(v_missing_required) = 0
     AND pg_catalog.cardinality(v_missing_canonical) = 0
     AND pg_catalog.cardinality(v_unsupported) = 0
@@ -1043,6 +1046,7 @@ BEGIN
       'missing_canonical_evolution_tables',pg_catalog.to_jsonb(v_missing_canonical),
       'unsupported_child_tables',pg_catalog.to_jsonb(v_unsupported),
       'schema_fingerprint',v_fingerprint,
+      'content_checksum',v_content_checksum,
       'phase_three_schema_present',v_phase_three_present,
       'known_phase_three_candidate_tables',pg_catalog.to_jsonb(v_phase_three_candidate),
       'missing_phase_three_candidate_tables',pg_catalog.to_jsonb(v_missing_phase_three),
@@ -1126,6 +1130,9 @@ BEGIN
   v_tables := p_backup->'tables';
   IF pg_catalog.jsonb_typeof(v_tables) IS DISTINCT FROM 'object' THEN
     RAISE EXCEPTION 'backup_tables_object_missing' USING ERRCODE = '22023';
+  END IF;
+  IF p_backup->'coverage_report'->>'content_checksum' IS DISTINCT FROM pg_catalog.md5(v_tables::text) THEN
+    RAISE EXCEPTION 'backup_content_checksum_mismatch' USING ERRCODE = '22023';
   END IF;
 
   v_current_tables := evolution_private.team_backup_table_names();
