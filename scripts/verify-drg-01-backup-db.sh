@@ -61,18 +61,26 @@ CREATE TABLE public.drg_backup_fixture_events (
 
 INSERT INTO public.canonical_sessions(
   id,team_id,session_type,title,idempotency_key,created_by
-) VALUES (
+) VALUES
+ (
   'de100000-0000-0000-0000-000000000001',
   'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   'training','DRG-01 backup fixture',
   'de200000-0000-0000-0000-000000000001',
   '10000000-0000-0000-0000-000000000001'
-);
+ ),
+ (
+  'de100000-0000-0000-0000-000000000002',
+  'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+  'training','DRG-01 Bravo fixture',
+  'de200000-0000-0000-0000-000000000002',
+  '20000000-0000-0000-0000-000000000002'
+ );
 
 INSERT INTO public.drg_backup_fixture(id,team_id,canonical_session_id) VALUES
  ('de300000-0000-0000-0000-000000000001','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','de100000-0000-0000-0000-000000000001'),
  ('de300000-0000-0000-0000-000000000002','bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-  (SELECT id FROM public.canonical_sessions WHERE team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' ORDER BY created_at LIMIT 1));
+  'de100000-0000-0000-0000-000000000002');
 INSERT INTO public.drg_backup_fixture_events(id,fixture_id,event_note) VALUES
  ('de400000-0000-0000-0000-000000000001','de300000-0000-0000-0000-000000000001','Alpha child event'),
  ('de400000-0000-0000-0000-000000000002','de300000-0000-0000-0000-000000000002','Bravo child event');
@@ -83,6 +91,7 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$ROOT/supabase/migrations/2026112101
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 CREATE TEMP TABLE drg_backup_result(payload jsonb);
 CREATE TEMP TABLE drg_restore_result(payload jsonb);
+GRANT INSERT, SELECT ON drg_backup_result, drg_restore_result TO authenticated;
 
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
