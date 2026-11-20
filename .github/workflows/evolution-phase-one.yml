@@ -16,6 +16,20 @@ jobs:
     name: Typecheck, tests and production build
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: squad_os_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d squad_os_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/squad_os_ci
     steps:
@@ -36,13 +50,10 @@ jobs:
           path: package-lock.json
           if-no-files-found: error
           retention-days: 1
-      - name: Install and start disposable local PostgreSQL (free GitHub runner)
+      - name: Install PostgreSQL client
         run: |
           sudo apt-get update
-          sudo apt-get install --yes postgresql postgresql-client
-          sudo service postgresql start
-          sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
-          PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_ci
+          sudo apt-get install --yes postgresql-client
       - name: Verify Evolution Phase 2.2 canonical session migration against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_2_ci

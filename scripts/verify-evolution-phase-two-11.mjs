@@ -19,6 +19,7 @@ test("Session lifecycle uses server RPC, optimistic version and audited reason",
   assert.match(component, /p_reason:reason\.trim\(\)/);
   assert.match(component, /reopen_canonical_session/);
   assert.match(component, /create_canonical_session/);
+  assert.match(component, /Create Scrim and Tournament sessions in their existing modules/);
 });
 test("Roster, role, participation and substitution use canonical server RPCs", async () => {
   const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
@@ -30,6 +31,8 @@ test("Result workflow preserves draft, submission, verification and rejection pr
   const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
   for (const rpc of ["save_canonical_session_result_draft","submit_canonical_session_result","verify_canonical_session_result","reject_canonical_session_result","submit_canonical_session_results"]) assert.match(component,new RegExp(rpc));
   assert.match(component,/no_inferred_values/);
+  assert.match(component,/p\.participation_status==="participated"/);
+  assert.match(component,/!\["in_progress","awaiting_results"\]\.includes\(selected\.lifecycle_status\)/);
   assert.match(component,/raw_submitted_values/);
 });
 test("UI fails closed for staff-only actions and offline writes", async () => {
