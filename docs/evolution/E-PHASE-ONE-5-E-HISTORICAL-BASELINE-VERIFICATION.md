@@ -72,9 +72,9 @@ Required unblock evidence: the original pre-migration schema dump or an independ
 
 The prior E report records successful CI runs #352/#353 on older commit `0a24ce6fd9811ef53b0e8d39b3dbd54597fe4426`. These are historical evidence and are not represented as exact-head results for the audited source head.
 
-The latest observed push/PR runs for source head `a024f13d029a15aa4dfa74a466435da7e2d3b8ce` are #661 (ID `44726357303`) and #662 (ID `44726364443`), both reported failed. The GitHub job records expose no step records, and the workflow-job log artifact could not be retrieved. Therefore the failure stage and test results cannot be truthfully attributed to a code assertion or reported as passing. Re-run full CI on the checkpoint commit and record its exact result.
+The latest observed push/PR runs for source head `a024f13d029a15aa4dfa74a466435da7e2d3b8ce` are #661 (ID `44726357303`) and #662 (ID `44726364443`), both reported failed. The GitHub job records expose no step records, and the workflow-job log artifact could not be retrieved. Therefore the failure stage and test results cannot be truthfully attributed to a code assertion or reported as passing. Checkpoint commit `a82eead226ea302d852ef991721181671d4ffb8c` triggered push workflow run #746 (ID `44794364558`). The run completed with failure. Its only job is marked failed, but GitHub returned an empty step list and the job-log artifact URL returned BlobNotFound; the failure stage and test outcomes are therefore unavailable. This run is not a passing verification. Re-run CI when the runner/log evidence is available and record its exact result.
 
-## Final status
+## 6. Checkpoint commit CI update\n\n- Checkpoint documentation commit: `a82eead226ea302d852ef991721181671d4ffb8c`.\n- Push workflow run #746 / `44794364558`: **FAILURE**.\n- Job record: one job marked failed; zero step records returned. Job log retrieval returned `BlobNotFound`.\n- No test suite, PostgreSQL step, typecheck, or build result can be claimed from this run.\n\n## Final status
 
 - Historical SQL provenance and 53 dispositions: **RE-VERIFIED AT SOURCE/MANIFEST LEVEL**.
 - Historical full-chain replay: **NOT RUN — BLOCKED**.
