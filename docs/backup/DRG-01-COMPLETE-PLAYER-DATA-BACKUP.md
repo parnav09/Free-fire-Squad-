@@ -35,6 +35,7 @@ The v2 export includes:
 - Per-table row counts and total row count
 - Included-table manifest
 - Schema fingerprint over columns and primary, unique, foreign-key, check and exclusion constraints
+- Table-payload checksum over the canonical JSONB table payload; restore recomputes it before any deletion to reject accidental file corruption
 - Missing required/canonical/Phase 3 tables and unsupported child-table report
 - Explicit non-team-owned/security exclusions
 
