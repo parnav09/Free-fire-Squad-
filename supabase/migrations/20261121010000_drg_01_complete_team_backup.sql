@@ -745,9 +745,12 @@ AS $function$
     FROM pg_catalog.pg_constraint fk
     JOIN pg_catalog.pg_class child ON child.oid = fk.conrelid
     JOIN pg_catalog.pg_namespace child_ns ON child_ns.oid = child.relnamespace
-    JOIN scoped parent ON parent.oid = fk.confrelid
+    JOIN pg_catalog.pg_class parent ON parent.oid = fk.confrelid
+    JOIN pg_catalog.pg_namespace parent_ns ON parent_ns.oid = parent.relnamespace
     WHERE fk.contype = 'f'
       AND child_ns.nspname = 'public'
+      AND parent_ns.nspname = 'public'
+      AND (parent.relname = 'teams' OR EXISTS (SELECT 1 FROM scoped WHERE scoped.oid = parent.oid))
       AND child.relkind IN ('r','p')
       AND NOT EXISTS (
         SELECT 1 FROM pg_catalog.pg_attribute a
@@ -793,9 +796,10 @@ BEGIN
 
   SELECT pg_catalog.string_agg(
     pg_catalog.format(
-      'EXISTS (SELECT 1 FROM public.%I p WHERE %s AND p.team_id = $1)',
+      'EXISTS (SELECT 1 FROM public.%I p WHERE %s AND p.%I = $1)',
       parent.relname,
-      join_columns.join_sql
+      join_columns.join_sql,
+      CASE WHEN parent.relname = 'teams' THEN 'id' ELSE 'team_id' END
     ),
     ' AND ' ORDER BY parent.relname, fk.conname
   )
@@ -822,10 +826,13 @@ BEGIN
     AND child_ns.nspname = 'public'
     AND child.relname = p_table
     AND parent_ns.nspname = 'public'
-    AND EXISTS (
-      SELECT 1 FROM pg_catalog.pg_attribute a
-      WHERE a.attrelid = parent.oid AND a.attname = 'team_id'
-        AND a.attnum > 0 AND NOT a.attisdropped
+    AND (
+      parent.relname = 'teams'
+      OR EXISTS (
+        SELECT 1 FROM pg_catalog.pg_attribute a
+        WHERE a.attrelid = parent.oid AND a.attname = 'team_id'
+          AND a.attnum > 0 AND NOT a.attisdropped
+      )
     );
 
   RETURN v_predicate;
