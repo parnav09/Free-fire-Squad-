@@ -133,6 +133,30 @@ BEGIN
 END
 $export$;
 
+-- A changed table value with the same row count must fail checksum validation before deletion.
+DO $tamper$
+DECLARE
+  corrupted jsonb;
+  rejected boolean := false;
+BEGIN
+  SELECT payload INTO corrupted FROM drg_backup_result;
+  corrupted:=pg_catalog.jsonb_set(
+    corrupted,
+    '{tables,drg_backup_fixture_events,0,event_note}',
+    pg_catalog.to_jsonb('tampered event'::text),
+    false
+  );
+  BEGIN
+    PERFORM public.restore_team_backup_for_team(
+      corrupted,'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
+    );
+  EXCEPTION WHEN SQLSTATE '22023' THEN
+    rejected:=true;
+  END;
+  IF NOT rejected THEN RAISE EXCEPTION 'DRG-01 corrupted payload was not rejected'; END IF;
+END
+$tamper$;
+
 -- Restore Alpha's own backup over its existing rows, retaining its authenticated owner and proving Bravo remains isolated.
 RESET ROLE;
 SET ROLE authenticated;
