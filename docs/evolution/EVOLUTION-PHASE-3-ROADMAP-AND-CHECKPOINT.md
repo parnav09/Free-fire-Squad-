@@ -267,11 +267,11 @@ Active branch: feat/evolution-phase-three-1-existing-evaluation-audit
 Active PR: #131 — https://github.com/parnav09/Free-fire-Squad-/pull/131 (Draft, unmerged)
 Last known commit: 96b5aaef10cb50a5c571bbc8f86722da90f220c8 (PR #131 exact head at last CI inspection)
 Last successful checks: none verified on the exact PR #131 head
-Failing/pending checks: GitHub Actions run #44736214567 failed before any job steps; its retry also had an empty step list. Earlier run #44735966399 had the same runner-start failure. Vercel status is build-rate-limit failure.
+Failing/pending checks: GitHub Actions run #44736346581 (run #887) on checkpoint commit edeaa9ccb2624fc8263674a171f31b20bb19b524 completed with failure; job #136288591678 has steps: null (no runner steps). Log retrieval returned 404 BlobNotFound. Earlier run #44736214567 and #44735966399 also failed before runner steps. Vercel status remains build-rate-limit failure.
 Files changed: docs/evolution/PHASE-3-1-EXISTING-EVALUATION-SYSTEM-AUDIT.md; scripts/verify-evolution-phase-three-1.mjs; package.json; this roadmap checkpoint
 Migrations created/applied: none
 Production changes: none
-Next action: GitHub Actions runner availability must be restored before CI can execute; rerun the PR #131 head after runner recovery. Then resolve Phase 2.12 and the pre-existing canonical scoring branch blockers before 3.2 implementation
+Next action: restore GitHub Actions runner availability, then rerun PR #131 on its latest head and require actual executed steps plus green audit contract/typecheck/build checks. Do not start 3.2 until 3.1 exact-head verification passes and Phase 2.12/canonical-scoring blockers are dispositioned.
 Open blockers/decisions:
 - Legacy product Phase 3 numbering is explicitly separated from Evolution Phase Three.
 - Canonical six dimensions are reconciled to the Evolution Version 2 blueprint: communication, coordination_trade_support, decision_making, positioning, map_awareness_rotation, role_execution.
