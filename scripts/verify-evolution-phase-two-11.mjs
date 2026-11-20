@@ -54,3 +54,13 @@ test("Responsive UI and accessibility states are present", async () => {
   assert.match(component,/role="alert"/);
   assert.match(component,/role="status"/);
 });
+
+
+test("Session list and detail requests cannot publish stale data after team or selection changes", async () => {
+  const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
+  assert.match(component, /listRequestRef=useRef\(0\),detailRequestRef=useRef\(0\)/);
+  assert.match(component, /requestId!==listRequestRef\.current/);
+  assert.match(component, /requestId!==detailRequestRef\.current/);
+  assert.match(component, /return\(\)=>\{listRequestRef\.current\+\+;detailRequestRef\.current\+\+;\}/);
+  assert.match(component, /setSessions\(\[\]\);setSources\(\{\}\);setMatchCounts\(\{\}\);setSelectedId\("\")/);
+});
