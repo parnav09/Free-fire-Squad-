@@ -97,6 +97,8 @@ test("Disposable PostgreSQL integration verifies export, restore, same-team rest
   assert.match(script, /restore_team_backup_for_team/);
   assert.match(script, /corrupted payload was not rejected/);
   assert.match(script, /current team owner identity was not retained/);
+  assert.match(script, /persisted player scoring\/evaluation history was not exported/);
+  assert.match(script, /persisted player scoring\/evaluation history did not survive restore/);
   assert.match(script, /partial Phase 3 schema was silently reported complete/);
   assert.match(script, /DRG-01 complete team backup export\/restore PostgreSQL integration PASS/);
 });
