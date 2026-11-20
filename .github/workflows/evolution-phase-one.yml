@@ -14,7 +14,7 @@ concurrency:
 jobs:
   foundation:
     name: Typecheck, tests and production build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/squad_os_ci
