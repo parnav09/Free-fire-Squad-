@@ -25,13 +25,14 @@
 - The UI never fabricates missing match rows, result values or roster records.
 - Only Owner/Coach controls are rendered; server-side RLS/RPC authorization remains authoritative.
 - Offline mode is read-only; no unsupported queue/replay behavior is implied.
+- Team changes clear the prior team list immediately; list/detail requests use generation guards so stale responses cannot overwrite a newer team or selected session.
 - Result verification requires a non-empty verified JSON object, all four server-defined checklist keys and a reason.
 - Session verification is disabled until every expected match (or the single Training session result) is verified/amended; the session-level result receipt is submitted before the verified lifecycle transition.
 - No schema migration or live Supabase write is part of this UI point.
 
 ## Verification
 
-- Source contract: scripts/verify-evolution-phase-two-11.mjs
+- Source contract: scripts/verify-evolution-phase-two-11.mjs (includes stale-request and team-isolation regression assertions)
 - npm run test:evolution-phase-two-11 is included in the production build test chain.
 - Vercel Preview build checks TypeScript, the source-contract test chain and production bundle.
 - GitHub Actions PostgreSQL integration is currently failing before any runner steps start. Phase 2.10 remains unverified until isolated database tests can execute.
