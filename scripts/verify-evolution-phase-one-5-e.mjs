@@ -101,7 +101,7 @@ test("adversarial runtime authorization evidence covers all callable RPC signatu
   assert.match(rpcTestReport, /ROLLBACK/);
   assert.match(rpcTestReport, /team_join_requests.*0 rows/s);
   assert.match(securityReview, /18 callable function signatures passed/);
-  assert.match(audit, /18 callable function signatures/);
+  assert.match(audit, /18 callable authenticated SECURITY DEFINER signatures/);
 });
 
 test("E final audit keeps production, merge and loadout scope boundaries explicit", () => {
