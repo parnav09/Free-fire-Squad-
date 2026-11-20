@@ -80,6 +80,26 @@ RLS is a database boundary, not a UI-only check. The disposable PostgreSQL integ
 - The tests cover six-dimension seed, team rubric activation, role-weight shape and activation, evidence visibility, same-team constraints, dimension linking, archive behavior, no-delete grants and anonymous denial.
 - Scoring tests cover zero vs Not observed, missing dimensions, partial coverage, no observations, invalid ranges, role weights, confidence inputs, comparability and legacy conversion.
 
+
+## 5.1 SQL integration failure and corrective patch (20 Nov 2026)
+
+The first exact-head PostgreSQL integration run (#44384438749) failed while activating a complete team rubric with:
+
+`infinite recursion detected in policy for relation "evolution_rubric_versions"`
+
+Root cause: the `evolution_rubric_versions` UPDATE policy counted rows in `evolution_rubric_dimensions`; the dimensions SELECT policy reads `evolution_rubric_versions`. PostgreSQL recursively expanded the RLS policies.
+
+Corrective patch on this feature branch:
+- Removed the cross-table dimension-count subquery from the rubric-version UPDATE policy.
+- Added a narrowly scoped trigger function in the non-exposed `evolution_private` schema. It is SECURITY DEFINER with an empty search_path and fully qualified table references; it returns no table data and only enforces the six-dimension activation invariant.
+- Revoked schema/function access from PUBLIC, anon and authenticated. The trigger invokes the function internally; it is not a client RPC.
+- The trigger raises SQLSTATE 23514 when an attempt is made to activate a rubric that does not have exactly six dimensions.
+- Extended the disposable PostgreSQL integration test: it first attempts activation with five dimensions and expects rejection, adds the sixth dimension, and then expects activation to succeed.
+
+The trigger is used for a database integrity invariant that must be enforced independently of RLS visibility. The helper is isolated from exposed schemas, has a pinned empty search_path, uses schema-qualified objects and exposes no query result.
+
+**Verification state:** the corrected migration and integration test are committed. GitHub Actions run #44736784106 (including retry) and #44736955958 failed before executing any steps (empty step list). Therefore the corrected PostgreSQL integration test has not yet executed in CI; do not mark this SQL fix as verified until a runner executes the job and the database integration step passes. No production database was touched.
+
 ## 6. Explicit boundaries and follow-up
 
 - Migration is committed to the feature branch only; it is not applied to the live Supabase project.
