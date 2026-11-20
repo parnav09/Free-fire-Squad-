@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { getTeamUiCapabilities, indiaDateISO, indiaDateLabel, millisecondsUntilIndiaMidnight, resolveActiveTeamIdentity, resolveTeamSessionEligibility } from "./lib/evolution-identity";
 import { createLatestRequestGuard } from "./lib/latest-request-guard";
+import { integrateCanonicalSource } from "./lib/canonical-module-integration";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
 
@@ -699,10 +700,25 @@ export default function App() {
         const { error } = await supabase!.from("tournament_matches").upsert(rows, { onConflict: "cycle_id,match_day,match_number" });
         if (error) throw error;
       }
-      if (activeMatchScopeRef.current === `${teamSnapshot.id}:${weekSnapshot}`) setConnection("Signed in · cloud sync active");
+      const canonical = await integrateCanonicalSource(supabase!, teamSnapshot.id, "tournament", cycle.id);
+      if (activeMatchScopeRef.current === `${teamSnapshot.id}:${weekSnapshot}`) {
+        setConnection(canonical.linked
+          ? "Signed in · cloud + canonical sync active"
+          : "Signed in · legacy sync active · canonical link pending");
+      }
     } catch {
       if (activeMatchScopeRef.current === `${teamSnapshot.id}:${weekSnapshot}`) setConnection("Signed in · sync retry needed");
     }
+  };
+
+  const linkCurrentTournamentCycle = async () => {
+    if (!supabase || !team) return;
+    const start = weekMonday(week);
+    const { data: cycle, error } = await supabase.from("tournament_cycles").select("id").eq("team_id", team.id).eq("cycle_start", start).maybeSingle();
+    if (error) { setNotice("Could not find the selected Tournament cycle: " + error.message); return; }
+    if (!cycle) { setNotice("No saved Tournament cycle exists for this week yet."); return; }
+    const canonical = await integrateCanonicalSource(supabase, team.id, "tournament", cycle.id);
+    setNotice(canonical.linked ? `Tournament cycle linked · canonical session ${canonical.canonicalSessionId} · ${canonical.syncedMatchCount} match IDs.` : "Tournament data remains saved; canonical link pending: " + canonical.message);
   };
 
   const flushPendingMatchSync = () => {
@@ -879,7 +895,7 @@ export default function App() {
   };
 
   const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
-  const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
+  const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error|pending/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
   const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
   const nav: Section[] = ["Players", "Tournament", "StratForge", "Assignments", "Evolution", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
   const mainNav: Section[] = ["Players", "Tournament", "StratForge", "Assignments"];
@@ -1004,7 +1020,7 @@ export default function App() {
           {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!team&&teamUiCapabilities.canManageAssignments} canAssignTasks={!!team&&teamUiCapabilities.canManageAssignments||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))} language={drillLanguage} onLanguageChange={changeDrillLanguage}/></Suspense>}
           {section==="Evolution"&&<><div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · EVOLUTION</div><h2>One place for improvement</h2></div><span className="phase-pill">4 MODULES</span></div><p className="intro">Evaluation, weekly review, player trends and squad analytics stay together. Use the module you need; all records remain team-shared.</p><div className="evolution-hub-grid">{[{title:"Daily Evaluation",desc:"Legacy five-dimension form. Canonical session-linked workflow is planned for Evolution Phase Four.",to:"Evaluation",icon:"◎"},{title:"Weekly Review",desc:"Legacy read-only snapshot. Full review and approvals are planned for Evolution Phase Seven.",to:"Weekly Review",icon:"↗"},{title:"Player Trends",desc:"Legacy read-only preview. Longitudinal trends are planned for Evolution Phase Eight.",to:"Player Trends",icon:"⌁"},{title:"Squad Analytics",desc:"Competitive-results snapshot. Player-development analytics are planned for Evolution Phase Nine.",to:"Analytics",icon:"▥"}].map(x=><button key={x.to} className="evolution-hub-card" onClick={()=>setSection(x.to as Section)}><span className="evolution-hub-icon">{x.icon}</span><strong>{x.title}</strong><small>{x.desc}</small><span className="evolution-hub-link">Open module →</span></button>)}</div></>}
           {section==="Tournament" && <><div className="matches-section-tabs" role="tablist" aria-label="Matches sections"><button role="tab" aria-selected={matchesTab==="Scrims"} className={matchesTab==="Scrims"?"active":""} onClick={()=>setMatchesTab("Scrims")}>Scrims</button><button role="tab" aria-selected={matchesTab==="Tournament"} className={matchesTab==="Tournament"?"active":""} onClick={()=>setMatchesTab("Tournament")}>Tournaments</button></div>{matchesTab==="Scrims"?<Suspense fallback={<div className="pt-loading">Opening scrims workspace…</div>}> <ScrimsSection supabase={supabase} teamId={team?.id||""} userId={sessionUserId} teamMembers={teamMembers as Array<{user_id:string;display_name?:string}>}/> </Suspense>:<>
-            <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><span className="phase-pill">42 MATCH SLOTS</span></div>
+            <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><div className="scoreboard-actions"><button className="secondary-button score-action" onClick={linkCurrentTournamentCycle}>↗ Link canonical IDs</button><span className="phase-pill">42 MATCH SLOTS</span></div></div>
             <div className="toolbar"><label>Week <input value={week} onChange={e=>setWeek(e.target.value)} placeholder="YYYY-W##"/></label><label>Day <select value={day} onChange={e=>setDay(Number(e.target.value))}>{Array.from({length:7},(_,i)=><option value={i+1} key={i}>Day {i+1} · {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][i]}</option>)}</select></label></div>
             <div className="match-grid">{Array.from({length:6},(_,i)=>{const key=week+"-D"+day+"-M"+(i+1);const remote=sharedMatches.find(x=>x.match_day===day&&x.match_number===i+1);const m=(signedIn&&team&&remote)?{placement:remote.placement??12,kills:remote.kills??0}:(matches[key]||{placement:12,kills:0});return <article className="match-card" key={key}><div className="card-index">MATCH 0{i+1}</div><h3>Match {i+1}</h3><label>Placement<select value={m.placement} disabled={!!team&&!(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))} onChange={e=>saveMatch(key,"placement",Number(e.target.value))}>{Array.from({length:12},(_,j)=><option key={j} value={j+1}>{j+1===12?"12+ / Other":j+1}</option>)}</select></label><label>Kills<input type="text" inputMode="numeric" pattern="[0-9]*" minLength={1} value={killDrafts[key] ?? String(m.kills)} disabled={!!team&&!(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))} onChange={e=>{const raw=e.target.value;setKillDrafts(prev=>({...prev,[key]:raw}));}} onBlur={e=>{const raw=e.currentTarget.value;if(raw!==""){saveMatch(key,"kills",Math.max(0,Number(raw)));}setKillDrafts(prev=>{const next={...prev};delete next[key];return next;});}} onKeyDown={e=>{if(e.key==="Enter"){e.currentTarget.blur();}}}/></label></article>})}</div>
             {signedIn&&team&&<section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">TEAM SCOREBOARD</div><div className="scoreboard-head">
