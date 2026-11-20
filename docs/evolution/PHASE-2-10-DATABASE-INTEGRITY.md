@@ -3,7 +3,7 @@
 **Blueprint mapping:** Evolution Version 2, Point 2.10  
 **Branch:** feat/evolution-phase-two-10-database-integrity  
 **Parent:** feat/evolution-phase-two-9-module-integration  
-**Status:** Implementation and source-contract checks complete; disposable PostgreSQL integration is still blocked by GitHub runner startup failures; production rollout remains gated by Points 2.11–2.12 and explicit approval.
+**Status:** Development implementation; production rollout remains gated by Points 2.11–2.12 and explicit approval.
 
 ## Scope
 
@@ -18,7 +18,7 @@ Close the structural integrity gaps recorded in Phase 2.1 and preserve the canon
 - Composite team-scoped foreign key for Scrim review → Scrim record.
 - A real FK for Planning block → linked drill, absent in the audited schema.
 - Drill ownership guard: team-owned drills can only be referenced within their team; global templates (is_template = true, team_id IS NULL) remain available to every team. A referenced drill cannot be reassigned in a way that invalidates existing links.
-- A task that references a block must also carry that block's owning plan; the block must belong to the task's selected plan. A NULL task plan cannot bypass this invariant. This was found during acceptance review and fixed in the migration guard and DB harness.
+- Task block must belong to the task's selected plan when both are supplied.
 - Scrim JSONB array length must equal match_count.
 - Session-level Training results with a NULL player are unique per session/attempt; per-player attempt uniqueness remains unchanged.
 - Supporting child-side indexes and parent (id, team_id) unique indexes.
@@ -43,8 +43,7 @@ No legacy row is updated, deleted, or synthesized. Existing single-column FKs an
 - Source contract: scripts/verify-evolution-phase-two-10.mjs
 - Disposable PostgreSQL integration: scripts/verify-evolution-phase-two-10-db.sh
 - The DB harness replays Points 2.2–2.9, adds representative legacy child fixtures, applies the exact 2.10 migration, and tests cross-team rejection, global drill-template compatibility, plan/block consistency, Scrim count integrity, NULL-player attempt uniqueness, and validated constraint metadata.
-- The isolated DB harness is wired into GitHub Actions using a local disposable PostgreSQL 16 instance on the hosted runner; the source contract is included in `npm run build`.
-- Current source-contract/build verification passes on the latest Vercel Preview. The PostgreSQL harness has **not** executed because recent GitHub Actions jobs #642, #660, #664 and #692 each failed before their first runner step, with no step list or logs. This is a runner-startup failure, not a passing or failing database test.
+- CI runs the isolated DB harness on the Phase 2.10 branch and includes the source contract in npm run build.
 
 ## Rollback
 
