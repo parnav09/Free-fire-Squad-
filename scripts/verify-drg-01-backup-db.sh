@@ -43,6 +43,107 @@ BEGIN
 END
 $fixtures$;
 
+-- Add representative persisted player scoring/evaluation columns to the legacy fixture tables.
+ALTER TABLE public.daily_scores
+  ADD COLUMN IF NOT EXISTS score_date date,
+  ADD COLUMN IF NOT EXISTS player_id uuid,
+  ADD COLUMN IF NOT EXISTS evaluator_id uuid,
+  ADD COLUMN IF NOT EXISTS communication integer,
+  ADD COLUMN IF NOT EXISTS coordination integer,
+  ADD COLUMN IF NOT EXISTS decision_making integer,
+  ADD COLUMN IF NOT EXISTS role_execution integer,
+  ADD COLUMN IF NOT EXISTS map_awareness integer,
+  ADD COLUMN IF NOT EXISTS total integer,
+  ADD COLUMN IF NOT EXISTS notes text,
+  ADD COLUMN IF NOT EXISTS improvement_target text,
+  ADD COLUMN IF NOT EXISTS created_at timestamptz DEFAULT now(),
+  ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now(),
+  ADD COLUMN IF NOT EXISTS review_visibility text DEFAULT 'team';
+ALTER TABLE public.daily_score_feedback
+  ADD COLUMN IF NOT EXISTS score_id uuid REFERENCES public.daily_scores(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS player_id uuid,
+  ADD COLUMN IF NOT EXISTS improvement_target text,
+  ADD COLUMN IF NOT EXISTS improvement_notes text,
+  ADD COLUMN IF NOT EXISTS mistake_notes text,
+  ADD COLUMN IF NOT EXISTS context_notes text,
+  ADD COLUMN IF NOT EXISTS created_at timestamptz DEFAULT now();
+ALTER TABLE public.daily_drills
+  ADD COLUMN IF NOT EXISTS drill_date date,
+  ADD COLUMN IF NOT EXISTS player_id uuid,
+  ADD COLUMN IF NOT EXISTS drill_name text,
+  ADD COLUMN IF NOT EXISTS category text,
+  ADD COLUMN IF NOT EXISTS minutes integer,
+  ADD COLUMN IF NOT EXISTS completed boolean DEFAULT false,
+  ADD COLUMN IF NOT EXISTS score integer,
+  ADD COLUMN IF NOT EXISTS max_score integer,
+  ADD COLUMN IF NOT EXISTS evaluator uuid,
+  ADD COLUMN IF NOT EXISTS notes text,
+  ADD COLUMN IF NOT EXISTS improvement_target text,
+  ADD COLUMN IF NOT EXISTS created_at timestamptz DEFAULT now(),
+  ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();
+ALTER TABLE public.team_ratings
+  ADD COLUMN IF NOT EXISTS week_start date,
+  ADD COLUMN IF NOT EXISTS evaluator_id uuid,
+  ADD COLUMN IF NOT EXISTS communication_quality integer,
+  ADD COLUMN IF NOT EXISTS team_coordination integer,
+  ADD COLUMN IF NOT EXISTS igl_decision_making integer,
+  ADD COLUMN IF NOT EXISTS rotation_management integer,
+  ADD COLUMN IF NOT EXISTS role_consistency integer,
+  ADD COLUMN IF NOT EXISTS map_adaptation integer,
+  ADD COLUMN IF NOT EXISTS match_consistency integer,
+  ADD COLUMN IF NOT EXISTS survival_decisions integer,
+  ADD COLUMN IF NOT EXISTS replay_improvement integer,
+  ADD COLUMN IF NOT EXISTS total integer,
+  ADD COLUMN IF NOT EXISTS notes_worked text,
+  ADD COLUMN IF NOT EXISTS notes_wrong text,
+  ADD COLUMN IF NOT EXISTS next_focus text,
+  ADD COLUMN IF NOT EXISTS created_at timestamptz DEFAULT now(),
+  ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();
+
+INSERT INTO public.daily_scores(
+  id,team_id,score_date,player_id,evaluator_id,communication,coordination,
+  decision_making,role_execution,map_awareness,total,notes,improvement_target,review_visibility
+) VALUES (
+  'de500000-0000-0000-0000-000000000001',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  DATE '2026-11-20',
+  '10000000-0000-0000-0000-000000000001',
+  '10000000-0000-0000-0000-000000000001',
+  8,7,9,8,7,39,'Backup score fixture','Rotation timing','team'
+);
+INSERT INTO public.daily_score_feedback(
+  id,score_id,team_id,player_id,improvement_target,improvement_notes,mistake_notes,context_notes
+) VALUES (
+  'de500000-0000-0000-0000-000000000002',
+  'de500000-0000-0000-0000-000000000001',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  '10000000-0000-0000-0000-000000000001',
+  'Rotation timing','Earlier zone checks','Late rotate','Final circle review'
+);
+INSERT INTO public.daily_drills(
+  id,team_id,drill_date,player_id,drill_name,category,minutes,completed,score,max_score,evaluator,notes,improvement_target
+) VALUES (
+  'de500000-0000-0000-0000-000000000003',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  DATE '2026-11-20',
+  '10000000-0000-0000-0000-000000000001',
+  'Comms review','communication',25,true,18,20,
+  '10000000-0000-0000-0000-000000000001',
+  'Preserved player drill result','Callout timing'
+);
+INSERT INTO public.team_ratings(
+  id,team_id,week_start,evaluator_id,communication_quality,team_coordination,
+  igl_decision_making,rotation_management,role_consistency,map_adaptation,
+  match_consistency,survival_decisions,replay_improvement,total,notes_worked,notes_wrong,next_focus
+) VALUES (
+  'de500000-0000-0000-0000-000000000004',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  DATE '2026-11-16',
+  '10000000-0000-0000-0000-000000000001',
+  8,8,7,8,9,7,8,8,7,70,
+  'Team communication improved','Late rotations','Zone timing'
+);
+
 -- A custom parent/child pair proves that tables without their own team_id are discovered
 -- through their FK and restored only through the selected team's parent records.
 CREATE TABLE public.drg_backup_fixture (
@@ -130,6 +231,12 @@ BEGIN
   IF (coverage->'row_counts'->>'canonical_sessions')::integer<1 THEN
     RAISE EXCEPTION 'DRG-01 canonical session history was not exported';
   END IF;
+  IF (coverage->'row_counts'->>'daily_scores')::integer<>1
+    OR (coverage->'row_counts'->>'daily_score_feedback')::integer<>1
+    OR (coverage->'row_counts'->>'daily_drills')::integer<>1
+    OR (coverage->'row_counts'->>'team_ratings')::integer<>1 THEN
+    RAISE EXCEPTION 'DRG-01 persisted player scoring/evaluation history was not exported';
+  END IF;
 END
 $export$;
 
@@ -192,6 +299,12 @@ BEGIN
       AND user_id='10000000-0000-0000-0000-000000000001'
       AND membership_role='owner' AND status='active'
   ) THEN RAISE EXCEPTION 'DRG-01 current team owner identity was not retained'; END IF;
+  IF NOT EXISTS (SELECT 1 FROM public.daily_scores WHERE id='de500000-0000-0000-0000-000000000001' AND team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
+    OR NOT EXISTS (SELECT 1 FROM public.daily_score_feedback WHERE id='de500000-0000-0000-0000-000000000002' AND score_id='de500000-0000-0000-0000-000000000001')
+    OR NOT EXISTS (SELECT 1 FROM public.daily_drills WHERE id='de500000-0000-0000-0000-000000000003' AND team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
+    OR NOT EXISTS (SELECT 1 FROM public.team_ratings WHERE id='de500000-0000-0000-0000-000000000004' AND team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') THEN
+    RAISE EXCEPTION 'DRG-01 persisted player scoring/evaluation history did not survive restore';
+  END IF;
   IF NOT EXISTS (
     SELECT 1 FROM public.canonical_sessions
     WHERE id='de100000-0000-0000-0000-000000000001'
