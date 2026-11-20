@@ -51,7 +51,7 @@ test("Restore validates schema, payload rows, team identity, owner and FK depend
     "backup_row_count_mismatch",
     "cross_team_row_detected_in_backup",
     "backup_must_contain_exactly_one_original_owner_membership",
-    "team_backup_foreign_key_cycle_blocks_safe_restore",
+    "team_backup_foreign_key_cycle_blocks_dependency_safe_restore",
     "current_owner_membership_restore_failed",
     "unsupported_team_child_table_blocks_safe_restore"
   ]) assert.ok(sql.includes(contract), `Missing restore safety check: ${contract}`);
