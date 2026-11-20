@@ -39,6 +39,8 @@ SQL
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$SESSION_MIGRATION"
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$PHASE_MIGRATION"
+REGISTRY_MIGRATION="$ROOT/supabase/migrations/20261120170000_evolution_phase_three_2_canonical_dimension_registry.sql"
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$REGISTRY_MIGRATION"
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 INSERT INTO auth.users(id) VALUES
@@ -209,8 +211,43 @@ BEGIN
   END IF;
 END $$;
 
+-- Phase 3.2 canonical registry contract.
+DO $
+DECLARE
+  registry_count integer;
+  definition_count integer;
+  linked_count integer;
+  alias_count integer;
+BEGIN
+  SELECT count(*) INTO registry_count FROM public.evolution_dimension_registry
+  WHERE lifecycle_status = 'active';
+  IF registry_count <> 6 THEN RAISE EXCEPTION 'expected 6 active registry dimensions, got %', registry_count; END IF;
+
+  SELECT count(*) INTO definition_count FROM public.evolution_dimension_definition_versions
+  WHERE definition_version = 1 AND rating_min = 0 AND rating_max = 10 AND rating_step = 1
+    AND cardinality(applicable_role_keys) = 6;
+  IF definition_count <> 6 THEN RAISE EXCEPTION 'expected 6 v1 definitions with 0-10 scale and all roles, got %', definition_count; END IF;
+
+  SELECT count(*) INTO linked_count FROM public.evolution_rubric_dimensions d
+  JOIN public.evolution_dimension_registry r ON r.dimension_key = d.dimension_key
+  JOIN public.evolution_dimension_definition_versions v
+    ON v.dimension_key = d.dimension_key AND v.definition_version = d.registry_definition_version;
+  IF linked_count <> 12 THEN RAISE EXCEPTION 'expected system + team rubric dimensions linked to registry, got %', linked_count; END IF;
+
+  SELECT count(*) INTO alias_count FROM public.evolution_dimension_aliases
+  WHERE mapping_kind <> 'exact';
+  IF alias_count <> 0 THEN RAISE EXCEPTION 'non-exact legacy alias was registered'; END IF;
+
+  IF EXISTS (
+    SELECT 1 FROM public.evolution_dimension_aliases
+    WHERE legacy_key IN ('coordination','trade_support','map_awareness','consistency')
+  ) THEN
+    RAISE EXCEPTION 'non-equivalent legacy category was incorrectly aliased';
+  END IF;
+END $;
+
 RESET ROLE;
-DO $$
+DO $
 BEGIN
   IF has_table_privilege('authenticated','public.evolution_evidence_items','DELETE') THEN
     RAISE EXCEPTION 'authenticated role unexpectedly has evidence DELETE';
