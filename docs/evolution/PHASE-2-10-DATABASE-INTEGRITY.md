@@ -18,7 +18,7 @@ Close the structural integrity gaps recorded in Phase 2.1 and preserve the canon
 - Composite team-scoped foreign key for Scrim review → Scrim record.
 - A real FK for Planning block → linked drill, absent in the audited schema.
 - Drill ownership guard: team-owned drills can only be referenced within their team; global templates (is_template = true, team_id IS NULL) remain available to every team. A referenced drill cannot be reassigned in a way that invalidates existing links.
-- Task block must belong to the task's selected plan when both are supplied.
+- A task that references a block must also carry that block's owning plan; the block must belong to the task's selected plan. A NULL task plan cannot bypass this invariant.
 - Scrim JSONB array length must equal match_count.
 - Session-level Training results with a NULL player are unique per session/attempt; per-player attempt uniqueness remains unchanged.
 - Supporting child-side indexes and parent (id, team_id) unique indexes.
