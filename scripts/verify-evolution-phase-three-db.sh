@@ -86,6 +86,8 @@ BEGIN
     'score-1.0',4,false,auth.uid()
   ) RETURNING id INTO version_id;
 
+  -- Add five dimensions first. Activation must fail at the database boundary
+  -- until the sixth canonical dimension exists.
   INSERT INTO public.evolution_rubric_dimensions(
     rubric_version_id,dimension_key,label,definition,sort_order
   )
@@ -95,9 +97,24 @@ BEGIN
     ('coordination_trade_support','Coordination & Trade Support','Team coordination and support.',2),
     ('decision_making','Decision Making','Decision quality in context.',3),
     ('positioning','Positioning','Cover, spacing and angles.',4),
-    ('map_awareness_rotation','Map Awareness & Rotation','Map and zone context.',5),
-    ('role_execution','Role Execution','Execution of the recorded role.',6)
+    ('map_awareness_rotation','Map Awareness & Rotation','Map and zone context.',5)
   ) AS d(key,label,definition,position);
+
+  BEGIN
+    UPDATE public.evolution_rubric_versions
+    SET status='active',activated_at=now()
+    WHERE id=version_id;
+    RAISE EXCEPTION 'incomplete rubric unexpectedly activated' USING ERRCODE='P0001';
+  EXCEPTION
+    WHEN check_violation THEN
+      NULL; -- Expected: the activation trigger rejects five dimensions.
+  END;
+
+  INSERT INTO public.evolution_rubric_dimensions(
+    rubric_version_id,dimension_key,label,definition,sort_order
+  ) VALUES (
+    version_id,'role_execution','Role Execution','Execution of the recorded role.',6
+  );
 
   UPDATE public.evolution_rubric_versions
   SET status='active',activated_at=now()
