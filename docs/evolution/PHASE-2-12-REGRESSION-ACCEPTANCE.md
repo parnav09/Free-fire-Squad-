@@ -31,11 +31,11 @@ It checks:
 
 | Gate | Current evidence | Status |
 |---|---|---|
-| Earlier source-contract suites | Registered in build chain; rerun by CI/preview build | Pending run on this commit |
-| TypeScript + production bundle | Included in `npm run build` | Pending run on this commit |
-| Phase 2.10 source contract | 4 tests passed on the preceding Phase 2.11 preview build | Previously passed |
+| Earlier source-contract suites | Full `npm run build` completed on exact preview commit `6f3dfd4436f0772d715ce91c7445c7e3d5c631d4`; all registered commands completed without stopping the build | **PASS (source/build layer)** |
+| TypeScript + production bundle | Vercel Preview for exact commit `6f3dfd4436f0772d715ce91c7445c7e3d5c631d4` reached READY; `tsc --noEmit` and Vite production build completed | **PASS** |
+| Phase 2.10 source contract | 4/4 passed on the preceding preview; rerun is part of the successful full build chain on this commit | **PASS (source contract only)** |
 | Phase 2.10 PostgreSQL integration | GitHub Actions job fails before runner steps; no DB test output exists | **BLOCKED** |
-| Phase 2.11 source contract | 6 tests passed on the preceding Phase 2.11 preview build | Previously passed |
+| Phase 2.11 source contract | 6/6 passed on the preceding preview; rerun is part of the successful full build chain on this commit | **PASS (source contract only)** |
 | Phase 2.11 browser/database end-to-end | No live/staging migration-backed environment was used | **NOT VERIFIED** |
 | Android, tablet and desktop interaction QA | Manual Android, tablet and desktop QA requires real device/browser interaction; a bundle build is not device QA | **PENDING** |
 | Historical snapshot and cross-module runtime regression | Requires disposable DB integration execution and representative authenticated flows | **PENDING** |
