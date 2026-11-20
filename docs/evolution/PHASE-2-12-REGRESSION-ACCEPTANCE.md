@@ -3,7 +3,7 @@
 **Blueprint mapping:** Evolution Version 2, Point 2.12  
 **Branch:** feat/evolution-phase-two-12-regression-acceptance  
 **Parent:** feat/evolution-phase-two-11-application-ui  
-**Status:** Development regression gate; final acceptance is blocked.
+**OVERALL STATUS: BLOCKED** — development regression gate; final acceptance is not yet cleared.
 
 ## Scope implemented
 
@@ -37,14 +37,14 @@ It checks:
 | Phase 2.10 PostgreSQL integration | GitHub Actions job fails before runner steps; no DB test output exists | **BLOCKED** |
 | Phase 2.11 source contract | 6 tests passed on the preceding Phase 2.11 preview build | Previously passed |
 | Phase 2.11 browser/database end-to-end | No live/staging migration-backed environment was used | **NOT VERIFIED** |
-| Android, tablet and desktop interaction QA | Requires real device/browser interaction; a bundle build is not device QA | **PENDING** |
+| Android, tablet and desktop interaction QA | Manual Android, tablet and desktop QA requires real device/browser interaction; a bundle build is not device QA | **PENDING** |
 | Historical snapshot and cross-module runtime regression | Requires disposable DB integration execution and representative authenticated flows | **PENDING** |
 
 ## Final acceptance blockers
 
 1. Restore a working free GitHub Actions runner execution path and obtain a successful isolated PostgreSQL replay for Points 2.2–2.10. A failed job with no steps/logs is not evidence of database correctness.
 2. Run authenticated end-to-end flows against a disposable/staging database using the exact staged migrations, including Owner/Coach/member permission boundaries and cross-team isolation.
-3. Manually exercise the Sessions workspace on Android phone, tablet-sized viewport, and desktop; record browser/device, viewport, scenarios, and outcomes.
+3. Complete manual Android, tablet and desktop QA by exercising the Sessions workspace on an Android phone, tablet-sized viewport, and desktop; record browser/device, viewport, scenarios, and outcomes.
 4. Verify historical source mappings and snapshot immutability across existing Tournament, Scrim, Planning and Training records using disposable fixtures.
 
 ## Production boundary
