@@ -425,12 +425,18 @@ export default function App() {
       if(team.avatar_url){
         try{const response=await fetch(team.avatar_url);if(response.ok){const imageBlob=await response.blob();if(imageBlob.size<=5*1024*1024){logoDataUrl=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error("Could not read team logo."));reader.readAsDataURL(imageBlob);});}}}catch{logoDataUrl=null;}
       }
-      const backup={...data,team_logo_data_url:logoDataUrl,local_device_data:{players,week,day,matches,drillDone,notes}};
+      const backup={...data,team_logo_data_url:logoDataUrl,local_device_data:{schema_version:1,captured_at:new Date().toISOString(),players,week,day,matches,drillDone,notes}};
       const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
       const url=URL.createObjectURL(blob);const a=document.createElement("a");
       a.href=url;a.download="SQUAD-OS-"+team.team_name.replace(/[^a-z0-9-_]+/gi,"-")+"-"+new Date().toISOString().slice(0,10)+".json";
       document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
-      setBackupStatus("Backup exported successfully. "+(logoDataUrl?"Team logo image is included. ":"Team logo image could not be embedded; the existing logo URL is retained. ")+"Keep the JSON file somewhere safe.");
+      const coverage=data?.coverage_report;
+      const missing=[...(coverage?.missing_required_tables??[]),...(coverage?.missing_canonical_evolution_tables??[]),...(coverage?.unsupported_child_tables??[])];
+      const completeness=coverage?.complete
+        ? `Complete v2 backup: ${coverage.included_table_count} tables and ${coverage.total_rows} records. `
+        : `WARNING — incomplete backup; it cannot be restored safely. Missing or unresolved coverage: ${missing.join(", ")||"required schema coverage"}. `;
+      const phaseThreeMissing=coverage?.missing_phase_three_candidate_tables??[];
+      setBackupStatus(completeness+(phaseThreeMissing.length?`Phase 3 candidate tables not yet in this schema: ${phaseThreeMissing.join(", ")}. `:"")+(logoDataUrl?"Team logo image is included. ":"Team logo image could not be embedded; the existing logo URL is retained. ")+"Keep the JSON file somewhere safe.");
     }catch(e){setBackupStatus(e instanceof Error?e.message:"Backup export failed.");}
     finally{setBackupBusy(false);}
   };
@@ -439,7 +445,7 @@ export default function App() {
     setBackupBusy(true);setBackupStatus("");
     try{
       const backup=JSON.parse(await backupFile.text());
-      if(backup?.format!=="squad-os-team-backup"||backup?.schema_version!==1)throw new Error("This is not a supported SQUAD OS backup file.");
+      if(backup?.format!=="squad-os-team-backup"||backup?.schema_version!==2)throw new Error("This backup is not version 2. Legacy version 1 backups are incomplete and cannot be restored safely; export a new v2 backup.");
       const {data,error}=await supabase.rpc("restore_team_backup_for_team",{p_backup:backup,p_team_id:team.id});if(error)throw error;
       const local=backup.local_device_data;
       if(local&&Array.isArray(local.players))setPlayers(local.players);
@@ -458,7 +464,7 @@ export default function App() {
         const {error:logoUpdateError}=await supabase.from("teams").update({avatar_url:publicLogo.publicUrl+"?v="+Date.now()}).eq("id",team.id);if(logoUpdateError)throw logoUpdateError;
       }
       await loadTeam();await loadAssignments();setBackupFile(null);setConfirmAction(null);
-      setBackupStatus("Restore complete. "+(data?.restored_rows??0)+" records restored to this team.");
+      setBackupStatus("Restore complete: "+(data?.restored_rows??0)+" records across "+(data?.restored_tables?.length??0)+" tables. Original record IDs and relationships were preserved.");
       setNotice("Team backup restored successfully.");
     }catch(e){setBackupStatus(e instanceof Error?e.message:"Backup import failed.");}
     finally{setBackupBusy(false);}
