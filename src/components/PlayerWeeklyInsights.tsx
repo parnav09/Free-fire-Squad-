@@ -1,26 +1,60 @@
-import React from "react";
-
 type Member={user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;status:string};
 type Assignment={id:string;player_id:string;drill_title:string;due_date:string;status:string;drill_description:string|null};
-type Evaluation={id:string;player_id:string;score_date:string;communication:number;coordination:number;decision_making:number;role_execution:number;map_awareness:number;total:number|null;improvement_target:string|null;notes:string|null};
-type Props={members:Member[];assignments:Assignment[];evaluations:Evaluation[];canManage:boolean;onGenerate:(players:string[],due:string)=>Promise<void>};
-const score=(e:Evaluation)=>e.total??(e.communication+e.coordination+e.decision_making+e.role_execution+e.map_awareness);
-export default function PlayerWeeklyInsights({members,assignments,evaluations,canManage,onGenerate}:Props){
- const [selected,setSelected]=React.useState<string[]>(members.filter(m=>m.status==="active").map(m=>m.user_id));
- const [due,setDue]=React.useState(()=>{const d=new Date();d.setDate(d.getDate()+7);return d.toLocaleDateString("en-CA")});
- const [busy,setBusy]=React.useState(false),[message,setMessage]=React.useState("");
+type Evaluation={id:string;player_id:string;score_date:string;created_at?:string;communication:number|null;coordination:number|null;decision_making:number|null;role_execution:number|null;map_awareness:number|null;total:number|null;improvement_target:string|null;notes:string|null};
+type Props={members:Member[];assignments:Assignment[];evaluations:Evaluation[]};
+const score=(e:Evaluation):number|null=>{
+ const values=[e.communication,e.coordination,e.decision_making,e.role_execution,e.map_awareness];
+ if(!values.every(v=>Number.isInteger(v)&&v!==null&&v>=0&&v<=10))return null;
+ // Recompute from complete raw dimensions; never trust a stale or malformed cached total.
+ return values.reduce<number>((sum,value)=>sum+(value??0),0);
+};
+const byNewest=(a:Evaluation,b:Evaluation)=>
+ b.score_date.localeCompare(a.score_date)||
+ (b.created_at??"").localeCompare(a.created_at??"")||
+ b.id.localeCompare(a.id);
+
+export default function PlayerWeeklyInsights({members,assignments,evaluations}:Props){
  const active=members.filter(m=>m.status==="active");
- const latest=(id:string)=>evaluations.find(e=>e.player_id===id);
- const previous=(id:string)=>evaluations.filter(e=>e.player_id===id)[1];
- const avg=(id:string)=>{const rows=evaluations.filter(e=>e.player_id===id).slice(0,4);return rows.length?Math.round(rows.reduce((s,e)=>s+score(e),0)/rows.length):0};
+ const ordered=[...evaluations].sort(byNewest);
+ const valid=ordered.filter(e=>score(e)!==null);
+ const forPlayer=(id:string)=>valid.filter(e=>e.player_id===id);
+ const latest=(id:string)=>forPlayer(id)[0];
+ const previous=(id:string)=>forPlayer(id)[1];
+ const avg=(id:string):number|null=>{
+  const rows=forPlayer(id).slice(0,4).map(score).filter((v):v is number=>v!==null);
+  return rows.length?Math.round(rows.reduce((sum,value)=>sum+value,0)/rows.length):null;
+ };
+ const playerAverages=active.map(m=>avg(m.user_id)).filter((value):value is number=>value!==null);
+ const rosterAverage=playerAverages.length
+  ? Math.round(playerAverages.reduce((sum,value)=>sum+value,0)/playerAverages.length)
+  : null;
  const completed=assignments.filter(a=>a.status==="completed").length;
  const pending=assignments.filter(a=>a.status!=="completed").length;
- const generate=async()=>{if(!selected.length)return;setBusy(true);setMessage("");try{await onGenerate(selected,due);setMessage("Weekly batch created. Duplicate tasks are skipped.");}catch(e){setMessage(e instanceof Error?e.message:"Batch failed. No success assumed.");}finally{setBusy(false);}};
  return <div className="pwi">
- <div className="pwi-hero"><div><span className="pwi-kicker">PLAYER DEVELOPMENT · WEEKLY INTELLIGENCE</span><h2>Review. Compare. Improve.</h2><p>Shared assignment + evaluation data; player-by-player progress and team-wide trends.</p></div><div className="pwi-orb">W<span>EEK</span></div></div>
- <div className="pwi-kpis"><article><small>Tasks complete</small><strong>{completed}<i>/{assignments.length}</i></strong><div className="pwi-track"><span style={{width:(assignments.length?completed/assignments.length*100:0)+"%"}}/></div></article><article><small>Open tasks</small><strong>{pending}</strong><span className="pwi-caption">Across active roster</span></article><article><small>Evaluations</small><strong>{evaluations.length}</strong><span className="pwi-caption">Saved team records</span></article><article><small>Roster active</small><strong>{active.length}</strong><span className="pwi-caption">Members in this team</span></article></div>
- <section className="pwi-panel"><header><div><span className="pwi-kicker">01 · WEEKLY REVIEW</span><h3>Team pulse</h3></div><span className="pwi-chip">LIVE DATA</span></header><div className="pwi-review-grid"><div className="pwi-review-stat"><strong>{active.length?Math.round(active.reduce((s,m)=>s+avg(m.user_id),0)/active.length):0}<small>/50</small></strong><span>Roster recent average</span></div><div><b>{pending?pending+" tasks need follow-through":"All assigned tasks completed"}</b><p>{evaluations.length?"Use the latest score and improvement target to decide next week's focus.":"No evaluation records yet. Add Daily Evaluation entries to unlock meaningful trends."}</p></div></div><div className="pwi-focus">{active.slice(0,4).map(m=>{const e=latest(m.user_id);return <div key={m.user_id}><span>{m.player_number?"P"+m.player_number:"—"}</span><b>{m.display_name}</b><small>{e?.improvement_target||"No improvement target saved"}</small><strong>{e?score(e)+"/50":"—"}</strong></div>})}</div></section>
- <section className="pwi-panel"><header><div><span className="pwi-kicker">02 · BULK WEEKLY GENERATION</span><h3>Assign a weekly focus batch</h3></div><span className="pwi-chip">DUPLICATE GUARD</span></header><p className="pwi-muted">Select roster members; batch uses a standard safe communication + map-awareness task. Existing same-week task title is skipped.</p><div className="pwi-select-actions"><button onClick={()=>setSelected(active.map(m=>m.user_id))}>Select all</button><button onClick={()=>setSelected([])}>Clear</button></div><div className="pwi-roster">{active.map(m=><label key={m.user_id}><input type="checkbox" checked={selected.includes(m.user_id)} onChange={e=>setSelected(s=>e.target.checked?[...s,m.user_id]:s.filter(x=>x!==m.user_id))}/><span><b>{m.display_name}</b><small>P{m.player_number||"—"} · {m.assigned_role||"Role pending"}</small></span></label>)}</div><div className="pwi-batch-footer"><label>Due date<input type="date" value={due} onChange={e=>setDue(e.target.value)}/></label><button className="primary-button" disabled={!canManage||busy||!selected.length} onClick={generate}>{busy?"Generating…":"Generate weekly batch · "+selected.length}</button></div>{message&&<p className="pwi-feedback" role="status">{message}</p>}{!canManage&&<p className="pwi-muted">Only owner/coach can generate assignments.</p>}</section>
- <section className="pwi-panel"><header><div><span className="pwi-kicker">03 · PLAYER TRENDS</span><h3>Individual progression</h3></div><span className="pwi-chip">LAST 2 EVALS</span></header><div className="pwi-trends">{active.map(m=>{const e=latest(m.user_id),p=previous(m.user_id),v=e?score(e):0,delta=e&&p?score(e)-score(p):null;return <article key={m.user_id}><div className="pwi-player"><span>P{m.player_number||"—"}</span><b>{m.display_name}</b><small>{m.assigned_role||"Role pending"}</small></div><div className="pwi-bars"><span style={{height:(v/50*100)+"%"}} title={"Latest "+v}/><span className="pwi-prev" style={{height:((p?score(p):0)/50*100)+"%"}} title={"Previous "+(p?score(p):0)}/></div><strong>{e?v+"/50":"No data"}</strong><em className={delta===null?"":delta>=0?"up":"down"}>{delta===null?"—":(delta>0?"+":"")+delta}</em><small>{e?.score_date||"Add evaluation"}</small></article>})}</div><p className="pwi-legend"><span/> Latest <span className="pwi-legend-prev"/> Previous · Score is 0–50 across five criteria.</p></section>
+  <div className="pwi-hero"><div><span className="pwi-kicker">LEGACY SNAPSHOT · EVOLUTION ROADMAP</span><h2>Player development snapshot</h2><p>This is the existing read-only view, not the final Weekly Review or Player Trends experience.</p></div><div className="pwi-orb">E<span>VOL</span></div></div>
+  <div className="pwi-kpis">
+   <article><small>Legacy assignments complete</small><strong>{completed}<i>/{assignments.length}</i></strong><div className="pwi-track"><span style={{width:(assignments.length?completed/assignments.length*100:0)+"%"}}/></div></article>
+   <article><small>Open legacy assignments</small><strong>{pending}</strong><span className="pwi-caption">Existing records only</span></article>
+   <article><small>Valid evaluation records</small><strong>{valid.length}</strong><span className="pwi-caption">{evaluations.length-valid.length} incomplete / unscored excluded</span></article>
+   <article><small>Active roster</small><strong>{active.length}</strong><span className="pwi-caption">Current team members</span></article>
+  </div>
+  <section className="pwi-panel">
+   <header><div><span className="pwi-kicker">LEGACY REVIEW DATA</span><h3>Team snapshot</h3></div><span className="pwi-chip">READ ONLY</span></header>
+   <div className="pwi-review-grid">
+    <div className="pwi-review-stat"><strong>{rosterAverage===null?"—":rosterAverage}<small>/50</small></strong><span>Recent average · evaluated players only</span><small>{playerAverages.length}/{active.length} active players have valid observations</small></div>
+    <div><b>{pending?pending+" legacy assignments remain open":"No open legacy assignments"}</b><p>Missing or incomplete evaluations are excluded from averages; they are never treated as zero. This summary uses each player's latest four valid records, not a published weekly review.</p></div>
+   </div>
+   <div className="pwi-focus">{active.slice(0,4).map(m=>{const e=latest(m.user_id);const value=e?score(e):null;return <div key={m.user_id}><span>{m.player_number?"P"+m.player_number:"—"}</span><b>{m.display_name}</b><small>{e?.improvement_target||"No improvement target saved"}</small><strong>{value===null?"Not enough data":value+"/50"}</strong></div>})}</div>
+  </section>
+  <section className="pwi-panel">
+   <header><div><span className="pwi-kicker">LEGACY TASK PATH</span><h3>Existing assignments preserved</h3></div><span className="pwi-chip">NO NEW BATCHES</span></header>
+   <p className="pwi-muted">The old assignment records remain visible and unchanged. Generic weekly batch creation is paused because it creates a second task system. A single reconciled development-task workflow belongs to Evolution Phase Six; no history is deleted in this phase.</p>
+  </section>
+  <section className="pwi-panel">
+   <header><div><span className="pwi-kicker">LEGACY TREND PREVIEW</span><h3>Latest valid observations</h3></div><span className="pwi-chip">READ ONLY</span></header>
+   <div className="pwi-trends">{active.map(m=>{const e=latest(m.user_id),p=previous(m.user_id),v=e?score(e):null,pv=p?score(p):null,delta=v!==null&&pv!==null?v-pv:null;return <article key={m.user_id}><div className="pwi-player"><span>P{m.player_number||"—"}</span><b>{m.display_name}</b><small>{m.assigned_role||"Role pending"}</small></div><div className="pwi-bars"><span style={{height:(v===null?0:Math.max(0,Math.min(100,v/50*100)))+"%"}} title={v===null?"No valid observation":"Latest "+v}/><span className="pwi-prev" style={{height:(pv===null?0:Math.max(0,Math.min(100,pv/50*100)))+"%"}} title={pv===null?"No previous valid observation":"Previous "+pv}/></div><strong>{v===null?"No data":v+"/50"}</strong><em className={delta===null?"":delta>=0?"up":"down"}>{delta===null?"—":(delta>0?"+":"")+delta}</em><small>{e?.score_date||"No valid observation"}</small></article>})}</div>
+   <p className="pwi-legend"><span/> Latest valid record <span className="pwi-legend-prev"/> Previous valid record · 0–50 legacy five-dimension scale.</p>
+   <p className="pwi-muted">Separate Weekly Review and Player Trends workflows, date filters, dimension-level trends, coverage and comparability are reserved for Evolution Phase Seven and Evolution Phase Eight.</p>
+  </section>
  </div>;
 }

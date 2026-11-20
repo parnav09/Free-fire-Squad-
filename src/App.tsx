@@ -41,10 +41,43 @@ function readLocalRecord<T extends Record<string, unknown>>(key: string, fallbac
   }
 }
 
-function localDateISO(date = new Date()): string { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`; }
+function kolkataDateISO(date = new Date()): string {
+  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date);
+  const part=(type:string)=>parts.find(value=>value.type===type)?.value||"";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
 
 
 type SupabaseInstance = NonNullable<typeof import("./lib/supabase/client")["supabase"]>;
+
+async function fetchEvaluationHistory(client: SupabaseInstance, teamId: string, userId: string) {
+  const [scoresResult, feedbackResult] = await Promise.all([
+    client.from("daily_scores")
+      .select("id,player_id,score_date,created_at,communication,coordination,decision_making,role_execution,map_awareness,total")
+      .eq("team_id", teamId)
+      .order("score_date", { ascending: false })
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false })
+      .limit(100),
+    client.from("daily_score_feedback")
+      .select("score_id,improvement_target,improvement_notes,mistake_notes,context_notes")
+      .eq("player_id", userId),
+  ]);
+  if (scoresResult.error) throw scoresResult.error;
+  if (feedbackResult.error) throw feedbackResult.error;
+
+  const privateByScore = new Map((feedbackResult.data || []).map((feedback) => [feedback.score_id, feedback]));
+  return (scoresResult.data || []).map((score) => {
+    const feedback = privateByScore.get(score.id);
+    return {
+      ...score,
+      notes: feedback?.context_notes || null,
+      improvement_target: feedback?.improvement_target || null,
+      improvement_notes: feedback?.improvement_notes || null,
+      mistake_notes: feedback?.mistake_notes || null,
+    };
+  });
+}
 
 export default function App() {
   const [supabase, setSupabase] = useState<SupabaseInstance | null>(null);
@@ -159,20 +192,14 @@ export default function App() {
   const [cloudTraining, setCloudTraining] = useState<Record<string, boolean>>({});
   const [cloudSessionNotes, setCloudSessionNotes] = useState("");
   const [trainingDate, setTrainingDate] = useState(() => new Date().toLocaleDateString("en-CA"));
-  const [evalPlayer,setEvalPlayer]=useState("P1");
-  const evalDate=localDateISO();
-  const [evalScores,setEvalScores]=useState<Record<string,number>>({communication:5,coordination:5,decision_making:5,role_execution:5,map_awareness:5});
-  const [evalNotes,setEvalNotes]=useState("");
-  const [evalTarget,setEvalTarget]=useState("");
-  const [evalImprovements,setEvalImprovements]=useState("");
-  const [evalMistakes,setEvalMistakes]=useState("");
-  const [evalHistory,setEvalHistory]=useState<Array<{id:string;player_id:string;score_date:string;communication:number;coordination:number;decision_making:number;role_execution:number;map_awareness:number;total:number|null;notes:string|null;improvement_target:string|null;improvement_notes:string|null;mistake_notes:string|null}>>([]);
+  const [evalPlayer,setEvalPlayer]=useState("");
+  const evalDate=kolkataDateISO();
+  const [evalScores,setEvalScores]=useState<Record<string,number>>({});
+  const [evalSaving,setEvalSaving]=useState(false);
+  const [evalHistory,setEvalHistory]=useState<Array<{id:string;player_id:string;score_date:string;created_at?:string;communication:number;coordination:number;decision_making:number;role_execution:number;map_awareness:number;total:number|null;notes:string|null;improvement_target:string|null;improvement_notes:string|null;mistake_notes:string|null}>>([]);
 
-  const [assignmentPlayer,setAssignmentPlayer]=useState("");
-  const [assignmentTitle,setAssignmentTitle]=useState("Comms: short info + confirmation");
-  const [assignmentDesc,setAssignmentDesc]=useState("Practice concise enemy/location callouts, repeat IGL orders, and confirm role.");
-  const [assignmentDate,setAssignmentDate]=useState(()=>new Date().toLocaleDateString("en-CA"));
   const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
+  const assignmentScopeRef=useRef("");
   // Local-only records are isolated by immutable team UUID. Legacy data is marked migrated
   // only after every scoped copy has been persisted successfully.
   useEffect(()=>{
@@ -245,10 +272,53 @@ export default function App() {
     return () => { alive = false; authSub.subscription.unsubscribe(); };
   }, [supabase, supabaseReady]);
 
-  const loadAssignments=async()=>{if(!supabase||!team)return;setConnection("Syncing…");const {data,error}=await supabase.from("player_drill_assignments").select("id,player_id,drill_title,drill_description,due_date,status,completion_note").eq("team_id",team.id).order("due_date",{ascending:false}).limit(100);if(error){setConnection("Signed in · sync retry needed");throw error;}setAssignmentRows(data||[]);setConnection("Signed in · cloud sync active");};
-  useEffect(()=>{if(signedIn&&team)loadAssignments().catch(e=>{setConnection("Signed in · sync retry needed");setNotice(e.message);});},[signedIn,team?.id]);
-  const createAssignment=async()=>{if(!supabase||!team||!sessionUserId||!["owner","coach"].includes(team.membership_role)||!assignmentPlayer||!assignmentTitle.trim())return;setConnection("Syncing…");const {error}=await supabase.from("player_drill_assignments").insert({team_id:team.id,player_id:assignmentPlayer,assigned_by:sessionUserId,drill_title:assignmentTitle.trim(),drill_description:assignmentDesc.trim(),due_date:assignmentDate});if(error){setConnection("Signed in · sync retry needed");setNotice(error.message);return;}setNotice("Drill assigned.");await loadAssignments();};
-  const updateAssignment=async(id:string,status:string)=>{if(!supabase||!team)return;setConnection("Syncing…");const {error}=await supabase.from("player_drill_assignments").update({status,completed_at:status==="completed"?new Date().toISOString():null}).eq("id",id);if(error){setConnection("Signed in · sync retry needed");setNotice(error.message);return;}await loadAssignments();};
+  const loadAssignments=async()=>{
+    if(!supabase||!team)return;
+    setConnection("Syncing…");
+    const {data,error}=await supabase.from("player_drill_assignments")
+      .select("id,player_id,drill_title,drill_description,due_date,status,completion_note")
+      .eq("team_id",team.id).order("due_date",{ascending:false}).limit(100);
+    if(error){setConnection("Signed in · sync retry needed");throw error;}
+    if(assignmentScopeRef.current!==team.id)return;
+    setAssignmentRows(data||[]);setConnection("Signed in · cloud sync active");
+  };
+  useEffect(()=>{
+    let active=true;
+    assignmentScopeRef.current=team?.id||"";
+    setAssignmentRows([]);
+    if(!supabase||!signedIn||!team)return()=>{active=false};
+    (async()=>{try{
+      const {data,error}=await supabase.from("player_drill_assignments")
+        .select("id,player_id,drill_title,drill_description,due_date,status,completion_note")
+        .eq("team_id",team.id).order("due_date",{ascending:false}).limit(100);
+      if(error)throw error;
+      if(active)setAssignmentRows(data||[]);
+    }catch(e){if(active){
+      setConnection("Signed in · sync retry needed");
+      setNotice(e instanceof Error?e.message:"Assignments could not be loaded.");
+    }}})();
+    return()=>{active=false};
+  },[supabase,signedIn,team?.id]);
+  const updateAssignment=async(id:string,status:"assigned"|"completed")=>{
+    if(!supabase||!team||!sessionUserId)return;
+    const assignment=assignmentRows.find(row=>row.id===id);
+    if(!assignment){setNotice("This legacy assignment is no longer in the current team list. Refresh and try again.");return;}
+    const canManageAssignments=team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive);
+    if(assignment.player_id!==sessionUserId&&!canManageAssignments){setNotice("You can only update your own existing assignment.");return;}
+    if(status!=="assigned"&&status!=="completed"){setNotice("Invalid assignment status.");return;}
+    setConnection("Syncing…");
+    try{
+      const {data,error}=await supabase.from("player_drill_assignments")
+        .update({status,completed_at:status==="completed"?new Date().toISOString():null})
+        .eq("id",id).eq("team_id",team.id).select("id").maybeSingle();
+      if(error)throw error;
+      if(!data){setNotice("Assignment was not updated. It may have changed or is no longer available.");return;}
+      await loadAssignments();
+    }catch(e){
+      setConnection("Signed in · sync retry needed");
+      setNotice(e instanceof Error?e.message:"Assignment update failed.");
+    }
+  };
   const signIn = async () => {
     if (!supabase) return setNotice("The service is unavailable right now. Please try again later.");
     const identifier = sessionUsername.trim();
@@ -614,13 +684,45 @@ export default function App() {
   };
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_log").select("activity,done").eq("team_id",team.id).eq("log_date",trainingDate);if(error)throw error;if(!cancelled)setCloudTraining(Object.fromEntries((data||[]).map(x=>[x.activity,!!x.done])));}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Training checklist could not be loaded.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
   useEffect(()=>{if(!supabase||!signedIn||!team)return;let cancelled=false;(async()=>{try{const {data,error}=await supabase.from("training_session_notes").select("notes").eq("team_id",team.id).eq("note_date",trainingDate).maybeSingle();if(error)throw error;if(!cancelled)setCloudSessionNotes(data?.notes||"");}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Session notes could not be loaded.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,trainingDate]);
-  useEffect(()=>{if(!supabase||!signedIn||!team||!sessionUserId)return;let cancelled=false;(async()=>{try{const [{data:scores,error:scoreError},{data:feedback,error:feedbackError}]=await Promise.all([supabase.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total").eq("team_id",team.id).order("score_date",{ascending:false}).limit(100),supabase.from("daily_score_feedback").select("score_id,improvement_target,improvement_notes,mistake_notes,context_notes").eq("player_id",sessionUserId)]);if(scoreError)throw scoreError;if(feedbackError)throw feedbackError;const privateByScore=new Map((feedback||[]).map(f=>[f.score_id,f]));const merged=(scores||[]).map(row=>{const p=privateByScore.get(row.id);return {...row,notes:p?.context_notes||null,improvement_target:p?.improvement_target||null,improvement_notes:p?.improvement_notes||null,mistake_notes:p?.mistake_notes||null};});if(!cancelled)setEvalHistory(merged);}catch(e){if(!cancelled){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Evaluation history unavailable.");}}})();return()=>{cancelled=true};},[signedIn,team?.id,sessionUserId]);
-  const saveEvaluation=async()=>{if(!supabase||!team||!signedIn){setNotice("Sign in and join a team to save evaluations.");return;}setConnection("Syncing…");try{if(!sessionUserId)throw new Error("Session expired.");const {data,error}=await supabase.from("daily_scores").insert({team_id:team.id,score_date:evalDate,player_id:evalPlayer,evaluator_id:null,...evalScores,notes:null,improvement_target:null,review_visibility:"recipient_only"}).select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total").single();if(error)throw error;const privatePayload={score_id:data.id,team_id:team.id,player_id:evalPlayer,improvement_target:evalTarget.trim()||null,improvement_notes:evalImprovements.trim()||null,mistake_notes:evalMistakes.trim()||null,context_notes:evalNotes.trim()||null};if(privatePayload.improvement_target||privatePayload.improvement_notes||privatePayload.mistake_notes||privatePayload.context_notes){const {error:feedbackError}=await supabase.from("daily_score_feedback").insert(privatePayload);if(feedbackError){setEvalHistory(prev=>[{...data,notes:null,improvement_target:null,improvement_notes:null,mistake_notes:null},...prev].slice(0,100));setNotice("Score saved, but private feedback could not be delivered: "+feedbackError.message);return;}}setEvalHistory(prev=>[{...data,notes:privatePayload.context_notes,improvement_target:privatePayload.improvement_target,improvement_notes:privatePayload.improvement_notes,mistake_notes:privatePayload.mistake_notes},...prev].slice(0,100));setEvalNotes("");setEvalTarget("");setEvalImprovements("");setEvalMistakes("");setConnection("Signed in · cloud sync active");setNotice("Anonymous evaluation and private feedback saved.");}catch(e){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Evaluation save failed.");}};
+  useEffect(()=>{
+    let cancelled=false;
+    setEvalHistory([]);
+    if(!supabase||!signedIn||!team||!sessionUserId)return()=>{cancelled=true};
+    (async()=>{try{
+      const merged=await fetchEvaluationHistory(supabase,team.id,sessionUserId);
+      if(!cancelled)setEvalHistory(merged);
+    }catch(e){if(!cancelled){
+      setConnection("Signed in · sync retry needed");
+      setNotice(e instanceof Error?e.message:"Evaluation history unavailable.");
+    }}})();
+    return()=>{cancelled=true};
+  },[supabase,signedIn,team?.id,sessionUserId]);
+  const evaluationKeys=["communication","coordination","decision_making","role_execution","map_awareness"] as const;
+  const evaluationComplete=evaluationKeys.every(key=>Number.isInteger(evalScores[key])&&evalScores[key]>=0&&evalScores[key]<=10);
+  const saveEvaluation=async()=>{
+    if(evalSaving)return;
+    if(!supabase||!team||!signedIn){setNotice("Sign in and join a team to save evaluations.");return;}
+    if(!teamMembers.some(member=>member.status==="active"&&member.user_id===evalPlayer&&member.user_id!==sessionUserId)){setNotice("Choose another active player from this team. Self-evaluation is disabled in this legacy form.");return;}
+    if(!evaluationComplete){setNotice("Rate all five dimensions before submitting. Unselected sliders are not saved.");return;}
+    setEvalSaving(true);setConnection("Syncing…");
+    try{
+      if(!sessionUserId)throw new Error("Session expired.");
+      const {data:existing,error:existingError}=await supabase.from("daily_scores").select("id").eq("team_id",team.id).eq("player_id",evalPlayer).eq("score_date",evalDate).limit(1).maybeSingle();
+      if(existingError)throw existingError;
+      if(existing){setConnection("Signed in · cloud sync active");setNotice("A legacy evaluation already exists for this player today. Duplicate submission blocked.");return;}
+      const {data,error}=await supabase.from("daily_scores").insert({team_id:team.id,score_date:evalDate,player_id:evalPlayer,evaluator_id:null,...evalScores,notes:null,improvement_target:null,review_visibility:"recipient_only"}).select("id,player_id,score_date,created_at,communication,coordination,decision_making,role_execution,map_awareness,total").single();
+      if(error)throw error;
+      setEvalHistory(prev=>[{...data,notes:null,improvement_target:null,improvement_notes:null,mistake_notes:null},...prev].slice(0,100));
+      setEvalScores({});setConnection("Signed in · cloud sync active");
+      setNotice("Legacy evaluation score saved. Private feedback entry is reserved for Evolution Phase Four.");
+    }catch(e){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Evaluation save failed.");}
+    finally{setEvalSaving(false);}
+  };
   const saveCloudTraining = async (activity:string,done:boolean) => {setCloudTraining(p=>({...p,[activity]:done}));if(!supabase||!team||!signedIn||!sessionUserId)return;setConnection("Syncing…");try{const {error}=await supabase.from("training_log").upsert({team_id:team.id,log_date:trainingDate,activity,done,updated_by:sessionUserId},{onConflict:"team_id,log_date,activity"});if(error)throw error;setConnection("Signed in · cloud sync active");setNotice("Training checklist saved.");}catch(e){setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Training checklist save failed.");}};
   const saveSessionNotes = async () => { if(!supabase||!team||!signedIn||!sessionUserId)return; setConnection("Syncing…"); try { const {error}=await supabase.from("training_session_notes").upsert({team_id:team.id,note_date:trainingDate,notes:cloudSessionNotes.trim(),updated_by:sessionUserId},{onConflict:"team_id,note_date"}); if(error)throw error; setConnection("Signed in · cloud sync active");setNotice("Session notes saved."); } catch(e) { setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Session notes save failed."); } };
   useEffect(() => {
     const client = supabase;
-    if (!client || !signedIn || !team) return;
+    if (!client || !signedIn || !team || !sessionUserId) return;
     let active = true;
     const channel = client.channel(`squad-os-${team.id}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "tournament_matches", filter: `team_id=eq.${team.id}` }, async () => {
@@ -646,8 +748,26 @@ export default function App() {
         if (active) setCloudSessionNotes(data?.notes || "");
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "daily_scores", filter: `team_id=eq.${team.id}` }, async () => {
-        const { data } = await client.from("daily_scores").select("id,player_id,score_date,communication,coordination,decision_making,role_execution,map_awareness,total,notes,improvement_target,improvement_notes,mistake_notes").eq("team_id", team.id).order("score_date", { ascending: false }).limit(100);
-        if (active) setEvalHistory(data || []);
+        try {
+          const merged = await fetchEvaluationHistory(client, team.id, sessionUserId);
+          if (active) setEvalHistory(merged);
+        } catch (e) {
+          if (active) {
+            setConnection("Signed in · sync retry needed");
+            setNotice(e instanceof Error ? e.message : "Evaluation history refresh failed.");
+          }
+        }
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "daily_score_feedback", filter: `team_id=eq.${team.id}` }, async () => {
+        try {
+          const merged = await fetchEvaluationHistory(client, team.id, sessionUserId);
+          if (active) setEvalHistory(merged);
+        } catch (e) {
+          if (active) {
+            setConnection("Signed in · sync retry needed");
+            setNotice(e instanceof Error ? e.message : "Evaluation feedback refresh failed.");
+          }
+        }
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "player_drill_assignments", filter: `team_id=eq.${team.id}` }, () => {
         if (active) loadAssignments().catch(e => setNotice(e.message));
@@ -660,7 +780,7 @@ export default function App() {
         else if (active && ["CHANNEL_ERROR","TIMED_OUT","CLOSED"].includes(status)) setConnection("Signed in · sync retry needed");
       });
     return () => { active = false; void client.removeChannel(channel); };
-  }, [signedIn, team?.id, week, trainingDate]);
+  }, [signedIn, team?.id, sessionUserId, week, trainingDate]);
 
   const analyticsMatches = signedIn && team ? sharedMatches.filter(m=>m.placement!==null || m.kills>0) : Object.values(matches);
   const totalMatches = analyticsMatches.length;
@@ -794,7 +914,7 @@ export default function App() {
           <p className="intro">A focused workspace for tournament results, player development and team performance.</p>
 
           {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} canAssignTasks={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))} language={drillLanguage} onLanguageChange={changeDrillLanguage}/></Suspense>}
-          {section==="Evolution"&&<><div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · EVOLUTION</div><h2>One place for improvement</h2></div><span className="phase-pill">4 MODULES</span></div><p className="intro">Evaluation, weekly review, player trends and squad analytics stay together. Use the module you need; all records remain team-shared.</p><div className="evolution-hub-grid">{[{title:"Daily Evaluation",desc:"Record communication, coordination, decisions, role execution and map awareness.",to:"Evaluation",icon:"◎"},{title:"Weekly Review",desc:"Review assigned work, roster pulse and improvement focus.",to:"Weekly Review",icon:"↗"},{title:"Player Trends",desc:"Compare recent player scores and track progression.",to:"Player Trends",icon:"⌁"},{title:"Squad Analytics",desc:"Inspect match records and team performance metrics.",to:"Analytics",icon:"▥"}].map(x=><button key={x.to} className="evolution-hub-card" onClick={()=>setSection(x.to as Section)}><span className="evolution-hub-icon">{x.icon}</span><strong>{x.title}</strong><small>{x.desc}</small><span className="evolution-hub-link">Open module →</span></button>)}</div></>}
+          {section==="Evolution"&&<><div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · EVOLUTION</div><h2>One place for improvement</h2></div><span className="phase-pill">4 MODULES</span></div><p className="intro">Evaluation, weekly review, player trends and squad analytics stay together. Use the module you need; all records remain team-shared.</p><div className="evolution-hub-grid">{[{title:"Daily Evaluation",desc:"Legacy five-dimension form. Canonical session-linked workflow is planned for Evolution Phase Four.",to:"Evaluation",icon:"◎"},{title:"Weekly Review",desc:"Legacy read-only snapshot. Full review and approvals are planned for Evolution Phase Seven.",to:"Weekly Review",icon:"↗"},{title:"Player Trends",desc:"Legacy read-only preview. Longitudinal trends are planned for Evolution Phase Eight.",to:"Player Trends",icon:"⌁"},{title:"Squad Analytics",desc:"Competitive-results snapshot. Player-development analytics are planned for Evolution Phase Nine.",to:"Analytics",icon:"▥"}].map(x=><button key={x.to} className="evolution-hub-card" onClick={()=>setSection(x.to as Section)}><span className="evolution-hub-icon">{x.icon}</span><strong>{x.title}</strong><small>{x.desc}</small><span className="evolution-hub-link">Open module →</span></button>)}</div></>}
           {section==="Tournament" && <><div className="matches-section-tabs" role="tablist" aria-label="Matches sections"><button role="tab" aria-selected={matchesTab==="Scrims"} className={matchesTab==="Scrims"?"active":""} onClick={()=>setMatchesTab("Scrims")}>Scrims</button><button role="tab" aria-selected={matchesTab==="Tournament"} className={matchesTab==="Tournament"?"active":""} onClick={()=>setMatchesTab("Tournament")}>Tournaments</button></div>{matchesTab==="Scrims"?<Suspense fallback={<div className="pt-loading">Opening scrims workspace…</div>}> <ScrimsSection supabase={supabase} teamId={team?.id||""} userId={sessionUserId} teamMembers={teamMembers as Array<{user_id:string;display_name?:string}>}/> </Suspense>:<>
             <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><span className="phase-pill">42 MATCH SLOTS</span></div>
             <div className="toolbar"><label>Week <input value={week} onChange={e=>setWeek(e.target.value)} placeholder="YYYY-W##"/></label><label>Day <select value={day} onChange={e=>setDay(Number(e.target.value))}>{Array.from({length:7},(_,i)=><option value={i+1} key={i}>Day {i+1} · {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][i]}</option>)}</select></label></div>
@@ -896,29 +1016,22 @@ export default function App() {
             </section>}{combatNexusView&&<div className="combat-nexus-detail" role="region" aria-live="polite"><div><div className="eyebrow">COMBAT NEXUS / {combatNexusView.toUpperCase()}</div><h4>{combatNexusView==="pets"?"Pet database":"Loadout"}</h4><p>{combatNexusView==="pets"?"The pet catalogue will contain skill details, level effects, cooldowns, activation conditions and verified character interactions.":"Loadout workspace reserved for verified character, pet and weapon combinations. No unverified presets are pre-filled."}</p></div><button type="button" className="secondary-button" onClick={()=>setCombatNexusView(null)}>Close</button></div>}</>}
           </>}
           {section==="Evaluation" && <>
-            <div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT</div><h2>Daily evaluation</h2></div></div>
+            <div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · LEGACY FORM</div><h2>Legacy daily evaluation</h2><p className="daily-eval-helper">This is the existing five-dimension record form. The canonical session-linked Daily Evaluation is reserved for Evolution Phase Four.</p></div></div>
             <section className="connection-panel" style={{display:"block"}}>
               <div className="daily-eval-date-lock"><span className="date-lock-mark">▣</span><div><b>Today's evaluation · {evalDate}</b><small>Locked to today's local date · cannot be edited</small></div><span className="date-lock-badge">DATE LOCK</span></div>
-              <div className="daily-eval-player-select"><label>Evaluate player<select value={evalPlayer} onChange={e=>setEvalPlayer(e.target.value)}>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · {m.assigned_role||("P"+m.player_number)}</option>)}{teamMembers.length===0&&players.map(p=><option key={p.id} value={p.id}>{p.id} · {p.name}</option>)}</select></label><span className="daily-eval-anon">◉ Anonymous · evaluator identity is not stored</span></div>
-              <p className="daily-eval-helper">Rate observed actions, not reputation or match result. Each dimension is 0–10; total is out of 50.</p>
-              <div className="daily-eval-ratings">{[["communication","Communication","Clear, timely calls + confirmations"],["coordination","Coordination","Team timing, spacing and sync"],["decision_making","Decision making","Fight, reset, rotate and regroup"],["role_execution","Role execution","Player's assigned role delivered"],["map_awareness","Map awareness","Zone, enemy info and safe angles"]].map(([k,label,hint])=><div className="daily-eval-rating" key={k}><div className="daily-eval-rating-copy"><div><b>{label}</b><small>{hint}</small></div><strong>{evalScores[k]}<em>/10</em></strong></div><input aria-label={label+" rating 0 to 10"} type="range" min="0" max="10" step="1" value={evalScores[k]} onChange={e=>setEvalScores(p=>({...p,[k]:Number(e.target.value)}))}/><div className="daily-eval-ticks"><span>0</span><span>2</span><span>5</span><span>8</span><span>10</span></div></div>)}</div>
-              <div className="daily-eval-total"><div><small>DAILY PLAYER SCORE</small><b>{Object.values(evalScores).reduce((a,b)=>a+b,0)}<em>/50</em></b></div><span>5 dimensions · weighted equally</span></div>
-              <div className="daily-eval-feedback-grid"><label><span>Improvement suggestions <i>OPTIONAL</i></span><textarea value={evalImprovements} onChange={e=>setEvalImprovements(e.target.value)} maxLength={10000} placeholder="What should this player improve? Add specific examples, habits, communication changes, positioning or practice recommendations…"/><small>{evalImprovements.length.toLocaleString()}/10,000 characters</small></label><label><span>Mistakes / corrections <i>OPTIONAL</i></span><textarea value={evalMistakes} onChange={e=>setEvalMistakes(e.target.value)} maxLength={10000} placeholder="What mistakes happened? Include context, decision, timing and what would be better next time…"/><small>{evalMistakes.length.toLocaleString()}/10,000 characters</small></label></div>
-              <label className="daily-eval-legacy-note">Quick improvement target <i>OPTIONAL</i><input value={evalTarget} onChange={e=>setEvalTarget(e.target.value)} maxLength={500} placeholder="One short measurable focus for next session"/></label>
-              <label className="daily-eval-legacy-note">Evidence / context <i>OPTIONAL</i><textarea value={evalNotes} onChange={e=>setEvalNotes(e.target.value)} maxLength={3000} placeholder="Situation that explains today's rating…"/></label>
-              <div className="daily-eval-privacy"><span>◇</span><p><b>Anonymous feedback</b><br/>The evaluator ID is not saved. Feedback is delivered to the reviewed player; the review UI does not expose who submitted it.</p></div>
-              <button className="primary-button daily-eval-submit" style={{marginTop:8}} onClick={saveEvaluation}>Submit anonymous evaluation <span>→</span></button>
+              <div className="daily-eval-player-select"><label>Evaluate player<select value={evalPlayer} onChange={e=>setEvalPlayer(e.target.value)}><option value="">Select another active team player</option>{teamMembers.filter(m=>m.status==="active"&&m.user_id!==sessionUserId).map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · {m.assigned_role||("P"+m.player_number)}</option>)}</select></label><span className="daily-eval-anon">◉ Anonymous · evaluator identity is not stored</span></div>
+              <p className="daily-eval-helper">Rate observed actions, not reputation or match result. Each dimension is 0–10; total is out of 50. Slider positions are placeholders until selected; all five ratings are required before saving.</p>
+              <div className="daily-eval-ratings">{[["communication","Communication","Clear, timely calls + confirmations"],["coordination","Coordination","Team timing, spacing and sync"],["decision_making","Decision making","Fight, reset, rotate and regroup"],["role_execution","Role execution","Player's assigned role delivered"],["map_awareness","Map awareness","Zone, enemy info and safe angles"]].map(([k,label,hint])=><div className="daily-eval-rating" key={k}><div className="daily-eval-rating-copy"><div><b>{label}</b><small>{hint}</small></div><strong>{evalScores[k]??"Not rated"}<em>/10</em></strong></div><input aria-label={label+" rating 0 to 10"} type="range" min="0" max="10" step="1" value={evalScores[k]??5} onPointerDown={()=>setEvalScores(p=>p[k]===undefined?({...p,[k]:5}):p)} onChange={e=>setEvalScores(p=>({...p,[k]:Number(e.target.value)}))}/><div className="daily-eval-ticks"><span>0</span><span>2</span><span>5</span><span>8</span><span>10</span></div></div>)}</div>
+              <div className="daily-eval-total"><div><small>DAILY PLAYER SCORE</small><b>{evaluationComplete?evaluationKeys.reduce((sum,key)=>sum+evalScores[key],0):"—"}<em>/50</em></b></div><span>{evaluationKeys.filter(key=>evalScores[key]!==undefined).length}/5 dimensions rated · equally weighted</span></div>
+              <div className="daily-eval-privacy"><span>◇</span><p><b>Private feedback entry is paused</b><br/>This legacy form saves scores only. Atomic score + feedback submission, improvement notes and evidence linkage are planned for Evolution Phase Four. Existing feedback history remains available in the inbox below.</p></div>
+              <button className="primary-button daily-eval-submit" style={{marginTop:8}} disabled={!evalPlayer||!evaluationComplete||!signedIn||!team||evalSaving} onClick={saveEvaluation}>{evalSaving?"Saving…":"Submit anonymous evaluation"} <span>→</span></button>
             </section>
             <section className="connection-panel daily-eval-inbox" style={{display:"block",marginTop:18}}><div className="eyebrow">MY FEEDBACK INBOX · {(evalHistory.filter(e=>e.player_id===sessionUserId)).length}</div><p className="daily-eval-helper">Only feedback addressed to your signed-in player account appears here. Reviewer identity is never shown.</p><div className="player-list">{evalHistory.filter(e=>e.player_id===sessionUserId).map(e=><article className="player-row daily-eval-inbox-row" key={e.id}><span className="player-id">{e.score_date}</span><div><b>Daily score · {e.total??"—"}/50</b><small>Communication {e.communication}/10 · Coordination {e.coordination}/10 · Decision {e.decision_making}/10 · Role {e.role_execution}/10 · Map {e.map_awareness}/10</small>{e.improvement_target&&<small>Focus target: {e.improvement_target}</small>}{e.improvement_notes&&<small><strong>Improvement suggestions:</strong> {e.improvement_notes}</small>}{e.mistake_notes&&<small><strong>Mistakes / corrections:</strong> {e.mistake_notes}</small>}{e.notes&&<small><strong>Match context:</strong> {e.notes}</small>}</div></article>)}{!evalHistory.some(e=>e.player_id===sessionUserId)&&<div className="empty-state">No feedback received yet. Evaluations addressed to your account will appear here.</div>}</div></section>
           </>}
           {section==="Assignments" && <>
-            <div className="section-heading"><div><div className="eyebrow">INDIVIDUAL PRACTICE</div><h2>Drill assignments</h2></div><span className="phase-pill">{assignmentRows.filter(x=>x.status==="completed").length}/{assignmentRows.length} DONE</span></div>
+            <div className="section-heading"><div><div className="eyebrow">LEGACY TASK TRACKER</div><h2>Existing drill assignments</h2><p>New legacy assignments are paused. The unified development-task workflow is planned for Evolution Phase Six.</p></div><span className="phase-pill">{assignmentRows.filter(x=>x.status==="completed").length}/{assignmentRows.length} DONE</span></div>
             <section className="connection-panel" style={{display:"block"}}>
-              {!signedIn||!team?<p>Sign in and join/create a squad to use team assignments.</p>:!(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))?<p>Only an active team admin or coach can assign new drills. You can update your own assigned tasks below.</p>:<>
-              <div className="toolbar"><label>Player<select value={assignmentPlayer} onChange={e=>setAssignmentPlayer(e.target.value)}><option value="">Choose player</option>{teamMembers.filter(m=>m.status==="active").map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · P{m.player_number||"—"}</option>)}</select></label><label>Due date<input type="date" value={assignmentDate} onChange={e=>setAssignmentDate(e.target.value)}/></label></div>
-              <label className="notes-label">Drill title<input value={assignmentTitle} onChange={e=>setAssignmentTitle(e.target.value)}/></label><label className="notes-label">Exact task<textarea value={assignmentDesc} onChange={e=>setAssignmentDesc(e.target.value)}/></label>
-              <button className="primary-button" onClick={createAssignment} disabled={!assignmentPlayer||!assignmentTitle.trim()}>Assign drill</button>
-              </>}
+              <div className="daily-eval-privacy"><span>◇</span><p><b>Legacy creation paused</b><br/>This tracker keeps existing assignments and completion history. New assignments are paused to stop growth of the second task system. Existing members can still complete their current items; the canonical task workflow will be built in Evolution Phase Six.</p></div>
             </section>
             <section className="connection-panel" style={{display:"block",marginTop:18}}><div className="eyebrow">SQUAD TASK BOARD · {assignmentRows.length}</div><div className="player-list">{assignmentRows.map(a=><article className="player-row" key={a.id}><span className="player-id">{a.due_date}</span><div><b>{teamMembers.find(m=>m.user_id===a.player_id)?.display_name||a.player_id.slice(0,8)} · {a.drill_title}</b><small>{a.drill_description}</small><small>Status: {a.status}</small>{a.completion_note&&<small>{a.completion_note}</small>}</div>{a.player_id===sessionUserId||!!team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive))?<button className="secondary-button" onClick={()=>updateAssignment(a.id,a.status==="completed"?"assigned":"completed")}>{a.status==="completed"?"Undo":"Complete"}</button>:null}</article>)}</div></section>
           </>}
@@ -984,7 +1097,7 @@ export default function App() {
               </section>}
               </>}
           </>}
-          {(section==="Weekly Review"||section==="Player Trends")&&<Suspense fallback={<section className="connection-panel" role="status">Loading player intelligence…</section>}><PlayerWeeklyInsights members={teamMembers} assignments={assignmentRows} evaluations={evalHistory} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} onGenerate={async(playerIds,due)=>{if(!supabase||!team||!sessionUserId)throw new Error("Sign in and select a team first.");const task="Weekly focus · concise comms + map awareness";const eligible=playerIds.filter(pid=>!assignmentRows.some(a=>a.player_id===pid&&a.drill_title===task&&a.due_date>=due.slice(0,4)+"-01-01"&&a.due_date<=due));if(!eligible.length)throw new Error("All selected players already have this weekly task.");const {error}=await supabase.from("player_drill_assignments").insert(eligible.map(player_id=>({team_id:team.id,player_id,assigned_by:sessionUserId,drill_title:task,drill_description:"Practice concise location/info callouts, confirm IGL instructions, and review map positioning as a team. Record one improvement note.",due_date:due})));if(error)throw new Error(error.message);await loadAssignments();}}/></Suspense>}
+          {(section==="Weekly Review"||section==="Player Trends")&&<Suspense fallback={<section className="connection-panel" role="status">Loading legacy player snapshot…</section>}><PlayerWeeklyInsights members={teamMembers} assignments={assignmentRows} evaluations={evalHistory}/></Suspense>}
           {section==="Analytics" && <Suspense fallback={<section className="connection-panel" role="status">Loading analytics…</section>}>
             <AnalyticsSection totalMatches={totalMatches} points={points} analyticsMatches={analyticsMatches} rosterSize={players.length}/>
           </Suspense>}

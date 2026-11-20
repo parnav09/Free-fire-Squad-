@@ -1,4 +1,4 @@
-name: SQUAD OS Foundation CI
+name: SQUAD OS — Evolution Phase One CI
 
 on:
   push:
