@@ -35,7 +35,7 @@ The v2 export includes:
 - Per-table row counts and total row count
 - Included-table manifest
 - Schema fingerprint over columns and primary, unique, foreign-key, check and exclusion constraints
-- Table-payload checksum over the canonical JSONB table payload; restore recomputes it before any deletion to reject accidental file corruption
+- Table-payload checksum over the canonical JSONB table payload; restore recomputes it before any deletion to reject accidental file corruption (unkeyed MD5 is an integrity check, not a signed or tamper-proof authenticity mechanism)
 - Missing required/canonical/Phase 3 tables and unsupported child-table report
 - Explicit non-team-owned/security exclusions
 
@@ -45,7 +45,7 @@ The inventory is schema-driven rather than a hard-coded export allowlist. New te
 
 Restore is owner-only and targets one explicitly selected team. It:
 
-1. Rejects v1, incomplete, malformed, cross-team or schema-incompatible backups.
+1. Rejects v1, incomplete, malformed, rows carrying another source team ID, or schema-incompatible backups.
 2. Validates every table array, row count, source team ID, payload column and required column before the first delete.
 3. Derives dependency order from actual foreign keys and fails closed on cycles.
 4. Deletes in reverse dependency order and inserts in dependency order inside one database transaction.
