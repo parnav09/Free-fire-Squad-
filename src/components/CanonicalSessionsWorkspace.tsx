@@ -131,6 +131,8 @@ export default function CanonicalSessionsWorkspace({supabase,teamId,members,canM
   useEffect(()=>{void refreshList();},[refreshList]);
   useEffect(()=>{if(selectedId)void refreshDetail(selectedId);else setDetail(null);},[selectedId,refreshDetail]);
   useEffect(()=>{if(selected){setEditTitle(selected.title);setEditDate(selected.session_date||"");setEditSeason(selected.season_label||"");setReason("");}},[selected?.id,selected?.title,selected?.session_date,selected?.season_label]);
+  useEffect(()=>{setMatchId("");setSelectedMembers([]);setRoleMember("");setRoleId("");setSubOut("");setSubIn("");},[selectedId]);
+  useEffect(()=>{setRawValues("{\\n  \\n}");setResultRef("");setCorrectionReason("");setVerifiedValues("{\\n  \\n}");setVerifyReason("");setVerifyChecks({});setRejectReason("");setSubOut("");setSubIn("");},[selectedId,matchId]);
 
   const perform=async(labelText:string,action:()=>Promise<void>)=>{
     if(!isOnline){setError("Offline mode is read-only. Reconnect before changing records.");return;}
@@ -196,7 +198,7 @@ export default function CanonicalSessionsWorkspace({supabase,teamId,members,canM
   const substitute=()=>matchId&&perform("Substitution recorded",async()=>{
     if(!subOut||!subIn||subOut===subIn||subReason.trim().length<3)throw new Error("Choose different players and enter a reason.");
     const {error:e}=await supabase!.rpc("record_canonical_session_substitution",{p_match_id:matchId,p_outgoing_roster_member_id:subOut,p_incoming_roster_member_id:subIn,p_effective_at:new Date().toISOString(),p_effective_round_label:subRound.trim()||null,p_category:subCategory,p_source_provenance:subSource,p_reason:subReason.trim(),p_transfer_role:false,p_idempotency_key:key()});
-    if(e)throw e;setSubReason("");
+    if(e)throw e;setSubReason("");setSubOut("");setSubIn("");
   });
 
   const parseObject=(raw:string,name:string)=>{
