@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import "./CanonicalSessionsWorkspace.css";
 
@@ -35,6 +35,7 @@ const errorText = (error:unknown) => {
 
 export default function CanonicalSessionsWorkspace({supabase,teamId,members,canManage,isOnline}:{supabase:SupabaseClient|null;teamId:string;members:Member[];canManage:boolean;isOnline:boolean}) {
   const [sessions,setSessions]=useState<SessionRow[]>([]);
+  const listRequestRef=useRef(0),detailRequestRef=useRef(0);
   const [sources,setSources]=useState<Record<string,{source_system:string;source_record_id:string}[]>>({});
   const [matchCounts,setMatchCounts]=useState<Record<string,number>>({});
   const [selectedId,setSelectedId]=useState("");
@@ -65,30 +66,37 @@ export default function CanonicalSessionsWorkspace({supabase,teamId,members,canM
   }),[sessions,typeFilter,statusFilter,seasonFilter,dateFilter,search]);
 
   const refreshList=useCallback(async()=>{
-    if(!supabase||!teamId){setLoading(false);return;}
+    const requestId=++listRequestRef.current;
+    if(!supabase||!teamId){
+      setSessions([]);setSources({});setMatchCounts({});setSelectedId("");setDetail(null);setLoading(false);
+      return;
+    }
     setLoading(true);setError("");
     try{
       const q=await supabase.from("canonical_sessions").select("*").eq("team_id",teamId).order("created_at",{ascending:false}).limit(100);
+      if(requestId!==listRequestRef.current)return;
       if(q.error)throw q.error;
-      const rows=(q.data||[]) as SessionRow[];setSessions(rows);
-      if(!rows.length){setSources({});setMatchCounts({});setSelectedId("");setDetail(null);return;}
+      const rows=(q.data||[]) as SessionRow[];
       const ids=rows.map((s)=>s.id);
-      const [src,sets]=await Promise.all([
+      const [src,sets]=ids.length?await Promise.all([
         supabase.from("canonical_session_sources").select("canonical_session_id,source_system,source_record_id").eq("team_id",teamId).in("canonical_session_id",ids),
         supabase.from("canonical_session_match_sets").select("canonical_session_id,expected_match_count").eq("team_id",teamId).in("canonical_session_id",ids),
-      ]);
+      ]):[{data:[],error:null},{data:[],error:null}];
+      if(requestId!==listRequestRef.current)return;
       if(src.error)throw src.error;if(sets.error)throw sets.error;
       const sourceMap:Record<string,{source_system:string;source_record_id:string}[]>={};
       (src.data||[]).forEach((r:any)=>{sourceMap[r.canonical_session_id]||=[];sourceMap[r.canonical_session_id].push({source_system:r.source_system,source_record_id:r.source_record_id});});
       const countMap:Record<string,number>={};(sets.data||[]).forEach((r:any)=>{countMap[r.canonical_session_id]=r.expected_match_count;});
-      setSources(sourceMap);setMatchCounts(countMap);
-      if(!selectedId||!rows.some((s)=>s.id===selectedId))setSelectedId(rows[0].id);
-    }catch(e){setError(errorText(e));}
-    finally{setLoading(false);}
-  },[supabase,teamId,selectedId]);
+      setSessions(rows);setSources(sourceMap);setMatchCounts(countMap);
+      setSelectedId(current=>!rows.length?"":(!current||!rows.some((s)=>s.id===current)?rows[0].id:current));
+      if(!rows.length){setDetail(null);detailRequestRef.current++;}
+    }catch(e){if(requestId===listRequestRef.current)setError(errorText(e));}
+    finally{if(requestId===listRequestRef.current)setLoading(false);}
+  },[supabase,teamId]);
 
   const refreshDetail=useCallback(async(id:string)=>{
-    if(!supabase||!teamId||!id)return;
+    const requestId=++detailRequestRef.current;
+    if(!supabase||!teamId||!id){setDetail(null);setDetailLoading(false);return;}
     setDetailLoading(true);setDetailError("");
     try{
       const queries=await Promise.all([
@@ -105,17 +113,20 @@ export default function CanonicalSessionsWorkspace({supabase,teamId,members,canM
         supabase.from("canonical_session_match_sets").select("expected_match_count").eq("team_id",teamId).eq("canonical_session_id",id).maybeSingle(),
         supabase.from("canonical_session_result_submissions").select("id").eq("team_id",teamId).eq("canonical_session_id",id).maybeSingle(),
       ]);
+      if(requestId!==detailRequestRef.current)return;
       const [matches,roster,rosterMembers,roleDefs,roles,participants,subs,results,life,src,sets,submission]=queries;
       for(const q of queries)if(q.error)throw q.error;
       const resultRows=(results.data||[]) as SessionResult[], resultIds=resultRows.map((r)=>r.id);
       let versions:ResultVersion[]=[],events:ResultEvent[]=[];
       if(resultIds.length){
         const [v,e]=await Promise.all([
-          supabase!.from("canonical_session_result_versions").select("*").eq("team_id",teamId).in("result_id",resultIds).order("version_no",{ascending:false}),
-          supabase!.from("canonical_session_result_events").select("*").eq("team_id",teamId).in("result_id",resultIds).order("changed_at",{ascending:false}),
+          supabase.from("canonical_session_result_versions").select("*").eq("team_id",teamId).in("result_id",resultIds).order("version_no",{ascending:false}),
+          supabase.from("canonical_session_result_events").select("*").eq("team_id",teamId).in("result_id",resultIds).order("changed_at",{ascending:false}),
         ]);
+        if(requestId!==detailRequestRef.current)return;
         if(v.error)throw v.error;if(e.error)throw e.error;versions=(v.data||[]) as ResultVersion[];events=(e.data||[]) as ResultEvent[];
       }
+      if(requestId!==detailRequestRef.current)return;
       setDetail({
         matches:(matches.data||[]) as MatchRow[],roster:roster.data as Detail["roster"],
         rosterMembers:(rosterMembers.data||[]) as RosterMember[],roleDefinitions:(roleDefs.data||[]) as RoleDefinition[],
@@ -124,12 +135,20 @@ export default function CanonicalSessionsWorkspace({supabase,teamId,members,canM
         lifecycleEvents:(life.data||[]) as LifecycleEvent[],sources:(src.data||[]) as Detail["sources"],
         expectedMatchCount:sets.data?.expected_match_count??null,sessionResultSubmitted:!!submission.data,
       });
-    }catch(e){setDetailError(errorText(e));setDetail(null);}
-    finally{setDetailLoading(false);}
+    }catch(e){if(requestId===detailRequestRef.current){setDetailError(errorText(e));setDetail(null);}}
+    finally{if(requestId===detailRequestRef.current)setDetailLoading(false);}
   },[supabase,teamId]);
 
-  useEffect(()=>{void refreshList();},[refreshList]);
-  useEffect(()=>{if(selectedId)void refreshDetail(selectedId);else setDetail(null);},[selectedId,refreshDetail]);
+  useEffect(()=>{
+    setSessions([]);setSources({});setMatchCounts({});setSelectedId("");setDetail(null);setDetailError("");
+    void refreshList();
+    return()=>{listRequestRef.current++;detailRequestRef.current++;};
+  },[refreshList]);
+  useEffect(()=>{
+    if(selectedId)void refreshDetail(selectedId);
+    else{detailRequestRef.current++;setDetail(null);setDetailLoading(false);}
+    return()=>{detailRequestRef.current++;};
+  },[selectedId,refreshDetail]);
   useEffect(()=>{if(selected){setEditTitle(selected.title);setEditDate(selected.session_date||"");setEditSeason(selected.season_label||"");setReason("");}},[selected?.id,selected?.title,selected?.session_date,selected?.season_label]);
   useEffect(()=>{setMatchId("");setSelectedMembers([]);setRoleMember("");setRoleId("");setSubOut("");setSubIn("");},[selectedId]);
   useEffect(()=>{setRawValues("{\\n  \\n}");setResultRef("");setCorrectionReason("");setVerifiedValues("{\\n  \\n}");setVerifyReason("");setVerifyChecks({});setRejectReason("");setSubOut("");setSubIn("");},[selectedId,matchId]);
