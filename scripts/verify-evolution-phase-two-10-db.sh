@@ -91,6 +91,19 @@ BEGIN
     RAISE EXCEPTION 'cross-team training plan accepted';
   EXCEPTION WHEN foreign_key_violation THEN NULL; END;
 
+  BEGIN
+    INSERT INTO public.practice_plan_blocks(id,team_id,plan_id,linked_drill_id,sort_order)
+    VALUES ('aa100000-0000-0000-0000-000000000013','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+      'aa290000-0000-0000-0000-000000000003','dd100000-0000-0000-0000-000000000002',2);
+    RAISE EXCEPTION 'cross-team plan block drill accepted';
+  EXCEPTION WHEN check_violation THEN NULL; END;
+  BEGIN
+    INSERT INTO public.practice_plan_blocks(id,team_id,plan_id,linked_drill_id,sort_order)
+    VALUES ('aa100000-0000-0000-0000-000000000014','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+      'aa290000-0000-0000-0000-000000000003','dd100000-0000-0000-0000-000000000099',3);
+    RAISE EXCEPTION 'missing plan block drill accepted';
+  EXCEPTION WHEN foreign_key_violation THEN NULL; END;
+
   INSERT INTO public.training_sessions(id,team_id,plan_id,drill_id,title,session_type,scheduled_at,duration_minutes,instructions,created_by)
   VALUES ('aa100000-0000-0000-0000-000000000030','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',NULL,
     'dd100000-0000-0000-0000-000000000003','Global template allowed','squad',NULL,30,'Fixture',
@@ -122,6 +135,12 @@ BEGIN
       'bb100000-0000-0000-0000-000000000004',member_a,1);
     RAISE EXCEPTION 'cross-team result session accepted';
   EXCEPTION WHEN foreign_key_violation THEN NULL; END;
+  BEGIN
+    INSERT INTO public.training_results(id,team_id,session_id,player_member_id,attempt_number)
+    VALUES ('aa100000-0000-0000-0000-000000000053','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+      'aa290000-0000-0000-0000-000000000021',member_b,2);
+    RAISE EXCEPTION 'cross-team result member accepted';
+  EXCEPTION WHEN foreign_key_violation THEN NULL; END;
   INSERT INTO public.training_results(id,team_id,session_id,player_member_id,attempt_number)
   VALUES ('aa100000-0000-0000-0000-000000000051','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
     'aa290000-0000-0000-0000-000000000021',NULL,1);
@@ -137,6 +156,12 @@ BEGIN
     VALUES ('aa100000-0000-0000-0000-000000000060','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
       'bb100000-0000-0000-0000-000000000002');
     RAISE EXCEPTION 'cross-team task plan accepted';
+  EXCEPTION WHEN foreign_key_violation THEN NULL; END;
+  BEGIN
+    INSERT INTO public.practice_tasks(id,team_id,block_id)
+    VALUES ('aa100000-0000-0000-0000-000000000064','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+      'bb100000-0000-0000-0000-000000000011');
+    RAISE EXCEPTION 'cross-team task block accepted';
   EXCEPTION WHEN foreign_key_violation THEN NULL; END;
   BEGIN
     INSERT INTO public.practice_tasks(id,team_id,player_member_id)
