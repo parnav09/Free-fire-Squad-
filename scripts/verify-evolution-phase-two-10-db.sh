@@ -180,6 +180,12 @@ BEGIN
       'aa290000-0000-0000-0000-000000000003','aa100000-0000-0000-0000-000000000012');
     RAISE EXCEPTION 'task block from another plan accepted';
   EXCEPTION WHEN check_violation THEN NULL; END;
+  BEGIN
+    INSERT INTO public.practice_tasks(id,team_id,block_id)
+    VALUES ('aa100000-0000-0000-0000-000000000065','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+      'aa100000-0000-0000-0000-000000000012');
+    RAISE EXCEPTION 'task block without its owning plan accepted';
+  EXCEPTION WHEN check_violation THEN NULL; END;
 
   BEGIN
     INSERT INTO public.scrim_team_reviews(id,scrim_id,team_id)
