@@ -97,6 +97,7 @@ test("Disposable PostgreSQL integration verifies export, restore, same-team rest
   assert.match(script, /DRG-01 expected complete export/);
   assert.match(script, /FK-only child discovery or team scoping failed/);
   assert.match(script, /direct teams\(id\) child was not restored/);
+  assert.match(script, /unsupported descendant was silently omitted/);
   assert.match(script, /restore_team_backup_for_team/);
   assert.match(script, /corrupted payload was not rejected/);
   assert.match(script, /current team owner identity was not retained/);
