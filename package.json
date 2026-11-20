@@ -23,7 +23,8 @@
     "test:evolution-phase-one-5-e": "node --test scripts/verify-evolution-phase-one-5-e.mjs",
     "test:evolution-phase-two-1": "node --test scripts/verify-evolution-phase-two-1.mjs",
     "test:evolution-phase-two-2": "node --test scripts/verify-evolution-phase-two-2.mjs",
-    "test:evolution-phase-three": "node --test scripts/verify-evolution-phase-three.mjs"
+    "test:evolution-phase-three": "node --test scripts/verify-evolution-phase-three.mjs",
+    "test:evolution-phase-three-2": "node --test scripts/verify-evolution-phase-three-2.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.1",
