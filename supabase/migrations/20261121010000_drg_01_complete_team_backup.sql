@@ -1429,9 +1429,18 @@ GRANT EXECUTE ON FUNCTION public.get_team_backup_for_team(uuid) TO authenticated
 REVOKE ALL ON FUNCTION public.restore_team_backup_for_team(jsonb,uuid) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.restore_team_backup_for_team(jsonb,uuid) TO authenticated;
 
--- The old unscoped endpoints are retired. Version 1 backups cannot safely restore the expanded graph.
-REVOKE ALL ON FUNCTION public.get_team_backup() FROM PUBLIC, anon, authenticated;
-REVOKE ALL ON FUNCTION public.restore_team_backup(jsonb) FROM PUBLIC, anon, authenticated;
+-- Retire old unscoped endpoints when the legacy backup migration is present.
+-- Disposable canonical-Evolution fixtures may not install the legacy endpoint first.
+DO $retire_legacy$
+BEGIN
+  IF pg_catalog.to_regprocedure('public.get_team_backup()') IS NOT NULL THEN
+    EXECUTE 'REVOKE ALL ON FUNCTION public.get_team_backup() FROM PUBLIC, anon, authenticated';
+  END IF;
+  IF pg_catalog.to_regprocedure('public.restore_team_backup(jsonb)') IS NOT NULL THEN
+    EXECUTE 'REVOKE ALL ON FUNCTION public.restore_team_backup(jsonb) FROM PUBLIC, anon, authenticated';
+  END IF;
+END
+$retire_legacy$;
 
 COMMENT ON FUNCTION public.get_team_backup_for_team(uuid) IS
   'Exports every team_id table plus direct FK-only children, with schema fingerprint, exact row counts and an explicit completeness report. Version 2.';
