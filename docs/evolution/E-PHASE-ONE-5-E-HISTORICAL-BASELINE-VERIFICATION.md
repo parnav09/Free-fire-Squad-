@@ -74,7 +74,25 @@ The prior E report records successful CI runs #352/#353 on older commit `0a24ce6
 
 The latest observed push/PR runs for source head `a024f13d029a15aa4dfa74a466435da7e2d3b8ce` are #661 (ID `44726357303`) and #662 (ID `44726364443`), both reported failed. The GitHub job records expose no step records, and the workflow-job log artifact could not be retrieved. Therefore the failure stage and test results cannot be truthfully attributed to a code assertion or reported as passing. Checkpoint commit `a82eead226ea302d852ef991721181671d4ffb8c` triggered push workflow run #746 (ID `44794364558`). The run completed with failure. Its only job is marked failed, but GitHub returned an empty step list and the job-log artifact URL returned BlobNotFound; the failure stage and test outcomes are therefore unavailable. This run is not a passing verification. Re-run CI when the runner/log evidence is available and record its exact result.
 
-## 6. Checkpoint commit CI update\n\n- Checkpoint documentation commit: `a82eead226ea302d852ef991721181671d4ffb8c`.\n- Push workflow run #746 / `44794364558`: **FAILURE**.\n- Job record: one job marked failed; zero step records returned. Job log retrieval returned `BlobNotFound`.\n- No test suite, PostgreSQL step, typecheck, or build result can be claimed from this run.\n\n## Final status
+## 6. Checkpoint commit CI update\n\n- Checkpoint documentation commit: `a82eead226ea302d852ef991721181671d4ffb8c`.\n- Push workflow run #746 / `44794364558`: **FAILURE**.\n- Job record: one job marked failed; zero step records returned. Job log retrieval returned `BlobNotFound`.\n- No test suite, PostgreSQL step, typecheck, or build result can be claimed from this run.\n
+## 7. Follow-up provenance investigation (21 November 2026)
+
+- Supabase project `xaixnqvyoswcvvkydrmh` was created on **2026-11-02**, PostgreSQL 17, region `ap-southeast-1`.
+- Organization metadata confirms the **Free** plan. Supabase documentation says automated daily database backups are provided for Pro, Team and Enterprise plans; Free projects should maintain their own logical exports. An automatic daily backup for November 2–7 cannot be assumed. No backup was restored or project altered.
+- The live migration ledger has 55 entries; the earliest is `20261107081456` (`phase_0_security_performance`). The project predates the first tracked migration by five days.
+- Initial scaffold commit `c96284e` added `docs/architecture/legacy-database-inventory.md`: a read-only inventory of nine tables and row counts. It explicitly says it is **not a schema export** and that exact columns/types, keys, constraints, indexes, enums, triggers, views, grants, policies and function definitions were not yet mapped. The initial commit contains no SQL schema dump or migration bootstrap file.
+- The first recovered historical migration is hardening, not bootstrap: it runs `ALTER FUNCTION public.set_updated_at()`, `ALTER FUNCTION public.fix_role()`, replaces policies on existing `daily_scores` and `team_ratings`, and creates indexes on existing tables. These operations presuppose pre-existing objects; empty-database replay is invalid.
+- The predecessor `parnav09/ff-squad` application repository did not yield a verifiable database schema export or provenance. Application source is not a PostgreSQL schema snapshot.
+- Supabase backup documentation: https://supabase.com/docs/guides/platform/backups.
+
+### Recovery conclusion
+
+No original SQL dump, pre-November-7 database backup, PITR recovery point, schema-only export, IaC definition, or independently verifiable schema source has been located in connected GitHub/Supabase evidence. The nine-table inventory corroborates table existence only and cannot establish the full baseline.
+
+**Best remaining source:** an owner-held logical export created before `20261107081456`, or a verified archived Supabase backup/PITR recovery point from before the first migration. The Supabase Management API backup-list endpoint is not exposed by the connected Supabase tools, and no Management API token was available; backup availability remains unverified, not confirmed absent.
+
+The required next artifact is any original pre-2026-11-07 `.sql`, `.dump`, `.backup`, or Supabase export from the project owner's archived files.
+\n## Final status
 
 - Historical SQL provenance and 53 dispositions: **RE-VERIFIED AT SOURCE/MANIFEST LEVEL**.
 - Historical full-chain replay: **NOT RUN — BLOCKED**.
