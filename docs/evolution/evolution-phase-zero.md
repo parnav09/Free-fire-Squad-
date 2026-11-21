@@ -2,11 +2,11 @@
 
 **Review date:** 18 November 2026  
 **Repository:** `parnav09/Free-fire-Squad-`  
-**Blueprint:** `docs/evolution-version-2.md` on this PR branch (master roadmap included with all 13 renamed Evolution phases)  
+**Blueprint:** `docs/evolution-version-2.md` on `main` (master roadmap includes all 13 Evolution phases)  
 **Code baseline:** `main` at the current audited source snapshot  
 **Live data snapshot:** FF Squad Supabase project, read-only inspection  
 **Baseline audit:** **COMPLETE — Evolution scope only**  
-**Legacy-fix status:** **IMPLEMENTED ON PR BRANCH · CI VERIFIED · NOT MERGED**  
+**Legacy-fix status:** **IMPLEMENTED · MERGED TO MAIN · PRODUCTION BUILD READY · DEPLOYED**  
 **Implementation boundary:** this phase repairs existing Evolution regressions and marks incomplete modules for their future phases. It does not build the planned Version 2 feature set.
 
 ## 1. Scope
@@ -148,28 +148,28 @@ These counts show that the competitive match ledger and drill library have recor
 **Impact:** scores from Daily Evaluation, training results, and future trends cannot safely be combined or compared as one player-development rating.  
 **Future build:** Evolution Phase Three defines the canonical six-dimension rubric, evidence/coverage semantics, versioning, and historical crosswalk. Phase Zero does not silently convert old scores.
 
-### EV2-AUD-003 — Default evaluation values could look like observations (fixed on PR branch)
+### EV2-AUD-003 — Default evaluation values could look like observations (fixed, merged to main, and production-deployed)
 
 - Before the fix, Daily Evaluation initialized the selected player as the display string `P1`, although the persisted player identity is a UUID.
 - Before the fix, its five score fields initialized to 5.
 - Before the fix, `PlayerEvaluationRubric` initialized all six ratings to 5 and allowed saving without requiring explicit interaction.
 
 **Impact:** a reviewer could save untouched defaults as if they were observed; the player selector also began with a display label instead of a canonical UUID.  
-**Phase Zero fix on this PR branch:** removed the P1 default, removed prefilled score values, require another active roster UUID (self-target excluded), require all five ratings to be explicitly selected, show an incomplete total as unavailable, and disable submission until the form is complete. A duplicate preflight blocks a second score for the same team/player/date, and a busy guard prevents repeated taps. This is a legacy-form guard only; the new session-linked evaluation workflow remains Evolution Phase Four.
+**Phase Zero fix (merged to `main` and production-deployed):** removed the P1 default, removed prefilled score values, require another active roster UUID (self-target excluded), require all five ratings to be explicitly selected, show an incomplete total as unavailable, and disable submission until the form is complete. A duplicate preflight blocks a second score for the same team/player/date, and a busy guard prevents repeated taps. This is a legacy-form guard only; the new session-linked evaluation workflow remains Evolution Phase Four.
 
 ### EV2-AUD-004 — Evaluation and feedback are separate writes (atomic fix deferred)
 
 - Before the Phase Zero fix, `saveEvaluation` inserted the `daily_scores` row first and then separately inserted private feedback into `daily_score_feedback`.
 - If the second write failed, a score could remain without its intended feedback.
-- **Phase Zero fix on this PR branch:** private feedback entry is paused in the legacy form; the current form saves scores only. Existing private feedback remains visible in the recipient inbox. This removes the non-atomic two-write path without adding schema/API work or deleting history. The UI also blocks duplicate same-player/same-day submissions and self-target selection; a server-side idempotency/unique constraint remains part of the future phase contract.
+- **Phase Zero fix (merged to `main` and production-deployed):** private feedback entry is paused in the legacy form; the current form saves scores only. Existing private feedback remains visible in the recipient inbox. This removes the non-atomic two-write path without adding schema/API work or deleting history. The UI also blocks duplicate same-player/same-day submissions and self-target selection; a server-side idempotency/unique constraint remains part of the future phase contract.
 - **Future build:** Evolution Phase Four will restore private feedback as part of one atomic score + feedback transaction with idempotency and fault-injection tests.
 
-### EV2-AUD-005 — Realtime evaluation refresh selected columns absent from the live table (fixed on PR branch)
+### EV2-AUD-005 — Realtime evaluation refresh selected columns absent from the live table (fixed, merged to main, and production-deployed)
 
 Before the fix, the initial load read base score columns from `daily_scores` and loaded private feedback separately. The Realtime callback selected `improvement_notes` and `mistake_notes` directly from `daily_scores`. The live `daily_scores` column inventory does not contain those two columns; they belong to `daily_score_feedback`.
 
 **Impact:** the Realtime refresh query could fail and the callback did not surface that query error before updating local history. This could leave the displayed evaluation history stale or replace it with an empty result.  
-**Phase Zero fix on this PR branch:** the shared `fetchEvaluationHistory` loader reads valid score columns, merges private feedback from its own table, orders same-day records deterministically, subscribes to both source tables, and reports refresh errors. This change is not merged or production-deployed.
+**Phase Zero fix (merged to `main` and production-deployed):** the shared `fetchEvaluationHistory` loader reads valid score columns, merges private feedback from its own table, orders same-day records deterministically, subscribes to both source tables, and reports refresh errors. This change is merged to `main` and included in the production deployment recorded in Section 12.
 
 ### EV2-AUD-006 — Weekly Review and Player Trends are not separate experiences (legacy view corrected)
 
@@ -184,14 +184,14 @@ Observed pre-fix calculation and scope limitations:
 - the generated focus was generic rather than linked to an approved review snapshot.
 
 **Impact:** team averages could be depressed by missing data, trend comparisons could be inconsistent, and the two navigation items did not deliver distinct workflows.  
-**Phase Zero fix on this PR branch:** a record is valid only when all five stored dimensions are integers from 0–10; the displayed 0–50 total is recomputed from those raw dimensions rather than trusting a stale cached `total`. Missing/incomplete evaluations are excluded rather than treated as zero; same-day ordering uses score date, creation timestamp, and stable ID; no-data players are shown as insufficient data; the shared screen is labelled a read-only legacy snapshot; generic weekly task generation is paused. The separate Weekly Review and Player Trends builds remain Evolution Phases Seven and Eight.
+**Phase Zero fix (merged to `main` and production-deployed):** a record is valid only when all five stored dimensions are integers from 0–10; the displayed 0–50 total is recomputed from those raw dimensions rather than trusting a stale cached `total`. Missing/incomplete evaluations are excluded rather than treated as zero; same-day ordering uses score date, creation timestamp, and stable ID; no-data players are shown as insufficient data; the shared screen is labelled a read-only legacy snapshot; generic weekly task generation is paused. The separate Weekly Review and Player Trends builds remain Evolution Phases Seven and Eight.
 
-### EV2-AUD-007 — Training rubric storage did not match its scale label (new writes fixed on PR branch)
+### EV2-AUD-007 — Training rubric storage did not match its scale label (new writes fixed, merged to main, and production-deployed)
 
 Before the Phase Zero fix, both the standard role rubric and advanced rubric converted each displayed 1–10 dimension to a 10–100 value before storing it in the JSON rubric, while the advanced rubric also declared `scale: "1-10"`. The overall result score is a separate 0–100 value.
 
 **Impact:** downstream readers could interpret dimension values on the wrong scale, and a stored scale label did not describe the actual values.  
-**Phase Zero fix on this PR branch:** new standard and advanced rubric rows store raw 1–10 dimension values and include `scale: "1-10"` plus `dimension_storage: "raw_1_to_10"`. The standard rubric's role-weighted score is normalized separately to 0–100. Both legacy rubric forms require explicit dimension selection before saving. Historical rows are not rewritten. Evolution Phase Three will version the canonical rubric and add a crosswalk for old rows.
+**Phase Zero fix (merged to `main` and production-deployed):** new standard and advanced rubric rows store raw 1–10 dimension values and include `scale: "1-10"` plus `dimension_storage: "raw_1_to_10"`. The standard rubric's role-weighted score is normalized separately to 0–100. Both legacy rubric forms require explicit dimension selection before saving. Historical rows are not rewritten. Evolution Phase Three will version the canonical rubric and add a crosswalk for old rows.
 
 ### EV2-AUD-008 — Squad Analytics is competitive-only (future development analytics)
 
@@ -216,13 +216,13 @@ Training sessions, participants, and training results exist, but the inspected E
 **Impact:** do not advertise durable offline writes, conflict-safe sync, or completed anonymous peer reviews as existing capabilities.  
 **Future build:** anonymous peer cohorts/inbox belong to Evolution Phase Five; durable offline queue, conflict resolution, and complete Realtime data-quality handling belong to Evolution Phase Ten.
 
-### EV2-AUD-011 — Team switching could retain stale Evolution records (fixed on PR branch)
+### EV2-AUD-011 — Team switching could retain stale Evolution records (fixed, merged to main, and production-deployed)
 
 Before the scoped follow-up fix, evaluation and legacy-assignment arrays were not cleared immediately when the signed-in user or selected team changed. A late assignment refresh started under the previous team could also finish after a team switch and replace the new team's list. Legacy assignment completion updates filtered by assignment ID without also constraining the selected team.
 
 **Impact:** a player could briefly see a previous team's legacy evaluation/assignment information after changing team or account, and a late refresh could repopulate stale rows.
 
-**Phase Zero fix on this PR branch:** evaluation and assignment state is cleared on sign-out/team change; initial fetches are cancelled on scope change; assignment refreshes verify the active team scope before updating state; completion updates require both assignment ID and team ID and check that the actor is the assignee or an active team manager. This is a client-side data-correctness guard, not an RLS/grant remediation; the separate Security workstream remains responsible for server authorization.
+**Phase Zero fix (merged to `main` and production-deployed):** evaluation and assignment state is cleared on sign-out/team change; initial fetches are cancelled on scope change; assignment refreshes verify the active team scope before updating state; completion updates require both assignment ID and team ID and check that the actor is the assignee or an active team manager. This is a client-side data-correctness guard, not an RLS/grant remediation; the separate Security workstream remains responsible for server authorization.
 
 ### EV2-AUD-012 — Daily Evaluation client date could disagree with the live database date (fixed to current contract)
 
@@ -230,7 +230,7 @@ The live `lock_daily_score_date_and_anonymize()` trigger assigns `score_date` us
 
 **Impact:** the displayed/preflight evaluation date could disagree with the server-assigned date around timezone boundaries, weakening the legacy same-day duplicate guard.
 
-**Phase Zero fix on this PR branch:** the legacy Daily Evaluation date now uses the same explicit `Asia/Kolkata` timezone as the live trigger. This aligns the current implementation contract without changing the trigger or any schema. **Future build:** Evolution Phase One must replace the hard-coded timezone with a team-timezone contract and update server-side date assignment and client display together; do not assume all future teams use India time.
+**Phase Zero fix (merged to `main` and production-deployed):** the legacy Daily Evaluation date now uses the same explicit `Asia/Kolkata` timezone as the live trigger. This aligns the current implementation contract without changing the trigger or any schema. **Future build:** Evolution Phase One must replace the hard-coded timezone with a team-timezone contract and update server-side date assignment and client display together; do not assume all future teams use India time.
 
 ## 6. Data-integrity checks
 
@@ -264,7 +264,7 @@ These behavior-preserving baseline changes are present on `main`:
 
 No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-snapshot, or analytics schema has been implemented by these foundation changes.
 
-### 7.1 Legacy fixes delivered on this PR branch
+### 7.1 Legacy fixes delivered, merged to main, and production-deployed
 
 - **Daily Evaluation:** removed the P1 default and prefilled ratings; the existing five-dimension form now requires another active team roster UUID, excludes self-targets, requires explicit selection of every rating, and blocks duplicate same-player/day submissions. Its date now follows the live database trigger's Asia/Kolkata date contract. The form is labelled legacy and saves scores only; private feedback entry is paused to avoid partial writes. The session-linked atomic replacement remains Evolution Phase Four.
 - **Evaluation Realtime:** one shared loader reads valid score columns and private feedback from their correct tables; score and feedback updates both trigger refetch; same-day ordering is deterministic; refresh errors are surfaced.
@@ -284,7 +284,7 @@ No Evolution Version 2 scoring, peer-review, task-unification, evidence, trend-s
 - The workflow still generates a run-local lockfile because the repository does not yet commit `package-lock.json`; reproducible dependency pinning remains a repository follow-up.
 - The latest Vercel Preview check on this PR head is **blocked/failed with a Vercel build-rate-limit response** (`upgradeToPro=build-rate-limit`). This is a platform build quota result, not a TypeScript or Vite build failure.
 - No Vercel Preview was available for approved-scope browser smoke tests; Android/tablet/desktop interaction QA is not claimed and remains assigned to Evolution Phase Eleven.
-- No production deployment or promotion was performed as part of this audit.
+- At the time this audit was first written, no production deployment or promotion had been performed. The subsequent production release is recorded in Section 12.
 
 ## 9. Code/data paths to preserve
 
@@ -320,6 +320,33 @@ Security-specific migration/grant work remains in the separate Security workstre
 
 The baseline inventory, live Evolution data dictionary, relationships, task/rubric mapping, aggregate row counts, integrity-check results, implementation gaps, and preservation/migration requirements are documented. The scoped legacy fixes on this PR branch now cover the P1/default-score defect, self-target and duplicate submission paths, stale Realtime refresh, incomplete/cached-total trend calculations, duplicate legacy task creation, standard and advanced rubric scale mismatch, partial score/feedback writes, stale cross-team legacy data refresh, and browser/database date disagreement in the legacy Daily Evaluation form.
 
-The scoped legacy-fix code and ten Evolution regression tests passed GitHub Actions run #54 at PR head commit `27c9d5d`. This is not a Version 2 feature build and does not mean the app is ready for production. Future functionality remains assigned to Evolution Phases One through Twelve. No schema changes, production data edits, merge, or production deployment are part of this phase. Device/browser interaction QA remains assigned to Evolution Phase Eleven; the restricted full-app preview was not used for testing.
+The scoped legacy-fix code and ten Evolution regression tests passed GitHub Actions run #54 at PR head commit `27c9d5d`; the merged `main` release was subsequently recorded as passing run #55. The production deployment build also completed the configured typecheck, foundation tests, character-data tests, Evolution regression tests, and Vite production build. This is not a Version 2 feature build: future functionality remains assigned to Evolution Phases One through Twelve. No schema changes or production data edits were made by Phase Zero. Device/browser interaction QA remains assigned to Evolution Phase Eleven; a production deployment does not replace that broader device QA.
 
 Separate Security work remains outside this Evolution audit and is tracked independently in `docs/security/rls-review.md`.
+
+## 12. Phase Zero point-by-point merge and production release record
+
+**Release status:** ALL PHASE ZERO POINTS 0.1–0.14 IMPLEMENTED, MERGED TO `main`, AND INCLUDED IN A READY VERCEL PRODUCTION DEPLOYMENT.
+
+| Point | Phase Zero scope | Main merge | Production |
+|---|---|---|---|
+| 0.1 | Daily Evaluation legacy fixes | PASS — PR #114 | PASS |
+| 0.2 | Stable player identity; remove P1-as-identity | PASS — PR #114 | PASS |
+| 0.3 | Remove prefilled/default evaluation scores | PASS — PR #114 | PASS |
+| 0.4 | Preserve and validate the five-dimension legacy rubric | PASS — PR #114 | PASS |
+| 0.5 | Prevent self-evaluation and duplicate same-player/day submissions | PASS — PR #114 | PASS |
+| 0.6 | Align legacy evaluation date with Asia/Kolkata database trigger | PASS — PR #114 | PASS |
+| 0.7 | Repair Realtime evaluation/feedback refresh | PASS — PR #114 | PASS |
+| 0.8 | Prevent partial score/feedback writes in the legacy form | PASS — PR #114 | PASS |
+| 0.9 | Pause duplicate legacy task creation without deleting history | PASS — PR #114 | PASS |
+| 0.10 | Correct Weekly Review/Player Trends legacy calculations and no-data handling | PASS — PR #114 | PASS |
+| 0.11 | Store new rubric dimensions on the declared 1–10 scale; normalize overall score separately | PASS — PR #114 | PASS |
+| 0.12 | Clear stale team-scoped evaluation/assignment state on team switch/sign-out | PASS — PR #114 | PASS |
+| 0.13 | Keep Squad Analytics competitive-results-only; separate development analytics | PASS — PR #114 | PASS |
+| 0.14 | Add Evolution regression-contract tests to the production build | PASS — PR #114 | PASS |
+
+**Merge evidence:** PR [#114](https://github.com/parnav09/Free-fire-Squad-/pull/114); merge commit [`62aea53e68bbdd949db8f589948dc14dd2e680c5`](https://github.com/parnav09/Free-fire-Squad-/commit/62aea53e68bbdd949db8f589948dc14dd2e680c5). GitHub Actions mainline run #55 was recorded as PASS in the release history.
+
+**Production evidence:** Vercel deployment [`dpl_GLwyZanM34ru1ThJtyuoDCfU1mau`](https://vercel.com/parnav09/squad-os/GLwyZanM34ru1ThJtyuoDCfU1mau) completed with state **READY**, target **production**, built from `main` at commit `62aea53e68bbdd949db8f589948dc14dd2e680c5`. URL: https://squad-os-parnav09.vercel.app. The build ran `npm run typecheck`, `test:foundation`, `test:characters`, `test:evolution`, and `vite build`; the 10 Evolution regression tests passed. Vite emitted only the existing non-blocking 334.24 kB main-chunk warning.
+
+**Scope boundary:** “Phase Zero complete” means the audit and safe legacy fixes above are released. It does not mean the future canonical six-dimension rubric, atomic session-linked evaluation, unified task system, full Weekly Review/Player Trends, development analytics, offline sync, responsive device QA, or separate Security workstream are complete. Those remain assigned to their named later phases/workstreams. No Supabase schema/data/policy/grant changes were included in this release.
