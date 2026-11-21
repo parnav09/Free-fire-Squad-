@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import CanonicalSessionsWorkspace from "../../../src/components/CanonicalSessionsWorkspace";
-import "../../../src/styles/tokens.css";
-import "../../../src/styles.css";
-import "../../../src/styles/foundation.css";
+import CanonicalSessionsWorkspace from "../../src/components/CanonicalSessionsWorkspace";
+import "../../src/styles/tokens.css";
+import "../../src/styles.css";
+import "../../src/styles/foundation.css";
 
 type Fixture = Record<string, any[]>;
 const now = new Date().toISOString();
