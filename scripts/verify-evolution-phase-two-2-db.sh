@@ -86,6 +86,12 @@ INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date) VALUES (
  '10000000-0000-0000-0000-000000000001',
  DATE '2026-11-20'
 );
+INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date) VALUES (
+ 'bbbbbbbb-0000-0000-0000-000000000002',
+ 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+ '20000000-0000-0000-0000-000000000002',
+ DATE '2026-11-20'
+);
 INSERT INTO public.tournament_cycles(id,team_id,cycle_start,cycle_end,title,created_by) VALUES (
  'aaaaaaaa-2222-2222-2222-222222222222',
  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
@@ -111,11 +117,7 @@ INSERT INTO public.team_members(team_id,user_id,membership_role,status) VALUES
  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','10000000-0000-0000-0000-000000000001','owner','active'),
  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','20000000-0000-0000-0000-000000000002','owner','active'),
  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','30000000-0000-0000-0000-000000000003','player','active');
-INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date) VALUES
- ('bbbbbbbb-0000-0000-0000-000000000002','bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-  '20000000-0000-0000-0000-000000000002',DATE '2026-11-20');
-
-DO $
+DO $$
 DECLARE
   legacy_id uuid := 'aaaaaaaa-1111-1111-1111-111111111111';
   mapped_id uuid;
@@ -148,7 +150,7 @@ BEGIN
     WHERE id=mapped_id AND season_label IS NOT NULL
   ) THEN RAISE EXCEPTION 'historical season was fabricated';
   END IF;
-END $;
+END $$;
 
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
