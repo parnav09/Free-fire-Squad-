@@ -72,6 +72,8 @@ test("Expected match coverage blocks premature session verification", async () =
   assert.match(component, /expectedMatchCount/);
   assert.match(component, /allExpectedResultsVerified/);
   assert.match(component, /Link every expected match and verify every result/);
+  assert.match(component, /Session verification is blocked:/);
+  assert.match(component, /will not create placeholder matches or results/);
 });
 test("Training rejection and correction paths remain usable", async () => {
   const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
