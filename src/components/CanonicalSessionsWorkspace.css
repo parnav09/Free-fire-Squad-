@@ -56,3 +56,31 @@
 @media(max-width:760px){.canonical-workspace-head{display:grid}.canonical-head-actions{justify-content:flex-start}.canonical-session-layout{grid-template-columns:1fr}.canonical-session-list{position:static;max-height:320px}.canonical-filter-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.canonical-metadata-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.canonical-match-list{grid-template-columns:1fr}}
 @media(max-width:520px){.canonical-panel,.canonical-session-list,.canonical-session-detail{padding:12px}.canonical-form-grid,.canonical-roster-grid,.canonical-roster-pick-list,.canonical-checklist,.canonical-mini-grid{grid-template-columns:1fr}.canonical-filter-bar{grid-template-columns:1fr 1fr}.canonical-filter-bar label:first-child{grid-column:1/-1}.canonical-detail-header{display:grid}.canonical-history-list>div,.canonical-source-list>div{display:grid}.canonical-history-list span{text-align:left}.canonical-action-row>*{flex:1 1 auto}.canonical-action-row .canonical-danger,.canonical-action-row .canonical-primary,.canonical-action-row .canonical-secondary{min-height:44px}.canonical-head-actions button{min-height:44px}.canonical-workspace input,.canonical-workspace select,.canonical-workspace textarea{min-height:42px}}
 @media(prefers-reduced-motion:reduce){.canonical-workspace *{transition:none!important;scroll-behavior:auto!important}}
+/* Point 2.11 interaction and viewport refinements — retain the established Deep Onyx palette. */
+.canonical-workspace button{min-height:44px;min-width:44px;line-height:1.25;touch-action:manipulation}
+.canonical-workspace .canonical-icon-button{width:44px;height:44px;padding:0;display:inline-grid;place-items:center}
+.canonical-workspace .canonical-mini-button{min-height:44px;padding:8px 12px}
+.canonical-workspace input:not([type=checkbox]),.canonical-workspace select{min-height:44px}
+.canonical-workspace input[type=checkbox]{min-width:18px;min-height:18px;width:18px;height:18px;flex:0 0 18px}
+.canonical-workspace button:focus-visible,.canonical-workspace input:focus-visible,.canonical-workspace select:focus-visible,.canonical-workspace textarea:focus-visible{outline:2px solid #8db4ff;outline-offset:2px}
+.canonical-workspace button:disabled{transform:none;box-shadow:none}
+.canonical-session-item{min-height:96px}
+.canonical-session-detail{scroll-margin-top:16px}
+@media(max-width:820px){
+  .canonical-session-layout{grid-template-columns:minmax(0,1fr)}
+  .canonical-session-list{position:static;max-height:340px}
+  .canonical-filter-bar{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .canonical-detail-header{gap:10px}
+}
+@media(max-width:520px){
+  .canonical-workspace-head{padding:14px}
+  .canonical-head-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+  .canonical-head-actions>*{width:100%}
+  .canonical-head-actions .canonical-connection{grid-column:1/-1;justify-content:center}
+  .canonical-filter-bar{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .canonical-filter-bar label:first-child{grid-column:1/-1}
+  .canonical-action-row>*{min-width:0}
+}
+@media(hover:none){
+  .canonical-primary:hover:not(:disabled),.canonical-secondary:hover:not(:disabled),.canonical-danger:hover:not(:disabled),.canonical-mini-button:hover:not(:disabled){transform:none}
+}
