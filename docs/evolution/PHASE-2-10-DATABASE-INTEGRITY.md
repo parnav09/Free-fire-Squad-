@@ -3,7 +3,7 @@
 **Blueprint mapping:** Evolution Version 2, Point 2.10  
 **Branch:** feat/evolution-phase-two-10-database-integrity  
 **Parent:** feat/evolution-phase-two-9-module-integration  
-**Status:** Development implementation; production rollout remains gated by Points 2.11–2.12 and explicit approval.
+**Status:** PASS — development implementation and exact-head CI verified. Production rollout remains gated by Points 2.11–2.12 and explicit approval.
 
 ## Scope
 
@@ -18,8 +18,9 @@ Close the structural integrity gaps recorded in Phase 2.1 and preserve the canon
 - Composite team-scoped foreign key for Scrim review → Scrim record.
 - A real FK for Planning block → linked drill, absent in the audited schema.
 - Drill ownership guard: team-owned drills can only be referenced within their team; global templates (is_template = true, team_id IS NULL) remain available to every team. A referenced drill cannot be reassigned in a way that invalidates existing links.
-- Task block must belong to the task's selected plan when both are supplied.
-- Scrim JSONB array length must equal match_count.
+- A task that references a block must also carry that block's owning plan; the block must belong to the task's selected plan. A NULL task plan cannot bypass this invariant. This was found during acceptance review and fixed in the migration guard and DB harness.
+- Drill ownership and block/plan lookups take row-share locks while validating references, preventing concurrent reassignment from racing a new cross-team reference.
+- Scrim JSONB `matches` must be an array whose length does not exceed the expected `match_count`. A shorter array is valid when fewer matches were played/recorded; missing matches are never fabricated.
 - Session-level Training results with a NULL player are unique per session/attempt; per-player attempt uniqueness remains unchanged.
 - Supporting child-side indexes and parent (id, team_id) unique indexes.
 
@@ -43,7 +44,9 @@ No legacy row is updated, deleted, or synthesized. Existing single-column FKs an
 - Source contract: scripts/verify-evolution-phase-two-10.mjs
 - Disposable PostgreSQL integration: scripts/verify-evolution-phase-two-10-db.sh
 - The DB harness replays Points 2.2–2.9, adds representative legacy child fixtures, applies the exact 2.10 migration, and tests cross-team rejection, global drill-template compatibility, plan/block consistency, Scrim count integrity, NULL-player attempt uniqueness, and validated constraint metadata.
-- CI runs the isolated DB harness on the Phase 2.10 branch and includes the source contract in npm run build.
+- The harness now exercises a two-transaction drill ownership/reference race, executes the documented rollback against the disposable database, verifies fixture data and Phase 2.2-owned indexes survive, then reapplies the migration and checks all 14 constraints are validated and all four guards are restored.
+- The isolated DB harness is wired into GitHub Actions using a local disposable PostgreSQL 16 instance on the hosted runner; the source contract is included in `npm run build`.
+- CI run [#909](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44913664018) and push run [#908](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44913659564) passed on exact head `f0fa995471c84fa9e08da1f1e5cb02df1b392df8`. All inherited Point 2.2–2.9 PostgreSQL integrations passed; Point 2.10 passed the disposable PostgreSQL migration, all 14 validated constraints, four guard triggers, concurrent drill-ownership race, rollback/data-preservation check, and forward re-apply. Staged B migration, security-trigger ACL verification, typecheck, source contracts, character-data checks, and Vite production bundle also passed. The earlier CI failures exposed and corrected three issues: the Scrim count invariant now allows partial played-match arrays (`array_length(matches) <= match_count`); the shared trigger uses table-specific `NEW` record branches; and the disposable harness now separates shell concurrency checks from SQL heredocs and uses surviving roster fixtures.
 
 ## Live read-only data preflight
 
@@ -61,7 +64,7 @@ A live preflight checked all 19 integrity predicates introduced or relied upon b
 - Training result → session and optional member identity
 - Scrim team review → Scrim/team identity
 - Planning block and Training session → linked drill existence and team/template compatibility
-- Scrim JSONB match-array length → `match_count`
+- Scrim JSONB match-array length ≤ expected `match_count`
 - NULL-player Training session/attempt duplicate detection
 
 **Result: 19/19 predicates returned zero existing violations.** In particular, the live Scrim array-count check and NULL-player duplicate check both returned zero.
@@ -70,7 +73,7 @@ This is a production-data preflight only. It does **not** execute the Phase 2.10
 
 ## Rollback
 
-The migration is additive and performs no data rewrite. Before later points depend on these constraints, rollback can be executed in one reviewed transaction by dropping the four triggers (training_sessions_team_drill_guard, practice_plan_blocks_team_drill_guard, practice_tasks_plan_block_guard, training_drills_reassignment_guard), the helper function evolution_private.guard_team_scoped_training_references(), all composite FKs introduced above, the Scrim count check, the NULL-player unique index, and the child/parent indexes listed in the migration. Do not drop the evolution_private schema because earlier Evolution points may own objects in it. Production rollback is never automatic and requires fresh preflight plus explicit approval.
+The migration is additive and performs no data rewrite. The disposable harness now executes the rollback in one transaction: it drops the four triggers (training_sessions_team_drill_guard, practice_plan_blocks_team_drill_guard, practice_tasks_plan_block_guard, training_drills_reassignment_guard), the helper function evolution_private.guard_team_scoped_training_references(), all 14 constraints introduced above, the NULL-player unique index, and the Point 2.10-only indexes. It deliberately preserves the `scrim_records_id_team_uidx`, `training_sessions_id_team_uidx`, and `tournament_cycles_id_team_uidx` indexes because those were introduced by Point 2.2 and are reused by Point 2.10. The harness confirms fixture rows survive rollback and reapplies the migration to prove forward recovery. Do not drop the evolution_private schema because earlier Evolution points own objects in it. Production rollback is never automatic and requires fresh preflight plus explicit approval.
 
 ## Production boundary
 
