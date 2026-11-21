@@ -34,8 +34,8 @@
 
 - Source contract: scripts/verify-evolution-phase-two-11.mjs (includes stale-request and team-isolation regression assertions)
 - npm run test:evolution-phase-two-11 is included in the production build test chain.
-- Vercel Preview build checks TypeScript, the source-contract test chain and production bundle.
-- GitHub Actions PostgreSQL integration is currently failing before any runner steps start. Phase 2.10 remains unverified until isolated database tests can execute.
+- Vercel Preview is currently blocked by the provider's build rate limit, so TypeScript/bundle verification must come from the current GitHub Actions run until Preview becomes available.
+- Phase 2.10's latest development head `c924ea267db3aca661ae5086251a7e88f7fa1d8e` passed the disposable PostgreSQL integration and full CI in run [#913](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44913845502). The initial Phase 2.11 CI run exposed that its stacked branch still carried an older copy of the Phase 2.10 migration/harness; those inherited files have now been synchronized from the verified Phase 2.10 branch. A fresh exact-head CI run is required before Point 2.11 can be marked PASS.
 - Source contracts additionally cover expected-match completeness, rejected Training corrections, explicit substitution effective timestamps, result audit/version history, 44px controls and the tablet breakpoint. Manual Android device, tablet and desktop interaction QA remains an acceptance requirement and is not inferred from a successful bundle build.
 
 ## Production boundary
