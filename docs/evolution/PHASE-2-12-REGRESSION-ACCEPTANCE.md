@@ -3,7 +3,7 @@
 **Branch:** `feat/evolution-phase-two-12-final-acceptance`  
 **Base:** Phase 2.11 application UI branch `feat/evolution-phase-two-11-session-ui`  
 **Scope:** Evolution Version 2, Points 2.1–2.12 only  
-**Automated acceptance:** PASS — exact-head CI run #44941803192  
+**Automated acceptance:** PASS — code-head run #44941803192; current report-head run #44942027524  
 **Physical-device acceptance:** OWNER QA REQUIRED  
 **Production rollout:** NOT AUTHORIZED BY THIS BRANCH
 
@@ -65,7 +65,7 @@ The disposable PostgreSQL harness runs authenticated database-role tests and ver
 
 ## Exact-head acceptance gates
 
-All six automated gates passed on commit `2db5c5960baca6d41028b52b4c40cb115815b6d5` in [GitHub Actions run #44941803192](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44941803192):
+All six automated gates passed on code commit `2db5c5960baca6d41028b52b4c40cb115815b6d5` in [GitHub Actions run #44941803192](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44941803192). The acceptance report was then updated on commit `b22be880d2bdb42fad2b157c31ff116c58463a9f` and the complete workflow passed again in [run #44942027524](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44942027524):
 
 1. PASS — Node 22 typecheck and complete production build.
 2. PASS — all source-contract suites from Phase 2.1 through 2.12.
