@@ -4,7 +4,6 @@ import {
   clearPendingSessionRequest,
   getOrCreatePendingSessionRequest,
   readPendingSessionPayload,
-  type PendingSessionPayload,
 } from "../src/features/training/pendingSessionRequest.ts";
 
 function memoryStorage() {
@@ -16,7 +15,7 @@ function memoryStorage() {
   };
 }
 
-const payload: PendingSessionPayload = {
+const payload = {
   teamId: "team-1",
   title: "Squad communication",
   sessionType: "communication",
