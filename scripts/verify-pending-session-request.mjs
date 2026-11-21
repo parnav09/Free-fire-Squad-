@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   clearPendingSessionRequest,
   getOrCreatePendingSessionRequest,
+  readPendingSessionPayload,
   type PendingSessionPayload,
 } from "../src/features/training/pendingSessionRequest.ts";
 
@@ -75,4 +76,15 @@ test("successful completion clears only the matching team's pending request", ()
   clearPendingSessionRequest(storage, "pending:team-1");
 
   assert.equal(storage.getItem("pending:team-1"), null);
+});
+
+test("pending draft payload is restored after reload for offline-to-online retry", () => {
+  const storage = memoryStorage();
+  getOrCreatePendingSessionRequest(storage, "pending:team-1", payload, () => "key-1");
+  const restored = readPendingSessionPayload(storage, "pending:team-1");
+
+  assert.deepEqual(restored, {
+    ...payload,
+    participantIds: ["player-a", "player-b"],
+  });
 });
