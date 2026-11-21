@@ -1,4 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { getTeamUiCapabilities, indiaDateISO, indiaDateLabel, millisecondsUntilIndiaMidnight, resolveActiveTeamIdentity, resolveTeamSessionEligibility } from "./lib/evolution-identity";
+import { createLatestRequestGuard } from "./lib/latest-request-guard";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
 
@@ -40,13 +42,6 @@ function readLocalRecord<T extends Record<string, unknown>>(key: string, fallbac
     return fallback;
   }
 }
-
-function kolkataDateISO(date = new Date()): string {
-  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date);
-  const part=(type:string)=>parts.find(value=>value.type===type)?.value||"";
-  return `${part("year")}-${part("month")}-${part("day")}`;
-}
-
 
 type SupabaseInstance = NonNullable<typeof import("./lib/supabase/client")["supabase"]>;
 
@@ -127,10 +122,10 @@ export default function App() {
   const [teamLogoCropX, setTeamLogoCropX] = useState(50);
   const [teamLogoCropY, setTeamLogoCropY] = useState(50);
   const [teamScreen, setTeamScreen] = useState<"choice" | "create" | "join">("choice");
-  const [team, setTeam] = useState<{id:string;membership_id:string;team_name:string;invite_code:string;avatar_url?:string|null;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
+  const [team, setTeam] = useState<{id:string;membership_id:string;team_name:string;invite_code:string;avatar_url?:string|null;timezone?:string|null;membership_role:string;player_number:number|null;assigned_role:string|null}|null>(null);
   const [localDataHydratedFor,setLocalDataHydratedFor]=useState("");
   const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
-  const [teamChoices,setTeamChoices]=useState<Array<{id:string;team_name:string;membership_role:string}>>([]);
+  const [teamChoices,setTeamChoices]=useState<Array<{id:string;team_name:string;membership_role:string;selectable:boolean}>>([]);
   const [teamBusy, setTeamBusy] = useState(false);
   const [confirmAction,setConfirmAction]=useState<"logout"|"leave"|"import"|null>(null);
   const [leaveTransferTo,setLeaveTransferTo]=useState("");
@@ -189,17 +184,33 @@ export default function App() {
 
   const [customRoleDrafts,setCustomRoleDrafts]=useState<Record<string,string>>({});
   const ownerPowerActive=team?.membership_role==="owner"&&ownerPowerEnabled;
+  const teamUiCapabilities=getTeamUiCapabilities(team?.membership_role,ownerPowerEnabled);
   const [cloudTraining, setCloudTraining] = useState<Record<string, boolean>>({});
   const [cloudSessionNotes, setCloudSessionNotes] = useState("");
   const [trainingDate, setTrainingDate] = useState(() => new Date().toLocaleDateString("en-CA"));
   const [evalPlayer,setEvalPlayer]=useState("");
-  const evalDate=kolkataDateISO();
+  const [indiaToday,setIndiaToday]=useState(()=>({iso:indiaDateISO(),label:indiaDateLabel()}));
+  const evalDate=indiaToday.iso;
+  const evalDateLabel=indiaToday.label;
+  useEffect(()=>{
+    let timer:number|undefined;
+    let cancelled=false;
+    const refreshIndiaDate=()=>{
+      if(cancelled)return;
+      const now=new Date();
+      setIndiaToday({iso:indiaDateISO(now),label:indiaDateLabel(now)});
+      timer=window.setTimeout(refreshIndiaDate,millisecondsUntilIndiaMidnight(now)+100);
+    };
+    refreshIndiaDate();
+    return()=>{cancelled=true;if(timer!==undefined)window.clearTimeout(timer);};
+  },[]);
   const [evalScores,setEvalScores]=useState<Record<string,number>>({});
   const [evalSaving,setEvalSaving]=useState(false);
   const [evalHistory,setEvalHistory]=useState<Array<{id:string;player_id:string;score_date:string;created_at?:string;communication:number;coordination:number;decision_making:number;role_execution:number;map_awareness:number;total:number|null;notes:string|null;improvement_target:string|null;improvement_notes:string|null;mistake_notes:string|null}>>([]);
 
   const [assignmentRows,setAssignmentRows]=useState<Array<{id:string;player_id:string;drill_title:string;drill_description:string|null;due_date:string;status:string;completion_note:string|null}>>([]);
   const assignmentScopeRef=useRef("");
+  const teamLoadGuardRef=useRef(createLatestRequestGuard());
   // Local-only records are isolated by immutable team UUID. Legacy data is marked migrated
   // only after every scoped copy has been persisted successfully.
   useEffect(()=>{
@@ -303,7 +314,7 @@ export default function App() {
     if(!supabase||!team||!sessionUserId)return;
     const assignment=assignmentRows.find(row=>row.id===id);
     if(!assignment){setNotice("This legacy assignment is no longer in the current team list. Refresh and try again.");return;}
-    const canManageAssignments=team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive);
+    const canManageAssignments=teamUiCapabilities.canManageAssignments;
     if(assignment.player_id!==sessionUserId&&!canManageAssignments){setNotice("You can only update your own existing assignment.");return;}
     if(status!=="assigned"&&status!=="completed"){setNotice("Invalid assignment status.");return;}
     setConnection("Syncing…");
@@ -452,7 +463,7 @@ export default function App() {
   };
   const confirmLogout=async()=>{
     if(!supabase)return;setTeamBusy(true);
-    try{const {error}=await supabase.auth.signOut();if(error)throw error;setConfirmAction(null);setNotice("Signed out successfully. Your team data remains saved.");}
+    try{const {error}=await supabase.auth.signOut();if(error)throw error;teamLoadGuardRef.current.invalidate();setConfirmAction(null);setNotice("Signed out successfully. Your team data remains saved.");}
     catch(e){setNotice(e instanceof Error?e.message:"Logout failed.");}
     finally{setTeamBusy(false);}
   };
@@ -468,43 +479,120 @@ export default function App() {
     finally{setTeamBusy(false);}
   };
   const loadTeam = async (preferredTeamId?:string) => {
-    if (!supabase) return;
-    setConnection("Syncing…");
-    const {data:{user}}=await supabase.auth.getUser(); if(!user) {setTeam(null);setTeamMembers([]);setTeamChoices([]);return;}
-    const {data:allMemberships,error:allMembershipsError}=await supabase.from("team_members").select("team_id,membership_role").eq("user_id",user.id).eq("status","active");
+    const requestId=teamLoadGuardRef.current.begin();
+    const isCurrent=()=>teamLoadGuardRef.current.isCurrent(requestId);
+    try {
+      if (!supabase) return;
+      setConnection("Syncing…");
+    const {data:{user}}=await supabase.auth.getUser();
+    if(!isCurrent())return;
+    if(!user) {
+      setTeam(null);setTeamMembers([]);setTeamChoices([]);setJoinRequests([]);setIglUserId("");
+      safeStorageRemoveItem("squad-os-active-team");
+      return;
+    }
+
+    const {data:allMemberships,error:allMembershipsError}=await supabase
+      .from("team_members")
+      .select("id,team_id,user_id,membership_role,status")
+      .eq("user_id",user.id)
+      .eq("status","active");
+    if(!isCurrent())return;
     if(allMembershipsError)throw allMembershipsError;
-    const allTeamIds=(allMemberships||[]).map(m=>m.team_id);
-    if(allTeamIds.length){const {data:allTeams,error:allTeamsError}=await supabase.from("teams").select("id,team_name").in("id",allTeamIds);if(allTeamsError)throw allTeamsError;setTeamChoices((allTeams||[]).map(t=>({...t,membership_role:allMemberships?.find(m=>m.team_id===t.id)?.membership_role||"player"})));}else setTeamChoices([]);
-    const preferred=preferredTeamId||safeStorageGetItem("squad-os-active-team")||"";
-    let membershipQuery=supabase.from("team_members").select("id,team_id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("user_id",user.id).eq("status","active");
-    if(preferred)membershipQuery=membershipQuery.eq("team_id",preferred);
-    let {data:membership,error}=await membershipQuery.limit(1).maybeSingle();
-    if(error)throw error;
-    if(!membership&&preferred){safeStorageRemoveItem("squad-os-active-team");const fallback=await supabase.from("team_members").select("id,team_id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("user_id",user.id).eq("status","active").limit(1).maybeSingle();membership=fallback.data;error=fallback.error;if(error)throw error;}
-    if(!membership){setTeam(null);setTeamMembers([]);return;}
-    safeStorageSetItem("squad-os-active-team",membership.team_id);
-    const {data:t,error:te}=await supabase.from("teams").select("id,team_name,invite_code,avatar_url").eq("id",membership.team_id).single(); if(te)throw te;
-    setTeam({...t,membership_id:membership.id,membership_role:membership.membership_role,player_number:membership.player_number,assigned_role:membership.assigned_role});setRosterEditEnabled(safeStorageGetItem("squad-os-roster-edit:"+t.id)==="on");if(membership.display_name)setDisplayName(membership.display_name);
+
+    const memberships=allMemberships||[];
+    const teamIds=[...new Set(memberships.map(m=>m.team_id).filter(Boolean))];
+    if(teamIds.length){
+      const {data:allTeams,error:allTeamsError}=await supabase
+        .from("teams")
+        .select("id,team_name")
+        .in("id",teamIds);
+      if(!isCurrent())return;
+      if(allTeamsError)throw allTeamsError;
+      setTeamChoices((allTeams||[]).map(t=>{
+        const rows=memberships.filter(m=>m.team_id===t.id);
+        const resolved=resolveActiveTeamIdentity(user.id,rows,t.id);
+        return {...t,membership_role:rows[0]?.membership_role||"player",selectable:!!resolved};
+      }));
+    }else{
+      setTeamChoices([]);
+    }
+
+    const preferred=preferredTeamId??safeStorageGetItem("squad-os-active-team");
+    const identity=resolveActiveTeamIdentity(user.id,memberships,preferred||null);
+    if(!identity){
+      safeStorageRemoveItem("squad-os-active-team");
+      setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");
+      setRosterCapacity(4);
+      return;
+    }
+
+    const {data:membership,error:membershipError}=await supabase
+      .from("team_members")
+      .select("id,team_id,user_id,display_name,player_number,assigned_role,membership_role,status")
+      .eq("id",identity.membershipId)
+      .eq("user_id",identity.authUserId)
+      .eq("team_id",identity.teamId)
+      .eq("status","active")
+      .maybeSingle();
+    if(!isCurrent())return;
+    if(membershipError)throw membershipError;
+    const sessionEligibility=resolveTeamSessionEligibility(user.id,membership,identity.teamId);
+    if(!sessionEligibility.eligible||!membership){
+      safeStorageRemoveItem("squad-os-active-team");
+      setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");
+      setRosterCapacity(4);
+      return;
+    }
+    const eligibleIdentity=sessionEligibility.identity;
+
+    if(team?.id!==eligibleIdentity.teamId){
+      setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");
+    }
+    safeStorageSetItem("squad-os-active-team",eligibleIdentity.teamId);
+    const {data:t,error:te}=await supabase
+      .from("teams")
+      .select("id,team_name,invite_code,avatar_url,timezone")
+      .eq("id",eligibleIdentity.teamId)
+      .single();
+    if(!isCurrent())return;
+    if(te)throw te;
+    setTeam({...t,membership_id:eligibleIdentity.membershipId,membership_role:eligibleIdentity.membershipRole,player_number:membership.player_number,assigned_role:membership.assigned_role});
+    setRosterEditEnabled(safeStorageGetItem("squad-os-roster-edit:"+t.id)==="on");
+    if(membership.display_name)setDisplayName(membership.display_name);
+
     const [membersResult,requestsResult,iglResult,capacityResult]=await Promise.all([
       supabase.from("team_members").select("id,user_id,display_name,player_number,assigned_role,membership_role,status").eq("team_id",t.id).order("player_number"),
       supabase.from("team_join_requests").select("id,user_id,requested_at,status").eq("team_id",t.id).eq("status","pending").order("requested_at"),
       supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","igl_user_id").maybeSingle(),
       supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","roster_capacity").maybeSingle(),
     ]);
+    if(!isCurrent())return;
     if(membersResult.error)throw membersResult.error;
     if(requestsResult.error)throw requestsResult.error;
     if(iglResult.error)throw iglResult.error;
     if(capacityResult.error)throw capacityResult.error;
     const capacityValue=Number(capacityResult.data?.setting_value);
-    setRosterCapacity(Number.isInteger(capacityValue)&&capacityValue>=4&&capacityValue<=10?capacityValue:((await supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","fifth_player").maybeSingle()).data?.setting_value===true?5:4));
+    let fallbackCapacity=4;
+    if(!Number.isInteger(capacityValue)||capacityValue<4||capacityValue>10){
+      const {data:fifthPlayerSetting}=await supabase.from("team_settings").select("setting_value").eq("team_id",t.id).eq("setting_key","fifth_player").maybeSingle();
+      if(!isCurrent())return;
+      fallbackCapacity=fifthPlayerSetting?.setting_value===true?5:4;
+    }
+    if(!isCurrent())return;
+    setRosterCapacity(Number.isInteger(capacityValue)&&capacityValue>=4&&capacityValue<=10?capacityValue:fallbackCapacity);
     setTeamMembers((membersResult.data||[]).map(x=>({...x,display_name:x.display_name||"Player"})));
     const reqs=requestsResult.data||[];
     const reqIds=reqs.map(q=>q.user_id);
     const {data:rp,error:profilesError}=reqIds.length?await supabase.from("profiles").select("id,display_name").in("id",reqIds):{data:[],error:null};
+    if(!isCurrent())return;
     if(profilesError)throw profilesError;
     setJoinRequests(reqs.map(q=>({...q,display_name:rp?.find(p=>p.id===q.user_id)?.display_name||"New player"})));
     setIglUserId(String(iglResult.data?.setting_value||""));
     setConnection("Syncing…");
+    } catch(error) {
+      if(isCurrent())throw error;
+    }
   };
   const createTeam = async () => {
     if (!supabase || !sessionUserId) { setNotice("Sign in again before creating a team."); return; }
@@ -585,7 +673,7 @@ export default function App() {
   const saveIGL=async(userId:string)=>{if(!supabase||team?.membership_role!=="owner")return;try{const {error}=await supabase.from("team_settings").upsert({team_id:team.id,setting_key:"igl_user_id",setting_value:userId,updated_at:new Date().toISOString()},{onConflict:"team_id,setting_key"});if(error)throw error;setIglUserId(userId);setNotice(userId?"IGL designation updated.":"IGL designation cleared.");}catch(e){setNotice(e instanceof Error?e.message:"IGL setting failed.");}};
   const saveOwnerRole=async(slot:number)=>{if(!supabase||team?.membership_role!=="owner"||!team.membership_id)return;const roleBySlot:Record<number,string>={1:"Primary Rusher",2:"Secondary Rusher",3:"Third Rusher",4:"Sniper",5:"Substitute"};const occupied=teamMembers.find(m=>m.status==="active"&&m.player_number===slot&&m.user_id!==sessionUserId);if(occupied){setNotice("That player slot is already occupied. Move or reassign that player first.");return;}try{const {error}=await supabase.rpc("assign_member",{p_member:team.membership_id,p_player:slot,p_activate:true});if(error)throw error;const {error:re}=await supabase.from("team_members").update({assigned_role:roleBySlot[slot]||"Substitute"}).eq("id",team.membership_id);if(re)throw re;await loadTeam();setNotice("Your player slot and role were updated.");}catch(e){setNotice(e instanceof Error?e.message:"Could not update owner role.");}};
   const assignMember = async (memberId:string, player:number, role:string) => { if(!supabase||team?.membership_role!=="owner")return; try { if(player>=1&&player<=rosterCapacity){const {error}=await supabase.rpc("assign_member",{p_member:memberId,p_player:player,p_activate:true});if(error)throw error;} const {error:re}=await supabase.from("team_members").update({assigned_role:role}).eq("id",memberId);if(re)throw re;await loadTeam();setNotice("Member slot and role updated."); }catch(e){setNotice(e instanceof Error?e.message:"Member assignment failed.");} };
-  useEffect(()=>{if(signedIn)loadTeam().catch(e=>{setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Could not load team.");});else{setTeam(null);setTeamMembers([]);setMatchesHydratedKey("");}},[signedIn]);
+  useEffect(()=>{if(signedIn)loadTeam().catch(e=>{setConnection("Signed in · sync retry needed");setNotice(e instanceof Error?e.message:"Could not load team.");});else{teamLoadGuardRef.current.invalidate();setTeam(null);setTeamMembers([]);setTeamChoices([]);setJoinRequests([]);setIglUserId("");setMatchesHydratedKey("");safeStorageRemoveItem("squad-os-active-team");}},[signedIn]);
   const weekMonday = (w: string) => { const m=w.match(/^(\d{4})-W(\d{2})$/); if(!m) return new Date().toISOString().slice(0,10); const y=Number(m[1]), n=Number(m[2]); const d=new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+(n-1)*7); return d.toISOString().slice(0,10); };
   const persistMatchSnapshot = async (teamSnapshot: NonNullable<typeof team>, weekSnapshot: string, matchSnapshot: typeof matches, userId: string) => {
     try {
@@ -913,7 +1001,7 @@ export default function App() {
           <h1>{section==="Players" ? <>Team roster.<br/><span>People & roles.</span></> : <>{section}.<br/><span>Team operations.</span></>}</h1>
           <p className="intro">A focused workspace for tournament results, player development and team performance.</p>
 
-          {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))} canAssignTasks={!!(team&&(team.membership_role==="coach"||(team.membership_role==="owner"&&ownerPowerActive)))||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))} language={drillLanguage} onLanguageChange={changeDrillLanguage}/></Suspense>}
+          {(section==="StratForge") && <Suspense fallback={<div className="pt-loading">Opening StratForge workspace…</div>}><PlanningTrainingCenter teamId={team?.id||""} members={teamMembers} userId={sessionUserId} canManage={!!team&&teamUiCapabilities.canManageAssignments} canAssignTasks={!!team&&teamUiCapabilities.canManageAssignments||teamMembers.some(m=>m.user_id===sessionUserId&&/igl/i.test(m.assigned_role||""))} language={drillLanguage} onLanguageChange={changeDrillLanguage}/></Suspense>}
           {section==="Evolution"&&<><div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · EVOLUTION</div><h2>One place for improvement</h2></div><span className="phase-pill">4 MODULES</span></div><p className="intro">Evaluation, weekly review, player trends and squad analytics stay together. Use the module you need; all records remain team-shared.</p><div className="evolution-hub-grid">{[{title:"Daily Evaluation",desc:"Legacy five-dimension form. Canonical session-linked workflow is planned for Evolution Phase Four.",to:"Evaluation",icon:"◎"},{title:"Weekly Review",desc:"Legacy read-only snapshot. Full review and approvals are planned for Evolution Phase Seven.",to:"Weekly Review",icon:"↗"},{title:"Player Trends",desc:"Legacy read-only preview. Longitudinal trends are planned for Evolution Phase Eight.",to:"Player Trends",icon:"⌁"},{title:"Squad Analytics",desc:"Competitive-results snapshot. Player-development analytics are planned for Evolution Phase Nine.",to:"Analytics",icon:"▥"}].map(x=><button key={x.to} className="evolution-hub-card" onClick={()=>setSection(x.to as Section)}><span className="evolution-hub-icon">{x.icon}</span><strong>{x.title}</strong><small>{x.desc}</small><span className="evolution-hub-link">Open module →</span></button>)}</div></>}
           {section==="Tournament" && <><div className="matches-section-tabs" role="tablist" aria-label="Matches sections"><button role="tab" aria-selected={matchesTab==="Scrims"} className={matchesTab==="Scrims"?"active":""} onClick={()=>setMatchesTab("Scrims")}>Scrims</button><button role="tab" aria-selected={matchesTab==="Tournament"} className={matchesTab==="Tournament"?"active":""} onClick={()=>setMatchesTab("Tournament")}>Tournaments</button></div>{matchesTab==="Scrims"?<Suspense fallback={<div className="pt-loading">Opening scrims workspace…</div>}> <ScrimsSection supabase={supabase} teamId={team?.id||""} userId={sessionUserId} teamMembers={teamMembers as Array<{user_id:string;display_name?:string}>}/> </Suspense>:<>
             <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><span className="phase-pill">42 MATCH SLOTS</span></div>
@@ -974,10 +1062,11 @@ export default function App() {
             <div className="section-heading"><div><div className="eyebrow">TEAM COMMAND · PLAYER MANAGEMENT</div><h2>Players & squad identity</h2><p className="intro">Team code, active players, assigned roles and owner controls in one workspace.</p></div><span className="phase-pill">{teamMembers.filter(m=>m.status==="active").length} ACTIVE</span></div>
             <section className="connection-panel" style={{display:"block",marginBottom:22}}>
               {team ? <>
-                <div className="team-live-header team-identity-header"><div className="team-live-logo">{team.avatar_url?<img src={team.avatar_url} alt={team.team_name+" logo"}/>:<span>{team.team_name.slice(0,1).toUpperCase()}</span>}</div><div className="team-identity-copy"><h3>{team.team_name}</h3>{ownerPowerActive&&<div className="owner-team-code"><span>INVITE CODE</span><strong className="team-code-value">{team.invite_code}</strong><button className="secondary-button" onClick={async()=>{try{await navigator.clipboard.writeText(team.invite_code);setNotice("Invite code copied.");}catch{setNotice("Copy failed. Select the invite code manually.");}}}>Copy</button></div>}</div>{teamChoices.length>1&&<label className="team-switcher"><span>ACTIVE TEAM</span><select value={team.id} onChange={e=>{const next=e.target.value;safeStorageSetItem("squad-os-active-team",next);loadTeam(next).then(()=>setNotice("Switched team workspace. Each team keeps its own roster and records.")).catch(err=>setNotice(err.message||"Could not switch team."));}}>{teamChoices.map(choice=><option key={choice.id} value={choice.id}>{choice.team_name} · {choice.membership_role}</option>)}</select></label>}</div>
+                <div className="team-live-header team-identity-header"><div className="team-live-logo">{team.avatar_url?<img src={team.avatar_url} alt={team.team_name+" logo"}/>:<span>{team.team_name.slice(0,1).toUpperCase()}</span>}</div><div className="team-identity-copy"><h3>{team.team_name}</h3>{ownerPowerActive&&<div className="owner-team-code"><span>INVITE CODE</span><strong className="team-code-value">{team.invite_code}</strong><button className="secondary-button" onClick={async()=>{try{await navigator.clipboard.writeText(team.invite_code);setNotice("Invite code copied.");}catch{setNotice("Copy failed. Select the invite code manually.");}}}>Copy</button></div>}</div>{teamChoices.length>1&&<label className="team-switcher"><span>ACTIVE TEAM</span><select value={team.id} onChange={e=>{const next=e.target.value;loadTeam(next).then(()=>setNotice("Switched team workspace. Each team keeps its own roster and records.")).catch(err=>setNotice(err instanceof Error?err.message:"Could not switch team."));}}>{teamChoices.map(choice=><option key={choice.id} value={choice.id}>{choice.team_name} · {choice.membership_role}</option>)}</select></label>}</div>
                 {ownerPowerActive&&<section className="connection-panel team-admin-panel"><h3>IGL designation</h3><label className="admin-setting">IGL player<select value={iglUserId} onChange={e=>saveIGL(e.target.value)}><option value="">Not assigned</option>{teamMembers.filter(m=>m.status==="active").map(m=><option value={m.user_id} key={m.user_id}>P{m.player_number||"—"} · {m.display_name} ({m.assigned_role||"Unassigned"})</option>)}</select><small>Separate designation. Shows “Role / IGL” without changing the base role.</small></label></section>}
                 {ownerPowerActive&&<section className="connection-panel team-admin-panel"><div className="admin-section-title"><h3>Join requests</h3><span className="active-tag">{joinRequests.length} pending</span></div>{joinRequests.length===0?<p className="muted">No pending requests.</p>:<div className="request-list">{joinRequests.map(q=><article className="request-card" key={q.id}><div className="request-person"><b>{q.display_name}</b><small>{new Date(q.requested_at).toLocaleDateString()}</small></div><div className="request-controls"><label>Player slot<select value={requestSlot[q.id]||""} onChange={e=>setRequestSlot(p=>({...p,[q.id]:e.target.value}))}><option value="">Select slot</option>{Array.from({length:rosterCapacity},(_,i)=>i+1).filter(n=>!teamMembers.some(m=>m.status==="active"&&m.player_number===n)).map(n=><option key={n} value={n}>P{n}</option>)}</select></label><label>Role<select value={requestRole[q.id]||"Primary Rusher"} onChange={e=>setRequestRole(p=>({...p,[q.id]:e.target.value}))}>{["Primary Rusher","Secondary Rusher","Third Rusher","Sniper","Substitute"].map(role=><option key={role}>{role}</option>)}</select></label></div><div className="request-actions"><button className="primary-button" onClick={()=>reviewJoinRequest(q.id,true)}>Approve & add</button><button className="secondary-button" onClick={()=>reviewJoinRequest(q.id,false)}>Decline</button></div></article>)}</div>}</section>}
               </>:<>
+                {teamChoices.length>0&&<label className="team-switcher" style={{display:"block",marginBottom:16}}><span>CHOOSE ACTIVE TEAM</span><select defaultValue="" onChange={e=>{const next=e.target.value;if(!next)return;loadTeam(next).then(()=>setNotice("Team workspace loaded.")).catch(err=>setNotice(err instanceof Error?err.message:"Could not load selected team."));}}><option value="" disabled>Select one of your active teams</option>{teamChoices.map(choice=><option key={choice.id} value={choice.id} disabled={!choice.selectable}>{choice.team_name} · {choice.membership_role}{!choice.selectable?" · needs membership review":""}</option>)}</select></label>}
                 <h3 style={{marginTop:8}}>Create a team or join with code</h3><p>Team owner creates one squad. Players use the invite code from their own accounts.</p>
                 <p className="team-separate-page-note">Create or join a squad from the dedicated Team Setup screen above. Team creation is not embedded here.</p>
                 <div className="add-form" style={{marginTop:12}}><input value={teamCode} onChange={e=>setTeamCode(e.target.value.toUpperCase())} placeholder="8-character invite code" maxLength={8}/><button className="secondary-button" disabled={teamBusy||teamCode.trim().length<6} onClick={joinTeam}>Request to join</button></div>{requestStatus&&<p className="join-pending">{requestStatus}</p>}
@@ -1018,7 +1107,7 @@ export default function App() {
           {section==="Evaluation" && <>
             <div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · LEGACY FORM</div><h2>Legacy daily evaluation</h2><p className="daily-eval-helper">This is the existing five-dimension record form. The canonical session-linked Daily Evaluation is reserved for Evolution Phase Four.</p></div></div>
             <section className="connection-panel" style={{display:"block"}}>
-              <div className="daily-eval-date-lock"><span className="date-lock-mark">▣</span><div><b>Today's evaluation · {evalDate}</b><small>Locked to today's local date · cannot be edited</small></div><span className="date-lock-badge">DATE LOCK</span></div>
+              <div className="daily-eval-date-lock"><span className="date-lock-mark">▣</span><div><b>Today's evaluation · {evalDateLabel}</b><small>India date · UTC+05:30 · auto-selected and locked for today</small></div><span className="date-lock-badge">DATE LOCK</span></div>
               <div className="daily-eval-player-select"><label>Evaluate player<select value={evalPlayer} onChange={e=>setEvalPlayer(e.target.value)}><option value="">Select another active team player</option>{teamMembers.filter(m=>m.status==="active"&&m.user_id!==sessionUserId).map(m=><option key={m.user_id} value={m.user_id}>{m.display_name} · {m.assigned_role||("P"+m.player_number)}</option>)}</select></label><span className="daily-eval-anon">◉ Anonymous · evaluator identity is not stored</span></div>
               <p className="daily-eval-helper">Rate observed actions, not reputation or match result. Each dimension is 0–10; total is out of 50. Slider positions are placeholders until selected; all five ratings are required before saving.</p>
               <div className="daily-eval-ratings">{[["communication","Communication","Clear, timely calls + confirmations"],["coordination","Coordination","Team timing, spacing and sync"],["decision_making","Decision making","Fight, reset, rotate and regroup"],["role_execution","Role execution","Player's assigned role delivered"],["map_awareness","Map awareness","Zone, enemy info and safe angles"]].map(([k,label,hint])=><div className="daily-eval-rating" key={k}><div className="daily-eval-rating-copy"><div><b>{label}</b><small>{hint}</small></div><strong>{evalScores[k]??"Not rated"}<em>/10</em></strong></div><input aria-label={label+" rating 0 to 10"} type="range" min="0" max="10" step="1" value={evalScores[k]??5} onPointerDown={()=>setEvalScores(p=>p[k]===undefined?({...p,[k]:5}):p)} onChange={e=>setEvalScores(p=>({...p,[k]:Number(e.target.value)}))}/><div className="daily-eval-ticks"><span>0</span><span>2</span><span>5</span><span>8</span><span>10</span></div></div>)}</div>
@@ -1053,12 +1142,12 @@ export default function App() {
           {section==="Settings" && <>
             <div className="section-heading"><div><h2>Settings</h2></div></div>
             <section className="connection-panel language-settings-panel"><div><div className="eyebrow">PREFERENCES</div><h3>Display language</h3><p>Choose English or Hindi + English for the Drill Library and Character Database. Your preference is saved on this device.</p></div><div className="pt-language-toggle settings-language-toggle" role="group" aria-label="Drill language"><button type="button" className={drillLanguage==="en"?"active":""} onClick={()=>changeDrillLanguage("en")}>EN</button><button type="button" className={drillLanguage==="hi-en"?"active":""} onClick={()=>changeDrillLanguage("hi-en")}>HI+EN</button></div></section>
-            {signedIn&&team?.membership_role==="owner"&&<section className="connection-panel roster-edit-settings"><div className="owner-power-head"><div><div className="eyebrow">TEAM PREFERENCES</div><h3>Roster management</h3><p>Keep the Players page in clean member-view mode by default. Enable editing only when you need to adjust slots or roles.</p></div><span className={"owner-power-status "+(rosterEditEnabled?"is-on":"is-off")}>{rosterEditEnabled?"EDITING ON":"VIEW ONLY"}</span></div><label className="owner-power-toggle-row"><span><strong>{rosterEditEnabled?"Roster editing enabled":"Roster editing hidden"}</strong><small>{rosterEditEnabled?"Owner assignment controls are visible in the Player roster.":"You see the same clean player cards as team members."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={rosterEditEnabled} onChange={e=>{const next=e.target.checked;setRosterEditEnabled(next);if(team?.id)safeStorageSetItem("squad-os-roster-edit:"+team.id,next?"on":"off");setNotice(next?"Roster editing enabled for this device.":"Roster returned to member view.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label><div className="owner-power-foot"><span className="owner-power-dot"/><small>This changes only the owner’s interface. Team roles and permissions remain server-controlled.</small></div></section>}
+            {signedIn&&teamUiCapabilities.canManageTeamSettings&&<section className="connection-panel roster-edit-settings"><div className="owner-power-head"><div><div className="eyebrow">TEAM PREFERENCES</div><h3>Roster management</h3><p>Keep the Players page in clean member-view mode by default. Enable editing only when you need to adjust slots or roles.</p></div><span className={"owner-power-status "+(rosterEditEnabled?"is-on":"is-off")}>{rosterEditEnabled?"EDITING ON":"VIEW ONLY"}</span></div><label className="owner-power-toggle-row"><span><strong>{rosterEditEnabled?"Roster editing enabled":"Roster editing hidden"}</strong><small>{rosterEditEnabled?"Owner assignment controls are visible in the Player roster.":"You see the same clean player cards as team members."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={rosterEditEnabled} onChange={e=>{const next=e.target.checked;setRosterEditEnabled(next);if(team?.id)safeStorageSetItem("squad-os-roster-edit:"+team.id,next?"on":"off");setNotice(next?"Roster editing enabled for this device.":"Roster returned to member view.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label><div className="owner-power-foot"><span className="owner-power-dot"/><small>This changes only the owner’s interface. Team roles and permissions remain server-controlled.</small></div></section>}
             <section className="connection-panel profile-settings-entry">
               <div><div className="eyebrow">ACCOUNT</div><h3>Player profile</h3><p>View and update your IGN, account details, player slot, role and IGL information.</p></div>
               <button className="primary-button" type="button" onClick={()=>setSection("Profile")}>Open Profile <UiIcon name="arrow-right"/></button>
             </section>
-            {signedIn&&team?.membership_role==="owner"&&<section className="connection-panel owner-power-panel">
+            {signedIn&&teamUiCapabilities.canManageTeamSettings&&<section className="connection-panel owner-power-panel">
               <div className="owner-power-head"><div><div className="eyebrow">OWNER CONTROL CENTER</div><h3>Admin command power</h3><p>Switch owner command controls on or off for this device and active team.</p></div><span className={"owner-power-status "+(ownerPowerEnabled?"is-on":"is-off")}>{ownerPowerEnabled?"POWER ON":"POWER OFF"}</span></div>
               <label className="owner-power-toggle-row"><span><strong>{ownerPowerEnabled?"Owner commands enabled":"Member interface active"}</strong><small>{ownerPowerEnabled?"Owner-only controls are visible in the workspace.":"Owner controls are hidden; the workspace looks like a regular member view."}</small></span><input className="owner-power-switch" type="checkbox" role="switch" checked={ownerPowerEnabled} onChange={e=>{const next=e.target.checked;setOwnerPowerEnabled(next);if(team?.id)safeStorageSetItem("squad-os:"+team.id+":owner-power",next?"on":"off");setNotice(next?"Owner command power enabled on this device.":"Owner command power disabled. Your account remains the team owner.");}}/><span className="owner-power-switch-ui" aria-hidden="true"/></label>
               <div className="owner-power-foot"><span className="owner-power-dot"/><small>UI visibility only · Team ownership and server permissions are unchanged.</small></div>

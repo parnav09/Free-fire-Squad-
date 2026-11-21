@@ -1,0 +1,432 @@
+{
+  "source_table": "supabase_migrations.schema_migrations",
+  "source_column": "statements",
+  "project_ref": "xaixnqvyoswcvvkydrmh",
+  "recovered_at": "2026-11-18",
+  "entries": [
+    {
+      "version": "20261107081456",
+      "name": "phase_0_security_performance",
+      "file": "20261107081456_phase_0_security_performance.sql",
+      "sql_chars": 1967,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261107081539",
+      "name": "phase_0_revoke_public_definer",
+      "file": "20261107081539_phase_0_revoke_public_definer.sql",
+      "sql_chars": 753,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261107130445",
+      "name": "weekly_tournament_cycles_and_matches",
+      "file": "20261107130445_weekly_tournament_cycles_and_matches.sql",
+      "sql_chars": 3859,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261107130547",
+      "name": "auto_seed_42_weekly_match_slots",
+      "file": "20261107130547_auto_seed_42_weekly_match_slots.sql",
+      "sql_chars": 651,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261107133318",
+      "name": "player_drill_assignments",
+      "file": "20261107133318_player_drill_assignments.sql",
+      "sql_chars": 1107,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261107153344",
+      "name": "harden_assignments_and_sync_training_notes",
+      "file": "20261107153344_harden_assignments_and_sync_training_notes.sql",
+      "sql_chars": 7887,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261107153641",
+      "name": "remove_overlapping_team_settings_policy",
+      "file": "20261107153641_remove_overlapping_team_settings_policy.sql",
+      "sql_chars": 572,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261107154200",
+      "name": "enable_realtime_for_squad_operations",
+      "file": "20261107154200_enable_realtime_for_squad_operations.sql",
+      "sql_chars": 300,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261107164949",
+      "name": "unique_squad_usernames",
+      "file": "20261107164949_unique_squad_usernames.sql",
+      "sql_chars": 108,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261107175635",
+      "name": "team_avatars_and_optional_logo",
+      "file": "20261107175635_team_avatars_and_optional_logo.sql",
+      "sql_chars": 1177,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108052253",
+      "name": "account_recovery_email_and_otp",
+      "file": "20261108052253_account_recovery_email_and_otp.sql",
+      "sql_chars": 757,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108061922",
+      "name": "team_join_approval_and_role_assignments",
+      "file": "20261108061922_team_join_approval_and_role_assignments.sql",
+      "sql_chars": 3178,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108062141",
+      "name": "guard_fifth_slot_in_join_approval",
+      "file": "20261108062141_guard_fifth_slot_in_join_approval.sql",
+      "sql_chars": 1723,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108064303",
+      "name": "team_leave_and_empty_cleanup",
+      "file": "20261108064303_team_leave_and_empty_cleanup.sql",
+      "sql_chars": 4223,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108064524",
+      "name": "team_backup_export_restore",
+      "file": "20261108064524_team_backup_export_restore.sql",
+      "sql_chars": 7844,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108064840",
+      "name": "tighten_empty_team_cleanup_schedule",
+      "file": "20261108064840_tighten_empty_team_cleanup_schedule.sql",
+      "sql_chars": 2867,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108064910",
+      "name": "lock_cleanup_trigger_function",
+      "file": "20261108064910_lock_cleanup_trigger_function.sql",
+      "sql_chars": 91,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108064937",
+      "name": "restrict_join_review_rpc_to_signed_in_users",
+      "file": "20261108064937_restrict_join_review_rpc_to_signed_in_users.sql",
+      "sql_chars": 355,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108072713",
+      "name": "scope_player_igns_to_each_team",
+      "file": "20261108072713_scope_player_igns_to_each_team.sql",
+      "sql_chars": 5400,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108072831",
+      "name": "scope_backup_restore_to_selected_team",
+      "file": "20261108072831_scope_backup_restore_to_selected_team.sql",
+      "sql_chars": 1167,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108072846",
+      "name": "scope_leave_action_to_selected_team",
+      "file": "20261108072846_scope_leave_action_to_selected_team.sql",
+      "sql_chars": 629,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108072905",
+      "name": "remove_legacy_global_ign_check",
+      "file": "20261108072905_remove_legacy_global_ign_check.sql",
+      "sql_chars": 569,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108072946",
+      "name": "disable_legacy_unscoped_team_admin_rpcs",
+      "file": "20261108072946_disable_legacy_unscoped_team_admin_rpcs.sql",
+      "sql_chars": 249,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108073010",
+      "name": "restore_owner_team_scoped_ign_from_backup",
+      "file": "20261108073010_restore_owner_team_scoped_ign_from_backup.sql",
+      "sql_chars": 414,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108105554",
+      "name": "phase_2_configurable_roster_capacity",
+      "file": "20261108105554_phase_2_configurable_roster_capacity.sql",
+      "sql_chars": 3240,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108105653",
+      "name": "phase_2_capacity_guard_member_assignment",
+      "file": "20261108105653_phase_2_capacity_guard_member_assignment.sql",
+      "sql_chars": 1322,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108122752",
+      "name": "fix_set_display_name_rpc_ambiguity",
+      "file": "20261108122752_fix_set_display_name_rpc_ambiguity.sql",
+      "sql_chars": 1501,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108170059",
+      "name": "phase_2_3_planning_training",
+      "file": "20261108170059_phase_2_3_planning_training.sql",
+      "sql_chars": 7610,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108170508",
+      "name": "phase_2_3_player_task_updates",
+      "file": "20261108170508_phase_2_3_player_task_updates.sql",
+      "sql_chars": 547,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108170609",
+      "name": "phase_2_3_seed_drill_templates",
+      "file": "20261108170609_phase_2_3_seed_drill_templates.sql",
+      "sql_chars": 5717,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108170923",
+      "name": "phase_2_3_session_participants",
+      "file": "20261108170923_phase_2_3_session_participants.sql",
+      "sql_chars": 1816,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108171644",
+      "name": "phase_2_3_tactical_plan_fields",
+      "file": "20261108171644_phase_2_3_tactical_plan_fields.sql",
+      "sql_chars": 506,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108174411",
+      "name": "phase_2_3_role_drill_templates",
+      "file": "20261108174411_phase_2_3_role_drill_templates.sql",
+      "sql_chars": 4476,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108174835",
+      "name": "phase_2_3_task_blocked_reason_and_category",
+      "file": "20261108174835_phase_2_3_task_blocked_reason_and_category.sql",
+      "sql_chars": 339,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108175900",
+      "name": "phase_2_3_followup_task_session_link",
+      "file": "20261108175900_phase_2_3_followup_task_session_link.sql",
+      "sql_chars": 141,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108193820",
+      "name": "expand_drill_library_to_50",
+      "file": "20261108193820_expand_drill_library_to_50.sql",
+      "sql_chars": 16951,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108195004",
+      "name": "role_specific_drill_progression",
+      "file": "20261108195004_role_specific_drill_progression.sql",
+      "sql_chars": 25456,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261108195112",
+      "name": "complete_role_drill_library_to_100",
+      "file": "20261108195112_complete_role_drill_library_to_100.sql",
+      "sql_chars": 4783,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109033737",
+      "name": "anonymous_daily_player_evaluation_feedback",
+      "file": "20261109033737_anonymous_daily_player_evaluation_feedback.sql",
+      "sql_chars": 945,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109033815",
+      "name": "enforce_daily_evaluation_date_and_anonymity",
+      "file": "20261109033815_enforce_daily_evaluation_date_and_anonymity.sql",
+      "sql_chars": 511,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109033916",
+      "name": "allow_anonymous_daily_evaluation_insert",
+      "file": "20261109033916_allow_anonymous_daily_evaluation_insert.sql",
+      "sql_chars": 237,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109034550",
+      "name": "daily_score_feedback_private_rls",
+      "file": "20261109034550_daily_score_feedback_private_rls.sql",
+      "sql_chars": 2515,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109034618",
+      "name": "daily_score_feedback_private_rls",
+      "file": "20261109034618_daily_score_feedback_private_rls.sql",
+      "sql_chars": 2422,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109093254",
+      "name": "smart_task_deadlines_and_retention",
+      "file": "20261109093254_smart_task_deadlines_and_retention.sql",
+      "sql_chars": 6450,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109093320",
+      "name": "fix_task_lifecycle_event_order",
+      "file": "20261109093320_fix_task_lifecycle_event_order.sql",
+      "sql_chars": 2259,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109093531",
+      "name": "igl_task_management_rls",
+      "file": "20261109093531_igl_task_management_rls.sql",
+      "sql_chars": 650,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109094759",
+      "name": "retention_settings_owner_access",
+      "file": "20261109094759_retention_settings_owner_access.sql",
+      "sql_chars": 517,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109095926",
+      "name": "team_scoped_retention_policies",
+      "file": "20261109095926_team_scoped_retention_policies.sql",
+      "sql_chars": 4391,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261109095952",
+      "name": "seed_team_retention_on_team_create",
+      "file": "20261109095952_seed_team_retention_on_team_create.sql",
+      "sql_chars": 905,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261110181415",
+      "name": "scrims_personal_team_review",
+      "file": "20261110181415_scrims_personal_team_review.sql",
+      "sql_chars": 3553,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261110181550",
+      "name": "scrims_owner_update_team_scope",
+      "file": "20261110181550_scrims_owner_update_team_scope.sql",
+      "sql_chars": 534,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261114100112",
+      "name": "create_character_profiles_table",
+      "file": "20261114100112_create_character_profiles_table.sql",
+      "sql_chars": 394,
+      "statement_count": 1,
+      "rollback_statements": 0
+    },
+    {
+      "version": "20261116092206",
+      "name": "sync_all_67_character_profiles",
+      "file": "20261116092206_sync_all_67_character_profiles.sql",
+      "sql_chars": 224472,
+      "statement_count": 1,
+      "rollback_statements": 0
+    }
+  ]
+}
