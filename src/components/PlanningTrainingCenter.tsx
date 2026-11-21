@@ -111,7 +111,7 @@ export default function PlanningTrainingCenter({teamId,members,userId,canManage,
    if(canonicalResult.error)return {error:canonicalResult.error};
    const canonical=Array.isArray(canonicalResult.data)?canonicalResult.data[0]:canonicalResult.data;
    const canonicalId=canonical?.id;
-   if(typeof canonicalId!=="string")return {error:new Error("Canonical session RPC returned no UUID. The pending retry key has been preserved.")};
+   if(typeof canonicalId!=="string"||canonical?.team_id!==teamId||canonical?.session_type!=="training")return {error:new Error("Canonical session RPC returned an invalid UUID/team/type contract. The pending retry key has been preserved.")};
 
    // New legacy training rows reuse the canonical UUID so every existing child FK
    // (participants, results and practice-task source references) stays stable.
