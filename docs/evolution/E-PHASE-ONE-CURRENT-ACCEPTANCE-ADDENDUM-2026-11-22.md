@@ -55,7 +55,7 @@ The session resolver requires a signed-in Auth UUID and exact active membership 
 
 ### 1.5-A provenance / 1.5-C rollback disposition
 
-The 53-entry recovered migration manifest and the 53-entry rollback disposition register remain available. The rollback register is a forward-only/no-automatic-rollback disposition; it does not claim 53 executable rollback scripts. The machine-check suite verifies the manifest and disposition records. The live ledger exposes version/name metadata, not the original pre-migration schema or original SQL for every historical operation.
+The 53 safe-scope historical SQL bodies were recovered verbatim from the live migration ledger statements and reconciled as 53/53 exact version/name/SQL counterparts in the active migration chain. The 53-entry rollback disposition register is separately forward-only/no-automatic-rollback; it does not claim 53 executable rollback scripts. The current ledger read exposes version/name metadata, while the previously recovered statement bodies are preserved in the archive. This proves historical SQL provenance, not the original pre-migration schema baseline.
 
 ### 1.5-B timezone contract
 
@@ -142,7 +142,7 @@ Adjacent risk observed but not changed: `can_rate(t,p)` checks caller team membe
 - 1.2: implementation and automated source-contract tests PASS; server authorization defect addressed by branch-only migration, not production-applied.
 - 1.3: implementation and deterministic race tests PASS.
 - 1.4: eligibility/capability helper tests PASS; backend membership ACL acceptance awaits migration promotion and full isolated security suite.
-- 1.5-A: provenance/disposition documentation verified; full clean replay BLOCKED.
+- 1.5-A: 53/53 historical SQL provenance matches and 53/53 rollback dispositions verified; full clean replay BLOCKED by the missing starting schema baseline.
 - 1.5-B: staged timezone migration tests PASS; production write guard NOT APPLIED.
 - 1.5-C: rollback disposition machine checks PASS; no automatic historical rollback scripts claimed.
 - 1.5-D: CI/typecheck/tests/build PASS on exact HEAD.
