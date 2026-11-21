@@ -1,8 +1,8 @@
 # Evolution Phase One.5-E — Security Findings Disposition
 
-**Snapshot:** 18 November 2026  
+**Snapshot:** 20 November 2026  
 **Project:** `xaixnqvyoswcvvkydrmh`  
-**Status:** PARTIAL — staged ACL remediation and CI proof added; Auth setting remains outstanding.
+**Status:** PARTIAL — callable RPC authorization runtime tests passed; trigger ACL remediation remains staged; paid-only Auth setting excluded from this scope.
 
 ## 1. OTP tables: intentional private storage
 
@@ -46,11 +46,11 @@ Read-only catalog review found all reviewed functions have a pinned `search_path
 
 This includes team creation/join/leave, roster assignment and join approval, backup export/restore, display-name updates, score/feedback summaries, and membership helpers. Examples: `assign_member` checks team ownership; `restore_backup` checks ownership; `daily_summary` and `team_rating_summary` require active team membership.
 
-This is a source/catalog authorization review, not a substitute for adversarial role-level tests of every RPC. Keep the remaining SECURITY DEFINER functions under separate security review; do not revoke authenticated access indiscriminately because these are intentional application RPCs.
+Adversarial runtime checks were subsequently executed under `SET LOCAL ROLE authenticated` using a synthetic non-member JWT subject and explicit transaction rollback. **All 18 callable function signatures passed**, counting both `set_display_name` overloads: team-scoped read functions returned false/empty results for a non-member; owner-only backup/restore/assignment/review operations rejected a non-owner; signed-out calls were rejected; and the team-scoped display-name overload rejected a non-member. A temporary join-request fixture was rolled back and the post-rollback row count returned to zero. Full evidence is recorded in [Adversarial RPC Tests](./E-PHASE-ONE-5-E-ADVERSARIAL-RPC-TESTS.md). Do not revoke authenticated access indiscriminately because these are intentional application RPCs.
 
 ## 4. Leaked-password protection
 
-The advisor still reports leaked-password protection disabled. This is a Supabase Auth project setting, not a SQL privilege. No supported Auth-configuration write action is available in this execution path, so it has not been changed. Enable it in the Supabase Dashboard under Authentication password/security settings, then rerun the Security Advisor.
+The advisor still reports leaked-password protection disabled. This is a Supabase Auth project setting, not a SQL privilege. It is paid-only on the current plan and is excluded from the user's requested acceptance scope. No setting was changed and no workaround is represented as equivalent.
 
 Remediation reference: https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection
 
@@ -58,7 +58,7 @@ Remediation reference: https://supabase.com/docs/guides/auth/password-security#p
 
 - OTP table findings: **DISPOSITIONED — intentional service-only access**.
 - Four trigger-function exposure findings: **REMEDIATION STAGED — CI proof required before production migration**.
-- Remaining authenticated RPC warnings: **REVIEWED — authorization predicates and fixed search paths observed; adversarial review remains separate**.
-- Leaked-password protection: **OPEN — project Auth setting must be enabled**.
+- Remaining authenticated RPC warnings: **RUNTIME TESTED — 18/18 callable signatures passed adversarial role-level checks; Security Advisor still reports SECURITY DEFINER exposure because these RPCs intentionally remain callable**.
+- Leaked-password protection: **EXCLUDED — paid-only setting, outside current acceptance scope**.
 
-**Overall Security acceptance is not PASS yet.** No production ACL, RLS, function, or Auth configuration was changed by this review.
+**Overall Security acceptance remains PARTIAL** because trigger-function ACL revocations are staged and not production-applied. The callable RPC authorization test gate is closed. No production ACL, RLS, function, or Auth configuration was changed by this review.

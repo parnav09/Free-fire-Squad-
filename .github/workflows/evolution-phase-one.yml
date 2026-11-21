@@ -2,54 +2,33 @@ name: SQUAD OS — Evolution Phase One & Phase Two.1 Audit CI
 
 on:
   push:
-    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification, feat/evolution-phase-two-9-module-integration]
+    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification, feat/evolution-phase-two-9-module-integration, feat/evolution-phase-two-10-database-integrity]
   pull_request:
-    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification]
+    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification, feat/evolution-phase-two-9-module-integration, feat/evolution-phase-two-10-database-integrity]
 
 permissions:
   contents: read
-
 concurrency:
   group: foundation-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   foundation:
     name: Typecheck, tests and production build
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: squad_os_ci
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres -d squad_os_ci"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/squad_os_ci
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 22.12.0
-
-      # The repository currently has no committed package-lock.json.
-      # Generate a run-local lockfile, then install strictly from that lockfile.
       - name: Resolve and install dependencies
         run: |
           npm install --package-lock-only --ignore-scripts --no-audit --no-fund
           npm ci --no-audit --no-fund
-
       - name: Export resolved lockfile for repository pinning
         uses: actions/upload-artifact@v4
         with:
@@ -57,57 +36,52 @@ jobs:
           path: package-lock.json
           if-no-files-found: error
           retention-days: 1
-
-      - name: Install PostgreSQL client
+      - name: Install and start disposable local PostgreSQL (free GitHub runner)
         run: |
           sudo apt-get update
-          sudo apt-get install --yes postgresql-client
-
+          sudo apt-get install --yes postgresql postgresql-client
+          sudo service postgresql start
+          sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+          PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_ci
       - name: Verify Evolution Phase 2.2 canonical session migration against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_2_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_2_ci bash scripts/verify-evolution-phase-two-2-db.sh
-
       - name: Verify Evolution Phase Two.3 match identity migration against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_3_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_3_ci bash scripts/verify-evolution-phase-two-3-db.sh
-
       - name: Verify Evolution Phase Two.4 session lifecycle migration against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_4_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_4_ci bash scripts/verify-evolution-phase-two-4-db.sh
-
       - name: Verify Evolution Phase Two.5 session roster snapshot against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_5_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_5_ci bash scripts/verify-evolution-phase-two-5-db.sh
-
       - name: Verify Evolution Phase Two.6 role snapshot against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_6_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_6_ci bash scripts/verify-evolution-phase-two-6-db.sh
-
       - name: Verify Evolution Phase Two.7 substitution tracking against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_7_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_7_ci bash scripts/verify-evolution-phase-two-7-db.sh
-
       - name: Verify Evolution Phase Two.8 result verification against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_8_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_8_ci bash scripts/verify-evolution-phase-two-8-db.sh
-
       - name: Verify Evolution Phase Two.9 module integration against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_9_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_9_ci bash scripts/verify-evolution-phase-two-9-db.sh
-
+      - name: Verify Evolution Phase Two.10 database integrity against isolated disposable PostgreSQL
+        run: |
+          PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_10_ci
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_two_10_ci bash scripts/verify-evolution-phase-two-10-db.sh
       - name: Verify staged B migration against disposable PostgreSQL
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
-
       - name: Verify staged security trigger ACL hardening
         run: bash scripts/verify-evolution-security-trigger-acls.sh
-
-      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.9 audits and production bundle
+      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.10 audits and production bundle
         run: npm run build
