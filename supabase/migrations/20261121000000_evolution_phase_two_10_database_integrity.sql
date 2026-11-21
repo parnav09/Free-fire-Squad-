@@ -81,9 +81,9 @@ $constraints$;
 
 DO $scrim_check$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_catalog.pg_constraint WHERE conrelid='public.scrim_records'::regclass AND conname='scrim_records_match_count_matches_array_check') THEN
-    ALTER TABLE public.scrim_records ADD CONSTRAINT scrim_records_match_count_matches_array_check
-      CHECK (CASE WHEN jsonb_typeof(matches)='array' THEN jsonb_array_length(matches)=match_count ELSE false END) NOT VALID;
+  IF NOT EXISTS (SELECT 1 FROM pg_catalog.pg_constraint WHERE conrelid='public.scrim_records'::regclass AND conname='scrim_records_matches_not_exceed_match_count_check') THEN
+    ALTER TABLE public.scrim_records ADD CONSTRAINT scrim_records_matches_not_exceed_match_count_check
+      CHECK (CASE WHEN jsonb_typeof(matches)='array' THEN jsonb_array_length(matches)<=match_count ELSE false END) NOT VALID;
   END IF;
 END
 $scrim_check$;
@@ -176,7 +176,7 @@ ALTER TABLE public.training_results VALIDATE CONSTRAINT training_results_session
 ALTER TABLE public.training_results VALIDATE CONSTRAINT training_results_member_team_fk;
 ALTER TABLE public.scrim_team_reviews VALIDATE CONSTRAINT scrim_team_reviews_scrim_team_fk;
 ALTER TABLE public.practice_plan_blocks VALIDATE CONSTRAINT practice_plan_blocks_linked_drill_fk;
-ALTER TABLE public.scrim_records VALIDATE CONSTRAINT scrim_records_match_count_matches_array_check;
+ALTER TABLE public.scrim_records VALIDATE CONSTRAINT scrim_records_matches_not_exceed_match_count_check;
 
 COMMENT ON INDEX public.training_results_session_attempt_without_player_uidx IS
   'Prevents duplicate session-level Training results for the same attempt when player_member_id is NULL.';
