@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase/client";
 import PlayerEvaluationRubric, { type PlayerEvaluationDraft } from "./PlayerEvaluationRubric";
 import { localizedDrill } from "./drillHinglish";
+import { clearPendingSessionRequest, getOrCreatePendingSessionRequest, readPendingSessionPayload } from "../features/training/pendingSessionRequest";
 import "./PlanningTrainingCenter.ux.css";
 
 type Member = { id:string; user_id:string; display_name:string; player_number:number|null; assigned_role:string|null; membership_role:string; status:string };
@@ -13,6 +14,7 @@ type Session = { id:string; title:string; session_type:string; scheduled_at:stri
 type Result = {id:string;session_id:string;player_member_id:string|null;attempt_number:number;score:number|null;completed:boolean;player_reflection:string;coach_feedback:string;next_action:string;created_at:string};
 type Participant = {id:string;session_id:string;player_member_id:string;attendance:string;participation_notes:string};
 const today=()=>new Date().toLocaleDateString("en-CA");
+const sameInstant=(left:string|null,right:string|null)=>left===right||!!left&&!!right&&Date.parse(left)===Date.parse(right);
 const categories=["individual","role","entry-trade","backup","flank","positioning","communication","igl","rotation","endgame","squad-coordination"];
 const roles=["P1 Primary Rusher","P2 Secondary Rusher","P3 Third Rusher / Flanker","P4 Sniper + IGL","IGL (Designated Caller)","Substitute","All players"];
 const categoryRoleDefault:Record<string,string>={"communication":"All players","positioning":"All players","igl":"P4 Sniper + IGL","entry-trade":"P1 Primary Rusher","backup":"P2 Secondary Rusher","flank":"P3 Third Rusher / Flanker","rotation":"All players","endgame":"All players","squad-coordination":"All players","individual":"P1 Primary Rusher","role":"All players"};
@@ -33,6 +35,23 @@ export default function PlanningTrainingCenter({teamId,members,userId,canManage,
  const [sessionTitle,setSessionTitle]=useState("Squad communication drill"),[sessionType,setSessionType]=useState("squad"),[sessionDrill,setSessionDrill]=useState(""),[sessionPlan,setSessionPlan]=useState(""),[sessionDate,setSessionDate]=useState(today()),[sessionMinutes,setSessionMinutes]=useState("30"),[sessionInstructions,setSessionInstructions]=useState(""),[selectedParticipants,setSelectedParticipants]=useState<string[]>([]),[resultPlayer,setResultPlayer]=useState(""),[resultScore,setResultScore]=useState(""),[resultFeedback,setResultFeedback]=useState(""),[resultReflection,setResultReflection]=useState(""),[resultNextAction,setResultNextAction]=useState(""),[advancedEval,setAdvancedEval]=useState(false),[rubricExecution,setRubricExecution]=useState(""),[rubricCommunication,setRubricCommunication]=useState(""),[rubricCoordination,setRubricCoordination]=useState(""),[rubricDecision,setRubricDecision]=useState(""),[rubricConsistency,setRubricConsistency]=useState(""),[blockTitle,setBlockTitle]=useState(""),[blockMinutes,setBlockMinutes]=useState("20"),[blockInstructions,setBlockInstructions]=useState(""),[blockCategory,setBlockCategory]=useState("team"),[blockOutcome,setBlockOutcome]=useState(""),[blockDrill,setBlockDrill]=useState(""),[reviewNotes,setReviewNotes]=useState(""),[editingPlanId,setEditingPlanId]=useState(""),[editPlanTitle,setEditPlanTitle]=useState(""),[editPlanDate,setEditPlanDate]=useState(today()),[editPlanFocus,setEditPlanFocus]=useState(""),[editPlanObjectives,setEditPlanObjectives]=useState(""),[editPlanMinutes,setEditPlanMinutes]=useState("0"),[editMapName,setEditMapName]=useState("Bermuda"),[editDropZone,setEditDropZone]=useState(""),[editRotation,setEditRotation]=useState(""),[editScrimMatches,setEditScrimMatches]=useState("6"),[editRules,setEditRules]=useState(""),[taskNotes,setTaskNotes]=useState<Record<string,string>>({}),[taskFeedback,setTaskFeedback]=useState<Record<string,string>>({}),[drillSearch,setDrillSearch]=useState(""),[drillFilter,setDrillFilter]=useState("all"),[roleFilter,setRoleFilter]=useState("all"),[difficultyFilter,setDifficultyFilter]=useState("all"),[weekAnchor,setWeekAnchor]=useState(today()),[planDateFilter,setPlanDateFilter]=useState("all"),[taskPlayerFilter,setTaskPlayerFilter]=useState("all"),[taskStatusFilter,setTaskStatusFilter]=useState("all"),[editingBlock,setEditingBlock]=useState(""),[blockEditTitle,setBlockEditTitle]=useState(""),[blockEditMinutes,setBlockEditMinutes]=useState("15"),[blockEditInstructions,setBlockEditInstructions]=useState(""),[blockEditCategory,setBlockEditCategory]=useState("team"),[blockEditOutcome,setBlockEditOutcome]=useState(""),[blockEditDrill,setBlockEditDrill]=useState(""),[editingDrill,setEditingDrill]=useState(""),[editDrillTitle,setEditDrillTitle]=useState(""),[editDrillObjective,setEditDrillObjective]=useState(""),[editDrillDuration,setEditDrillDuration]=useState("15"),[editDrillCategory,setEditDrillCategory]=useState("communication"),[editDrillDifficulty,setEditDrillDifficulty]=useState("medium"),[editDrillCriteria,setEditDrillCriteria]=useState(""),[editDrillSetup,setEditDrillSetup]=useState(""),[editDrillSteps,setEditDrillSteps]=useState("");
  const refresh=useCallback(async()=>{if(!supabase){setError("Supabase is not configured.");setLoading(false);return;}setLoading(true);setError("");try{const [p,d,t,s,r,b,a]=await Promise.all([supabase.from("practice_plans").select("*").eq("team_id",teamId).neq("status","archived").order("plan_date",{ascending:false}),supabase.from("training_drills").select("*").or(`team_id.eq.${teamId},team_id.is.null`).eq("archived",false).order("created_at",{ascending:false}),supabase.from("practice_tasks").select("*").eq("team_id",teamId).neq("status","cancelled").order("due_date",{ascending:true}),supabase.from("training_sessions").select("*").eq("team_id",teamId).order("created_at",{ascending:false}),supabase.from("training_results").select("*").eq("team_id",teamId).order("created_at",{ascending:false}),supabase.from("practice_plan_blocks").select("*").eq("team_id",teamId).order("sort_order",{ascending:true}),supabase.from("training_session_participants").select("*").eq("team_id",teamId)]);for(const x of [p,d,t,s,r,b,a])if(x.error)throw x.error;setPlans(p.data||[]);setDrills(d.data||[]);setTasks(t.data||[]);setSessions(s.data||[]);setResults(r.data||[]);setBlocks(b.data||[]);setParticipants(a.data||[]);}catch(e){setError(e instanceof Error?e.message:"Could not load planning/training data.");}finally{setLoading(false);}},[teamId]);
  useEffect(()=>{refresh()},[refresh]);
+ useEffect(()=>{
+  try{
+   const pending=readPendingSessionPayload(window.localStorage,"squad-os:pending-training-session:"+teamId);
+   if(!pending)return;
+   setSessionTitle(pending.title);
+   setSessionType(pending.sessionType);
+   setSessionPlan(pending.planId||"");
+   setSessionDrill(pending.drillId||"");
+   setSessionDate(pending.sessionDate||today());
+   setSessionMinutes(String(pending.durationMinutes));
+   setSessionInstructions(pending.instructions);
+   setSelectedParticipants(pending.participantIds);
+   setNotice("A pending session draft was restored. Retry scheduling with the same details to safely resume.");
+  }catch(e){
+   setError(e instanceof Error?e.message:"A pending session draft could not be restored.");
+  }
+ },[teamId]);
  const write=async(label:string,fn:()=>PromiseLike<{error:any}> )=>{if(!supabase)return;setBusy(true);setError("");setNotice("");try{const r=await fn();if(r.error)throw r.error;setNotice(label);await refresh();}catch(e){setError(e instanceof Error?e.message:"Action failed. Please retry.");}finally{setBusy(false);}};
  const createPlan=()=>{if(!supabase||!planTitle.trim())return;return write("Practice plan created.",()=>supabase!.from("practice_plans").insert({team_id:teamId,title:planTitle.trim(),plan_date:planDate,plan_type:planType,focus:planFocus.trim(),objectives:planObjectives.split("\n").map(x=>x.trim()).filter(Boolean),planned_minutes:Number(planMinutes)||0,notes:planNotes.trim(),map_name:mapName,drop_zone:dropZone.trim(),rotation_notes:rotationNotes.trim(),scrim_matches:planType==="scrim"?Number(scrimMatches)||6:null,rules_notes:rulesNotes.trim(),created_by:userId,status:"scheduled"}));};
  const changePlan=(p:Plan,status:string)=>write("Plan status updated.",()=>supabase!.from("practice_plans").update({status,updated_at:new Date().toISOString(),completed_at:status==="completed"?new Date().toISOString():null,reviewed_at:status==="reviewed"?new Date().toISOString():null}).eq("id",p.id).eq("team_id",teamId));
@@ -56,7 +75,104 @@ export default function PlanningTrainingCenter({teamId,members,userId,canManage,
  const saveDrillEdit=(d:Drill)=>write("Drill updated.",()=>supabase!.from("training_drills").update({title:editDrillTitle.trim(),objective:editDrillObjective.trim(),duration_minutes:Number(editDrillDuration)||15,category:editDrillCategory,difficulty:editDrillDifficulty,success_criteria:editDrillCriteria.trim(),setup:editDrillSetup.trim(),steps:editDrillSteps.split(String.fromCharCode(10)).map(x=>x.trim()).filter(Boolean),updated_at:new Date().toISOString()}).eq("id",d.id).eq("team_id",teamId)).then(()=>setEditingDrill(""));
  const archiveDrill=(d:Drill)=>write("Drill archived.",()=>supabase!.from("training_drills").update({archived:true,updated_at:new Date().toISOString()}).eq("id",d.id).eq("team_id",teamId));
  const copyDrill=(d:Drill)=>write("Template copied to your squad library.",()=>supabase!.from("training_drills").insert({team_id:teamId,is_template:false,title:d.title,category:d.category,difficulty:d.difficulty,role_tags:d.role_tags,duration_minutes:d.duration_minutes,objective:d.objective,setup:d.setup,steps:d.steps,success_criteria:d.success_criteria,scoring_rubric:{},tags:[]}));
- const createSession=()=>{if(!sessionTitle.trim())return;return write("Training session scheduled.",async()=>{const created=await supabase!.from("training_sessions").insert({team_id:teamId,title:sessionTitle.trim(),session_type:sessionType,drill_id:sessionDrill||null,plan_id:sessionPlan||null,scheduled_at:sessionDate?new Date(sessionDate+"T12:00:00").toISOString():null,duration_minutes:Number(sessionMinutes)||15,instructions:sessionInstructions.trim(),created_by:userId}).select("id").single();if(created.error)return {error:created.error};if(selectedParticipants.length){const added=await supabase!.from("training_session_participants").insert(selectedParticipants.map(player_member_id=>({team_id:teamId,session_id:created.data.id,player_member_id})));if(added.error){await supabase!.from("training_sessions").delete().eq("id",created.data.id).eq("team_id",teamId);return {error:added.error};}}return {error:null};});};
+ const createSession=()=>{
+  if(!supabase||!sessionTitle.trim())return;
+  const scheduledAt=sessionDate?new Date(sessionDate+"T12:00:00").toISOString():null;
+  const payload={
+   teamId,
+   title:sessionTitle.trim(),
+   sessionType,
+   planId:sessionPlan||null,
+   drillId:sessionDrill||null,
+   scheduledAt,
+   sessionDate:sessionDate||null,
+   durationMinutes:Number(sessionMinutes)||15,
+   instructions:sessionInstructions.trim(),
+   participantIds:[...selectedParticipants].sort(),
+  };
+  const storageKey="squad-os:pending-training-session:"+teamId;
+  let pending:{idempotencyKey:string};
+  try{
+   pending=getOrCreatePendingSessionRequest(window.localStorage,storageKey,payload,()=>crypto.randomUUID());
+  }catch(e){
+   setError(e instanceof Error?e.message:"Could not safely persist the session retry identity.");
+   return;
+  }
+  return write("Training session scheduled with canonical identity.",async()=>{
+   const canonicalResult=await supabase!.rpc("create_canonical_session",{
+    p_team_id:teamId,
+    p_session_type:"training",
+    p_title:payload.title,
+    p_idempotency_key:pending.idempotencyKey,
+    p_session_date:payload.sessionDate,
+    p_scheduled_at:payload.scheduledAt,
+    p_season_label:null,
+   });
+   if(canonicalResult.error)return {error:canonicalResult.error};
+   const canonical=Array.isArray(canonicalResult.data)?canonicalResult.data[0]:canonicalResult.data;
+   const canonicalId=canonical?.id;
+   if(typeof canonicalId!=="string"||canonical?.team_id!==teamId||canonical?.session_type!=="training")return {error:new Error("Canonical session RPC returned an invalid UUID/team/type contract. The pending retry key has been preserved.")};
+
+   // New legacy training rows reuse the canonical UUID so every existing child FK
+   // (participants, results and practice-task source references) stays stable.
+   const legacy=await supabase!.from("training_sessions").upsert({
+    id:canonicalId,
+    team_id:teamId,
+    title:payload.title,
+    session_type:payload.sessionType,
+    drill_id:payload.drillId,
+    plan_id:payload.planId,
+    scheduled_at:payload.scheduledAt,
+    duration_minutes:payload.durationMinutes,
+    instructions:payload.instructions,
+    created_by:userId,
+   },{onConflict:"id",ignoreDuplicates:true});
+   if(legacy.error)return {error:legacy.error};
+
+   const legacyCheck=await supabase!.from("training_sessions")
+    .select("id,team_id,title,session_type,drill_id,plan_id,scheduled_at,duration_minutes,instructions")
+    .eq("id",canonicalId).eq("team_id",teamId).maybeSingle();
+   if(legacyCheck.error)return {error:legacyCheck.error};
+   const legacyRow=legacyCheck.data;
+   if(!legacyRow
+    ||legacyRow.title!==payload.title
+    ||legacyRow.session_type!==payload.sessionType
+    ||legacyRow.drill_id!==payload.drillId
+    ||legacyRow.plan_id!==payload.planId
+    ||!sameInstant(legacyRow.scheduled_at,payload.scheduledAt)
+    ||legacyRow.duration_minutes!==payload.durationMinutes
+    ||legacyRow.instructions!==payload.instructions){
+    return {error:new Error("The canonical session exists, but its legacy training record could not be verified. Retry the same request; its identity key is preserved.")};
+   }
+
+   const source=await supabase!.from("canonical_session_sources").upsert({
+    team_id:teamId,
+    canonical_session_id:canonicalId,
+    source_system:"training",
+    training_session_id:canonicalId,
+    created_by:userId,
+   },{onConflict:"source_system,source_record_id",ignoreDuplicates:true});
+   if(source.error)return {error:source.error};
+   const sourceCheck=await supabase!.from("canonical_session_sources")
+    .select("canonical_session_id,source_record_id")
+    .eq("source_system","training").eq("source_record_id",canonicalId).maybeSingle();
+   if(sourceCheck.error)return {error:sourceCheck.error};
+   if(sourceCheck.data?.canonical_session_id!==canonicalId){
+    return {error:new Error("The legacy-to-canonical source mapping could not be verified. Retry the same request; its identity key is preserved.")};
+   }
+
+   if(payload.participantIds.length){
+    const participants=await supabase!.from("training_session_participants").upsert(
+     payload.participantIds.map(player_member_id=>({team_id:teamId,session_id:canonicalId,player_member_id})),
+     {onConflict:"session_id,player_member_id",ignoreDuplicates:true},
+    );
+    if(participants.error)return {error:participants.error};
+   }
+   try{clearPendingSessionRequest(window.localStorage,storageKey);}
+   catch{return {error:new Error("Session was saved, but the local retry marker could not be cleared. Retry the same request once to safely finalize it.")};}
+   return {error:null};
+  });
+ };
  const sessionStatus=(session:Session,status:string)=>write("Session status updated.",()=>supabase!.from("training_sessions").update({status,updated_at:new Date().toISOString(),...(status==="completed"?{completed_at:new Date().toISOString()}:{} )}).eq("id",session.id).eq("team_id",teamId));
  const attendance=(p:Participant,status:string)=>write("Attendance updated.",()=>supabase!.from("training_session_participants").update({attendance:status}).eq("id",p.id).eq("team_id",teamId));
  const saveParticipantNote=(p:Participant)=>write("Attendance note saved.",()=>supabase!.from("training_session_participants").update({participation_notes:(participantNotes[p.id]??p.participation_notes??"").trim()}).eq("id",p.id).eq("team_id",teamId));
