@@ -183,3 +183,86 @@ COMMENT ON TABLE public.canonical_sessions IS
   'Evolution Phase Two.2 canonical session identity. UUID is the stable key; titles, dates and season labels are descriptive attributes.';
 COMMENT ON TABLE public.canonical_session_sources IS
   'Team-scoped immutable source mapping from legacy Scrim, Tournament cycle or Training session IDs to a canonical session UUID.';
+
+-- Backfill eligible historical Training sessions without rewriting their legacy IDs.
+-- No season/cycle is inferred: historical season_label remains NULL until an audited mapping exists.
+INSERT INTO public.canonical_sessions (
+  id, team_id, session_type, title, scheduled_at, season_label,
+  idempotency_key, created_by, created_at
+)
+SELECT
+  md5('squad-os:legacy-training-session:' || ts.id::text)::uuid,
+  ts.team_id,
+  'training',
+  ts.title,
+  ts.scheduled_at,
+  NULL,
+  md5('squad-os:legacy-training-idempotency:' || ts.id::text)::uuid,
+  ts.created_by,
+  ts.created_at
+FROM public.training_sessions ts
+WHERE ts.created_by IS NOT NULL
+  AND char_length(btrim(ts.title)) BETWEEN 1 AND 120
+ON CONFLICT (id) DO NOTHING;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM public.training_sessions ts
+    JOIN public.canonical_sessions cs
+      ON cs.id = md5('squad-os:legacy-training-session:' || ts.id::text)::uuid
+    WHERE ts.created_by IS NOT NULL
+      AND char_length(btrim(ts.title)) BETWEEN 1 AND 120
+      AND (
+        cs.team_id IS DISTINCT FROM ts.team_id
+        OR cs.session_type IS DISTINCT FROM 'training'
+        OR cs.title IS DISTINCT FROM ts.title
+        OR cs.created_by IS DISTINCT FROM ts.created_by
+      )
+  ) THEN
+    RAISE EXCEPTION 'historical_training_canonical_identity_conflict';
+  END IF;
+END;
+$$;
+
+INSERT INTO public.canonical_session_sources (
+  team_id, canonical_session_id, source_system, training_session_id, created_by
+)
+SELECT
+  ts.team_id,
+  md5('squad-os:legacy-training-session:' || ts.id::text)::uuid,
+  'training',
+  ts.id,
+  ts.created_by
+FROM public.training_sessions ts
+JOIN public.canonical_sessions cs
+  ON cs.id = md5('squad-os:legacy-training-session:' || ts.id::text)::uuid
+ AND cs.team_id = ts.team_id
+WHERE ts.created_by IS NOT NULL
+  AND char_length(btrim(ts.title)) BETWEEN 1 AND 120
+ON CONFLICT (source_system, source_record_id) DO NOTHING;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM public.training_sessions ts
+    JOIN public.canonical_sessions cs
+      ON cs.id = md5('squad-os:legacy-training-session:' || ts.id::text)::uuid
+     AND cs.team_id = ts.team_id
+    LEFT JOIN public.canonical_session_sources src
+      ON src.source_system = 'training'
+     AND src.source_record_id = ts.id
+    WHERE ts.created_by IS NOT NULL
+      AND char_length(btrim(ts.title)) BETWEEN 1 AND 120
+      AND (
+        src.id IS NULL
+        OR src.canonical_session_id IS DISTINCT FROM cs.id
+        OR src.team_id IS DISTINCT FROM ts.team_id
+      )
+  ) THEN
+    RAISE EXCEPTION 'historical_training_session_mapping_incomplete_or_conflicting';
+  END IF;
+END;
+$$;
