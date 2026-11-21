@@ -17,6 +17,8 @@ const [
   bDbScript,
   securityAclScript,
   securityAclSql,
+  membershipAclMigration,
+  membershipAclScript,
 ] = await Promise.all([
   read("package.json"),
   read("docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md"),
@@ -30,6 +32,8 @@ const [
   read("scripts/verify-evolution-phase-one-5-b-db.sh"),
   read("scripts/verify-evolution-security-trigger-acls.sh"),
   read("docs/evolution/staged-migrations/20261118080000_revoke_direct_trigger_function_execution.sql"),
+  read("supabase/migrations/20261122020000_phase_one_secure_team_member_updates.sql"),
+  read("scripts/verify-evolution-phase-one-membership-acl.sh"),
 ]);
 const pkg = JSON.parse(pkgText);
 const manifest = JSON.parse(await read("docs/evolution/evolution-phase-one-5-c-rollback-manifest.json"));
@@ -110,4 +114,16 @@ test("E final audit keeps production, merge and loadout scope boundaries explici
   assert.match(audit, /No production deployment or merge was performed/i);
   assert.deepEqual(manifest.excluded_versions, ["20261116115255", "20261116115907"]);
   assert.match(phaseOne, /Phase One\.5-C historical rollback disposition is COMPLETE/i);
+});
+
+test("Phase One membership authorization is column-scoped and owner assignments use a protected RPC", () => {
+  assert.match(membershipAclMigration, /REVOKE UPDATE ON TABLE public\.team_members FROM authenticated/);
+  assert.match(membershipAclMigration, /GRANT UPDATE \(character_loadout\) ON TABLE public\.team_members TO authenticated/);
+  assert.match(membershipAclMigration, /SECURITY DEFINER[\s\S]*SET search_path TO 'pg_catalog', 'public'/);
+  assert.match(membershipAclMigration, /public\.is_team_owner\(v_team_id\)/);
+  assert.match(membershipAclMigration, /REVOKE ALL ON FUNCTION public\.set_member_assignment/);
+  assert.match(membershipAclScript, /membership_role update was not denied/);
+  assert.match(membershipAclScript, /non-owner assignment RPC was not denied/);
+  assert.match(membershipAclScript, /cross-team character_loadout update bypassed RLS/);
+  assert.match(workflow, /bash scripts\/verify-evolution-phase-one-membership-acl\.sh/);
 });
