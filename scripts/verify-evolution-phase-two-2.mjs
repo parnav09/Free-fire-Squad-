@@ -71,7 +71,9 @@ test("Phase 2.2 contracts are wired into the standard build and CI workflow", ()
   assert.ok(pkg.scripts.build.includes("npm run test:evolution-phase-two-2"));
   assert.match(workflow, /feat\/evolution-phase-two-2-canonical-session-identity/);
   assert.match(workflow, /verify-evolution-phase-two-2-db\.sh/);
-  assert.match(report, /CI evidence is intentionally pending/i);
+  assert.match(report, /Exact-head CI: PASS/i);
+  assert.match(report, /107 automated tests passed; 0 failed/i);
+  assert.match(report, /8d244f3526af5484cb52ab0a03d7420da6ad4546/i);
 });
 
 test("Auth plan limitation and original baseline gap are recorded without false PASS claims", () => {
