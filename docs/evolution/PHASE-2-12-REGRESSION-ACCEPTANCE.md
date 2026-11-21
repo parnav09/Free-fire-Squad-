@@ -3,7 +3,7 @@
 **Branch:** `feat/evolution-phase-two-12-final-acceptance`  
 **Base:** Phase 2.11 application UI branch `feat/evolution-phase-two-11-session-ui`  
 **Scope:** Evolution Version 2, Points 2.1–2.12 only  
-**Automated acceptance:** RUNNING ON THIS EXACT HEAD  
+**Automated acceptance:** PASS — exact-head CI run #44941803192  
 **Physical-device acceptance:** OWNER QA REQUIRED  
 **Production rollout:** NOT AUTHORIZED BY THIS BRANCH
 
@@ -15,18 +15,18 @@ A source assertion is not a database integration pass. A successful build is not
 
 | Point | Implementation scope | Automated evidence | Current disposition |
 |---|---|---|---|
-| 2.1 | Read-only audit of Scrims, Tournament, Planning, Training, schema, RLS, data integrity and UI entry points | Existing audit contract and read-only audit report | Implemented; previously CI-verified |
-| 2.2 | Canonical team-scoped session identity, source mapping, idempotent create | Disposable PostgreSQL migration/integration harness | Implemented; exact-head CI rerun pending |
-| 2.3 | Canonical match identity, parent/child integrity, source mapping | Disposable PostgreSQL migration/integration harness | Implemented; exact-head CI rerun pending |
-| 2.4 | Lifecycle transitions, authorization, optimistic versioning, audit and reopen | Disposable PostgreSQL transition/authorization matrix | Implemented; exact-head CI rerun pending |
-| 2.5 | Immutable roster snapshots and participation state | Disposable PostgreSQL historical roster tests | Implemented; exact-head CI rerun pending |
-| 2.6 | Versioned role snapshots and match-specific role history | Disposable PostgreSQL role immutability tests | Implemented; exact-head CI rerun pending |
-| 2.7 | Ordered substitutions and lineup reconstruction | Disposable PostgreSQL substitution tests | Implemented; exact-head CI rerun pending |
-| 2.8 | Raw result submission, verification, rejection, correction and trusted aggregates | Disposable PostgreSQL result/audit/aggregate tests | Implemented; exact-head CI rerun pending |
-| 2.9 | Scrim/Tournament/Training adapters; explicit Planning promotion | Disposable PostgreSQL adapter tests plus new true parallel same-source retry test | New concurrency test added; exact-head CI pending |
-| 2.10 | Team-scoped constraints, integrity guards, rollback and forward re-apply | Disposable PostgreSQL integrity, race, rollback and re-apply tests | Implemented; exact-head CI rerun pending |
-| 2.11 | Canonical Sessions workspace, lifecycle/roster/role/substitution/result controls, permission/offline states | Source contracts plus Chromium Playwright visual and interaction tests at 390, 768, 1024, 1280 and 1440 widths | Earlier exact-head CI PASS; rerun included in this acceptance |
-| 2.12 | Cross-point regression, migration order, CI wiring, evidence integrity and acceptance gate | This contract is part of `npm run build`; CI runs DB and Playwright suites | Exact-head acceptance pending |
+| 2.1 | Read-only audit of Scrims, Tournament, Planning, Training, schema, RLS, data integrity and UI entry points | Existing audit contract and read-only audit report | PASS — audit contract included in exact-head full build |
+| 2.2 | Canonical team-scoped session identity, source mapping, idempotent create | Disposable PostgreSQL migration/integration harness | PASS — exact-head CI run #44941803192 |
+| 2.3 | Canonical match identity, parent/child integrity, source mapping | Disposable PostgreSQL migration/integration harness | PASS — exact-head CI run #44941803192 |
+| 2.4 | Lifecycle transitions, authorization, optimistic versioning, audit and reopen | Disposable PostgreSQL transition/authorization matrix | PASS — exact-head CI run #44941803192 |
+| 2.5 | Immutable roster snapshots and participation state | Disposable PostgreSQL historical roster tests | PASS — exact-head CI run #44941803192 |
+| 2.6 | Versioned role snapshots and match-specific role history | Disposable PostgreSQL role immutability tests | PASS — exact-head CI run #44941803192 |
+| 2.7 | Ordered substitutions and lineup reconstruction | Disposable PostgreSQL substitution tests | PASS — exact-head CI run #44941803192 |
+| 2.8 | Raw result submission, verification, rejection, correction and trusted aggregates | Disposable PostgreSQL result/audit/aggregate tests | PASS — exact-head CI run #44941803192 |
+| 2.9 | Scrim/Tournament/Training adapters; explicit Planning promotion | Disposable PostgreSQL adapter tests plus new true parallel same-source retry test | PASS — two-client concurrent retry and adapter integration in run #44941803192 |
+| 2.10 | Team-scoped constraints, integrity guards, rollback and forward re-apply | Disposable PostgreSQL integrity, race, rollback and re-apply tests | PASS — exact-head CI run #44941803192 |
+| 2.11 | Canonical Sessions workspace, lifecycle/roster/role/substitution/result controls, permission/offline states | Source contracts plus Chromium Playwright visual and interaction tests at 390, 768, 1024, 1280 and 1440 widths | PASS — Chromium Playwright in run #44941803192; screenshot artifact #14721743242 |
+| 2.12 | Cross-point regression, migration order, CI wiring, evidence integrity and acceptance gate | This contract is part of `npm run build`; CI runs DB and Playwright suites | PASS — 14/14 contracts; exact-head CI run #44941803192 |
 
 ## Point 2.12 — twelve required regression groups
 
@@ -65,16 +65,16 @@ The disposable PostgreSQL harness runs authenticated database-role tests and ver
 
 ## Exact-head acceptance gates
 
-The branch CI must pass all of the following before automated acceptance is marked complete:
+All six automated gates passed on commit `2db5c5960baca6d41028b52b4c40cb115815b6d5` in [GitHub Actions run #44941803192](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44941803192):
 
-1. Node 22 typecheck and complete production build.
-2. Every source-contract suite from Phase 2.1 through 2.12.
-3. PostgreSQL 16 disposable migration/integration suites for Points 2.2–2.10.
-4. The new concurrent source-integration retry test in Point 2.9.
-5. Point 2.10 rollback and forward re-application.
-6. Chromium Playwright interaction/responsive suite and screenshot artifact.
+1. PASS — Node 22 typecheck and complete production build.
+2. PASS — all source-contract suites from Phase 2.1 through 2.12.
+3. PASS — PostgreSQL 16 disposable migration/integration suites for Points 2.2–2.10.
+4. PASS — two-client concurrent source-integration retry test in Point 2.9.
+5. PASS — Point 2.10 rollback and forward re-application.
+6. PASS — Chromium Playwright interaction/responsive suite and screenshot artifact.
 
-If a gate fails, inspect the exact failing step/log, fix the underlying issue on this branch, and rerun the full workflow. Do not convert missing evidence into PASS.
+Point 2.12 contract result: **14 tests, 14 passed, 0 failed**. The full workflow completed successfully. Any future code change to this branch must rerun the acceptance workflow.
 
 ## Owner-only physical-device checklist
 
