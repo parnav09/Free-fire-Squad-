@@ -163,9 +163,9 @@ END $$;
 SELECT 'Evolution Phase 2.9 PostgreSQL integration PASS' AS verification;
 SQL
 
--- Exercise two truly concurrent requests for the same source record. The first
--- request pauses inside canonical-session insertion while holding the source
--- advisory lock; the second must wait, then return the exact same session ID.
+# Exercise two truly concurrent requests for the same source record. The first
+# request pauses inside canonical-session insertion while holding the source
+# advisory lock; the second must wait, then return the exact same session ID.
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date,match_count,matches)
 VALUES (
