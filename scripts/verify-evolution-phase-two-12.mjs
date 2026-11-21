@@ -7,9 +7,9 @@ const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
 test("All Phase 2 point contracts 2.1–2.12 are registered in the production build", async () => {
   const pkg = JSON.parse(await read("../package.json"));
   for (let point = 1; point <= 12; point++) {
-    const key = \`test:evolution-phase-two-\${point}\`;
-    assert.ok(pkg.scripts[key], \`Missing npm script \${key}\`);
-    assert.ok(pkg.scripts.build.includes(\`npm run \${key}\`), \`Build omits Point 2.\${point}\`);
+    const key = `test:evolution-phase-two-${point}`;
+    assert.ok(pkg.scripts[key], `Missing npm script ${key}`);
+    assert.ok(pkg.scripts.build.includes(`npm run ${key}`), `Build omits Point 2.${point}`);
   }
   assert.match(pkg.scripts.build, /npm run typecheck/);
   assert.match(pkg.scripts.build, /vite build/);
@@ -28,7 +28,7 @@ test("Canonical schema migrations 2.2–2.10 exist in strict chronological order
     "20261120230000_evolution_phase_two_9_existing_module_integration.sql",
     "20261121000000_evolution_phase_two_10_database_integrity.sql"
   ];
-  for (const name of expected) assert.ok(files.includes(name), \`Missing migration: \${name}\`);
+  for (const name of expected) assert.ok(files.includes(name), `Missing migration: ${name}`);
   assert.deepEqual([...expected].sort(), expected);
   assert.equal(files.filter((name) => /evolution_phase_two_(11|12)/.test(name)).length, 0);
 });
@@ -36,7 +36,7 @@ test("Canonical schema migrations 2.2–2.10 exist in strict chronological order
 test("Every database point has its disposable PostgreSQL harness wired into CI", async () => {
   const workflow = await read("../.github/workflows/evolution-phase-one.yml");
   for (let point = 2; point <= 10; point++) {
-    assert.ok(workflow.includes(\`verify-evolution-phase-two-\${point}-db.sh\`), \`CI omits DB point 2.\${point}\`);
+    assert.ok(workflow.includes(`verify-evolution-phase-two-${point}-db.sh`), `CI omits DB point 2.${point}`);
   }
   assert.match(workflow, /Install and start disposable local PostgreSQL/);
   assert.match(workflow, /DATABASE_URL=postgresql:\/\/postgres:postgres@localhost:5432/);
@@ -70,7 +70,7 @@ test("Phase 2.11 UI source contracts and real Chromium visual harness are presen
   assert.ok(pkg.scripts["test:evolution-phase-two-11-visual"]);
   assert.match(sourceContract, /session ledger filters canonical sessions/);
   assert.match(sourceContract, /permission-denied and empty\/loading\/error states/);
-  for (const size of ["390","768","1024","1280","1440"]) assert.ok(visual.includes(\`width:\${size}\`));
+  for (const size of ["390","768","1024","1280","1440"]) assert.ok(visual.includes(`width:${size}`));
   assert.match(visual, /horizontal document overflow/);
   assert.match(visual, /undersized button hitboxes/);
   assert.match(visual, /keyboard focus outline missing/);
@@ -95,7 +95,7 @@ test("Canonical Sessions UI uses the authoritative RPC boundary and preserves fa
     "record_canonical_session_substitution","save_canonical_session_result_draft",
     "submit_canonical_session_result","verify_canonical_session_result",
     "reject_canonical_session_result","submit_canonical_session_results"
-  ]) assert.ok(ui.includes(rpc), \`Missing canonical RPC \${rpc}\`);
+  ]) assert.ok(ui.includes(rpc), `Missing canonical RPC ${rpc}`);
   assert.match(ui, /isOnline/);
   assert.match(ui, /canManage/);
   assert.match(ui, /no_inferred_values/);
@@ -118,7 +118,7 @@ test("Blueprint preserves all twelve Point 2.12 acceptance groups", async () => 
     "Android/mobile, tablet, desktop responsive and accessibility QA"
   ];
   for (let i = 0; i < groups.length; i++) {
-    assert.ok(blueprint.includes(\`\${i + 1}. \${groups[i]}\`), \`Blueprint acceptance group \${i + 1} missing\`);
+    assert.ok(blueprint.includes(`${i + 1}. ${groups[i]}`), `Blueprint acceptance group ${i + 1} missing`);
   }
 });
 
