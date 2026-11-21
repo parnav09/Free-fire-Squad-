@@ -3,7 +3,7 @@
 **Blueprint mapping:** Evolution Version 2, Point 2.10  
 **Branch:** feat/evolution-phase-two-10-database-integrity  
 **Parent:** feat/evolution-phase-two-9-module-integration  
-**Status:** Implementation and expanded acceptance harness are present on the draft PR; PostgreSQL execution is **pending** because GitHub Actions has not started a runner; production rollout remains gated by Points 2.11–2.12 and explicit approval.
+**Status:** Implementation and expanded acceptance harness are present on the draft PR; the first full CI execution exposed an invalid strict Scrim-count assumption, which has been corrected; the corrected exact-head CI run is pending. Production rollout remains gated by Points 2.11–2.12 and explicit approval.
 
 ## Scope
 
@@ -46,7 +46,7 @@ No legacy row is updated, deleted, or synthesized. Existing single-column FKs an
 - The DB harness replays Points 2.2–2.9, adds representative legacy child fixtures, applies the exact 2.10 migration, and tests cross-team rejection, global drill-template compatibility, plan/block consistency, Scrim count integrity, NULL-player attempt uniqueness, and validated constraint metadata.
 - The harness now exercises a two-transaction drill ownership/reference race, executes the documented rollback against the disposable database, verifies fixture data and Phase 2.2-owned indexes survive, then reapplies the migration and checks all 14 constraints are validated and all four guards are restored.
 - The isolated DB harness is wired into GitHub Actions using a local disposable PostgreSQL 16 instance on the hosted runner; the source contract is included in `npm run build`.
-- The latest previously recorded PR CI run #726 ended before the first runner step (`steps=[]`); its log endpoint is unavailable. It is **not** database-test evidence. The current changes have not yet received a fresh exact-head CI run. GitHub Actions usage is currently unavailable until the previously reported billing reset on 1 December; do not claim a CI PASS before then.
+- Exact-head PR CI run [#876](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44912269548) successfully started the runner and passed the inherited Phase 2.2–2.9 PostgreSQL integration steps. Phase 2.10 then failed while validating a strict equality check: inherited Phase 2.3 fixtures intentionally store fewer played Scrim entries than the expected `match_count`. The migration was corrected to enforce only `array_length(matches) <= match_count`; partial played-match arrays remain valid. The source-contract test was also corrected to load its migration/harness inputs explicitly. A fresh exact-head run is required before acceptance.
 
 ## Live read-only data preflight
 
