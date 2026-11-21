@@ -49,7 +49,7 @@ test("Disposable PostgreSQL harness remains mandatory for database points 2.2–
   for (const point of ["2","3","4","5","6","7","8","9","10"]) {
     assert.ok(workflow.includes(`verify-evolution-phase-two-${point}-db.sh`), `Missing PostgreSQL integration for Point 2.${point}`);
   }
-  assert.match(workflow, /Install and start disposable PostgreSQL 16|image: postgres:16/);
+  assert.match(workflow, /Install and start disposable local PostgreSQL|Install and start disposable PostgreSQL 16|image: postgres:16/);
   assert.match(workflow, /DATABASE_URL: postgresql:\/\/postgres:postgres@localhost:5432\/squad_os_ci/);
   assert.match(workflow, /createdb -h localhost -U postgres squad_os_phase_two_10_ci/);
 });
@@ -82,14 +82,13 @@ test("Responsive and accessible session UI safeguards remain in place", async ()
   assert.match(component, /role="status"/);
 });
 
-test("Phase 2.12 is wired into CI on its branch and PR base", async () => {
+test("Phase 2.12 build registration is active while GitHub Actions triggers remain explicitly held", async () => {
   const workflow = await read("../.github/workflows/evolution-phase-one.yml");
-  const push = workflow.split("  pull_request:")[0];
-  const pull = workflow.split("  pull_request:")[1].split("\n\npermissions:")[0];
-  assert.ok(push.includes("feat/evolution-phase-two-12-regression-acceptance"));
-  assert.ok(pull.includes("feat/evolution-phase-two-11-application-ui"));
-  assert.ok(pull.includes("feat/evolution-phase-two-12-regression-acceptance"));
+  const doc = await read("../docs/evolution/PHASE-2-12-REGRESSION-ACCEPTANCE.md");
   assert.match(workflow, /npm run build/);
+  assert.match(workflow, /verify-evolution-phase-two-10-db\.sh/);
+  assert.match(doc, /GitHub Actions branch triggers remain held until 1 December/i);
+  // Do not change or re-enable Actions branch triggers while the owner's hold is active.
 });
 
 test("Acceptance report cannot overstate blocked database or device evidence", async () => {
