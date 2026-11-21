@@ -51,7 +51,7 @@ jobs:
           npm ci --no-audit --no-fund
 
       - name: Export resolved lockfile for repository pinning
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: resolved-npm-lockfile
           path: package-lock.json
