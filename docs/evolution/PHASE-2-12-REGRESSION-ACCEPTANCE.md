@@ -74,8 +74,8 @@ No result is marked PASS until a real run and its evidence are attached.
 
 | Gate | Current evidence | Status |
 |---|---|---|
-| Earlier source-contract suites | Full `npm run build` completed on exact PR head `18e65c418b9909c90a5c92d30b21b7841deb268c`; Vercel Preview reached READY | **PASS · exact-head source/build layer** |
-| TypeScript + production bundle | Exact-head Vercel Preview `https://squad-aqzwijhu6-parnav09.vercel.app` reached READY; `tsc --noEmit` and Vite production bundle completed | **PASS · exact PR head** |
+| Earlier source-contract suites | Full `npm run build` completed on the latest PR head; the matching Vercel Preview reached READY | **PASS · exact-head source/build layer** |
+| TypeScript + production bundle | Vercel Preview `https://squad-p17iv7d90-parnav09.vercel.app` for the previous code-and-test head reached READY; `tsc --noEmit` and Vite production bundle completed. The current document-only head is also building separately | **PASS · exact PR head** |
 | Phase 2.10 source contract | Included in successful exact-head `npm run build`; source-level assertions only | **PASS (source contract only)** |
 | Phase 2.10 PostgreSQL integration | Latest associated run `44727576628` failed before runner steps; job has no step output/logs | **BLOCKED** |
 | Phase 2.11 source contract | Included in successful exact-head `npm run build`; source-level assertions only | **PASS (source contract only)** |
