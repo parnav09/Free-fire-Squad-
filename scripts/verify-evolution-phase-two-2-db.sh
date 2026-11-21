@@ -243,12 +243,22 @@ BEGIN
 END $$;
 
 SELECT set_config('request.jwt.claim.sub','20000000-0000-0000-0000-000000000002',false);
-DO $$
+DO $
 DECLARE visible_count integer;
 BEGIN
-  SELECT count(*) INTO visible_count FROM public.canonical_sessions;
-  IF visible_count <> 0 THEN RAISE EXCEPTION 'cross-team session visibility leaked'; END IF;
-END $$;
+  SELECT count(*) INTO visible_count
+  FROM public.canonical_sessions
+  WHERE team_id = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+  IF visible_count <> 1 THEN
+    RAISE EXCEPTION 'Bravo user expected exactly one own historical session, got %', visible_count;
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM public.canonical_sessions
+    WHERE team_id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
+  ) THEN
+    RAISE EXCEPTION 'cross-team session visibility leaked: Bravo user can see Alpha sessions';
+  END IF;
+END $;
 
 RESET ROLE;
 DO $$
