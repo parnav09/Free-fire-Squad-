@@ -56,7 +56,11 @@ test("migration is additive and validates existing rows without data rewrites", 
 });
 
 
-test("drill and block ownership checks serialize concurrent reference writes", () => {
+test("drill and block ownership checks serialize concurrent reference writes", async () => {
+  const [migration, harness] = await Promise.all([
+    read("../supabase/migrations/20261121000000_evolution_phase_two_10_database_integrity.sql"),
+    read("../scripts/verify-evolution-phase-two-10-db.sh"),
+  ]);
   assert.match(migration, /FROM public\\.training_drills d WHERE d\\.id=NEW\\.drill_id FOR SHARE/);
   assert.match(migration, /FROM public\\.practice_plan_blocks b[\\s\\S]*?FOR SHARE/);
   assert.match(migration, /training_drill_reassignment_guard/);
@@ -64,7 +68,8 @@ test("drill and block ownership checks serialize concurrent reference writes", (
   assert.match(harness, /training_drill_team_mismatch/);
 });
 
-test("disposable database harness executes rollback and forward recovery", () => {
+test("disposable database harness executes rollback and forward recovery", async () => {
+  const harness = await read("../scripts/verify-evolution-phase-two-10-db.sh");
   assert.match(harness, /Verify the documented rollback against this disposable database only/);
   assert.match(harness, /DROP FUNCTION IF EXISTS evolution_private\\.guard_team_scoped_training_references/);
   assert.match(harness, /Phase 2\\.10 rollback changed pre-existing fixture data/);
