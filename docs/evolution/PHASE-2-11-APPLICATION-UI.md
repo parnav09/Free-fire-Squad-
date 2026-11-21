@@ -13,10 +13,10 @@
 - Session detail with canonical matches, parent-session context, source mappings and result state.
 - Roster selection before lock; the database snapshots active membership, player slot and display name. Supported selection confirmation is available before session start.
 - Match participation record/correction, per-match role assignment and substitution event capture through canonical RPCs.
-- Result draft, submission, verification and rejection with raw values, source provenance, explicit four-item verification checklist and audit history.
+- Result draft, submission, verification, rejection and correction with raw values, source provenance, explicit four-item verification checklist, immutable version history and complete result-event timeline.
 - Training results remain session-level; no competitive matches are fabricated for Training.
 - Loading, empty, migration-unavailable, permission-denied, archived and offline read-only states.
-- Responsive Deep Onyx UI for desktop/tablet/mobile, semantic labels, visible focus and reduced-motion support.
+- Responsive Deep Onyx UI for desktop/laptop/tablet/mobile, semantic labels, visible keyboard focus, reduced-motion support, and 44px minimum button hitboxes (including icon and compact actions).
 
 ## Safety and correctness
 
@@ -27,7 +27,7 @@
 - Offline mode is read-only; no unsupported queue/replay behavior is implied.
 - The workspace is keyed by team UUID so team changes remount it without carrying prior-team state; list/detail requests also use generation guards so stale responses cannot overwrite a newer team or selected session.
 - Result verification requires a non-empty verified JSON object, all four server-defined checklist keys and a reason.
-- Session verification is disabled until every expected match (or the single Training session result) is verified/amended; the session-level result receipt is submitted before the verified lifecycle transition.
+- Session verification is disabled until every expected competitive match from the canonical match-set count is linked and every result is verified/amended (or the single Training session result is verified). The session-level result receipt is submitted before the verified lifecycle transition.
 - No schema migration or live Supabase write is part of this UI point.
 
 ## Verification
@@ -36,7 +36,7 @@
 - npm run test:evolution-phase-two-11 is included in the production build test chain.
 - Vercel Preview build checks TypeScript, the source-contract test chain and production bundle.
 - GitHub Actions PostgreSQL integration is currently failing before any runner steps start. Phase 2.10 remains unverified until isolated database tests can execute.
-- Manual Android device, tablet and desktop interaction QA remains an acceptance requirement and is not inferred from a successful bundle build.
+- Source contracts additionally cover expected-match completeness, rejected Training corrections, explicit substitution effective timestamps, result audit/version history, 44px controls and the tablet breakpoint. Manual Android device, tablet and desktop interaction QA remains an acceptance requirement and is not inferred from a successful bundle build.
 
 ## Production boundary
 
