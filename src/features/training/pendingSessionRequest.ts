@@ -63,3 +63,25 @@ export function getOrCreatePendingSessionRequest(
 export function clearPendingSessionRequest(storage: StorageLike, storageKey: string): void {
   storage.removeItem(storageKey);
 }
+
+export function readPendingSessionPayload(
+  storage: StorageLike,
+  storageKey: string,
+): PendingSessionPayload | null {
+  const raw = storage.getItem(storageKey);
+  if (raw === null) return null;
+  let pending: PendingRecord;
+  try {
+    pending = JSON.parse(raw) as PendingRecord;
+  } catch {
+    throw new Error("A pending session request is unreadable and needs recovery.");
+  }
+  if (typeof pending.payloadJson !== "string") {
+    throw new Error("A pending session request is incomplete and needs recovery.");
+  }
+  const payload = JSON.parse(pending.payloadJson) as PendingSessionPayload;
+  if (!payload || typeof payload.teamId !== "string" || !Array.isArray(payload.participantIds)) {
+    throw new Error("A pending session request has an invalid payload and needs recovery.");
+  }
+  return payload;
+}
