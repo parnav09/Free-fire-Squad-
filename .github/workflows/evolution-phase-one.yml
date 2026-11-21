@@ -2,7 +2,7 @@ name: SQUAD OS — Evolution Phase One CI
 
 on:
   push:
-    branches: [main, feat/evolution-phase-one-identity-timezone]
+    branches: [main, feat/evolution-phase-one-identity-timezone, fix/evolution-phase-one-audit-20261122]
   pull_request:
     branches: [main, chore/evolution-phase-zero-one-naming]
 
