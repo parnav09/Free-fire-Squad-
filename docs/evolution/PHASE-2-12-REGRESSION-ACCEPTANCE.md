@@ -74,11 +74,12 @@ No result is marked PASS until a real run and its evidence are attached.
 
 | Gate | Current evidence | Status |
 |---|---|---|
-| Earlier source-contract suites | Historical full build completed on `271c1e3eb1764802ea6660538bf1a28eb82eb5ec`; this is not the current PR head | **Historical PASS; exact-head rerun pending** |
-| TypeScript + production bundle | Historical Vercel Preview for `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` reached READY; current PR head of PR #130 has not yet produced a successful exact-head Vercel build | **Historical PASS; exact-head build pending** |
-| Phase 2.10 source contract | 4/4 passed on exact preview commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` | **PASS (source contract only)** |
+| Earlier source-contract suites | Full `npm run build` completed on exact PR head `18e65c418b9909c90a5c92d30b21b7841deb268c`; Vercel Preview reached READY | **PASS · exact-head source/build layer** |
+| TypeScript + production bundle | Exact-head Vercel Preview `https://squad-aqzwijhu6-parnav09.vercel.app` reached READY; `tsc --noEmit` and Vite production bundle completed | **PASS · exact PR head** |
+| Phase 2.10 source contract | Included in successful exact-head `npm run build`; source-level assertions only | **PASS (source contract only)** |
 | Phase 2.10 PostgreSQL integration | Latest associated run `44727576628` failed before runner steps; job has no step output/logs | **BLOCKED** |
-| Phase 2.11 source contract | 6/6 passed on exact preview commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` | **PASS (source contract only)** |
+| Phase 2.11 source contract | Included in successful exact-head `npm run build`; source-level assertions only | **PASS (source contract only)** |
+| Phase 2.12 regression source contract | 14/14 tests are registered in the exact-head build chain; full `npm run build` completed | **PASS (source/build layer only)** |
 | Phase 2.11 browser/database end-to-end | No disposable/staging migration-backed environment was used | **NOT VERIFIED** |
 | Android, tablet and desktop interaction QA | Source CSS hardening is present; manual Android, tablet and desktop interaction QA requires real device/browser interaction | **PENDING** |
 | Historical snapshot and cross-module runtime regression | Requires disposable DB integration execution and representative authenticated flows | **PENDING** |
