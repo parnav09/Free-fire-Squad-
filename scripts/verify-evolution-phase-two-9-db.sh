@@ -172,8 +172,8 @@ VALUES (
   'aa290000-0000-0000-0000-000000000099',
   'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   '10000000-0000-0000-0000-000000000001',
-  DATE '2026-11-25',2,
-  '[{"placement":3,"kills":3},{"placement":1,"kills":8}]'::jsonb
+  DATE '2026-11-25',3,
+  '[{"placement":3,"kills":3},{"placement":1,"kills":8},{"placement":2,"kills":5}]'::jsonb
 );
 CREATE OR REPLACE FUNCTION public.phase29_delay_concurrent_insert()
 RETURNS trigger LANGUAGE plpgsql AS $function$
@@ -279,7 +279,7 @@ if [[ -z "$id_a" || "$id_a" != "$id_b" ]]; then
   echo "Concurrent retries did not return the same canonical session ID" >&2
   exit 1
 fi
-if (( count_a + count_b != 2 )) || { [[ "$count_a" != "0" && "$count_a" != "2" ]] || [[ "$count_b" != "0" && "$count_b" != "2" ]]; }; then
+if (( count_a + count_b != 3 )) || { [[ "$count_a" != "0" && "$count_a" != "3" ]] || [[ "$count_b" != "0" && "$count_b" != "3" ]]; }; then
   echo "Concurrent retries returned an unexpected synchronized match count: $count_a / $count_b" >&2
   exit 1
 fi
@@ -299,8 +299,8 @@ BEGIN
   IF source_count<>1 THEN
     RAISE EXCEPTION 'Concurrent source integration created % source mappings instead of one',source_count;
   END IF;
-  IF match_count<>2 THEN
-    RAISE EXCEPTION 'Concurrent source integration synchronized % matches instead of two',match_count;
+  IF match_count<>3 THEN
+    RAISE EXCEPTION 'Concurrent source integration synchronized % matches instead of three',match_count;
   END IF;
 END
 $concurrent$;
@@ -308,4 +308,4 @@ DROP TRIGGER phase29_delay_concurrent_insert ON public.canonical_sessions;
 DROP FUNCTION public.phase29_delay_concurrent_insert();
 SQL
 rm -f /tmp/phase29-integrate-a.log /tmp/phase29-integrate-b.log
-echo "Phase 2.9 concurrent source integration PASS: both requests returned $id_a; one mapping and two matches."
+echo "Phase 2.9 concurrent source integration PASS: both requests returned $id_a; one mapping and three matches."
