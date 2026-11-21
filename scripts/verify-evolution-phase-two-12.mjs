@@ -173,5 +173,5 @@ test("Acceptance report explicitly separates automated evidence from owner devic
   assert.match(report, /Automated acceptance/);
   assert.match(report, /physical-device QA remains owner-run/i);
   assert.match(report, /No merge to `main`/);
-  assert.match(report, /No production deployment/);
+  assert.match(report, /No Vercel production deployment/);
 });
