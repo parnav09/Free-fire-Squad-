@@ -98,9 +98,13 @@ test("Historical Training IDs are mapped without rewriting IDs or fabricating se
   assert.match(migration, /Backfill eligible historical Training sessions without rewriting their legacy IDs/i);
   assert.match(migration, /md5\('squad-os:legacy-training-session:'/i);
   assert.match(migration, /historical_training_session_mapping_incomplete_or_conflicting/i);
+  assert.match(migration, /historical_scrim_session_mapping_incomplete_or_conflicting/i);
+  assert.match(migration, /historical_tournament_session_mapping_incomplete_or_conflicting/i);
   assert.match(dbHarness, /historical training session was not mapped/i);
   assert.match(dbHarness, /historical legacy UUID was unexpectedly replaced/i);
   assert.match(dbHarness, /historical season was fabricated/i);
+  assert.match(dbHarness, /historical scrim records were not all mapped/i);
+  assert.match(dbHarness, /historical tournament cycle was not mapped/i);
 });
 
 test("Auth plan limitation and original baseline gap are recorded without false PASS claims", () => {
