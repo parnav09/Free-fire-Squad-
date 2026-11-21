@@ -104,14 +104,14 @@ test("E records the remaining clean-replay and Auth gates instead of falsely pas
 });
 
 test("historical live-project RPC checks are not misreported as isolated Gate C acceptance", () => {
-  assert.match(rpcTestReport, /Environment: connected FF Squad Supabase project/);
+  assert.match(rpcTestReport, /connected FF Squad Supabase project/);
   assert.match(rpcTestReport, /SET LOCAL ROLE authenticated/);
   assert.match(rpcTestReport, /ROLLBACK/);
   assert.match(rpcTestReport, /team_join_requests.*0 rows/s);
   assert.match(securityReview, /18 callable function signatures passed/);
   assert.match(audit, /18 callable authenticated SECURITY DEFINER signatures/);
   assert.match(currentAcceptance, /Gate C remains blocked/i);
-  assert.match(currentAcceptance, /not executed in this audit/i);
+  assert.match(currentAcceptance, /has not been executed in this audit/i);
   assert.match(currentAcceptance, /isolated disposable database/i);
 });
 
