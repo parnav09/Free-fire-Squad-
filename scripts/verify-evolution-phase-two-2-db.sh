@@ -219,7 +219,7 @@ BEGIN
   END;
 
   SELECT count(*) INTO visible_count FROM public.canonical_sessions;
-  IF visible_count <> 2 THEN RAISE EXCEPTION 'team RLS returned % rows, expected 2', visible_count; END IF;
+  IF visible_count <> 5 THEN RAISE EXCEPTION 'team RLS returned % rows, expected 5 (three historical plus two newly created Alpha sessions)', visible_count; END IF;
 
   UPDATE public.canonical_sessions
   SET archived_at = now(), archived_by = auth.uid(), archive_reason = 'completed'
