@@ -54,3 +54,20 @@ test("migration is additive and validates existing rows without data rewrites", 
   assert.match(sql, /VALIDATE CONSTRAINT/);
   assert.match(sql, /CREATE UNIQUE INDEX IF NOT EXISTS/);
 });
+
+
+test("drill and block ownership checks serialize concurrent reference writes", () => {
+  assert.match(migration, /FROM public\\.training_drills d WHERE d\\.id=NEW\\.drill_id FOR SHARE/);
+  assert.match(migration, /FROM public\\.practice_plan_blocks b[\\s\\S]*?FOR SHARE/);
+  assert.match(migration, /training_drill_reassignment_guard/);
+  assert.match(harness, /Concurrent cross-team drill reference unexpectedly succeeded/);
+  assert.match(harness, /training_drill_team_mismatch/);
+});
+
+test("disposable database harness executes rollback and forward recovery", () => {
+  assert.match(harness, /Verify the documented rollback against this disposable database only/);
+  assert.match(harness, /DROP FUNCTION IF EXISTS evolution_private\\.guard_team_scoped_training_references/);
+  assert.match(harness, /Phase 2\\.10 rollback changed pre-existing fixture data/);
+  assert.match(harness, /Re-apply after rollback to prove the forward path is recoverable/);
+  assert.match(harness, /validated_count<>14/);
+});
