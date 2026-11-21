@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { getTeamUiCapabilities, indiaDateISO, indiaDateLabel, millisecondsUntilIndiaMidnight, resolveActiveTeamIdentity, resolveTeamSessionEligibility } from "./lib/evolution-identity";
+import { getTeamUiCapabilities, isStableUuid, indiaDateISO, indiaDateLabel, millisecondsUntilIndiaMidnight, resolveActiveTeamIdentity, resolveTeamSessionEligibility } from "./lib/evolution-identity";
 import { createLatestRequestGuard } from "./lib/latest-request-guard";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
@@ -503,8 +503,8 @@ export default function App() {
     if(!isCurrent())return;
     if(allMembershipsError)throw allMembershipsError;
 
-    const memberships=allMemberships||[];
-    const teamIds=[...new Set(memberships.map(m=>m.team_id).filter(Boolean))];
+    const memberships=Array.isArray(allMemberships)?allMemberships.filter(m=>!!m&&typeof m==="object"):[];
+    const teamIds=[...new Set(memberships.map(m=>m.team_id).filter((id):id is string=>isStableUuid(id)))];
     if(teamIds.length){
       const {data:allTeams,error:allTeamsError}=await supabase
         .from("teams")
@@ -515,7 +515,7 @@ export default function App() {
       setTeamChoices((allTeams||[]).map(t=>{
         const rows=memberships.filter(m=>m.team_id===t.id);
         const resolved=resolveActiveTeamIdentity(user.id,rows,t.id);
-        return {...t,membership_role:rows[0]?.membership_role||"player",selectable:!!resolved};
+        return {...t,membership_role:resolved?.membershipRole||"player",selectable:!!resolved};
       }));
     }else{
       setTeamChoices([]);
