@@ -7,7 +7,7 @@ import {
 } from "../src/features/training/pendingSessionRequest.ts";
 
 function memoryStorage() {
-  const values = new Map<string, string>();
+  const values = new Map();
   return {
     getItem: (key: string) => values.get(key) ?? null,
     setItem: (key: string, value: string) => { values.set(key, value); },
