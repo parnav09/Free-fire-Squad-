@@ -1,53 +1,80 @@
-# Evolution Phase 1.5 — Owner-Directed Closure With Exceptions
+# Evolution Phase 1.5 — Verified Closure Status
 
-**Decision date:** 21 November 2026  
+**Audit date:** 21 November 2026  
 **Repository:** `parnav09/Free-fire-Squad-`  
-**Decision:** `CLOSED — ACCEPTANCE WITH EXCEPTIONS`  
-**Verification label:** `NOT FULLY VERIFIED`  
-**Scope state:** `FROZEN`
+**Decision:** `CLOSED — ACCEPTANCE WITH ONE VERIFIED TECHNICAL EXCEPTION`  
+**Implementation status:** `SCOPE IMPLEMENTED`  
+**Verification status:** `ALL AVAILABLE GATES VERIFIED; HISTORICAL CLEAN REPLAY NOT VERIFIABLE`
 
-## Owner decision
+## Owner-directed scope
 
-The current Evolution Phase 1.5-A through 1.5-E work is frozen at the reviewed state. No further implementation, migration, remediation, cleanup, or scope expansion is authorized under this phase unless the owner explicitly reopens it.
+The paid-only Supabase Auth leaked-password protection setting is excluded from this acceptance scope as requested. It remains disabled and is not represented as enabled or technically passed. No workaround is claimed.
 
-Phase 1.5 is administratively closed with exceptions. This is an owner-directed scope/acceptance decision; it is not a claim that every technical acceptance gate passed, nor does it constitute independent security approval.
+This record updates stale RPC and trigger-ACL statuses using the available Phase 1.5 evidence and a fresh read-only inspection of the connected production Supabase project. It does not authorize further migrations, production changes, merges, or deployments.
 
 ## Acceptance disposition
 
-| Area | Disposition | Meaning |
+| Area | Current disposition | Evidence / boundary |
 |---|---|---|
-| 1.5-A — migration provenance | PASS — evidence-backed | Previously recorded 53/53 in-scope SQL provenance matches remain the accepted evidence. |
-| 1.5-B — application/timezone contract | PASS — isolated CI evidence | Disposable PostgreSQL and application-contract evidence remains valid for the tested scope; no production migration is implied. |
-| 1.5-C — rollback disposition | PASS — documented | Historical migrations remain classified as forward-only; this does not mean executable rollback scripts exist. |
-| 1.5-D — source contract | PASS — CI evidence | Previously recorded source-contract and build/test evidence is retained. |
-| 1.5-E — audit integrity | PASS — CI evidence only | Audit-integrity tests passed on the previously reviewed head. This does not make the unresolved security gates pass. |
-| Clean Replay Baseline | **WAIVED — OWNER-APPROVED SCOPE EXCEPTION PENDING INDEPENDENT REVIEW** | No authoritative original pre-migration schema baseline was found in the reviewed repository/evidence. Full-chain clean replay remains unverified. Do not fabricate a baseline or claim replay success. |
-| Supabase Auth leaked-password protection | **OPEN / NOT VERIFIED** | Prior audit recorded the setting as disabled. It has not been verified as enabled; no PASS is granted. |
-| Remaining RPC security review | **OPEN / NOT VERIFIED — INDEPENDENT REVIEW PENDING** | Adversarial role-level review of remaining callable authenticated SECURITY DEFINER RPCs is incomplete. Static inspection is not a substitute. No PASS is granted. |
-| Trigger ACL remediation | PASS — staged CI evidence only | The staged ACL SQL passed the recorded CI checks; it was not applied to production. |
+| 1.5-A — migration provenance | **PASS — VERIFIED** | 53/53 in-scope SQL provenance matches; zero missing/extra in-scope files in the audited chain. |
+| 1.5-B — application/timezone contract | **PASS — ISOLATED CI VERIFIED** | Dedicated source suite 7/7 and exact staged forward/rollback SQL tested against disposable PostgreSQL. The timezone migration is not recorded as applied to production. |
+| 1.5-C — rollback disposition | **PASS — VERIFIED** | 53/53 historical in-scope migrations have explicit forward-only disposition, risk class, and recovery rationale. This does not mean executable rollback SQL exists. |
+| 1.5-D — source contract | **PASS — CI VERIFIED** | Source-contract suite 6/6. |
+| 1.5-E — audit integrity | **PASS — CI VERIFIED** | E audit-integrity suite 7/7 in the recorded CI evidence. |
+| Callable authenticated SECURITY DEFINER RPC authorization | **PASS — 18/18 RUNTIME TESTS** | The recorded adversarial test report exercised all 18 callable signatures under `SET LOCAL ROLE authenticated`, with a synthetic non-member subject and transaction rollback. Fresh live catalog inspection confirms the same 18 callable signatures remain authenticated-callable, all reviewed SECURITY DEFINER functions have pinned `search_path`, and none is callable by `anon`. |
+| Trigger-function EXECUTE ACL | **PASS — PRODUCTION STATE RE-VERIFIED READ-ONLY** | Live migration ledger contains version `20261118193817` (`revoke_direct_trigger_function_execution`) with the four exact REVOKE statements. Live catalog confirms all four functions deny EXECUTE to `anon` and `authenticated`; the three expected trigger attachments remain present and the legacy duplicate remains unattached. |
+| Clean Replay Baseline | **BLOCKED — MISSING AUTHORITATIVE INPUT VERIFIED** | Independent repository/project audit found no original pre-migration schema dump or verifiable schema source. Historical full-chain replay was not run and must not be claimed. |
+| Supabase Auth leaked-password protection | **EXCLUDED FROM ACCEPTANCE — PAID-ONLY SETTING** | Current Security Advisor still reports it disabled. This is an approved scope exclusion, not a technical PASS or an enabled setting. |
 
-## Freeze and safety constraints
+## Fresh production read-only verification — 21 November 2026
 
-1. Preserve the reviewed Evolution Phase 1.5-A through E artifacts and evidence as-is. Do not silently rewrite historical results or retroactively mark unresolved gates as passed.
-2. Do not apply staged or new migrations to the production Supabase database as part of this closure.
-3. Do not reset, delete, recreate, migrate, or otherwise modify production data, production schema, Supabase Auth users, Auth settings, RLS policies, grants, functions, or triggers as part of this closure.
-4. Do not remove or alter previously deployed features.
-5. Do not merge or deploy this documentation change automatically. It must be reviewed through a pull request.
-6. Reopening Phase 1.5 or resolving any waived/deferred gate requires an explicit owner decision. The clean-replay exception remains subject to independent review; Auth and RPC security items remain open until actually checked and evidenced.
+Only read-only Supabase operations were performed for this checkpoint.
+
+- Project creation date: **2026-11-02**; PostgreSQL **17.11**.
+- Live migration ledger: **56 rows** — 53 in-scope historical migrations, 2 excluded loadout migrations, and 1 trigger-function ACL remediation migration (`20261118193817`).
+- The four trigger-function ACLs were inspected directly. All deny EXECUTE to `anon` and `authenticated`; three existing triggers remain attached.
+- The current Security Advisor reports **0 anon SECURITY DEFINER execution warnings**, **18 authenticated SECURITY DEFINER warnings** for the intentionally callable application RPCs, 2 INFO notices for service-only OTP tables, and 1 paid-only leaked-password-protection warning.
+- The current callable RPC catalog matches the 18 signatures covered by the recorded adversarial runtime test report. Their `search_path` is pinned to `public`.
+- No production data, schema, migration, grants, policies, functions, triggers, Auth users, or Auth settings were changed by this audit.
+
+The four-function ACL migration is already present in the live migration ledger; this audit did not apply it. The Phase 1.5-B timezone migration remains isolated-CI evidence only and is not claimed as production-applied.
+
+## Clean replay baseline — independent review result
+
+The missing-baseline finding was rechecked against:
+
+1. The recursive Git trees for the Phase 1.5 implementation branch, the current `main` branch, and the available legacy application repository.
+2. The Phase 1.5 historical-baseline checkpoint and recovered-migration archive documentation.
+3. The live Supabase project creation date and migration ledger.
+
+The first tracked migration is dated **2026-11-07**, while the Supabase project was created **2026-11-02**. The recovered SQL archive is provenance for migrations that ran later; it is not the original schema that existed before the first migration. No verifiable original pre-2026-11-07 SQL dump, schema-only export, backup, or IaC schema source was found in the accessible evidence.
+
+**Conclusion:** the absence of an authoritative baseline is independently confirmed within the accessible evidence. That does not make historical clean replay pass. Replay remains unverified until the owner supplies the original pre-migration artifact or explicitly accepts this as a scope waiver.
+
+Required artifact, if available: an original pre-2026-11-07 `.sql`, `.dump`, `.backup`, or equivalent independently verifiable schema source. A current schema snapshot or reconstructed fixture is not equivalent.
 
 ## Evidence references
 
-- [Prior Phase 1.5-E final audit](./E-PHASE-ONE-5-E-FINAL-AUDIT.md)
-- [Migration chain reconciliation](./MIGRATION-CHAIN-RECONCILIATION.md)
+- [Phase 1.5-E adversarial RPC runtime test report](https://github.com/parnav09/Free-fire-Squad-/blob/feat/evolution-phase-one-identity-timezone/docs/evolution/E-PHASE-ONE-5-E-ADVERSARIAL-RPC-TESTS.md)
+- [Phase 1.5-E historical baseline verification checkpoint](https://github.com/parnav09/Free-fire-Squad-/blob/feat/evolution-phase-one-identity-timezone/docs/evolution/E-PHASE-ONE-5-E-HISTORICAL-BASELINE-VERIFICATION.md)
+- [Phase 1.5-E security findings disposition](https://github.com/parnav09/Free-fire-Squad-/blob/feat/evolution-phase-one-identity-timezone/docs/evolution/E-PHASE-ONE-5-E-SECURITY-REVIEW.md)
+- [Phase 1.5-E final audit](https://github.com/parnav09/Free-fire-Squad-/blob/feat/evolution-phase-one-identity-timezone/docs/evolution/E-PHASE-ONE-5-E-FINAL-AUDIT.md)
 
-The prior audit records the missing authoritative baseline, the outstanding Auth leaked-password setting, the incomplete independent RPC review, and the fact that staged SQL was not applied to production. This closure record supersedes its overall phase-status wording only; it does not supersede or erase its technical findings.
+## Safety and merge/deploy boundary
+
+1. Preserve existing production data, Auth users, deployed features, and schema.
+2. Do not reset or recreate the production database.
+3. Do not apply any additional production migration as part of this closure.
+4. Do not merge this documentation update or deploy automatically. Review it through this pull request first.
+5. Historical clean replay remains an explicit exception until the original baseline is supplied or the owner approves a scope waiver.
 
 ## Final status
 
-**Evolution Phase 1.5: CLOSED — ACCEPTANCE WITH EXCEPTIONS.**  
-**A–E work: FROZEN.**  
-**Overall: NOT FULLY VERIFIED.**  
-**Clean Replay Baseline: WAIVED — OWNER-APPROVED SCOPE EXCEPTION PENDING INDEPENDENT REVIEW.**  
-**Auth leaked-password protection and RPC security review: OPEN / NOT VERIFIED.**
+**Evolution Phase 1.5 implementation scope: COMPLETE.**  
+**RPC authorization: VERIFIED — 18/18.**  
+**Trigger-function ACL remediation: PRODUCTION STATE VERIFIED.**  
+**Paid-only leaked-password protection: EXCLUDED FROM ACCEPTANCE AS REQUESTED; NOT ENABLED.**  
+**Historical clean replay: NOT VERIFIED — AUTHORITATIVE BASELINE UNAVAILABLE.**  
+**Overall acceptance: CLOSED WITH ONE TECHNICAL EXCEPTION; NOT CLAIMED AS FULLY VERIFIED.**
 
-No production database, Auth-user, or deployed-feature changes are authorized or performed by this closure.
+No production changes, merge, or deployment were performed by this documentation and read-only verification update.
