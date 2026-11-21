@@ -149,3 +149,60 @@ Adjacent risk observed but not changed: `can_rate(t,p)` checks caller team membe
 - 1.5-E: BLOCKED by Gate A and Gate C; Gate B OWNER ACTION REQUIRED.
 
 **Verdict: PHASE 1 IMPLEMENTATION COMPLETE — ACCEPTANCE PENDING.** This is not “Phase 1 fully accepted.” Do not merge or deploy until the original baseline issue, owner Auth action, full isolated 18-RPC suite, and responsive/browser regression verification are resolved.
+
+
+## 8. Continuation after reviewing the Phase 1.5 security and baseline documents
+
+The following historical documents were read in full on the audit branch:
+- `E-PHASE-ONE-5-E-SECURITY-REVIEW.md`
+- `E-PHASE-ONE-5-E-ADVERSARIAL-RPC-TESTS.md`
+- `E-PHASE-ONE-5-E-HISTORICAL-BASELINE-VERIFICATION.md`
+- `E-PHASE-ONE-5-E-FINAL-AUDIT.md`
+- `E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md`
+- `E-PHASE-ONE-5-MIGRATION-AUDIT.md`
+- `E-PHASE-ONE-5-C-ROLLBACK-REGISTER.md`
+- `E-PHASE-ONE-HANDOFF.md`
+- `evolution-phase-one.md`
+- `docs/evolution/recovered-migrations/README.md` and `MIGRATION-CHAIN-RECONCILIATION.md`
+
+The historic security report's 18/18 RPC results are against the connected Supabase project, using `SET LOCAL ROLE authenticated` and explicit transaction rollback. They are useful live authorization evidence, but they are **not** isolated disposable-database evidence. The E test suite was updated to assert this boundary and to keep Gate C blocked until a disposable fixture covers all relevant RPCs.
+
+The historical baseline checkpoint independently confirms 0/53 historical migrations replayed because no pre-2026-11-07 schema baseline was found. The 53-entry recovered SQL archive is not a bootstrap schema. No synthetic baseline or historical replay was created.
+
+### New membership ACL finding
+
+A fresh read-only production catalog query reconfirmed:
+- authenticated still has table-level UPDATE on `public.team_members`;
+- authenticated has UPDATE on all ten columns, including `membership_role`, `team_id`, and `user_id`;
+- `public.set_member_assignment` is absent from the live catalog;
+- the Phase 1.5-B timezone validation trigger is absent from the live `teams` table.
+
+This confirms the branch-only membership ACL migration is **not** live-applied. It is not a production fix until separately approved and applied. Production was not modified.
+
+### Exact-head CI after the documentation/test correction
+
+The E audit source-contract tests were corrected after two intermediate CI runs exposed assertion-text mismatches. Those intermediate runs failed only in the new documentation-boundary assertions; the disposable database steps passed. The assertions now check the actual wording of the current acceptance record.
+
+GitHub Actions run #1029:
+https://github.com/parnav09/Free-fire-Squad-/actions/runs/44949596087
+
+- Tested source HEAD: `6a76f4b890679eb1c73421de6ae52ffdcdcd5b14`
+- Job “Typecheck, tests and production build”: SUCCESS.
+- Disposable PostgreSQL: 16.16.
+- Disposable B forward/rollback contract: PASS.
+- Trigger function ACL contract: PASS.
+- Membership column ACL / owner RPC adversarial fixture: PASS.
+- TypeScript `tsc --noEmit`: PASS.
+- Test suite totals: foundation 18/18; character 11/11; legacy Evolution 10/10; Phase One 27/27; Phase One.5 6/6; B 7/7; C 6/6; D 6/6; E 10/10. **101 passed, 0 failed.**
+- Vite 8.3.6 production build: PASS (built in 284 ms).
+
+This run does not close Gate A, Gate B, or the full Gate C requirement; it proves only the checks actually listed above. No browser automation or responsive viewport suite is configured in this workflow.
+
+## 9. Remaining acceptance boundary
+
+The final branch state remains **PHASE 1 IMPLEMENTATION COMPLETE — ACCEPTANCE PENDING**. Outstanding:
+1. Original pre-migration schema baseline and full 53-entry clean replay.
+2. Owner action for leaked-password protection, which the current Security Advisor reports disabled.
+3. Isolated disposable adversarial runtime coverage for all relevant authenticated SECURITY DEFINER RPCs (the existing 18/18 live-project tests are not a substitute).
+4. Browser-driven Phase 1 flow and responsive verification at the requested five viewport sizes; no browser automation tool was available in this audit.
+5. Separate approval and production application of the branch-only membership ACL and timezone migrations; this audit did not modify production.
