@@ -118,6 +118,7 @@ test("historical live-project RPC checks are not misreported as isolated Gate C 
 test("current baseline and external Auth blockers remain explicit", () => {
   assert.match(historicalBaseline, /PARTIAL \/ BLOCKED/i);
   assert.match(historicalBaseline, /Historical replay executed: 0\/53/);
+  assert.match(currentAcceptance, /53\/53 exact version\/name\/SQL counterparts/);
   assert.match(currentAcceptance, /Gate A.*BLOCKED/i);
   assert.match(currentAcceptance, /Gate B.*OWNER ACTION REQUIRED/i);
   assert.match(currentAcceptance, /Gate C.*BLOCKED/i);
