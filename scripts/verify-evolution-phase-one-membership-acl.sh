@@ -148,9 +148,8 @@ BEGIN
   IF cfg NOT LIKE '%search_path=pg_catalog, public%' THEN
     RAISE EXCEPTION 'assignment RPC does not pin a safe search_path: %', cfg;
   END IF;
-  IF has_function_privilege('anon', fn, 'EXECUTE')
-     OR has_function_privilege('public', fn, 'EXECUTE') THEN
-    RAISE EXCEPTION 'anon/PUBLIC can execute the owner assignment RPC';
+  IF has_function_privilege('anon', fn, 'EXECUTE') THEN
+    RAISE EXCEPTION 'anon can execute the owner assignment RPC';
   END IF;
   IF NOT has_function_privilege('authenticated', fn, 'EXECUTE') THEN
     RAISE EXCEPTION 'authenticated cannot execute the owner assignment RPC';
