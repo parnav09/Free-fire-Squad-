@@ -248,32 +248,12 @@ fi
 
 wait "$request_a_pid"
 wait "$request_b_pid"
-result_a="$(grep -E '^[0-9a-f-]{36}\|[0-9]+
-DO $$
-BEGIN
-  IF has_function_privilege('anon','public.integrate_canonical_source(uuid,text,uuid)','EXECUTE')
-    OR NOT has_function_privilege('authenticated','public.integrate_canonical_source(uuid,text,uuid)','EXECUTE')
-  THEN RAISE EXCEPTION 'Canonical integration RPC ACLs are not restricted to authenticated'; END IF;
-END $$;
-
-SELECT 'Evolution Phase 2.9 PostgreSQL integration PASS' AS verification;
-SQL
- /tmp/phase29-integrate-a.log | tail -n 1)"
-result_b="$(grep -E '^[0-9a-f-]{36}\|[0-9]+
-DO $$
-BEGIN
-  IF has_function_privilege('anon','public.integrate_canonical_source(uuid,text,uuid)','EXECUTE')
-    OR NOT has_function_privilege('authenticated','public.integrate_canonical_source(uuid,text,uuid)','EXECUTE')
-  THEN RAISE EXCEPTION 'Canonical integration RPC ACLs are not restricted to authenticated'; END IF;
-END $$;
-
-SELECT 'Evolution Phase 2.9 PostgreSQL integration PASS' AS verification;
-SQL
- /tmp/phase29-integrate-b.log | tail -n 1)"
-id_a="\${result_a%%|*}"
-id_b="\${result_b%%|*}"
-count_a="\${result_a##*|}"
-count_b="\${result_b##*|}"
+result_a="$(tail -n 1 /tmp/phase29-integrate-a.log)"
+result_b="$(tail -n 1 /tmp/phase29-integrate-b.log)"
+id_a="$(printf '%s' "$result_a" | cut -d '|' -f 1)"
+id_b="$(printf '%s' "$result_b" | cut -d '|' -f 1)"
+count_a="$(printf '%s' "$result_a" | cut -d '|' -f 2)"
+count_b="$(printf '%s' "$result_b" | cut -d '|' -f 2)"
 if [[ -z "$id_a" || "$id_a" != "$id_b" ]]; then
   cat /tmp/phase29-integrate-a.log /tmp/phase29-integrate-b.log >&2
   echo "Concurrent retries did not return the same canonical session ID" >&2
