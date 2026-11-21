@@ -40,5 +40,5 @@ The complete scope is Points 1.1, 1.2, 1.3, 1.4, and 1.5-A through 1.5-E.
 - [x] Point 1.5-C implemented and verified
 - [x] Point 1.5-D implemented and verified
 - [ ] Point 1.5-E implemented and verified
-- [x] Exact-head CI, tests, and production build pass (run #1041; 21/Nov/2026 head 1932582bc9e4cccd048658119a5eafd4e8056920)
+- [x] Application-code head CI, tests, and production build pass (run #1041 on 1932582bc9e4cccd048658119a5eafd4e8056920; later commits are documentation-only)
 - [x] Remaining owner-only checks and rollout boundaries documented
