@@ -114,7 +114,9 @@ Source-contract suite: `scripts/verify-evolution-phase-two-2.mjs`, wired into `n
 
 **Prior historical CI:** PASS on exact head `8d244f3526af5484cb52ab0a03d7420da6ad4546`, push run #395 ([44382446442](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44382446442)). That run verified the earlier database-only Phase 2.2 implementation; it does not verify the frontend adapter and historical backfill added afterward.
 
-**Current exact-head CI:** PENDING. The current branch must pass typecheck, all standard tests, pending-session retry tests, disposable PostgreSQL integration (including migration replay and historical mapping), and Vite production build before this point can be marked verified.
+**Exact-head application build: PASS** on `49c2a862f9f72913c618d0be01249dc13e0a7027` via Vercel preview deployment [dpl_81nTyE1dp5hrJD76VuCCRanVC8v3](https://vercel.com/parnav09/squad-os/81nTyE1dp5hrJD76VuCCRanVC8v3). TypeScript typecheck, the repository build test chain (including Phase 2.2 contract checks and all five pending-session retry tests), and Vite production bundle completed successfully. The preview build is not a production deployment. Vite still reports the existing large-chunk warning (337.70 kB main chunk; 84.66 kB gzip); no unrelated code-splitting changes were made.
+
+**Disposable PostgreSQL integration: BLOCKED / NOT VERIFIED.** GitHub Actions run #832 and the subsequent exact-head run could not start a runner (job metadata showed `runner_id: 0` and no executed steps; logs were unavailable). Therefore the migration replay, historical backfill SQL and database-level idempotency/integrity harness have not yet been executed against disposable PostgreSQL. This is an infrastructure block, not a database test pass. Production Supabase remains untouched.
 
 ## 6. Owner-approved limited-development exceptions (19 November 2026)
 
