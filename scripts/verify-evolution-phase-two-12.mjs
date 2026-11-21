@@ -100,3 +100,88 @@ test("Acceptance report cannot overstate blocked database or device evidence", a
   assert.match(doc, /No production migration, backfill, merge or production deployment/);
   assert.doesNotMatch(doc, /OVERALL STATUS: PASS/);
 });
+
+
+test("Blueprint groups 1–3 have explicit disposable database regression cases", async () => {
+  const blueprint = await read("../docs/evolution-version-2.md");
+  const identity = await read("./verify-evolution-phase-two-2-db.sh");
+  const matches = await read("./verify-evolution-phase-two-3-db.sh");
+  const lifecycle = await read("./verify-evolution-phase-two-4-db.sh");
+  assert.match(blueprint, /1\. Canonical identity uniqueness and team isolation/);
+  assert.match(identity, /idempotent retry created a second session/);
+  assert.match(identity, /cross-team session visibility leaked/);
+  assert.match(matches, /canonical parent session backfill count mismatch/);
+  assert.match(matches, /canonical child match backfill count mismatch/);
+  assert.match(lifecycle, /Stale lifecycle version was accepted/);
+  assert.match(lifecycle, /Player unexpectedly transitioned a canonical session/);
+});
+
+test("Blueprint groups 4–6 protect historical roster, role snapshots and substitutions", async () => {
+  const blueprint = await read("../docs/evolution-version-2.md");
+  const roster = await read("./verify-evolution-phase-two-5-db.sh");
+  const roles = await read("./verify-evolution-phase-two-6-db.sh");
+  const substitutions = await read("./verify-evolution-phase-two-7-db.sh");
+  assert.match(blueprint, /4\. Historical roster immutability after roster edits/);
+  assert.match(roster, /Historical roster changed after member leave/);
+  assert.match(roster, /Historical roster changed after IGN\/slot edit/);
+  assert.match(roles, /Role definition edit rewrote an existing session snapshot/);
+  assert.match(roles, /Changing match one rewrote the player role in match two/);
+  assert.match(substitutions, /Expected two ordered substitution events/);
+  assert.match(substitutions, /Lineup before first substitution was not reconstructable/);
+  assert.match(substitutions, /Lineup after second substitution was not reconstructable/);
+});
+
+test("Blueprint groups 7–8 protect verified aggregates, retries and serialized source sync", async () => {
+  const blueprint = await read("../docs/evolution-version-2.md");
+  const results = await read("./verify-evolution-phase-two-8-db.sh");
+  const adapterHarness = await read("./verify-evolution-phase-two-9-db.sh");
+  const adapterMigration = await read("../supabase/migrations/20261120230000_evolution_phase_two_9_existing_module_integration.sql");
+  assert.match(blueprint, /7\. Result submission, verification, correction, and aggregate eligibility/);
+  assert.match(results, /Draft result leaked into verified competitive aggregate/);
+  assert.match(results, /Pending correction did not suspend only its own aggregate row/);
+  assert.match(results, /Training evidence leaked into competitive aggregates/);
+  assert.match(adapterHarness, /Scrim adapter is not idempotent or did not map all three match IDs/);
+  assert.match(adapterMigration, /pg_advisory_xact_lock/);
+  assert.match(adapterMigration, /hashtextextended/);
+});
+
+test("Blueprint groups 9–11 preserve migration reconciliation, module integration and RLS boundaries", async () => {
+  const blueprint = await read("../docs/evolution-version-2.md");
+  const matches = await read("./verify-evolution-phase-two-3-db.sh");
+  const integration = await read("./verify-evolution-phase-two-9-db.sh");
+  const integrity = await read("./verify-evolution-phase-two-10-db.sh");
+  const results = await read("./verify-evolution-phase-two-8-db.sh");
+  const rollbackNotes = await read("../docs/evolution/PHASE-2-10-DATABASE-INTEGRITY.md");
+  assert.match(blueprint, /9\. Migration forward\/recovery and historical reconciliation/);
+  assert.match(matches, /canonical source mapping count mismatch/);
+  assert.match(matches, /Mapped Scrim source was destructively deleted/);
+  assert.match(integration, /Explicitly promoted Planning item did not become a Training session identity/);
+  assert.match(integration, /Planning plan itself was incorrectly promoted as a played session/);
+  assert.match(integrity, /cross-team task source session accepted/);
+  assert.match(results, /Cross-team result visibility leaked/);
+  assert.match(rollbackNotes, /rollback can be executed in one reviewed transaction/);
+});
+
+test("Blueprint group 12 has responsive, touch-target and keyboard-focus source safeguards", async () => {
+  const blueprint = await read("../docs/evolution-version-2.md");
+  const css = await read("../src/components/CanonicalSessionsWorkspace.css");
+  const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
+  assert.match(blueprint, /12\. Android\/mobile, tablet, desktop responsive and accessibility QA/);
+  assert.match(css, /@media\(max-width:1050px\)/);
+  assert.match(css, /@media\(max-width:760px\)/);
+  assert.match(css, /@media\(max-width:520px\)/);
+  assert.match(css, /prefers-reduced-motion/);
+  assert.match(css, /min-height:44px/);
+  assert.match(css, /:focus-visible/);
+  assert.match(component, /role="alert"/);
+  assert.match(component, /role="status"/);
+  // These are source-level safeguards only; manual device acceptance remains separate.
+});
+
+test("Phase 2.12 acceptance report keeps runtime-only evidence explicitly pending", async () => {
+  const doc = await read("../docs/evolution/PHASE-2-12-REGRESSION-ACCEPTANCE.md");
+  assert.match(doc, /parallel contention runtime test remains pending/i);
+  assert.match(doc, /authenticated end-to-end flows remain pending/i);
+  assert.match(doc, /manual Android, tablet and desktop QA remains pending/i);
+  assert.match(doc, /OVERALL STATUS: BLOCKED/);
+});
