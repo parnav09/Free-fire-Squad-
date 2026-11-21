@@ -30,6 +30,15 @@ test("display labels and malformed IDs can never resolve as identity", () => {
   assert.equal(identity.resolveActiveTeamIdentity(userA, [row({ team_id: "P2" })]), null);
 });
 
+test("malformed membership records and unknown membership roles fail closed", () => {
+  assert.equal(identity.resolveActiveTeamIdentity(userA, null), null);
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [null]), null);
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [row({ user_id: null })]), null);
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [row({ user_id: "P1" })]), null);
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [row({ membership_role: "superadmin" })]), null);
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [row({ membership_role: " owner " })]), null);
+});
+
 test("inactive and other-user memberships are excluded", () => {
   assert.equal(identity.resolveActiveTeamIdentity(userA, [
     row({ status: "inactive" }), row({ user_id: userB }),
@@ -134,6 +143,60 @@ test("E Phase One.3: sign-out invalidates every in-flight team-load request", ()
   assert.equal(guard.isCurrent(requestId), false);
 });
 
+test("E Phase One.3: an old request failure cannot replace a newer successful team load", async () => {
+  const guard = guardModule.createLatestRequestGuard();
+  let rejectOlder;
+  let resolveNewer;
+  const state = { team: null, error: null };
+  const olderId = guard.begin();
+  const olderResult = new Promise((_, reject) => { rejectOlder = reject; });
+  const older = olderResult.catch((error) => {
+    if (guard.isCurrent(olderId)) state.error = error.message;
+  });
+  const newerId = guard.begin();
+  const newerResult = new Promise((resolve) => { resolveNewer = resolve; });
+  const newer = newerResult.then((team) => {
+    if (guard.isCurrent(newerId)) { state.team = team; state.error = null; }
+  });
+  resolveNewer("team-B");
+  await newer;
+  rejectOlder(new Error("stale-team-A-error"));
+  await older;
+  assert.deepEqual(state, { team: "team-B", error: null });
+});
+
+test("E Phase One.3: multiple rapid team switches commit only the last valid selection", async () => {
+  const guard = guardModule.createLatestRequestGuard();
+  const pending = [];
+  const committed = [];
+  for (const teamId of ["team-A", "team-B", "team-C"]) {
+    const requestId = guard.begin();
+    let resolve;
+    const promise = new Promise((done) => { resolve = done; });
+    pending.push({ requestId, promise, resolve, teamId });
+  }
+  pending[2].resolve(pending[2].teamId);
+  await pending[2].promise.then((value) => { if (guard.isCurrent(pending[2].requestId)) committed.push(value); });
+  pending[0].resolve(pending[0].teamId);
+  await pending[0].promise.then((value) => { if (guard.isCurrent(pending[0].requestId)) committed.push(value); });
+  pending[1].resolve(pending[1].teamId);
+  await pending[1].promise.then((value) => { if (guard.isCurrent(pending[1].requestId)) committed.push(value); });
+  assert.deepEqual(committed, ["team-C"]);
+});
+
+test("E Phase One.3: invalidation prevents a cancelled or unmounted request from committing", async () => {
+  const guard = guardModule.createLatestRequestGuard();
+  let resolve;
+  const result = new Promise((done) => { resolve = done; });
+  const requestId = guard.begin();
+  const committed = [];
+  const pending = result.then((value) => { if (guard.isCurrent(requestId)) committed.push(value); });
+  guard.invalidate();
+  resolve("late-result");
+  await pending;
+  assert.deepEqual(committed, []);
+});
+
 test("E Phase One.3: loadTeam checks request freshness after async boundaries and ignores stale errors", () => {
   const loadStart = appSource.indexOf("const loadTeam = async");
   const loadEnd = appSource.indexOf("const createTeam = async", loadStart);
@@ -143,6 +206,26 @@ test("E Phase One.3: loadTeam checks request freshness after async boundaries an
   assert.ok((loadBlock.match(/if\(!isCurrent\(\)\)return;/g) || []).length >= 6);
   assert.match(loadBlock, /catch\(error\)\s*\{\s*if\(isCurrent\(\)\)throw error;/);
   assert.match(appSource, /teamLoadGuardRef\.current\.invalidate\(\);setTeam\(null\)/);
+});
+
+test("E Phase One.3: identity changes and component unmount invalidate pending team loads", () => {
+  assert.match(appSource, /return\s*\(\)\s*=>\s*\{\s*teamLoadGuardRef\.current\.invalidate\(\);\s*\};/);
+  assert.match(appSource, /\},\[signedIn,sessionUserId\]\);/);
+});
+
+test("E Phase One.2/1.3: team switch clears old scoped data before the first network wait", () => {
+  const loadStart = appSource.indexOf("const loadTeam = async");
+  const loadEnd = appSource.indexOf("const createTeam = async", loadStart);
+  const loadBlock = appSource.slice(loadStart, loadEnd);
+  const clearIndex = loadBlock.indexOf("if(preferredTeamId&&team?.id!==preferredTeamId){");
+  const authReadIndex = loadBlock.indexOf("await supabase.auth.getUser()");
+  assert.ok(clearIndex >= 0 && authReadIndex > clearIndex);
+  assert.match(loadBlock, /setTeam\(null\);setTeamMembers\(\[\]\);setJoinRequests\(\[\]\)/);
+});
+
+test("E Phase One.4: owner roster assignments use the owner-checked RPC, not direct table updates", () => {
+  assert.match(appSource, /rpc\("set_member_assignment"/);
+  assert.doesNotMatch(appSource, /from\("team_members"\)\.update\(\{assigned_role/);
 });
 
 
@@ -160,6 +243,7 @@ test("E Phase One.4: session eligibility fails closed for missing, inactive, mal
   assert.deepEqual(identity.resolveTeamSessionEligibility(userA, null, teamA), { eligible: false, reason: "missing-membership" });
   assert.deepEqual(identity.resolveTeamSessionEligibility(userA, row({ id: "P1" }), teamA), { eligible: false, reason: "invalid-membership" });
   assert.deepEqual(identity.resolveTeamSessionEligibility(userA, row({ status: "inactive" }), teamA), { eligible: false, reason: "inactive-membership" });
+  assert.deepEqual(identity.resolveTeamSessionEligibility(userA, row({ membership_role: "superadmin" }), teamA), { eligible: false, reason: "invalid-role" });
   assert.deepEqual(identity.resolveTeamSessionEligibility(userB, row(), teamA), { eligible: false, reason: "user-mismatch" });
   assert.deepEqual(identity.resolveTeamSessionEligibility(userA, row({ team_id: teamB }), teamA), { eligible: false, reason: "team-mismatch" });
 });
