@@ -36,6 +36,14 @@ test("inactive and other-user memberships are excluded", () => {
   ]), null);
 });
 
+test("malformed membership rows fail closed without throwing", () => {
+  assert.equal(identity.resolveActiveTeamIdentity(userA, [
+    null,
+    { ...row(), user_id: null },
+    { ...row(), id: "not-a-uuid" },
+  ]), null);
+});
+
 test("multiple active teams require an explicit preferred team", () => {
   const rows = [row(), row({ id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", team_id: teamB })];
   assert.equal(identity.resolveActiveTeamIdentity(userA, rows), null);
