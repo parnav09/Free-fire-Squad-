@@ -334,7 +334,7 @@ BEGIN
   END;
   IF NOT denied THEN RAISE EXCEPTION 'signed-out assignment RPC was not denied'; END IF;
 END;
-$;
+$$;
 COMMIT;
 SQL
 
@@ -343,7 +343,7 @@ psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 BEGIN;
 SET LOCAL ROLE authenticated;
 SET LOCAL request.jwt.claim.sub = '30000000-0000-4000-8000-000000000001';
-DO $
+DO $$
 DECLARE denied boolean;
 BEGIN
   denied := false;
@@ -379,7 +379,7 @@ BEGIN
   END;
   IF NOT denied THEN RAISE EXCEPTION 'out-of-capacity player slot was not rejected'; END IF;
 END;
-$;
+$$;
 COMMIT;
 SQL
 
@@ -411,7 +411,7 @@ BEGIN
     RAISE EXCEPTION 'owner assignment failed or changed protected membership identity';
   END IF;
 END;
-$;
+$$;
 SQL
 
 echo "Phase One membership ACL PASS: member escalation denied; owner RPC enforced; loadout self-service preserved; cross-team and other-member writes denied."
