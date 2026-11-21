@@ -20,7 +20,7 @@ Close the structural integrity gaps recorded in Phase 2.1 and preserve the canon
 - Drill ownership guard: team-owned drills can only be referenced within their team; global templates (is_template = true, team_id IS NULL) remain available to every team. A referenced drill cannot be reassigned in a way that invalidates existing links.
 - A task that references a block must also carry that block's owning plan; the block must belong to the task's selected plan. A NULL task plan cannot bypass this invariant. This was found during acceptance review and fixed in the migration guard and DB harness.
 - Drill ownership and block/plan lookups take row-share locks while validating references, preventing concurrent reassignment from racing a new cross-team reference.
-- Scrim JSONB array length must equal match_count.
+- Scrim JSONB `matches` must be an array whose length does not exceed the expected `match_count`. A shorter array is valid when fewer matches were played/recorded; missing matches are never fabricated.
 - Session-level Training results with a NULL player are unique per session/attempt; per-player attempt uniqueness remains unchanged.
 - Supporting child-side indexes and parent (id, team_id) unique indexes.
 
@@ -64,7 +64,7 @@ A live preflight checked all 19 integrity predicates introduced or relied upon b
 - Training result → session and optional member identity
 - Scrim team review → Scrim/team identity
 - Planning block and Training session → linked drill existence and team/template compatibility
-- Scrim JSONB match-array length → `match_count`
+- Scrim JSONB match-array length ≤ expected `match_count`
 - NULL-player Training session/attempt duplicate detection
 
 **Result: 19/19 predicates returned zero existing violations.** In particular, the live Scrim array-count check and NULL-player duplicate check both returned zero.
