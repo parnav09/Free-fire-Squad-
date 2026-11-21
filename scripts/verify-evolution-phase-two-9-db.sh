@@ -152,6 +152,17 @@ END $$;
 RESET ROLE;
 
 
+-- Verify RPC privilege surface.
+DO $$
+BEGIN
+  IF has_function_privilege('anon','public.integrate_canonical_source(uuid,text,uuid)','EXECUTE')
+    OR NOT has_function_privilege('authenticated','public.integrate_canonical_source(uuid,text,uuid)','EXECUTE')
+  THEN RAISE EXCEPTION 'Canonical integration RPC ACLs are not restricted to authenticated'; END IF;
+END $$;
+
+SELECT 'Evolution Phase 2.9 PostgreSQL integration PASS' AS verification;
+SQL
+
 -- Exercise two truly concurrent requests for the same source record. The first
 -- request pauses inside canonical-session insertion while holding the source
 -- advisory lock; the second must wait, then return the exact same session ID.
@@ -298,15 +309,3 @@ DROP FUNCTION public.phase29_delay_concurrent_insert();
 SQL
 rm -f /tmp/phase29-integrate-a.log /tmp/phase29-integrate-b.log
 echo "Phase 2.9 concurrent source integration PASS: both requests returned $id_a; one mapping and two matches."
-
-
--- Verify RPC privilege surface.
-DO $$
-BEGIN
-  IF has_function_privilege('anon','public.integrate_canonical_source(uuid,text,uuid)','EXECUTE')
-    OR NOT has_function_privilege('authenticated','public.integrate_canonical_source(uuid,text,uuid)','EXECUTE')
-  THEN RAISE EXCEPTION 'Canonical integration RPC ACLs are not restricted to authenticated'; END IF;
-END $$;
-
-SELECT 'Evolution Phase 2.9 PostgreSQL integration PASS' AS verification;
-SQL
