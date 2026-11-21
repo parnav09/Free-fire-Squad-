@@ -16,7 +16,7 @@ The existing implementation in the base already contains the identity resolver, 
 
 | Point | Required outcome | Current evidence | Status |
 |---|---|---|---|
-| 1.1 | Stable Auth UUID → membership UUID → team UUID mapping; labels never act as IDs; active membership and ambiguous-team fail-closed behavior | `src/lib/evolution-identity.ts`; `scripts/verify-evolution-phase-one.mjs` | Implemented in base; exact-head CI pending |
+| 1.1 | Stable Auth UUID → membership UUID → team UUID mapping; labels never act as IDs; active membership and ambiguous-team fail-closed behavior | `src/lib/evolution-identity.ts`; `scripts/verify-evolution-phase-one.mjs`; this PR adds runtime guards for null/malformed membership rows and regression coverage | Implemented + hardened in this PR; exact-head CI pending |
 | 1.2 | Real app team-loading uses the selected stable identity; no arbitrary first-team fallback; sign-out clears scoped state | `src/App.tsx`; Phase One verifier | Implemented in base; exact-head CI pending |
 | 1.3 | Latest team-load request wins; stale async results/errors cannot overwrite newer state; sign-out invalidates requests | `src/lib/latest-request-guard.ts`; Phase One verifier | Implemented in base; exact-head CI pending |
 | 1.4 | Session eligibility requires exact active membership; role affordances fail closed and are explicitly UI-only | `src/lib/evolution-identity.ts`; `src/App.tsx`; Phase One verifier | Implemented in base; exact-head CI pending |
