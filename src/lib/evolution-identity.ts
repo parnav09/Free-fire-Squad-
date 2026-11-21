@@ -34,7 +34,10 @@ export function resolveActiveTeamIdentity(
   if (preferredTeamId != null && !isStableUuid(preferredTeamId)) return null;
 
   const candidates = rows.filter((row) =>
+    row != null &&
+    typeof row === "object" &&
     row.status === "active" &&
+    typeof row.user_id === "string" &&
     row.user_id.toLowerCase() === authUserId.toLowerCase() &&
     isStableUuid(row.id) &&
     isStableUuid(row.team_id) &&
