@@ -35,7 +35,7 @@ test("global drill templates remain valid and cross-team custom drill links are 
   assert.match(sql, /training_drills_reassignment_guard/);
   assert.match(sql, /practice_task_block_does_not_belong_to_plan/);
   assert.match(dbScript, /task block without its owning plan accepted/);
-  assert.match(sql, /IF TG_TABLE_NAME='practice_tasks' AND NEW\.block_id IS NOT NULL THEN/);
+  assert.match(sql, /ELSIF TG_TABLE_NAME='practice_tasks' THEN[\s\S]*?IF NEW\.block_id IS NOT NULL THEN/);
   assert.doesNotMatch(sql, /NEW\.block_id IS NOT NULL AND NEW\.plan_id IS NOT NULL/);
 });
 
