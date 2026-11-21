@@ -268,7 +268,7 @@ if [[ -z "$id_a" || "$id_a" != "$id_b" ]]; then
   echo "Concurrent retries did not return the same canonical session ID" >&2
   exit 1
 fi
-if [[ "$((count_a + count_b))" -ne 2 || ! ( "$count_a" -eq 0 || "$count_a" -eq 2 ) || ! ( "$count_b" -eq 0 || "$count_b" -eq 2 ) ]]; then
+if (( count_a + count_b != 2 )) || { [[ "$count_a" != "0" && "$count_a" != "2" ]] || [[ "$count_b" != "0" && "$count_b" != "2" ]]; }; then
   echo "Concurrent retries returned an unexpected synchronized match count: $count_a / $count_b" >&2
   exit 1
 fi
