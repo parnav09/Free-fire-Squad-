@@ -39,11 +39,29 @@ Project `FF Squad` (`xaixnqvyoswcvvkydrmh`), PostgreSQL 17.11, was inspected rea
 
 No production SQL, migration, schema, data, RLS, grants, triggers, or Auth settings were changed during this read-only inspection.
 
-## Acceptance blockers — must not be hidden
+## Fresh 22 November 2026 security revalidation and remediation
 
-1. **Authoritative clean-replay baseline:** the repository/evidence still lacks the original pre-migration schema baseline. A synthetic fixture or current schema snapshot cannot be described as historical clean replay. Full 1.5-E acceptance remains blocked unless the authoritative baseline is supplied or an independently reviewed baseline exception is approved.
-2. **Security boundary:** broad authenticated UPDATE grants on `team_members` require separate security review/remediation. Do not treat UI capability helpers as authorization, and do not silently change production grants in this Phase One PR.
-3. **Physical-device QA:** GitHub browser automation is not the same as owner-run Android/tablet/laptop QA. Record those checks separately if they are required for final release acceptance.
+The connected live Supabase project was rechecked after the earlier audit. This section supersedes older security statements where they conflict.
+
+### Confirmed already fixed in live database
+- Live migration ledger contains `20261118193817_revoke_direct_trigger_function_execution`.
+- Read-only `has_function_privilege` checks returned **false** for `anon`, `authenticated`, and `service_role` on all four trigger-returning functions: `lock_daily_score_date_and_anonymize`, `log_practice_task_lifecycle`, `set_practice_task_lifecycle_fields`, and `track_practice_task_lifecycle`.
+- Therefore the older statement that trigger-function ACL remediation is only staged is stale; direct API execution is already revoked in production.
+
+### Confirmed live issue now fixed in PR code, migration pending rollout
+- `authenticated` has table-level UPDATE on `public.team_members` and column-level UPDATE grants on all ten columns, including `id`, `team_id`, `user_id`, `membership_role`, `status`, `player_number`, and `assigned_role`.
+- The live `tm_update_character_loadout` policy allowed a user to update their own membership row or an owner to update a team row. Since it did not restrict writable columns, this was too broad for identity-bearing fields.
+- PR #142 now adds `supabase/migrations/20261122110000_team_members_owner_rpc_only.sql`: it revokes table and column UPDATE grants from API roles, drops the broad update policy, and exposes a narrowly scoped owner-checked `assign_member_with_role` RPC.
+- `src/App.tsx` now routes both owner self-role and roster assignment through that RPC; it contains no direct `team_members` UPDATE call.
+- The migration was applied inside a transaction against the live catalog for a runtime check. Owner RPC update succeeded; non-owner RPC and direct identity-field UPDATE were rejected; table/column privilege checks passed. The transaction was rolled back. **No production change persisted.**
+- CI now includes `scripts/verify-evolution-phase-one-5-e-security.sh` against disposable PostgreSQL. The new exact-head CI run has not yet been observed, so the committed test suite is pending CI confirmation.
+
+### Remaining true acceptance blockers
+1. **Authoritative historical baseline:** the original pre-migration schema baseline is absent. No current snapshot or synthetic fixture can prove the original clean replay. This cannot be honestly fabricated or repaired from the post-migration database alone. Supply the original dump/backup, or approve a separately reviewed current-state-baseline exception.
+2. **Production rollout:** the new `team_members` grant-revocation migration is in PR #142 but intentionally not applied permanently while the application change is not yet merged/deployed. Until coordinated rollout, the live broad UPDATE grant remains.
+3. **Physical-device QA:** browser automation does not prove actual Android/tablet/laptop behavior. Owner-run device checks remain separate.
+4. **Leaked-password protection:** paid-only Supabase Auth setting, explicitly excluded from this acceptance scope; no equivalent workaround is claimed.
+
 
 ## Exact-head CI evidence
 
