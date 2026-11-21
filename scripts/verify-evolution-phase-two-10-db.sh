@@ -238,9 +238,11 @@ SQL
 # Exercise the drill reassignment/reference race with two independent transactions.
 # The referencing trigger must wait for an in-flight ownership change and then
 # reject the stale-team insert rather than committing a cross-team reference.
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 INSERT INTO public.training_drills(id,team_id,is_template,title)
 VALUES ('dd100000-0000-0000-0000-000000000004',
         'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',false,'Concurrent drill fixture');
+SQL
 
 (
   PGAPPNAME=phase210-drill-owner-update psql "$DATABASE_URL" -v ON_ERROR_STOP=1 > /tmp/phase210-drill-owner-update.log 2>&1 <<'SQL'
