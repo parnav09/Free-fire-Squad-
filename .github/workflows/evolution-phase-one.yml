@@ -69,5 +69,8 @@ jobs:
       - name: Verify staged security trigger ACL hardening
         run: bash scripts/verify-evolution-security-trigger-acls.sh
 
+      - name: Verify Phase One team membership column ACL and owner RPC
+        run: bash scripts/verify-evolution-phase-one-membership-acl.sh
+
       - name: Verify typecheck, foundation contracts, character data and production bundle
         run: npm run build
