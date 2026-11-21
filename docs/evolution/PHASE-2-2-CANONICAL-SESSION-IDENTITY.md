@@ -1,6 +1,6 @@
 # Evolution Phase 2.2 — Canonical Session Identity
 
-**Status:** IMPLEMENTATION IN PROGRESS · frontend canonical adapter added · current exact-head CI pending · production canonical migration NOT applied  
+**Status:** BASE 2.2 SCHEMA PASS FOR LIMITED DEVELOPMENT (prior verified head) · POINT 2.2.1 EXTENSION IMPLEMENTED IN BRANCH, POSTGRESQL INTEGRATION NOT VERIFIED · production canonical migration NOT applied  
 **Branch:** `feat/evolution-phase-two-2-canonical-session-identity`  
 **Scope:** Point 2.2 only. No match child model, lifecycle workflow, roster/role snapshot, substitutions, result verification, module UI, production app deploy, or production session migration.
 
@@ -80,6 +80,10 @@ src/features/training/pendingSessionRequest.ts stores a per-team pending request
 
 This is an offline-to-online retry safeguard, not a full local session outbox: a session cannot be created while fully offline. The user must reconnect and retry the restored draft. No local temporary Session ID is treated as authoritative.
 
+### Canonical identity write protection
+
+Authenticated update grants are column-scoped. Only descriptive metadata (`title`, `session_date`, `scheduled_at`, `season_label`) and archive fields can be updated. Stable identity/provenance columns (`id`, `team_id`, `session_type`, `idempotency_key`, `created_by`, `created_at`) have no authenticated UPDATE privilege. The disposable harness asserts these column-level restrictions.
+
 ## 4.2 Historical source mapping
 
 The additive migration backfills historical records from all three source systems when the source creator is present and the canonical title is valid:
@@ -114,9 +118,9 @@ Source-contract suite: `scripts/verify-evolution-phase-two-2.mjs`, wired into `n
 
 **Prior historical CI:** PASS on exact head `8d244f3526af5484cb52ab0a03d7420da6ad4546`, push run #395 ([44382446442](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44382446442)). That run verified the earlier database-only Phase 2.2 implementation; it does not verify the frontend adapter and historical backfill added afterward.
 
-**Exact-head application build: PASS** on `49c2a862f9f72913c618d0be01249dc13e0a7027` via Vercel preview deployment [dpl_81nTyE1dp5hrJD76VuCCRanVC8v3](https://vercel.com/parnav09/squad-os/81nTyE1dp5hrJD76VuCCRanVC8v3). TypeScript typecheck, the repository build test chain (including Phase 2.2 contract checks and all five pending-session retry tests), and Vite production bundle completed successfully. The preview build is not a production deployment. Vite still reports the existing large-chunk warning (337.70 kB main chunk; 84.66 kB gzip); no unrelated code-splitting changes were made.
+**Latest exact-head application build: PASS** on `f31c999609707593379c8291ee5fcc7db567fc56` via Vercel Preview [dpl_EvUDavFApjXhBVdzEGPNMAkUyTWd](https://vercel.com/parnav09/squad-os/EvUDavFApjXhBVdzEGPNMAkUyTWd) (`https://squad-nanmnrv0a-parnav09.vercel.app`). TypeScript typecheck, the full repository build test chain (including Phase 2.2 source-contract checks and all five pending-session retry tests), and Vite production bundle completed successfully. This is a Preview deployment, not production. Vite still reports the existing large-chunk warning (main chunk 337.70 kB; gzip 84.66 kB); no unrelated code-splitting changes were made.
 
-**Disposable PostgreSQL integration: BLOCKED / NOT VERIFIED.** GitHub Actions run #832 and the subsequent exact-head run could not start a runner (job metadata showed `runner_id: 0` and no executed steps; logs were unavailable). Therefore the migration replay, historical backfill SQL and database-level idempotency/integrity harness have not yet been executed against disposable PostgreSQL. This is an infrastructure block, not a database test pass. Production Supabase remains untouched.
+**Disposable PostgreSQL integration: BLOCKED / NOT VERIFIED.** The latest exact-head GitHub Actions run #845 (`44884230081`) failed before any job steps executed; job steps and logs are unavailable. The previous retry run #840 (`44881498310`) had the same no-step failure. The harness fixture was strengthened in this branch to provision the `service_role` expected by the migration and to assert that stable identity/provenance columns cannot be updated. These SQL changes have not yet been executed against disposable PostgreSQL. The earlier CI pass on `8d244f...` covered the prior database-only implementation, not this frontend/backfill extension. This is not a database test pass. Production Supabase remains untouched.
 
 ## 6. Owner-approved limited-development exceptions (19 November 2026)
 
@@ -157,6 +161,8 @@ Official references:
 
 ## 8. Exit decision
 
-Point 2.2 is **PASS for limited development**: the exact-head CI and disposable PostgreSQL gates are green, team isolation and retry behavior are tested, and the blueprint/PR carry the verification evidence.
+**Base Phase 2.2 schema:** PASS for limited development on its previously verified exact head `8d244f...`.
+
+**Point 2.2.1 extension in PR #119:** IMPLEMENTED IN BRANCH, PARTIALLY VERIFIED. The latest Vercel exact-head build passes, but disposable PostgreSQL integration has not run because GitHub Actions fails before job steps start. Do not mark this extension complete until the migration replay, historical backfill, idempotency, RLS and immutable-identity assertions pass on a disposable database.
 
 This does not imply Phase 1.5-E full security acceptance or authorize production rollout. The canonical session migration remains un-applied to production.
