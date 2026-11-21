@@ -66,7 +66,7 @@ test("drill and block ownership checks serialize concurrent reference writes", a
   assert.match(migration, /ELSIF TG_TABLE_NAME='training_sessions' THEN/);
   assert.match(migration, /ELSIF TG_TABLE_NAME='practice_plan_blocks' THEN/);
   assert.match(migration, /ELSIF TG_TABLE_NAME='practice_tasks' THEN/);
-  assert.doesNotMatch(migration, /TG_TABLE_NAME='training_sessions' AND NEW\\.drill_id/);
+  assert.doesNotMatch(migration, /TG_TABLE_NAME='training_sessions' AND NEW\.drill_id/);
   assert.match(migration, /training_drill_reassignment_guard/);
   assert.match(harness, /Concurrent cross-team drill reference unexpectedly succeeded/);
   assert.match(harness, /training_drill_team_mismatch/);
