@@ -1,16 +1,16 @@
 # Evolution Phase One.5-B/C/D/E — Implementation and Acceptance Record
 
-**Date:** 18 Nov 2026  
+**Date:** 20 Nov 2026  
 **Branch:** `feat/evolution-phase-one-identity-timezone`  
 **PR:** #115 (draft; stacked on Phase Zero PR #114)
 
 ## Scope and safety
 
-This record covers only Evolution Phase One.5-B through .5-E. It does not authorize a production migration, migration-ledger edit, merge, deployment, security-policy redesign, retention change, or loadout work. No Supabase development branch was created.
+This record covers only Evolution Phase One.5-B through .5-E. It does not authorize a production migration, migration-ledger edit, merge, deployment, security-policy redesign, retention change, or loadout work. No production migration or deployment was performed during this audit. No Supabase development branch was created.
 
 ## B — India-only automatic date/timezone contract
 
-<badge>IN PROGRESS · ISOLATED DATABASE VERIFICATION PENDING</badge>
+<badge>PASS · DISPOSABLE POSTGRESQL VERIFIED IN CI RUNS #352/#353</badge>
 
 ### Application contract implemented
 
@@ -55,7 +55,7 @@ This record covers only Evolution Phase One.5-B through .5-E. It does not author
 
 ### Remaining acceptance gate
 
-The forward SQL is still staged outside `supabase/migrations/`. It has not yet been executed against an isolated PostgreSQL/Supabase-compatible database. Runtime verification must prove: default/legacy normalization, rejection of non-India values, restore-path behavior, Team Join inheritance, and no change to the existing Daily Evaluation trigger/RLS contract. No production migration will be applied as part of this validation.
+The forward SQL remains staged outside `supabase/migrations/` and has been executed against disposable PostgreSQL 16 in GitHub Actions runs #352/#353 (IDs 44276950260 and 44276957631). The test passed default/legacy normalization, invalid/blank rejection, restore-path normalization, canonical team-timezone lookup, and preservation of the existing Daily Evaluation trigger/RLS policy. The exact staged rollback also passed and removed only the new timezone trigger/function. This is B runtime proof in CI; production remains unchanged.
 
 
 ## C — Rollback
@@ -78,7 +78,7 @@ See [E Phase One.5-C Historical Rollback Disposition Register](./E-PHASE-ONE-5-C
 - The duplicate name `daily_score_feedback_private_rls` remains represented as two distinct versioned entries.
 - Destructive cleanup/retention changes, user-edited seed data, privacy/RLS changes, function replacements, and schema dependencies are explicitly protected from blind reversal.
 - The register prohibits migration-ledger rewrites, replaying old forward migrations, and unreviewed destructive inverses.
-- The B timezone rollback remains a separate staged draft; it is not a historical rollback and has not been database-tested.
+- The B timezone rollback remains a separate staged draft; it is not a historical rollback. Forward and rollback behavior passed disposable PostgreSQL CI runs #352/#353.
 
 **C historical disposition result: COMPLETE · DOCUMENTED · MACHINE-CHECKED.** This does not claim that historical rollback SQL exists or that production data can be restored by code alone. Any future compensation remains a new, independently reviewed migration with isolated database tests and separate release approval.
 
@@ -96,9 +96,11 @@ The checks cover:
 
 **Earlier local result:** the original Node source-contract suite passed **6/6**. The new C-specific suite validates all 53 disposition records, unique version coverage, the two intentionally excluded loadout versions, duplicate-name handling, all risk-class recovery rules, and no-destructive-inverse rules. GitHub Actions run #260 (ID 44257295715) on the corrected head passed: typecheck, all configured suites (including C 6/6), and Vite production build.
 
-**D acceptance:** the D suite cross-checks build wiring, B timezone/date test cases and staged SQL invariants, C 53-entry disposition coverage, B forward/rollback scope, and the explicit database/production evidence boundary. The suite validates the B test case names rather than relying on brittle source-text copies of runtime timezone values. D is complete when this suite and the full CI build pass on the exact head commit. **Limit:** these are source-contract tests, not a database integration test; staged B forward/rollback SQL still requires isolated database execution for B and final E acceptance.
+**D acceptance:** the D suite cross-checks build wiring, B timezone/date test cases and staged SQL invariants, C 53-entry disposition coverage, B forward/rollback scope, and the explicit database/production evidence boundary. The suite validates the B test case names rather than relying on brittle source-text copies of runtime timezone values. D is complete when this suite and the full CI build pass on the exact head commit. **Limit:** the D suite itself is a source-contract suite, not a database integration suite. The separate disposable PostgreSQL workflow step now executes the staged B forward/rollback SQL and verifies the runtime contract.
 
 ## E — Final Phase One acceptance audit
+
+The current-head final audit and its machine-checkable guard suite are recorded in [E Phase One.5-E Final Acceptance Audit](./E-PHASE-ONE-5-E-FINAL-AUDIT.md). B runtime execution is verified in CI, and all 18 callable authenticated SECURITY DEFINER signatures have passed adversarial role-level runtime checks. The paid-only leaked-password setting is excluded from this scope. E remains **BLOCKED / NOT PASSED** because the authoritative baseline/clean-replay evidence is unavailable.
 
 | Gate | Result |
 |---|---|
@@ -106,17 +108,20 @@ The checks cover:
 | Original SQL recovery for 53 safe-scope entries | 53/53 byte/hash verified |
 | Active migration-chain reconciliation | **Complete · verified: 53/53 exact in-scope matches; zero missing/extra in-scope files** |
 | Historical rollback disposition | **Complete · 53/53 explicitly forward-only; 0/53 automatic rollback statements** |
-| New timezone forward migration | Drafted and staged; not DB-executed |
-| New timezone rollback | Drafted; not DB-executed |
+| New timezone forward migration | **Disposable PostgreSQL CI PASS** · runs #352/#353; staged, not production-applied |
+| New timezone rollback | **Disposable PostgreSQL CI PASS** · runs #352/#353; staged, not production-applied |
 | Isolated clean replay | Not run; original pre-migration baseline unavailable |
-| Runtime timezone/RLS verification | Not run |
+| Runtime timezone/RLS verification | **PASS in disposable PostgreSQL CI** · runs #352/#353 |
+| Callable authenticated RPC authorization | **PASS · 18/18 signatures passed adversarial role-level runtime tests with transaction rollback** |
+| Paid-only leaked-password protection | **EXCLUDED · not a current-plan acceptance requirement** |
 | Full Phase One acceptance | **NOT PASSED** |
 
 ## Exact remaining blockers
 
 1. The pre-migration baseline needed for a clean replay is unavailable; do not invent it or claim a clean replay.
-2. The staged B timezone forward/rollback SQL still needs isolated PostgreSQL/Supabase-compatible execution and runtime validation; this is a separate B acceptance gate, not a C historical-disposition blocker.
-3. Any future historical compensation must be implemented as a new reviewed migration with isolated tests; no automatic historical rollback is approved.
-4. Re-run the full build/CI and Phase One acceptance checklist against the resulting exact commit.
+2. The authoritative pre-migration baseline is unavailable, so full-chain clean replay cannot be claimed.
+3. The paid-only leaked-password protection setting remains disabled and is excluded from this user-approved scope; no workaround is claimed.
+4. Any future historical compensation must be implemented as a new reviewed migration with isolated tests; no automatic historical rollback is approved.
+5. Re-run the full build/CI and Phase One acceptance checklist against the resulting exact commit.
 
-**Current result:** B's forward SQL and C's rollback for that new migration are drafted; D's automated source-contract checks are added. E correctly remains **BLOCKED / NOT COMPLETE** until database validation and historical migration disposition pass. No production database or deployment changes were made.
+**Current result:** C historical rollback disposition is complete (53/53). Exact-head CI runs #352/#353 passed B disposable-PostgreSQL forward/rollback tests, security trigger ACL tests, all configured suites (including D 6/6 and E 7/7), typecheck, and Vite production build. All 18 callable RPC signatures subsequently passed adversarial runtime authorization checks with rollback. The paid-only leaked-password setting is excluded. The original pre-migration baseline required for full clean replay remains unavailable, so E remains **BLOCKED / NOT PASSED**. No production database or deployment changes were made.
