@@ -53,7 +53,7 @@ The new Point 2.12 source tests assert that these cases remain present. They do 
 | Gate | Current evidence | Status |
 |---|---|---|
 | Earlier source-contract suites | Historical full build completed on `271c1e3eb1764802ea6660538bf1a28eb82eb5ec`; this is not the current PR head | **Historical PASS; exact-head rerun pending** |
-| TypeScript + production bundle | Historical Vercel Preview for `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` reached READY; current PR head is `b228d37531727eaf2747ef4d5c014dc6d17cf30f` and has no matching Vercel deployment record | **Historical PASS; exact-head build pending** |
+| TypeScript + production bundle | Historical Vercel Preview for `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` reached READY; current PR head is `5c3387a82baedd620e1bc4484428bfcf0ab0caa8` and has no matching Vercel deployment record | **Historical PASS; exact-head build pending** |
 | Phase 2.10 source contract | 4/4 passed on exact preview commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` | **PASS (source contract only)** |
 | Phase 2.10 PostgreSQL integration | Latest associated run `44727576628` failed before runner steps; job has no step output/logs | **BLOCKED** |
 | Phase 2.11 source contract | 6/6 passed on exact preview commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` | **PASS (source contract only)** |
@@ -69,7 +69,7 @@ The new Point 2.12 source tests assert that these cases remain present. They do 
 4. Complete manual Android, tablet and desktop QA by exercising the Sessions workspace on an Android phone, tablet-sized viewport, and desktop; record browser/device, viewport, scenarios, and outcomes.
 5. Verify historical source mappings and snapshot immutability across existing Tournament, Scrim, Planning and Training records using disposable fixtures.
 
-During the latest Phase 2.10 integrity review, a real gap was found: a task could reference a plan block while `plan_id` was NULL. The trigger now enforces the block's owning plan whenever `block_id` is set, and the disposable PostgreSQL harness includes a regression case for this. The source contract and full Vercel build pass; the database assertion still awaits a runner that starts.
+During the latest Phase 2.10 integrity review, a real gap was found: a task could reference a plan block while `plan_id` was NULL. The trigger now enforces the block's owning plan whenever `block_id` is set, and the disposable PostgreSQL harness includes a regression case for this. The earlier source contract and Vercel build passed on historical commits only. The newly added 12-group source assertions and UI focus/touch-target hardening require a fresh preview build; PostgreSQL assertions still await an allowed runner execution.
 
 ## Production boundary
 
