@@ -90,7 +90,7 @@ test("E records the remaining clean-replay and Auth gates instead of falsely pas
   assert.match(audit, /FINAL ACCEPTANCE: BLOCKED \/ NOT PASSED/);
   assert.match(audit, /no original pre-migration schema baseline/i);
   assert.match(audit, /leaked-password protection remains disabled/i);
-  assert.match(securityReview, /Overall Security acceptance is not PASS yet/i);
+  assert.match(securityReview, /Overall Security acceptance (?:is not PASS yet|remains PARTIAL)/i);
 });
 
 test("E final audit keeps production, merge and loadout scope boundaries explicit", () => {
