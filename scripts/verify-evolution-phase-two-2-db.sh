@@ -249,6 +249,13 @@ BEGIN
   IF has_table_privilege('authenticated','public.canonical_session_sources','DELETE') THEN
     RAISE EXCEPTION 'authenticated role unexpectedly has DELETE on canonical_session_sources';
   END IF;
+  IF has_column_privilege('authenticated','public.canonical_sessions','id','UPDATE')
+    OR has_column_privilege('authenticated','public.canonical_sessions','team_id','UPDATE')
+    OR has_column_privilege('authenticated','public.canonical_sessions','session_type','UPDATE')
+    OR has_column_privilege('authenticated','public.canonical_sessions','idempotency_key','UPDATE')
+    OR has_column_privilege('authenticated','public.canonical_sessions','created_by','UPDATE') THEN
+    RAISE EXCEPTION 'authenticated role can mutate canonical session identity/provenance columns';
+  END IF;
 END $$;
 
 SELECT 'Evolution Phase 2.2 PostgreSQL integration PASS' AS result;
