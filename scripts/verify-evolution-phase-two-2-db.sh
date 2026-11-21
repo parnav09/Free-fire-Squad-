@@ -243,7 +243,7 @@ BEGIN
 END $$;
 
 SELECT set_config('request.jwt.claim.sub','20000000-0000-0000-0000-000000000002',false);
-DO $
+DO $rls$
 DECLARE visible_count integer;
 BEGIN
   SELECT count(*) INTO visible_count
@@ -258,7 +258,7 @@ BEGIN
   ) THEN
     RAISE EXCEPTION 'cross-team session visibility leaked: Bravo user can see Alpha sessions';
   END IF;
-END $;
+END $rls$;
 
 RESET ROLE;
 DO $$
