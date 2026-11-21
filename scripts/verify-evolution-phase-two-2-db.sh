@@ -153,6 +153,16 @@ BEGIN
   END IF;
 END $$;
 
+-- Add fresh source rows for the runtime linkage and cross-team FK assertions.
+-- Historical source rows above are already mapped by the migration and must not be reused.
+INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date) VALUES
+ ('cccccccc-0000-0000-0000-000000000003',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  '10000000-0000-0000-0000-000000000001', DATE '2026-11-22'),
+ ('dddddddd-0000-0000-0000-000000000004',
+  'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+  '20000000-0000-0000-0000-000000000002', DATE '2026-11-22');
+
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
 
@@ -189,7 +199,7 @@ BEGIN
     team_id,canonical_session_id,source_system,scrim_record_id,created_by
   ) VALUES (
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',first_session.id,'scrim',
-    'aaaaaaaa-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000001'
+    'cccccccc-0000-0000-0000-000000000003','10000000-0000-0000-0000-000000000001'
   );
 
   second_session := public.create_canonical_session(
@@ -202,7 +212,7 @@ BEGIN
       team_id,canonical_session_id,source_system,scrim_record_id,created_by
     ) VALUES (
       'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',second_session.id,'scrim',
-      'bbbbbbbb-0000-0000-0000-000000000002','10000000-0000-0000-0000-000000000001'
+      'dddddddd-0000-0000-0000-000000000004','10000000-0000-0000-0000-000000000001'
     );
     RAISE EXCEPTION 'cross-team source mapping was accepted';
   EXCEPTION WHEN foreign_key_violation THEN NULL;
