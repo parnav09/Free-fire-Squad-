@@ -282,7 +282,7 @@ BEGIN
   denied := false;
   BEGIN
     PERFORM public.set_member_assignment(
-      '20000000-0000-4000-8000-000000000002',3,'Third Rusher',true
+      '20000000-0000-4000-8000-000000000002'::uuid,3::smallint,'Third Rusher'::text,true
     );
     RAISE EXCEPTION 'SECURITY FAILURE: non-owner assignment RPC succeeded';
   EXCEPTION WHEN raise_exception THEN
@@ -293,7 +293,7 @@ BEGIN
   denied := false;
   BEGIN
     PERFORM public.assign_member(
-      '20000000-0000-4000-8000-000000000002',3,true
+      '20000000-0000-4000-8000-000000000002'::uuid,3::smallint,true
     );
     RAISE EXCEPTION 'SECURITY FAILURE: non-owner assign_member succeeded';
   EXCEPTION WHEN raise_exception THEN
@@ -315,7 +315,7 @@ DECLARE denied boolean := false;
 BEGIN
   BEGIN
     PERFORM public.set_member_assignment(
-      '20000000-0000-4000-8000-000000000002',2,'Third Rusher',true
+      '20000000-0000-4000-8000-000000000002'::uuid,2::smallint,'Third Rusher'::text,true
     );
     RAISE EXCEPTION 'SECURITY FAILURE: signed-out assignment RPC succeeded';
   EXCEPTION WHEN raise_exception THEN
@@ -333,10 +333,10 @@ BEGIN;
 SET LOCAL ROLE authenticated;
 SET LOCAL request.jwt.claim.sub = '30000000-0000-4000-8000-000000000001';
 SELECT public.set_member_assignment(
-  '20000000-0000-4000-8000-000000000002',3,'Third Rusher',true
+  '20000000-0000-4000-8000-000000000002'::uuid,3::smallint,'Third Rusher'::text,true
 );
 SELECT public.set_member_assignment(
-  '20000000-0000-4000-8000-000000000002',NULL,'Coach',true
+  '20000000-0000-4000-8000-000000000002'::uuid,NULL::smallint,'Coach'::text,true
 );
 COMMIT;
 
