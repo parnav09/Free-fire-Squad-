@@ -96,7 +96,9 @@ test("Canonical Sessions UI uses the authoritative RPC boundary and preserves fa
     "submit_canonical_session_result","verify_canonical_session_result",
     "reject_canonical_session_result","submit_canonical_session_results"
   ]) assert.ok(ui.includes(rpc), `Missing canonical RPC ${rpc}`);
-  assert.match(ui, /isOnline/);
+  assert.match(ui, /online/);
+  assert.match(ui, /if\(busy\)return;if\(!online\)/);
+  assert.match(ui, /Offline — reconnect before changing session records/);
   assert.match(ui, /canManage/);
   assert.match(ui, /no_inferred_values/);
 });
@@ -170,6 +172,6 @@ test("Acceptance report explicitly separates automated evidence from owner devic
   const report = await read("../docs/evolution/PHASE-2-12-REGRESSION-ACCEPTANCE.md");
   assert.match(report, /Automated acceptance/);
   assert.match(report, /physical Android\/tablet\/desktop QA remains owner-run/i);
-  assert.match(report, /No merge to main/);
+  assert.match(report, /No merge to `main`/);
   assert.match(report, /No production deployment/);
 });
