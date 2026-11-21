@@ -151,6 +151,7 @@ BEGIN
 END $$;
 RESET ROLE;
 
+
 -- Verify RPC privilege surface.
 DO $$
 BEGIN
@@ -161,3 +162,130 @@ END $$;
 
 SELECT 'Evolution Phase 2.9 PostgreSQL integration PASS' AS verification;
 SQL
+
+# Exercise two truly concurrent requests for the same source record. The first
+# request pauses inside canonical-session insertion while holding the source
+# advisory lock; the second must wait, then return the exact same session ID.
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date,match_count,matches)
+VALUES (
+  'aa290000-0000-0000-0000-000000000099',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  '10000000-0000-0000-0000-000000000001',
+  DATE '2026-11-25',3,
+  '[{"placement":3,"kills":3},{"placement":1,"kills":8},{"placement":2,"kills":5}]'::jsonb
+);
+CREATE OR REPLACE FUNCTION public.phase29_delay_concurrent_insert()
+RETURNS trigger LANGUAGE plpgsql AS $function$
+BEGIN
+  IF NEW.title='Scrim · 2026-11-25' THEN
+    PERFORM pg_catalog.pg_sleep(2);
+  END IF;
+  RETURN NEW;
+END;
+$function$;
+CREATE TRIGGER phase29_delay_concurrent_insert
+BEFORE INSERT ON public.canonical_sessions
+FOR EACH ROW EXECUTE FUNCTION public.phase29_delay_concurrent_insert();
+SQL
+
+(
+  PGAPPNAME=phase29-integrate-a psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -At -F '|' > /tmp/phase29-integrate-a.log 2>&1 <<'SQL'
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
+SELECT canonical_session_id::text || '|' || synced_match_count::text
+FROM public.integrate_canonical_source(
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','scrim',
+  'aa290000-0000-0000-0000-000000000099'
+);
+SQL
+) &
+request_a_pid=$!
+
+first_inside_insert=0
+for attempt in {1..80}; do
+  if [[ "$(psql "$DATABASE_URL" -tA -c "SELECT count(*) FROM pg_catalog.pg_stat_activity WHERE application_name='phase29-integrate-a' AND state='active' AND wait_event='PgSleep'")" -gt 0 ]]; then
+    first_inside_insert=1
+    break
+  fi
+  sleep 0.1
+done
+if [[ "$first_inside_insert" -ne 1 ]]; then
+  wait "$request_a_pid" || true
+  cat /tmp/phase29-integrate-a.log >&2
+  echo "First concurrent source integration did not reach the controlled insert pause" >&2
+  exit 1
+fi
+
+(
+  PGAPPNAME=phase29-integrate-b psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -At -F '|' > /tmp/phase29-integrate-b.log 2>&1 <<'SQL'
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
+SELECT canonical_session_id::text || '|' || synced_match_count::text
+FROM public.integrate_canonical_source(
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','scrim',
+  'aa290000-0000-0000-0000-000000000099'
+);
+SQL
+) &
+request_b_pid=$!
+
+second_waiting_on_lock=0
+for attempt in {1..80}; do
+  if [[ "$(psql "$DATABASE_URL" -tA -c "SELECT count(*) FROM pg_catalog.pg_stat_activity WHERE application_name='phase29-integrate-b' AND state='active' AND wait_event_type='Lock'")" -gt 0 ]]; then
+    second_waiting_on_lock=1
+    break
+  fi
+  sleep 0.1
+done
+if [[ "$second_waiting_on_lock" -ne 1 ]]; then
+  wait "$request_a_pid" || true
+  wait "$request_b_pid" || true
+  cat /tmp/phase29-integrate-a.log /tmp/phase29-integrate-b.log >&2
+  echo "Second concurrent source integration did not wait on the source advisory lock" >&2
+  exit 1
+fi
+
+wait "$request_a_pid"
+wait "$request_b_pid"
+result_a="$(tail -n 1 /tmp/phase29-integrate-a.log)"
+result_b="$(tail -n 1 /tmp/phase29-integrate-b.log)"
+id_a="$(printf '%s' "$result_a" | cut -d '|' -f 1)"
+id_b="$(printf '%s' "$result_b" | cut -d '|' -f 1)"
+count_a="$(printf '%s' "$result_a" | cut -d '|' -f 2)"
+count_b="$(printf '%s' "$result_b" | cut -d '|' -f 2)"
+if [[ -z "$id_a" || "$id_a" != "$id_b" ]]; then
+  cat /tmp/phase29-integrate-a.log /tmp/phase29-integrate-b.log >&2
+  echo "Concurrent retries did not return the same canonical session ID" >&2
+  exit 1
+fi
+if (( count_a + count_b != 3 )) || { [[ "$count_a" != "0" && "$count_a" != "3" ]] || [[ "$count_b" != "0" && "$count_b" != "3" ]]; }; then
+  echo "Concurrent retries returned an unexpected synchronized match count: $count_a / $count_b" >&2
+  exit 1
+fi
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+DO $concurrent$
+DECLARE source_count integer; match_count integer;
+BEGIN
+  SELECT count(*) INTO source_count FROM public.canonical_session_sources
+  WHERE source_system='scrim'
+    AND source_record_id='aa290000-0000-0000-0000-000000000099';
+  SELECT count(*) INTO match_count FROM public.canonical_session_matches
+  WHERE canonical_session_id=(
+    SELECT canonical_session_id FROM public.canonical_session_sources
+    WHERE source_system='scrim'
+      AND source_record_id='aa290000-0000-0000-0000-000000000099'
+  );
+  IF source_count<>1 THEN
+    RAISE EXCEPTION 'Concurrent source integration created % source mappings instead of one',source_count;
+  END IF;
+  IF match_count<>3 THEN
+    RAISE EXCEPTION 'Concurrent source integration synchronized % matches instead of three',match_count;
+  END IF;
+END
+$concurrent$;
+DROP TRIGGER phase29_delay_concurrent_insert ON public.canonical_sessions;
+DROP FUNCTION public.phase29_delay_concurrent_insert();
+SQL
+rm -f /tmp/phase29-integrate-a.log /tmp/phase29-integrate-b.log
+echo "Phase 2.9 concurrent source integration PASS: both requests returned $id_a; one mapping and three matches."
