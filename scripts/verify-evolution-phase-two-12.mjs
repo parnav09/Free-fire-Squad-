@@ -171,7 +171,7 @@ test("Phase 2.11 responsive source safeguards cover breakpoints, focus, and redu
 test("Acceptance report explicitly separates automated evidence from owner device QA and rollout", async () => {
   const report = await read("../docs/evolution/PHASE-2-12-REGRESSION-ACCEPTANCE.md");
   assert.match(report, /Automated acceptance/);
-  assert.match(report, /physical Android\/tablet\/desktop QA remains owner-run/i);
+  assert.match(report, /physical-device QA remains owner-run/i);
   assert.match(report, /No merge to `main`/);
   assert.match(report, /No production deployment/);
 });
