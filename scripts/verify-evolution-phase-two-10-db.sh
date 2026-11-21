@@ -194,10 +194,16 @@ BEGIN
     RAISE EXCEPTION 'cross-team Scrim review accepted';
   EXCEPTION WHEN foreign_key_violation THEN NULL; END;
 
+  IF NOT EXISTS (SELECT 1 FROM public.scrim_records
+    WHERE id='aa100000-0000-0000-0000-000000000001'
+      AND jsonb_array_length(matches)<match_count) THEN
+    RAISE EXCEPTION 'Expected partial Scrim fixture was not preserved';
+  END IF;
+
   BEGIN
-    UPDATE public.scrim_records SET matches='[{"placement":1,"kills":2}]'::jsonb
+    UPDATE public.scrim_records SET matches='[{"m":1},{"m":2},{"m":3},{"m":4}]'::jsonb
     WHERE id='aa290000-0000-0000-0000-000000000001';
-    RAISE EXCEPTION 'Scrim JSONB count mismatch accepted';
+    RAISE EXCEPTION 'Scrim JSONB entries above expected match_count were accepted';
   EXCEPTION WHEN check_violation THEN NULL; END;
 
   BEGIN
@@ -300,7 +306,7 @@ ALTER TABLE public.training_results DROP CONSTRAINT IF EXISTS training_results_s
 ALTER TABLE public.training_results DROP CONSTRAINT IF EXISTS training_results_member_team_fk;
 ALTER TABLE public.scrim_team_reviews DROP CONSTRAINT IF EXISTS scrim_team_reviews_scrim_team_fk;
 ALTER TABLE public.practice_plan_blocks DROP CONSTRAINT IF EXISTS practice_plan_blocks_linked_drill_fk;
-ALTER TABLE public.scrim_records DROP CONSTRAINT IF EXISTS scrim_records_match_count_matches_array_check;
+ALTER TABLE public.scrim_records DROP CONSTRAINT IF EXISTS scrim_records_matches_not_exceed_match_count_check;
 
 DROP INDEX IF EXISTS public.practice_plans_id_team_uidx;
 DROP INDEX IF EXISTS public.practice_plan_blocks_id_team_uidx;
@@ -330,7 +336,7 @@ BEGIN
       'practice_tasks_source_session_team_fk','training_session_participants_session_team_fk',
       'training_session_participants_member_team_fk','training_results_session_team_fk',
       'training_results_member_team_fk','scrim_team_reviews_scrim_team_fk',
-      'practice_plan_blocks_linked_drill_fk','scrim_records_match_count_matches_array_check'
+      'practice_plan_blocks_linked_drill_fk','scrim_records_matches_not_exceed_match_count_check'
     )) THEN RAISE EXCEPTION 'Phase 2.10 rollback left a new constraint behind'; END IF;
   IF EXISTS (SELECT 1 FROM pg_catalog.pg_trigger
     WHERE tgname IN ('training_sessions_team_drill_guard','practice_plan_blocks_team_drill_guard',
@@ -365,7 +371,7 @@ BEGIN
     'practice_tasks_source_session_team_fk','training_session_participants_session_team_fk',
     'training_session_participants_member_team_fk','training_results_session_team_fk',
     'training_results_member_team_fk','scrim_team_reviews_scrim_team_fk',
-    'practice_plan_blocks_linked_drill_fk','scrim_records_match_count_matches_array_check'
+    'practice_plan_blocks_linked_drill_fk','scrim_records_matches_not_exceed_match_count_check'
   );
   IF validated_count<>14 THEN
     RAISE EXCEPTION 'Forward re-apply did not restore all 14 validated constraints: %',validated_count;
