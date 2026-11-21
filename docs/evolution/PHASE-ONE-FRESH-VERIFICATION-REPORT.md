@@ -76,3 +76,7 @@ The existing workflow did not include this PR's Phase Two.12 base in its `pull_r
 ## Rollout boundary
 
 This PR does not merge to `main`, apply the staged timezone or ACL migrations to production, change live grants/RLS, or deploy production. A passing disposable CI run proves only the tested disposable contract. Final completion requires exact-head CI success and closure or explicit independent disposition of every blocker above.
+
+### Latest CI attempt and correction
+
+GitHub Actions run #1066 (ID `44955380068`) reached the new team-member authorization step after all preceding disposable PostgreSQL steps and the staged trigger ACL step passed. The new security test script failed because its SQL fixture passed integer literals to an RPC parameter typed `smallint`. The test fixture was corrected to cast the slot literals explicitly to `smallint`; the application migration and RPC design were not changed by this correction. A fresh exact-head run is still required before this new CI gate can be marked passed.
