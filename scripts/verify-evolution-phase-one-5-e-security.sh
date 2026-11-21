@@ -73,7 +73,7 @@ END $$;
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000010',false);
 SELECT public.assign_member_with_role(
- '00000000-0000-0000-0000-000000000020',2,true,'Secondary Rusher'
+ '00000000-0000-0000-0000-000000000020',2::smallint,true,'Secondary Rusher'
 );
 RESET ROLE;
 
@@ -104,7 +104,7 @@ DO $$
 BEGIN
   BEGIN
     PERFORM public.assign_member_with_role(
-      '00000000-0000-0000-0000-000000000020',3,true,'Sniper'
+      '00000000-0000-0000-0000-000000000020',3::smallint,true,'Sniper'
     );
     RAISE EXCEPTION 'non-owner RPC call unexpectedly succeeded';
   EXCEPTION WHEN raise_exception THEN
