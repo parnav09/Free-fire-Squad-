@@ -26,7 +26,7 @@ It checks:
 4. Disposable PostgreSQL integration harnesses for 2.2–2.10 remain wired into CI.
 5. Phase 2.11 canonical UI RPC, permission, offline, and no-inferred-data safeguards remain present.
 6. Responsive breakpoints, reduced-motion, and semantic accessibility states remain present.
-7. CI triggers include this branch and the correct PR base branches.
+7. The Phase 2.12 contract is in the build chain. GitHub Actions branch triggers remain held until 1 December under the owner's earlier instruction; no workflow was edited to bypass that hold.
 8. The acceptance report cannot silently claim PASS while DB/device evidence is missing.
 
 ## Blueprint Point 2.12 — 12-group coverage matrix
@@ -63,9 +63,9 @@ The new Point 2.12 source tests assert that these cases remain present. They do 
 
 ## Final acceptance blockers
 
-1. Restore a working GitHub Actions runner execution path and obtain a successful isolated PostgreSQL replay for Points 2.2–2.10. The latest associated run #700 (ID `44727576628`) created a job but failed before runner steps; the job has no step output/logs. A failed job with no steps/logs is not evidence of database correctness. GitHub Actions is not to be rerun before the previously stated 1 December restriction expires.
+1. Restore a working GitHub Actions runner execution path and obtain a successful isolated PostgreSQL replay for Points 2.2–2.10. The latest associated run #700 (ID `44727576628`) created a job but failed before runner steps; the job has no step output/logs. A failed job with no steps/logs is not evidence of database correctness. GitHub Actions branch triggers and executions remain held until 1 December under the previously stated restriction. No workflow edit or manual Actions dispatch was made.
 2. Run authenticated end-to-end flows against a disposable/staging database using the exact staged migrations, including Owner/Coach/member permission boundaries and cross-team isolation.
-3. Add and execute a true parallel-request contention test for source integration; the current advisory lock and idempotency checks are source/runtime harness guards, not proof of concurrent race behavior.
+3. After the Actions hold expires, enable the intended branch triggers through an approved workflow change and run the full database integration suite. Add and execute a true parallel-request contention test for source integration; the current advisory lock and idempotency checks are source/runtime harness guards, not proof of concurrent race behavior.
 4. Complete manual Android, tablet and desktop QA by exercising the Sessions workspace on an Android phone, tablet-sized viewport, and desktop; record browser/device, viewport, scenarios, and outcomes.
 5. Verify historical source mappings and snapshot immutability across existing Tournament, Scrim, Planning and Training records using disposable fixtures.
 
