@@ -12,7 +12,7 @@ const legacyPlanning = readFileSync("src/components/PlanningTrainingCenter.tsx",
 test("Point 2.11 workspace is reachable without replacing legacy workspaces", () => {
   assert.match(app, /CanonicalSessionsWorkspace/);
   assert.match(app, /section==="Sessions"/);
-  assert.match(app, /"Sessions" as Section|Sessions,/);
+  assert.match(app, /const nav: Section\[\] = \[[^\]]*"Sessions"/s);
   assert.match(legacyScrims, /integrate_canonical_source|integrateCanonicalSource/);
   assert.match(legacyPlanning, /integrate_canonical_source|integrateCanonicalSource/);
 });
