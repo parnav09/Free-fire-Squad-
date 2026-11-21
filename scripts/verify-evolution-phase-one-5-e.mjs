@@ -17,6 +17,8 @@ const [
   bDbScript,
   securityAclScript,
   securityAclSql,
+  membershipGuardMigration,
+  membershipGuardScript,
 ] = await Promise.all([
   read("package.json"),
   read("docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md"),
@@ -30,6 +32,8 @@ const [
   read("scripts/verify-evolution-phase-one-5-b-db.sh"),
   read("scripts/verify-evolution-security-trigger-acls.sh"),
   read("docs/evolution/staged-migrations/20261118080000_revoke_direct_trigger_function_execution.sql"),
+  read("supabase/migrations/20261122000000_phase_one_membership_update_guard.sql"),
+  read("scripts/verify-evolution-phase-one-membership-acl.sh"),
 ]);
 const pkg = JSON.parse(pkgText);
 const manifest = JSON.parse(await read("docs/evolution/evolution-phase-one-5-c-rollback-manifest.json"));
@@ -102,6 +106,20 @@ test("adversarial runtime authorization evidence covers all callable RPC signatu
   assert.match(rpcTestReport, /team_join_requests.*0 rows/s);
   assert.match(securityReview, /18 callable function signatures passed/);
   assert.match(audit, /18 callable authenticated SECURITY DEFINER signatures/);
+});
+
+test("Phase One membership authorization migration limits UPDATE to character_loadout and adds an owner-checked RPC", () => {
+  assert.match(membershipGuardMigration, /REVOKE UPDATE ON TABLE public\.team_members FROM PUBLIC, anon, authenticated/);
+  assert.match(membershipGuardMigration, /GRANT UPDATE \(character_loadout\) ON TABLE public\.team_members TO authenticated/);
+  assert.match(membershipGuardMigration, /SECURITY DEFINER[\s\S]*SET search_path TO 'pg_catalog', 'public'/);
+  assert.match(membershipGuardMigration, /public\.is_team_owner\(v_team_id\)/);
+  assert.match(membershipGuardMigration, /public\.assign_member\(p_member, p_player/);
+  assert.match(membershipGuardMigration, /REVOKE ALL ON FUNCTION public\.set_member_assignment/);
+  assert.match(membershipGuardScript, /membership_role update was not denied/);
+  assert.match(membershipGuardScript, /non-owner assignment RPC was not denied/);
+  assert.match(membershipGuardScript, /own character_loadout update was not preserved/);
+  assert.match(membershipGuardScript, /owner assignment failed or changed protected membership identity/);
+  assert.match(workflow, /bash scripts\/verify-evolution-phase-one-membership-acl\.sh/);
 });
 
 test("E final audit keeps production, merge and loadout scope boundaries explicit", () => {
