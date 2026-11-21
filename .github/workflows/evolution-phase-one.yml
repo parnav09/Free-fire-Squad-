@@ -85,6 +85,8 @@ jobs:
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
       - name: Verify staged security trigger ACL hardening
         run: bash scripts/verify-evolution-security-trigger-acls.sh
+      - name: Verify team_members owner-only write boundary against disposable PostgreSQL
+        run: bash scripts/verify-evolution-phase-one-5-e-security.sh
       - name: Verify responsive UI, touch targets, permissions and offline write guard
         run: npm run test:evolution-phase-two-11-visual
       - name: Upload responsive UI screenshots
