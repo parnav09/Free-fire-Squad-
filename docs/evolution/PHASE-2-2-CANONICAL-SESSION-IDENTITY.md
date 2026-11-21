@@ -1,6 +1,6 @@
 # Evolution Phase 2.2 — Canonical Session Identity
 
-**Status:** PASS for limited development · exact-head CI verified · production trigger ACL hardening applied  
+**Status:** IMPLEMENTATION IN PROGRESS · frontend canonical adapter added · current exact-head CI pending · production canonical migration NOT applied  
 **Branch:** `feat/evolution-phase-two-2-canonical-session-identity`  
 **Scope:** Point 2.2 only. No match child model, lifecycle workflow, roster/role snapshot, substitutions, result verification, module UI, production app deploy, or production session migration.
 
@@ -59,16 +59,47 @@ This is the Phase 2.2 table/API access contract. It is not a substitute for the 
 
 ## 4. Existing-system preservation
 
-The migration is additive. It does not rewrite Scrim JSONB matches, Tournament cycles/matches, Planning plans/tasks, Training sessions/results, historical roster values, or any existing result. Existing module adapters and UI wiring remain assigned to Point 2.9; match child identities remain Point 2.3.
+The migration is additive. It does not rewrite Scrim JSONB matches, Tournament cycles/matches, Planning plans/tasks, Training session IDs/results, historical roster values, or any existing result. Existing module adapters and broader cross-module UI wiring remain assigned to Point 2.9; match child identities remain Point 2.3. Eligible historical Training sessions receive a deterministic canonical UUID and an explicit source mapping; their legacy IDs and child references remain unchanged.
 
-No new UI is required by Point 2.2. Building a second session UI before the later integration point would create a competing workflow.
+No second UI is introduced. The existing Planning/Training create action now calls the canonical RPC first, then writes the legacy training_sessions row using that same canonical UUID. Existing participant/result/task foreign-key contracts therefore continue to reference the same stable training row ID.
+
+
+## 4.1 Frontend canonical RPC adapter — Point 2.2.1
+
+PlanningTrainingCenter.tsx now:
+- Calls create_canonical_session before writing a new Training session.
+- Uses the database-returned canonical UUID as training_sessions.id for newly created sessions.
+- Keeps the legacy Training row and its existing child references intact.
+- Adds an explicit canonical_session_sources mapping from the canonical UUID to the legacy Training UUID.
+- Verifies the legacy row and source mapping after writes; it never deletes a partially completed record to simulate rollback.
+- Uses idempotent upserts for source mappings and participant associations so a retry can resume after a partial network failure.
+
+### Persistent retry identity and offline recovery
+
+src/features/training/pendingSessionRequest.ts stores a per-team pending request payload and idempotency UUID in local storage before the first network call. On reload, the existing form is restored from that payload. A retry with the same payload reuses the same key; a changed payload is blocked until the earlier request is completed. The marker is cleared only after the canonical row, legacy row, source mapping and participant associations have been verified.
+
+This is an offline-to-online retry safeguard, not a full local session outbox: a session cannot be created while fully offline. The user must reconnect and retry the restored draft. No local temporary Session ID is treated as authoritative.
+
+## 4.2 Historical Training mapping
+
+The additive migration backfills only historical rows with:
+- a non-null created_by that already references an existing Auth user;
+- a non-empty title no longer than the canonical title limit.
+
+It derives a deterministic canonical UUID and idempotency key from the immutable legacy Training UUID, then inserts a source mapping. Reapplying the migration does not create another canonical record or source mapping. The legacy training_sessions.id is never updated, and no participants, results or tasks are rewritten.
+
+No season/cycle is inferred from title, date or other descriptive data. Historical season_label remains NULL. Rows that fail the explicit eligibility rules remain unmapped for manual evidence-based review rather than receiving fabricated provenance.
 
 ## 5. Verification plan
 
 Disposable PostgreSQL integration harness: `scripts/verify-evolution-phase-two-2-db.sh`.
 
-The harness creates minimal source-system fixtures and executes the exact migration. It verifies:
+The harness creates minimal source-system fixtures, seeds a historical Training row before migration, executes the exact migration twice, and verifies:
 - schema installation against PostgreSQL;
+- historical Training session mapping is deterministic and replay-safe;
+- legacy Training UUID and record remain unchanged;
+- historical season metadata is not fabricated;
+- same canonical UUID is used for new frontend-created legacy Training rows;
 - same-key retry returns the same session UUID;
 - payload mismatch on a reused idempotency key is rejected;
 - active Owner/Coach authorization;
@@ -80,18 +111,9 @@ The harness creates minimal source-system fixtures and executes the exact migrat
 
 Source-contract suite: `scripts/verify-evolution-phase-two-2.mjs`, wired into `npm run build`.
 
-**Exact-head CI: PASS**  
-Head: `8d244f3526af5484cb52ab0a03d7420da6ad4546`  
-Push run #395: [44382446442](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44382446442)
+**Prior historical CI:** PASS on exact head `8d244f3526af5484cb52ab0a03d7420da6ad4546`, push run #395 ([44382446442](https://github.com/parnav09/Free-fire-Squad-/actions/runs/44382446442)). That run verified the earlier database-only Phase 2.2 implementation; it does not verify the frontend adapter and historical backfill added afterward.
 
-- 107 automated tests passed; 0 failed.
-- TypeScript typecheck passed.
-- Phase 2.2 disposable PostgreSQL integration passed.
-- Phase 1.5-B forward/rollback integration passed.
-- Trigger-function ACL integration passed, including the trigger smoke test.
-- Vite production build passed.
-
-The push run is tied to the exact branch head above. Earlier failed runs were superseded by this passing run; they are retained as diagnostic history.
+**Current exact-head CI:** PENDING. The current branch must pass typecheck, all standard tests, pending-session retry tests, disposable PostgreSQL integration (including migration replay and historical mapping), and Vite production build before this point can be marked verified.
 
 ## 6. Owner-approved limited-development exceptions (19 November 2026)
 
