@@ -12,7 +12,7 @@ export type StableTeamIdentity = {
   authUserId: string;
   membershipId: string;
   teamId: string;
-  membershipRole: string;
+  membershipRole: MembershipRole;
 };
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -21,12 +21,7 @@ export function isStableUuid(value: unknown): value is string {
   return typeof value === "string" && UUID_PATTERN.test(value);
 }
 
-/**
- * Resolve a signed-in user to exactly one active team membership.
- * Display labels (P1/P2/IGN) are never accepted as identity values.
- * If no preferred team is supplied and multiple active memberships exist,
- * return null rather than selecting an arbitrary team.
- */
+/** Accept only the three canonical membership permission roles. */
 export function isMembershipRole(value: unknown): value is MembershipRole {
   return value === "owner" || value === "coach" || value === "player";
 }
