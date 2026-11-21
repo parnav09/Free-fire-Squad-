@@ -64,7 +64,7 @@ test("Session list and detail requests cannot publish stale data after team or s
   assert.match(component, /requestId!==listRequestRef\.current/);
   assert.match(component, /requestId!==detailRequestRef\.current/);
   assert.match(component, /return\(\)=>\{listRequestRef\.current\+\+;detailRequestRef\.current\+\+;\}/);
-  assert.match(component, /setSessions\(\[\]\);setSources\(\{\}\);setMatchCounts\(\{\}\);setSelectedId\("\")/);
+  assert.ok(component.includes('setSessions([]);setSources({});setMatchCounts({});setSelectedId("")'));
 });
 
 test("Expected match coverage blocks premature session verification", async () => {
