@@ -64,10 +64,17 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 DO $phase210$
 DECLARE member_a uuid; member_b uuid;
 BEGIN
-  SELECT id INTO member_a FROM public.team_members WHERE team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
-    AND user_id='30000000-0000-0000-0000-000000000003';
-  SELECT id INTO member_b FROM public.team_members WHERE team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'
-    AND user_id='20000000-0000-0000-0000-000000000002';
+  -- Use the surviving post-2.5 roster fixtures (the earlier Alpha player
+  -- was intentionally deleted by the roster-snapshot acceptance test).
+  SELECT id INTO member_a FROM public.team_members
+    WHERE id='a4000000-0000-0000-0000-000000000004'
+      AND team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+  SELECT id INTO member_b FROM public.team_members
+    WHERE id='b3000000-0000-0000-0000-000000000003'
+      AND team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+  IF member_a IS NULL OR member_b IS NULL THEN
+    RAISE EXCEPTION 'Phase 2.10 member fixtures missing after inherited roster tests';
+  END IF;
 
   BEGIN
     INSERT INTO public.tournament_matches(id,cycle_id,team_id,match_day,match_number,placement,kills,points,status)
