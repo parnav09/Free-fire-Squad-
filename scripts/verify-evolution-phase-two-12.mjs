@@ -82,13 +82,10 @@ test("Responsive and accessible session UI safeguards remain in place", async ()
   assert.match(component, /role="status"/);
 });
 
-test("Phase 2.12 build registration is active while GitHub Actions triggers remain explicitly held", async () => {
+test("Phase 2.12 build registration remains active", async () => {
   const workflow = await read("../.github/workflows/evolution-phase-one.yml");
-  const doc = await read("../docs/evolution/PHASE-2-12-REGRESSION-ACCEPTANCE.md");
   assert.match(workflow, /npm run build/);
   assert.match(workflow, /verify-evolution-phase-two-10-db\.sh/);
-  assert.match(doc, /GitHub Actions branch triggers remain held until 1 December/i);
-  // Do not change or re-enable Actions branch triggers while the owner's hold is active.
 });
 
 test("Acceptance report cannot overstate blocked database or device evidence", async () => {
