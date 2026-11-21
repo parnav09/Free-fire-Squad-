@@ -1,10 +1,10 @@
-name: SQUAD OS — Evolution Phase One CI
+name: SQUAD OS — Evolution Phase One & Phase Two.1 Audit CI
 
 on:
   push:
-    branches: [main, feat/evolution-phase-one-identity-timezone]
+    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation]
   pull_request:
-    branches: [main, chore/evolution-phase-zero-one-naming]
+    branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone]
 
 permissions:
   contents: read
@@ -69,5 +69,5 @@ jobs:
       - name: Verify staged security trigger ACL hardening
         run: bash scripts/verify-evolution-security-trigger-acls.sh
 
-      - name: Verify typecheck, foundation contracts, character data and production bundle
+      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1 audit and production bundle
         run: npm run build
