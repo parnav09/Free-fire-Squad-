@@ -33,11 +33,30 @@ GRANT SELECT ON public.team_members TO authenticated;
 
 CREATE TABLE public.scrim_records (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  team_id uuid NOT NULL REFERENCES public.teams(id)
+  team_id uuid NOT NULL REFERENCES public.teams(id),
+  owner_id uuid NOT NULL REFERENCES auth.users(id),
+  scrim_date date NOT NULL,
+  match_count smallint NOT NULL DEFAULT 6,
+  matches jsonb NOT NULL DEFAULT '[]'::jsonb,
+  overall_rank integer,
+  total_teams integer,
+  personal_review jsonb NOT NULL DEFAULT '{}'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE TABLE public.tournament_cycles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  team_id uuid NOT NULL REFERENCES public.teams(id)
+  team_id uuid NOT NULL REFERENCES public.teams(id),
+  cycle_start date NOT NULL,
+  cycle_end date NOT NULL,
+  title text NOT NULL DEFAULT 'Weekly Tournament',
+  registration_open_at timestamptz,
+  registration_close_at timestamptz,
+  status text NOT NULL DEFAULT 'draft',
+  roster_snapshot jsonb NOT NULL DEFAULT '[]'::jsonb,
+  created_by uuid NOT NULL REFERENCES auth.users(id),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE TABLE public.training_sessions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -61,6 +80,18 @@ INSERT INTO auth.users(id) VALUES
 INSERT INTO public.teams(id, team_name) VALUES
  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','Alpha'),
  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','Bravo');
+INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date) VALUES (
+ 'aaaaaaaa-0000-0000-0000-000000000001',
+ 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+ '10000000-0000-0000-0000-000000000001',
+ DATE '2026-11-20'
+);
+INSERT INTO public.tournament_cycles(id,team_id,cycle_start,cycle_end,title,created_by) VALUES (
+ 'aaaaaaaa-2222-2222-2222-222222222222',
+ 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+ DATE '2026-11-16', DATE '2026-11-22', 'Weekly Tournament · 2026-W47',
+ '10000000-0000-0000-0000-000000000001'
+);
 INSERT INTO public.training_sessions(
  id,team_id,title,session_type,scheduled_at,duration_minutes,created_by
 ) VALUES (
@@ -80,9 +111,9 @@ INSERT INTO public.team_members(team_id,user_id,membership_role,status) VALUES
  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','10000000-0000-0000-0000-000000000001','owner','active'),
  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb','20000000-0000-0000-0000-000000000002','owner','active'),
  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','30000000-0000-0000-0000-000000000003','player','active');
-INSERT INTO public.scrim_records(id,team_id) VALUES
- ('aaaaaaaa-0000-0000-0000-000000000001','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
- ('bbbbbbbb-0000-0000-0000-000000000002','bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
+INSERT INTO public.scrim_records(id,team_id,owner_id,scrim_date) VALUES
+ ('bbbbbbbb-0000-0000-0000-000000000002','bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+  '20000000-0000-0000-0000-000000000002',DATE '2026-11-20');
 
 DO $
 DECLARE
@@ -102,6 +133,16 @@ BEGIN
   ) THEN RAISE EXCEPTION 'historical training session was rewritten or removed'; END IF;
   SELECT count(*) INTO mapped_count FROM public.canonical_session_sources WHERE source_system='training';
   IF mapped_count <> 1 THEN RAISE EXCEPTION 'historical source mapping duplicated after migration replay'; END IF;
+  IF (SELECT count(*) FROM public.canonical_session_sources WHERE source_system='scrim') <> 2 THEN
+    RAISE EXCEPTION 'historical scrim records were not all mapped';
+  END IF;
+  IF (SELECT count(*) FROM public.canonical_session_sources WHERE source_system='tournament') <> 1 THEN
+    RAISE EXCEPTION 'historical tournament cycle was not mapped';
+  END IF;
+  IF (SELECT count(*) FROM public.scrim_records WHERE id='aaaaaaaa-0000-0000-0000-000000000001') <> 1
+    OR (SELECT count(*) FROM public.tournament_cycles WHERE id='aaaaaaaa-2222-2222-2222-222222222222') <> 1 THEN
+    RAISE EXCEPTION 'historical Scrim/Tournament source IDs were rewritten';
+  END IF;
   IF EXISTS (
     SELECT 1 FROM public.canonical_sessions
     WHERE id=mapped_id AND season_label IS NOT NULL
