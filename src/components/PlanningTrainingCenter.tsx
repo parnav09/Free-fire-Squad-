@@ -14,6 +14,7 @@ type Session = { id:string; title:string; session_type:string; scheduled_at:stri
 type Result = {id:string;session_id:string;player_member_id:string|null;attempt_number:number;score:number|null;completed:boolean;player_reflection:string;coach_feedback:string;next_action:string;created_at:string};
 type Participant = {id:string;session_id:string;player_member_id:string;attendance:string;participation_notes:string};
 const today=()=>new Date().toLocaleDateString("en-CA");
+const sameInstant=(left:string|null,right:string|null)=>left===right||!!left&&!!right&&Date.parse(left)===Date.parse(right);
 const categories=["individual","role","entry-trade","backup","flank","positioning","communication","igl","rotation","endgame","squad-coordination"];
 const roles=["P1 Primary Rusher","P2 Secondary Rusher","P3 Third Rusher / Flanker","P4 Sniper + IGL","IGL (Designated Caller)","Substitute","All players"];
 const categoryRoleDefault:Record<string,string>={"communication":"All players","positioning":"All players","igl":"P4 Sniper + IGL","entry-trade":"P1 Primary Rusher","backup":"P2 Secondary Rusher","flank":"P3 Third Rusher / Flanker","rotation":"All players","endgame":"All players","squad-coordination":"All players","individual":"P1 Primary Rusher","role":"All players"};
@@ -138,7 +139,7 @@ export default function PlanningTrainingCenter({teamId,members,userId,canManage,
     ||legacyRow.session_type!==payload.sessionType
     ||legacyRow.drill_id!==payload.drillId
     ||legacyRow.plan_id!==payload.planId
-    ||legacyRow.scheduled_at!==payload.scheduledAt
+    ||!sameInstant(legacyRow.scheduled_at,payload.scheduledAt)
     ||legacyRow.duration_minutes!==payload.durationMinutes
     ||legacyRow.instructions!==payload.instructions){
     return {error:new Error("The canonical session exists, but its legacy training record could not be verified. Retry the same request; its identity key is preserved.")};
