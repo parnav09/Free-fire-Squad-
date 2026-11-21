@@ -66,3 +66,37 @@ test("Session list and detail requests cannot publish stale data after team or s
   assert.match(component, /return\(\)=>\{listRequestRef\.current\+\+;detailRequestRef\.current\+\+;\}/);
   assert.match(component, /setSessions\(\[\]\);setSources\(\{\}\);setMatchCounts\(\{\}\);setSelectedId\("\")/);
 });
+
+test("Expected match coverage blocks premature session verification", async () => {
+  const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
+  assert.match(component, /expectedMatchCount/);
+  assert.match(component, /allExpectedResultsVerified/);
+  assert.match(component, /Link every expected match and verify every result/);
+});
+test("Training rejection and correction paths remain usable", async () => {
+  const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
+  assert.match(component, /Correction reason · required/);
+  assert.match(component, /Reason to return for correction/);
+  assert.match(component, /existing\?\.status==="rejected"&&correctionReason\.trim\(\)\.length<3/);
+});
+test("Substitutions capture an explicit effective timestamp", async () => {
+  const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
+  assert.match(component, /type="datetime-local" value=\{subEffectiveAt\}/);
+  assert.match(component, /new Date\(subEffectiveAt\)\.toISOString\(\)/);
+});
+test("Result audit events and version history are visible", async () => {
+  const component = await read("../src/components/CanonicalSessionsWorkspace.tsx");
+  assert.match(component, /Result audit history/);
+  assert.match(component, /Version history/);
+  assert.match(component, /event\.changed_by/);
+  assert.match(component, /v\{v\.version_no\}/);
+});
+test("All interactive controls meet the 44px target and retain focus visibility", async () => {
+  const css = await read("../src/components/CanonicalSessionsWorkspace.css");
+  assert.match(css, /\.canonical-workspace button\{min-height:44px/);
+  assert.match(css, /\.canonical-icon-button\{width:44px;height:44px/);
+  assert.match(css, /:focus-visible/);
+  assert.match(css, /@media\(max-width:820px\)/);
+  assert.match(css, /@media\(max-width:520px\)/);
+  assert.match(css, /prefers-reduced-motion/);
+});
