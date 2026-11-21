@@ -39,10 +39,10 @@ test("global drill templates remain valid and cross-team custom drill links are 
   assert.doesNotMatch(sql, /NEW\.block_id IS NOT NULL AND NEW\.plan_id IS NOT NULL/);
 });
 
-test("Scrim match counts and NULL-player Training attempts have database uniqueness", async () => {
+test("Scrim arrays may be partial but cannot exceed expected matches; NULL-player attempts stay unique", async () => {
   const sql = await read("../supabase/migrations/20261121000000_evolution_phase_two_10_database_integrity.sql");
-  assert.match(sql, /scrim_records_match_count_matches_array_check/);
-  assert.match(sql, /jsonb_array_length\(matches\)=match_count/);
+  assert.match(sql, /scrim_records_matches_not_exceed_match_count_check/);
+  assert.match(sql, /jsonb_array_length\(matches\)<=match_count/);
   assert.match(sql, /training_results_session_attempt_without_player_uidx/);
   assert.match(sql, /WHERE player_member_id IS NULL/);
 });
