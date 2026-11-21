@@ -80,15 +80,16 @@ src/features/training/pendingSessionRequest.ts stores a per-team pending request
 
 This is an offline-to-online retry safeguard, not a full local session outbox: a session cannot be created while fully offline. The user must reconnect and retry the restored draft. No local temporary Session ID is treated as authoritative.
 
-## 4.2 Historical Training mapping
+## 4.2 Historical source mapping
 
-The additive migration backfills only historical rows with:
-- a non-null created_by that already references an existing Auth user;
-- a non-empty title no longer than the canonical title limit.
+The additive migration backfills historical records from all three source systems when the source creator is present and the canonical title is valid:
+- Training: existing created_by, title and scheduled_at;
+- Scrim: existing owner_id and scrim_date, with a generated descriptive title;
+- Tournament: existing created_by, title, cycle_start and registration_open_at.
 
-It derives a deterministic canonical UUID and idempotency key from the immutable legacy Training UUID, then inserts a source mapping. Reapplying the migration does not create another canonical record or source mapping. The legacy training_sessions.id is never updated, and no participants, results or tasks are rewritten.
+It derives deterministic canonical UUIDs and idempotency keys from each immutable source UUID, then inserts the matching source mapping. Reapplying the migration does not create another canonical record or source mapping. Legacy source UUIDs are never updated, and no participants, results, match JSON or tasks are rewritten.
 
-No season/cycle is inferred from title, date or other descriptive data. Historical season_label remains NULL. Rows that fail the explicit eligibility rules remain unmapped for manual evidence-based review rather than receiving fabricated provenance.
+No season/cycle is inferred from title, date or other descriptive data. Historical season_label remains NULL. The Tournament cycle is represented by its source mapping; the original cycle UUID and date range remain in tournament_cycles. Rows that fail the explicit eligibility rules remain unmapped for manual evidence-based review rather than receiving fabricated provenance.
 
 ## 5. Verification plan
 
