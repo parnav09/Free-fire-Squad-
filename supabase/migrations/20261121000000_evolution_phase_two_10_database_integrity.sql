@@ -122,7 +122,7 @@ BEGIN
 
   IF TG_TABLE_NAME='training_sessions' AND NEW.drill_id IS NOT NULL THEN
     SELECT d.team_id,d.is_template INTO v_drill_team_id,v_drill_is_template
-    FROM public.training_drills d WHERE d.id=NEW.drill_id;
+    FROM public.training_drills d WHERE d.id=NEW.drill_id FOR SHARE;
   ELSIF TG_TABLE_NAME='practice_plan_blocks' AND NEW.linked_drill_id IS NOT NULL THEN
     SELECT d.team_id,d.is_template INTO v_drill_team_id,v_drill_is_template
     FROM public.training_drills d WHERE d.id=NEW.linked_drill_id;
@@ -139,7 +139,7 @@ BEGIN
 
   IF TG_TABLE_NAME='practice_tasks' AND NEW.block_id IS NOT NULL THEN
     SELECT b.plan_id INTO v_block_plan_id FROM public.practice_plan_blocks b
-    WHERE b.id=NEW.block_id AND b.team_id=NEW.team_id;
+    WHERE b.id=NEW.block_id AND b.team_id=NEW.team_id FOR SHARE;
     IF FOUND AND v_block_plan_id IS DISTINCT FROM NEW.plan_id THEN
       RAISE EXCEPTION 'practice_task_block_does_not_belong_to_plan' USING ERRCODE='23514';
     END IF;
