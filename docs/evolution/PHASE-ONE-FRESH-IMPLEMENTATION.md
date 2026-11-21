@@ -31,14 +31,14 @@ The complete scope is Points 1.1, 1.2, 1.3, 1.4, and 1.5-A through 1.5-E.
 
 ## Completion checklist
 
-- [ ] Point 1.1 implemented and verified
-- [ ] Point 1.2 implemented and verified
-- [ ] Point 1.3 implemented and verified
-- [ ] Point 1.4 implemented and verified
-- [ ] Point 1.5-A implemented and verified
-- [ ] Point 1.5-B implemented and verified
-- [ ] Point 1.5-C implemented and verified
-- [ ] Point 1.5-D implemented and verified
+- [x] Point 1.1 implemented and verified
+- [x] Point 1.2 implemented and verified
+- [x] Point 1.3 implemented and verified
+- [x] Point 1.4 implemented and verified
+- [x] Point 1.5-A implemented and verified
+- [x] Point 1.5-B implemented and verified
+- [x] Point 1.5-C implemented and verified
+- [x] Point 1.5-D implemented and verified
 - [ ] Point 1.5-E implemented and verified
-- [ ] Exact-head CI, tests, and production build pass
+- [x] Exact-head CI, tests, and production build pass (run #1041; 21/Nov/2026 head 1932582bc9e4cccd048658119a5eafd4e8056920)
 - [ ] Remaining owner-only checks and rollout boundaries documented
