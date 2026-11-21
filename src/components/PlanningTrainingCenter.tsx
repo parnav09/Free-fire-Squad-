@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase/client";
 import PlayerEvaluationRubric, { type PlayerEvaluationDraft } from "./PlayerEvaluationRubric";
 import { localizedDrill } from "./drillHinglish";
+import { clearPendingSessionRequest, getOrCreatePendingSessionRequest } from "../features/training/pendingSessionRequest";
 import "./PlanningTrainingCenter.ux.css";
 
 type Member = { id:string; user_id:string; display_name:string; player_number:number|null; assigned_role:string|null; membership_role:string; status:string };
@@ -56,7 +57,104 @@ export default function PlanningTrainingCenter({teamId,members,userId,canManage,
  const saveDrillEdit=(d:Drill)=>write("Drill updated.",()=>supabase!.from("training_drills").update({title:editDrillTitle.trim(),objective:editDrillObjective.trim(),duration_minutes:Number(editDrillDuration)||15,category:editDrillCategory,difficulty:editDrillDifficulty,success_criteria:editDrillCriteria.trim(),setup:editDrillSetup.trim(),steps:editDrillSteps.split(String.fromCharCode(10)).map(x=>x.trim()).filter(Boolean),updated_at:new Date().toISOString()}).eq("id",d.id).eq("team_id",teamId)).then(()=>setEditingDrill(""));
  const archiveDrill=(d:Drill)=>write("Drill archived.",()=>supabase!.from("training_drills").update({archived:true,updated_at:new Date().toISOString()}).eq("id",d.id).eq("team_id",teamId));
  const copyDrill=(d:Drill)=>write("Template copied to your squad library.",()=>supabase!.from("training_drills").insert({team_id:teamId,is_template:false,title:d.title,category:d.category,difficulty:d.difficulty,role_tags:d.role_tags,duration_minutes:d.duration_minutes,objective:d.objective,setup:d.setup,steps:d.steps,success_criteria:d.success_criteria,scoring_rubric:{},tags:[]}));
- const createSession=()=>{if(!sessionTitle.trim())return;return write("Training session scheduled.",async()=>{const created=await supabase!.from("training_sessions").insert({team_id:teamId,title:sessionTitle.trim(),session_type:sessionType,drill_id:sessionDrill||null,plan_id:sessionPlan||null,scheduled_at:sessionDate?new Date(sessionDate+"T12:00:00").toISOString():null,duration_minutes:Number(sessionMinutes)||15,instructions:sessionInstructions.trim(),created_by:userId}).select("id").single();if(created.error)return {error:created.error};if(selectedParticipants.length){const added=await supabase!.from("training_session_participants").insert(selectedParticipants.map(player_member_id=>({team_id:teamId,session_id:created.data.id,player_member_id})));if(added.error){await supabase!.from("training_sessions").delete().eq("id",created.data.id).eq("team_id",teamId);return {error:added.error};}}return {error:null};});};
+ const createSession=()=>{
+  if(!supabase||!sessionTitle.trim())return;
+  const scheduledAt=sessionDate?new Date(sessionDate+"T12:00:00").toISOString():null;
+  const payload={
+   teamId,
+   title:sessionTitle.trim(),
+   sessionType,
+   planId:sessionPlan||null,
+   drillId:sessionDrill||null,
+   scheduledAt,
+   sessionDate:sessionDate||null,
+   durationMinutes:Number(sessionMinutes)||15,
+   instructions:sessionInstructions.trim(),
+   participantIds:[...selectedParticipants].sort(),
+  };
+  const storageKey="squad-os:pending-training-session:"+teamId;
+  let pending:{idempotencyKey:string};
+  try{
+   pending=getOrCreatePendingSessionRequest(window.localStorage,storageKey,payload,()=>crypto.randomUUID());
+  }catch(e){
+   setError(e instanceof Error?e.message:"Could not safely persist the session retry identity.");
+   return;
+  }
+  return write("Training session scheduled with canonical identity.",async()=>{
+   const canonicalResult=await supabase!.rpc("create_canonical_session",{
+    p_team_id:teamId,
+    p_session_type:"training",
+    p_title:payload.title,
+    p_idempotency_key:pending.idempotencyKey,
+    p_session_date:payload.sessionDate,
+    p_scheduled_at:payload.scheduledAt,
+    p_season_label:null,
+   });
+   if(canonicalResult.error)return {error:canonicalResult.error};
+   const canonical=Array.isArray(canonicalResult.data)?canonicalResult.data[0]:canonicalResult.data;
+   const canonicalId=canonical?.id;
+   if(typeof canonicalId!=="string")return {error:new Error("Canonical session RPC returned no UUID. The pending retry key has been preserved.")};
+
+   // New legacy training rows reuse the canonical UUID so every existing child FK
+   // (participants, results and practice-task source references) stays stable.
+   const legacy=await supabase!.from("training_sessions").upsert({
+    id:canonicalId,
+    team_id:teamId,
+    title:payload.title,
+    session_type:payload.sessionType,
+    drill_id:payload.drillId,
+    plan_id:payload.planId,
+    scheduled_at:payload.scheduledAt,
+    duration_minutes:payload.durationMinutes,
+    instructions:payload.instructions,
+    created_by:userId,
+   },{onConflict:"id",ignoreDuplicates:true});
+   if(legacy.error)return {error:legacy.error};
+
+   const legacyCheck=await supabase!.from("training_sessions")
+    .select("id,team_id,title,session_type,drill_id,plan_id,scheduled_at,duration_minutes,instructions")
+    .eq("id",canonicalId).eq("team_id",teamId).maybeSingle();
+   if(legacyCheck.error)return {error:legacyCheck.error};
+   const legacyRow=legacyCheck.data;
+   if(!legacyRow
+    ||legacyRow.title!==payload.title
+    ||legacyRow.session_type!==payload.sessionType
+    ||legacyRow.drill_id!==payload.drillId
+    ||legacyRow.plan_id!==payload.planId
+    ||legacyRow.scheduled_at!==payload.scheduledAt
+    ||legacyRow.duration_minutes!==payload.durationMinutes
+    ||legacyRow.instructions!==payload.instructions){
+    return {error:new Error("The canonical session exists, but its legacy training record could not be verified. Retry the same request; its identity key is preserved.")};
+   }
+
+   const source=await supabase!.from("canonical_session_sources").upsert({
+    team_id:teamId,
+    canonical_session_id:canonicalId,
+    source_system:"training",
+    training_session_id:canonicalId,
+    created_by:userId,
+   },{onConflict:"source_system,source_record_id",ignoreDuplicates:true});
+   if(source.error)return {error:source.error};
+   const sourceCheck=await supabase!.from("canonical_session_sources")
+    .select("canonical_session_id,source_record_id")
+    .eq("source_system","training").eq("source_record_id",canonicalId).maybeSingle();
+   if(sourceCheck.error)return {error:sourceCheck.error};
+   if(sourceCheck.data?.canonical_session_id!==canonicalId){
+    return {error:new Error("The legacy-to-canonical source mapping could not be verified. Retry the same request; its identity key is preserved.")};
+   }
+
+   if(payload.participantIds.length){
+    const participants=await supabase!.from("training_session_participants").upsert(
+     payload.participantIds.map(player_member_id=>({team_id:teamId,session_id:canonicalId,player_member_id})),
+     {onConflict:"session_id,player_member_id",ignoreDuplicates:true},
+    );
+    if(participants.error)return {error:participants.error};
+   }
+   try{clearPendingSessionRequest(window.localStorage,storageKey);}
+   catch{return {error:new Error("Session was saved, but the local retry marker could not be cleared. Retry the same request once to safely finalize it.")};}
+   return {error:null};
+  });
+ };
  const sessionStatus=(session:Session,status:string)=>write("Session status updated.",()=>supabase!.from("training_sessions").update({status,updated_at:new Date().toISOString(),...(status==="completed"?{completed_at:new Date().toISOString()}:{} )}).eq("id",session.id).eq("team_id",teamId));
  const attendance=(p:Participant,status:string)=>write("Attendance updated.",()=>supabase!.from("training_session_participants").update({attendance:status}).eq("id",p.id).eq("team_id",teamId));
  const saveParticipantNote=(p:Participant)=>write("Attendance note saved.",()=>supabase!.from("training_session_participants").update({participation_notes:(participantNotes[p.id]??p.participation_notes??"").trim()}).eq("id",p.id).eq("team_id",teamId));
