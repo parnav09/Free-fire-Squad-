@@ -124,7 +124,10 @@ WITH CHECK (
   )
 );
 
-GRANT SELECT, INSERT, UPDATE ON public.canonical_sessions TO authenticated;
+GRANT SELECT, INSERT ON public.canonical_sessions TO authenticated;
+REVOKE UPDATE ON public.canonical_sessions FROM PUBLIC, anon, authenticated;
+GRANT UPDATE (title, session_date, scheduled_at, season_label, archived_at, archived_by, archive_reason)
+  ON public.canonical_sessions TO authenticated;
 GRANT SELECT, INSERT ON public.canonical_session_sources TO authenticated;
 REVOKE DELETE ON public.canonical_sessions, public.canonical_session_sources FROM anon, authenticated;
 
