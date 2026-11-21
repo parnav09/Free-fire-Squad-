@@ -4,13 +4,16 @@ import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
-const [migration, dbHarness, report, blueprint, packageText, workflow] = await Promise.all([
+const [migration, dbHarness, report, blueprint, packageText, workflow, trainingComponent, pendingHelper, pendingTests] = await Promise.all([
   read("supabase/migrations/20261119120000_evolution_phase_two_2_canonical_session_identity.sql"),
   read("scripts/verify-evolution-phase-two-2-db.sh"),
   read("docs/evolution/PHASE-2-2-CANONICAL-SESSION-IDENTITY.md"),
   read("docs/evolution-version-2.md"),
   read("package.json"),
   read(".github/workflows/evolution-phase-one.yml"),
+  read("src/components/PlanningTrainingCenter.tsx"),
+  read("src/features/training/pendingSessionRequest.ts"),
+  read("scripts/verify-pending-session-request.mjs"),
 ]);
 const pkg = JSON.parse(packageText);
 
@@ -71,9 +74,33 @@ test("Phase 2.2 contracts are wired into the standard build and CI workflow", ()
   assert.ok(pkg.scripts.build.includes("npm run test:evolution-phase-two-2"));
   assert.match(workflow, /feat\/evolution-phase-two-2-canonical-session-identity/);
   assert.match(workflow, /verify-evolution-phase-two-2-db\.sh/);
-  assert.match(report, /Exact-head CI: PASS/i);
-  assert.match(report, /107 automated tests passed; 0 failed/i);
-  assert.match(report, /8d244f3526af5484cb52ab0a03d7420da6ad4546/i);
+  assert.match(pkg.scripts.build, /test:pending-session-request/);
+  assert.match(report, /Frontend canonical RPC adapter/i);
+});
+
+
+test("Training UI uses one canonical UUID and preserves legacy references idempotently", () => {
+  assert.match(trainingComponent, /rpc\("create_canonical_session"/);
+  assert.match(trainingComponent, /p_session_type:"training"/);
+  assert.match(trainingComponent, /id:canonicalId/);
+  assert.match(trainingComponent, /canonical_session_sources/);
+  assert.match(trainingComponent, /training_session_id:canonicalId/);
+  assert.match(trainingComponent, /onConflict:"session_id,player_member_id",ignoreDuplicates:true/);
+  assert.match(trainingComponent, /readPendingSessionPayload/);
+  assert.match(pendingHelper, /getOrCreatePendingSessionRequest/);
+  assert.match(pendingHelper, /storage\.setItem\(storageKey/);
+  assert.match(pendingHelper, /storage\.removeItem\(storageKey/);
+  assert.match(pendingTests, /retry reuses the same key/i);
+  assert.match(pendingTests, /offline-to-online retry/i);
+});
+
+test("Historical Training IDs are mapped without rewriting IDs or fabricating seasons", () => {
+  assert.match(migration, /Backfill eligible historical Training sessions without rewriting their legacy IDs/i);
+  assert.match(migration, /md5\('squad-os:legacy-training-session:'/i);
+  assert.match(migration, /historical_training_session_mapping_incomplete_or_conflicting/i);
+  assert.match(dbHarness, /historical training session was not mapped/i);
+  assert.match(dbHarness, /historical legacy UUID was unexpectedly replaced/i);
+  assert.match(dbHarness, /historical season was fabricated/i);
 });
 
 test("Auth plan limitation and original baseline gap are recorded without false PASS claims", () => {
