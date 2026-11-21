@@ -62,7 +62,7 @@ test("E final audit carries exact-head full CI and database evidence", () => {
 });
 
 test("B database forward and rollback integration checks are wired into CI", () => {
-  assert.match(workflow, /image: postgres:16/);
+  assert.match(workflow, /Install and start disposable local PostgreSQL|image: postgres:16/);
   assert.match(workflow, /bash scripts\/verify-evolution-phase-one-5-b-db\.sh/);
   assert.match(bDbScript, /default\/legacy timezone normalization failed/);
   assert.match(bDbScript, /non-India timezone was accepted/);
