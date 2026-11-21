@@ -1,3 +1,5 @@
+export type MembershipRole = "owner" | "coach" | "player";
+
 export type MembershipRow = {
   id: string;
   team_id: string;
@@ -25,6 +27,16 @@ export function isStableUuid(value: unknown): value is string {
  * If no preferred team is supplied and multiple active memberships exist,
  * return null rather than selecting an arbitrary team.
  */
+export function isMembershipRole(value: unknown): value is MembershipRole {
+  return value === "owner" || value === "coach" || value === "player";
+}
+
+/**
+ * Resolve a signed-in user to exactly one active team membership.
+ * Display labels (P1/P2/IGN) are never accepted as identity values.
+ * If no preferred team is supplied and multiple active memberships exist,
+ * return null rather than selecting an arbitrary team.
+ */
 export function resolveActiveTeamIdentity(
   authUserId: string,
   rows: readonly MembershipRow[],
@@ -32,15 +44,17 @@ export function resolveActiveTeamIdentity(
 ): StableTeamIdentity | null {
   if (!isStableUuid(authUserId)) return null;
   if (preferredTeamId != null && !isStableUuid(preferredTeamId)) return null;
+  if (!Array.isArray(rows)) return null;
 
-  const candidates = rows.filter((row) =>
-    row.status === "active" &&
-    row.user_id.toLowerCase() === authUserId.toLowerCase() &&
-    isStableUuid(row.id) &&
-    isStableUuid(row.team_id) &&
-    typeof row.membership_role === "string" &&
-    row.membership_role.trim().length > 0
-  );
+  const candidates = rows.filter((row): row is MembershipRow => {
+    if (!row || typeof row !== "object") return false;
+    return row.status === "active" &&
+      isStableUuid(row.user_id) &&
+      row.user_id.toLowerCase() === authUserId.toLowerCase() &&
+      isStableUuid(row.id) &&
+      isStableUuid(row.team_id) &&
+      isMembershipRole(row.membership_role);
+  });
 
   const scoped = preferredTeamId
     ? candidates.filter((row) => row.team_id.toLowerCase() === preferredTeamId.toLowerCase())
@@ -128,6 +142,7 @@ export type TeamSessionEligibility =
         | "invalid-auth-user"
         | "missing-membership"
         | "invalid-membership"
+        | "invalid-role"
         | "inactive-membership"
         | "user-mismatch"
         | "team-mismatch";
@@ -155,11 +170,12 @@ export function resolveTeamSessionEligibility(
   if (
     !isStableUuid(membership.id) ||
     !isStableUuid(membership.team_id) ||
-    !isStableUuid(membership.user_id) ||
-    typeof membership.membership_role !== "string" ||
-    membership.membership_role.trim().length === 0
+    !isStableUuid(membership.user_id)
   ) {
     return { eligible: false, reason: "invalid-membership" };
+  }
+  if (!isMembershipRole(membership.membership_role)) {
+    return { eligible: false, reason: "invalid-role" };
   }
   if (membership.status !== "active") {
     return { eligible: false, reason: "inactive-membership" };
