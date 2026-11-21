@@ -62,7 +62,7 @@ export function resolveActiveTeamIdentity(
     authUserId: authUserId.toLowerCase(),
     membershipId: membership.id.toLowerCase(),
     teamId: membership.team_id.toLowerCase(),
-    membershipRole: membership.membership_role,
+    membershipRole: membership.membership_role as MembershipRole,
   };
 }
 
