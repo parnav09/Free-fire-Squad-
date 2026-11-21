@@ -117,7 +117,7 @@ export default function CanonicalSessionsWorkspace({client,teamId,userId,members
       for(const q of [s,src,m,rh,rd,le,receipt,results])if(q.error)throw q.error;
       const matchRows=(m.data||[]) as Match[];const header=rh.data as Row|null;
       const [rm,pa,ra,su]=await Promise.all([
-        header?client.from("canonical_session_roster_members").select("*").eq("team_id",teamId).eq("canonical_session_id",id).eq("canonical_session_roster_id",header.id).order("player_number_snapshot"):Promise.resolve({data:[],error:null}),
+        client.from("canonical_session_roster_members").select("*").eq("team_id",teamId).eq("canonical_session_id",id).order("player_number_snapshot"),
         canManage&&matchRows.length?client.from("canonical_session_match_participants").select("*").eq("team_id",teamId).eq("canonical_session_id",id):Promise.resolve({data:[],error:null}),
         canManage&&matchRows.length?client.from("canonical_session_match_roles").select("*").eq("team_id",teamId).eq("canonical_session_id",id):Promise.resolve({data:[],error:null}),
         canManage?client.from("canonical_session_substitutions").select("*").eq("team_id",teamId).eq("canonical_session_id",id).order("effective_at"):Promise.resolve({data:[],error:null})
@@ -130,7 +130,7 @@ export default function CanonicalSessionsWorkspace({client,teamId,userId,members
       ]):[{data:[],error:null},{data:[],error:null}];
       if(vers.error)throw vers.error;if(events.error)throw events.error;
       setDetail(s.data as Row);setSourceRows(src.data||[]);setMatches(matchRows);setRoster(rm.data||[]);
-      setRosterLocked(!!header);setSelectedRosterIds((rm.data||[]).filter((x:Row)=>["selected","confirmed"].includes(x.selection_status)).map((x:Row)=>x.membership_id_snapshot));
+      setRosterLocked(!!header||(rm.data||[]).length>0);setSelectedRosterIds((rm.data||[]).filter((x:Row)=>["selected","confirmed"].includes(x.selection_status)).map((x:Row)=>x.membership_id_snapshot));
       setRoles(rd.data||[]);setRoleAssignments(ra.data||[]);setParticipations(pa.data||[]);setSubstitutions(su.data||[]);
       setLifecycleEvents(le.data||[]);setSessionReceipt(!!receipt.data);setResultRows(rr);setResultVersions(vers.data||[]);setResultEvents(events.data||[]);
       setEditTitle(s.data.title||"");setEditDate(s.data.session_date||"");setEditSeason(s.data.season_label||"");
@@ -148,6 +148,7 @@ export default function CanonicalSessionsWorkspace({client,teamId,userId,members
   const activeResult=resultRows.find(r=>r.canonical_session_match_id===(activeMatch?.id||null))||null;
   const currentVersions=activeResult?resultVersions.filter(v=>v.result_id===activeResult.id):[];
   const currentEvents=activeResult?resultEvents.filter(v=>v.result_id===activeResult.id):[];
+  useEffect(()=>{if(!activeResult){setResultRaw("{}");setResultReference("");return;}const version=resultVersions.find(v=>v.result_id===activeResult.id&&v.version_no===activeResult.current_version_no);if(version){setResultRaw(jsonText(version.raw_submitted_values));setResultSource(version.result_source);setResultReference(version.source_reference||"");}const verified=currentEvents.find(e=>e.event_kind==="verified"&&e.verified_values);if(verified)setVerifiedRaw(jsonText(verified.verified_values));},[activeResult?.id,activeResult?.current_version_no,resultVersions,currentEvents]);
   const keys=detail?checklistKeys(detail.session_type):[];
   const editable=!!detail&&canManage&&!detail.archived_at&&["draft","scheduled"].includes(detail.lifecycle_status);
   const active=!!detail&&canManage&&!detail.archived_at&&["in_progress","awaiting_results"].includes(detail.lifecycle_status);
@@ -160,7 +161,7 @@ export default function CanonicalSessionsWorkspace({client,teamId,userId,members
 
   const runAction=async(key:string,fn:()=>Promise<void>,success:string)=>{
     if(busy)return;if(!online){setError("Offline — reconnect before changing session records.");return;}setBusy(key);setError("");setNotice("");
-    try{await fn();setNotice(success);if(selectedId)await loadDetail(selectedId);await loadSessions(true);}
+    try{await fn();setNotice(success);if(selectedId&&key!=="link"&&key!=="create")await loadDetail(selectedId);await loadSessions(true);}
     catch(e){setError(errText(e));}finally{setBusy("");}
   };
 
