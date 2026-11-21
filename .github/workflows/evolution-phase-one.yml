@@ -36,10 +36,10 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/squad_os_ci
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22.12.0
 
@@ -51,7 +51,7 @@ jobs:
           npm ci --no-audit --no-fund
 
       - name: Export resolved lockfile for repository pinning
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: resolved-npm-lockfile
           path: package-lock.json
