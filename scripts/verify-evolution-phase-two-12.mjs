@@ -180,8 +180,8 @@ test("Blueprint group 12 has responsive, touch-target and keyboard-focus source 
 
 test("Phase 2.12 acceptance report keeps runtime-only evidence explicitly pending", async () => {
   const doc = await read("../docs/evolution/PHASE-2-12-REGRESSION-ACCEPTANCE.md");
-  assert.match(doc, /parallel contention runtime test remains pending/i);
-  assert.match(doc, /authenticated end-to-end flows remain pending/i);
+  assert.match(doc, /Parallel contention test still pending/i);
+  assert.match(doc, /Run authenticated end-to-end flows against a disposable\/staging database/i);
   assert.match(doc, /manual Android, tablet and desktop interaction QA requires real device\/browser interaction/i);
   assert.match(doc, /\*\*PENDING\*\*/);
   assert.match(doc, /OVERALL STATUS: BLOCKED/);
