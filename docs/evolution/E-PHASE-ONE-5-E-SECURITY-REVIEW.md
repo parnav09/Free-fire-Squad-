@@ -62,3 +62,22 @@ Remediation reference: https://supabase.com/docs/guides/auth/password-security#p
 - Leaked-password protection: **EXCLUDED — paid-only setting, outside current acceptance scope**.
 
 **Overall Security acceptance remains PARTIAL** because trigger-function ACL revocations are staged and not production-applied. The callable RPC authorization test gate is closed. No production ACL, RLS, function, or Auth configuration was changed by this review.
+
+
+## Fresh revalidation — 22 November 2026 (supersedes stale status above)
+
+A new read-only production catalog check confirms that the trigger-only ACL migration is no longer merely staged: the live migration ledger contains `20261118193817_revoke_direct_trigger_function_execution`, and `has_function_privilege` is false for `anon`, `authenticated`, and `service_role` on all four trigger-returning functions.
+
+The same fresh check found a separate, actionable issue on `public.team_members`: `authenticated` has table-level UPDATE plus column-level UPDATE on all ten columns, including the identity and authorization columns. The live `tm_update_character_loadout` policy allowed self-row updates or owner updates without restricting the columns that could be changed.
+
+PR #142 now contains a permanent migration proposal, `20261122110000_team_members_owner_rpc_only.sql`, which:
+- revokes table-level and per-column UPDATE from `PUBLIC`, `anon`, and `authenticated`;
+- removes the broad `tm_update_character_loadout` policy;
+- introduces `assign_member_with_role`, a SECURITY DEFINER RPC that checks the active team owner, validates the role and roster capacity, and updates only the assigned role/slot/status fields;
+- routes the app's roster edits through that RPC instead of direct table UPDATE.
+
+The migration was tested against the live schema inside one explicit transaction. The owner RPC succeeded; a non-owner RPC call and direct identity-field UPDATE were rejected; table-level and all ten column-level UPDATE privilege checks passed. The transaction was rolled back. No persistent production change was made.
+
+The PR also adds a disposable PostgreSQL test script and a GitHub Actions step for this grant/RPC boundary. Exact-head CI for this new change is still pending; do not label the new remediation CI-verified until that run passes. The migration remains unapplied permanently until the app code is merged/deployed and the database migration can be rolled out in the correct order.
+
+The original pre-migration schema baseline remains unavailable. This cannot be recreated from a post-migration snapshot without misrepresenting historical provenance. Full 1.5-E acceptance remains blocked until the original baseline is supplied or a separately reviewed exception is approved. Physical-device QA remains owner-only; leaked-password protection remains a paid-only excluded setting.
