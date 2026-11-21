@@ -29,6 +29,8 @@ jobs:
         run: |
           npm install --package-lock-only --ignore-scripts --no-audit --no-fund
           npm ci --no-audit --no-fund
+      - name: Install Chromium for responsive UI acceptance
+        run: npx playwright install --with-deps chromium
       - name: Export resolved lockfile for repository pinning
         uses: actions/upload-artifact@v4
         with:
@@ -83,5 +85,15 @@ jobs:
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
       - name: Verify staged security trigger ACL hardening
         run: bash scripts/verify-evolution-security-trigger-acls.sh
+      - name: Verify responsive UI, touch targets, permissions and offline write guard
+        run: npm run test:evolution-phase-two-11-visual
+      - name: Upload responsive UI screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evolution-phase-two-11-responsive-screenshots
+          path: test-results/phase-two-11/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.11 audits and production bundle
         run: npm run build
