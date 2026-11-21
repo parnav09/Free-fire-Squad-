@@ -17,6 +17,9 @@ const [
   bDbScript,
   securityAclScript,
   securityAclSql,
+  teamMemberSecuritySql,
+  teamMemberSecurityScript,
+  appSource,
 ] = await Promise.all([
   read("package.json"),
   read("docs/evolution/E-PHASE-ONE-5-B-C-D-E-ACCEPTANCE.md"),
@@ -30,6 +33,9 @@ const [
   read("scripts/verify-evolution-phase-one-5-b-db.sh"),
   read("scripts/verify-evolution-security-trigger-acls.sh"),
   read("docs/evolution/staged-migrations/20261118080000_revoke_direct_trigger_function_execution.sql"),
+  read("supabase/migrations/20261122110000_team_members_owner_rpc_only.sql"),
+  read("scripts/verify-evolution-phase-one-5-e-security.sh"),
+  read("src/App.tsx"),
 ]);
 const pkg = JSON.parse(pkgText);
 const manifest = JSON.parse(await read("docs/evolution/evolution-phase-one-5-c-rollback-manifest.json"));
@@ -84,6 +90,21 @@ test("security ACL fix is least-privilege and preserves trigger execution", () =
   assert.match(securityReview, /four trigger-returning functions/i);
   assert.match(securityReview, /Leaked-password protection/i);
   assert.match(audit, /staged trigger-function ACL remediation/i);
+});
+
+
+test("team_members identity fields are no longer directly writable by authenticated clients", () => {
+  assert.match(teamMemberSecuritySql, /REVOKE UPDATE ON TABLE public\\.team_members FROM PUBLIC, anon, authenticated/);
+  assert.match(teamMemberSecuritySql, /REVOKE UPDATE \\([\\s\\S]*membership_role[\\s\\S]*\\) ON TABLE public\\.team_members/);
+  assert.match(teamMemberSecuritySql, /DROP POLICY IF EXISTS tm_update_character_loadout/);
+  assert.match(teamMemberSecuritySql, /assign_member_with_role/);
+  assert.match(teamMemberSecuritySql, /public\\.is_team_owner\\(v_team\\)/);
+  assert.match(teamMemberSecurityScript, /has_table_privilege/);
+  assert.match(teamMemberSecurityScript, /has_column_privilege/);
+  assert.match(teamMemberSecurityScript, /non-owner RPC call unexpectedly succeeded/);
+  assert.match(workflow, /bash scripts\\/verify-evolution-phase-one-5-e-security\\.sh/);
+  assert.doesNotMatch(appSource, /from\\(["']team_members["']\\)\\.update/);
+  assert.match(appSource, /rpc\\(["']assign_member_with_role["']/);
 });
 
 test("E records the remaining clean-replay and Auth gates instead of falsely passing", () => {
