@@ -3,7 +3,6 @@
 -- columns a caller updates. Keep direct self-service updates limited to the
 -- character_loadout column and route roster assignments through an owner RPC.
 
-BEGIN;
 
 REVOKE UPDATE ON TABLE public.team_members FROM authenticated;
 REVOKE UPDATE (
@@ -75,4 +74,3 @@ REVOKE ALL ON FUNCTION public.set_member_assignment(uuid, smallint, text, boolea
 GRANT EXECUTE ON FUNCTION public.set_member_assignment(uuid, smallint, text, boolean)
   TO authenticated;
 
-COMMIT;
