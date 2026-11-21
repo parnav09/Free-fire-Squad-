@@ -182,6 +182,7 @@ test("Phase 2.12 acceptance report keeps runtime-only evidence explicitly pendin
   const doc = await read("../docs/evolution/PHASE-2-12-REGRESSION-ACCEPTANCE.md");
   assert.match(doc, /parallel contention runtime test remains pending/i);
   assert.match(doc, /authenticated end-to-end flows remain pending/i);
-  assert.match(doc, /manual Android, tablet and desktop QA remains pending/i);
+  assert.match(doc, /manual Android, tablet and desktop interaction QA requires real device\/browser interaction/i);
+  assert.match(doc, /\*\*PENDING\*\*/);
   assert.match(doc, /OVERALL STATUS: BLOCKED/);
 });
