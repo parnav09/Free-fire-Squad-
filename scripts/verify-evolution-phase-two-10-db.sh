@@ -226,33 +226,41 @@ END $$;
 INSERT INTO public.training_drills(id,team_id,is_template,title)
 VALUES ('dd100000-0000-0000-0000-000000000004',
         'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',false,'Concurrent drill fixture');
-UPDATE public.training_drills
-SET team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'
-WHERE id='dd100000-0000-0000-0000-000000000004'
-  AND team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 
 (
-  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 > /tmp/phase210-drill-owner-update.log 2>&1 <<'SQL'
+  PGAPPNAME=phase210-drill-owner-update psql "$DATABASE_URL" -v ON_ERROR_STOP=1 > /tmp/phase210-drill-owner-update.log 2>&1 <<'SQL'
 BEGIN;
 UPDATE public.training_drills
-SET team_id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'
+SET team_id='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'
 WHERE id='dd100000-0000-0000-0000-000000000004';
-SELECT pg_catalog.pg_sleep(1);
+SELECT pg_catalog.pg_sleep(2);
 COMMIT;
 SQL
 ) &
 owner_update_pid=$!
-sleep 0.2
+lock_observed=0
+for attempt in {1..50}; do
+  if [[ "$(psql "$DATABASE_URL" -tA -c "SELECT count(*) FROM pg_catalog.pg_stat_activity WHERE application_name='phase210-drill-owner-update' AND state='active' AND query LIKE '%pg_sleep%'")" -gt 0 ]]; then
+    lock_observed=1
+    break
+  fi
+  sleep 0.1
+done
+if [[ "$lock_observed" -ne 1 ]]; then
+  wait "$owner_update_pid"
+  echo "Could not observe the drill ownership transaction holding its row lock" >&2
+  exit 1
+fi
 if psql "$DATABASE_URL" -v ON_ERROR_STOP=1 > /tmp/phase210-stale-drill-reference.log 2>&1 <<'SQL'
 INSERT INTO public.training_sessions(
   id,team_id,plan_id,drill_id,title,session_type,scheduled_at,
   duration_minutes,instructions,created_by
 ) VALUES (
   'aa100000-0000-0000-0000-000000000032',
-  'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',NULL,
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',NULL,
   'dd100000-0000-0000-0000-000000000004','Concurrent stale drill link',
   'squad',NULL,30,'Concurrency fixture',
-  '20000000-0000-0000-0000-000000000002'
+  '10000000-0000-0000-0000-000000000001'
 );
 SQL
 then
