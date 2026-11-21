@@ -1,8 +1,8 @@
-name: SQUAD OS — Evolution Phase One & Phase Two.1 Audit CI
+name: SQUAD OS — Evolution Phase Two.2–2.11 Verification
 
 on:
   push:
-    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification, feat/evolution-phase-two-9-module-integration, feat/evolution-phase-two-10-database-integrity]
+    branches: [main, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification, feat/evolution-phase-two-9-module-integration, feat/evolution-phase-two-10-database-integrity, feat/evolution-phase-two-11-session-ui]
   pull_request:
     branches: [main, chore/evolution-phase-zero-one-naming, feat/evolution-phase-one-identity-timezone, feat/evolution-phase-two-session-foundation, feat/evolution-phase-two-2-canonical-session-identity, feat/evolution-phase-two-3-match-identity, feat/evolution-phase-two-4-session-lifecycle, feat/evolution-phase-two-5-session-roster-snapshot, feat/evolution-phase-two-6-role-snapshot, feat/evolution-phase-two-7-substitution-tracking, feat/evolution-phase-two-8-result-verification, feat/evolution-phase-two-9-module-integration, feat/evolution-phase-two-10-database-integrity]
 
@@ -29,6 +29,8 @@ jobs:
         run: |
           npm install --package-lock-only --ignore-scripts --no-audit --no-fund
           npm ci --no-audit --no-fund
+      - name: Install Chromium for responsive UI acceptance
+        run: npx playwright install --with-deps chromium
       - name: Export resolved lockfile for repository pinning
         uses: actions/upload-artifact@v4
         with:
@@ -83,5 +85,15 @@ jobs:
         run: bash scripts/verify-evolution-phase-one-5-b-db.sh
       - name: Verify staged security trigger ACL hardening
         run: bash scripts/verify-evolution-security-trigger-acls.sh
-      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.10 audits and production bundle
+      - name: Verify responsive UI, touch targets, permissions and offline write guard
+        run: npm run test:evolution-phase-two-11-visual
+      - name: Upload responsive UI screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evolution-phase-two-11-responsive-screenshots
+          path: test-results/phase-two-11/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.11 audits and production bundle
         run: npm run build
