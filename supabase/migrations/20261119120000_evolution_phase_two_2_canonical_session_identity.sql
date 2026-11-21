@@ -266,3 +266,151 @@ BEGIN
   END IF;
 END;
 $$;
+
+-- Backfill eligible historical Scrim records without changing their source UUIDs.
+INSERT INTO public.canonical_sessions (
+  id, team_id, session_type, title, session_date, idempotency_key, created_by, created_at
+)
+SELECT
+  md5('squad-os:legacy-scrim-record:' || sr.id::text)::uuid,
+  sr.team_id,
+  'scrim',
+  'Scrim · ' || sr.scrim_date::text,
+  sr.scrim_date,
+  md5('squad-os:legacy-scrim-idempotency:' || sr.id::text)::uuid,
+  sr.owner_id,
+  sr.created_at
+FROM public.scrim_records sr
+WHERE sr.owner_id IS NOT NULL
+  AND char_length(btrim('Scrim · ' || sr.scrim_date::text)) BETWEEN 1 AND 120
+ON CONFLICT (id) DO NOTHING;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM public.scrim_records sr
+    JOIN public.canonical_sessions cs
+      ON cs.id = md5('squad-os:legacy-scrim-record:' || sr.id::text)::uuid
+    WHERE sr.owner_id IS NOT NULL
+      AND (
+        cs.team_id IS DISTINCT FROM sr.team_id
+        OR cs.session_type IS DISTINCT FROM 'scrim'
+        OR cs.session_date IS DISTINCT FROM sr.scrim_date
+        OR cs.created_by IS DISTINCT FROM sr.owner_id
+      )
+  ) THEN
+    RAISE EXCEPTION 'historical_scrim_canonical_identity_conflict';
+  END IF;
+END;
+$$;
+
+INSERT INTO public.canonical_session_sources (
+  team_id, canonical_session_id, source_system, scrim_record_id, created_by
+)
+SELECT
+  sr.team_id,
+  md5('squad-os:legacy-scrim-record:' || sr.id::text)::uuid,
+  'scrim',
+  sr.id,
+  sr.owner_id
+FROM public.scrim_records sr
+JOIN public.canonical_sessions cs
+  ON cs.id = md5('squad-os:legacy-scrim-record:' || sr.id::text)::uuid
+ AND cs.team_id = sr.team_id
+WHERE sr.owner_id IS NOT NULL
+ON CONFLICT (source_system, source_record_id) DO NOTHING;
+
+-- Backfill eligible Tournament cycles as canonical tournament sessions.
+INSERT INTO public.canonical_sessions (
+  id, team_id, session_type, title, session_date, scheduled_at,
+  idempotency_key, created_by, created_at
+)
+SELECT
+  md5('squad-os:legacy-tournament-cycle:' || tc.id::text)::uuid,
+  tc.team_id,
+  'tournament',
+  tc.title,
+  tc.cycle_start,
+  tc.registration_open_at,
+  md5('squad-os:legacy-tournament-idempotency:' || tc.id::text)::uuid,
+  tc.created_by,
+  tc.created_at
+FROM public.tournament_cycles tc
+WHERE tc.created_by IS NOT NULL
+  AND char_length(btrim(tc.title)) BETWEEN 1 AND 120
+ON CONFLICT (id) DO NOTHING;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM public.tournament_cycles tc
+    JOIN public.canonical_sessions cs
+      ON cs.id = md5('squad-os:legacy-tournament-cycle:' || tc.id::text)::uuid
+    WHERE tc.created_by IS NOT NULL
+      AND char_length(btrim(tc.title)) BETWEEN 1 AND 120
+      AND (
+        cs.team_id IS DISTINCT FROM tc.team_id
+        OR cs.session_type IS DISTINCT FROM 'tournament'
+        OR cs.title IS DISTINCT FROM tc.title
+        OR cs.session_date IS DISTINCT FROM tc.cycle_start
+        OR cs.created_by IS DISTINCT FROM tc.created_by
+      )
+  ) THEN
+    RAISE EXCEPTION 'historical_tournament_canonical_identity_conflict';
+  END IF;
+END;
+$$;
+
+INSERT INTO public.canonical_session_sources (
+  team_id, canonical_session_id, source_system, tournament_cycle_id, created_by
+)
+SELECT
+  tc.team_id,
+  md5('squad-os:legacy-tournament-cycle:' || tc.id::text)::uuid,
+  'tournament',
+  tc.id,
+  tc.created_by
+FROM public.tournament_cycles tc
+JOIN public.canonical_sessions cs
+  ON cs.id = md5('squad-os:legacy-tournament-cycle:' || tc.id::text)::uuid
+ AND cs.team_id = tc.team_id
+WHERE tc.created_by IS NOT NULL
+  AND char_length(btrim(tc.title)) BETWEEN 1 AND 120
+ON CONFLICT (source_system, source_record_id) DO NOTHING;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM public.scrim_records sr
+    LEFT JOIN public.canonical_session_sources src
+      ON src.source_system = 'scrim' AND src.source_record_id = sr.id
+    WHERE sr.owner_id IS NOT NULL
+      AND (
+        src.id IS NULL
+        OR src.canonical_session_id IS DISTINCT FROM md5('squad-os:legacy-scrim-record:' || sr.id::text)::uuid
+        OR src.team_id IS DISTINCT FROM sr.team_id
+      )
+  ) THEN
+    RAISE EXCEPTION 'historical_scrim_session_mapping_incomplete_or_conflicting';
+  END IF;
+
+  IF EXISTS (
+    SELECT 1
+    FROM public.tournament_cycles tc
+    LEFT JOIN public.canonical_session_sources src
+      ON src.source_system = 'tournament' AND src.source_record_id = tc.id
+    WHERE tc.created_by IS NOT NULL
+      AND char_length(btrim(tc.title)) BETWEEN 1 AND 120
+      AND (
+        src.id IS NULL
+        OR src.canonical_session_id IS DISTINCT FROM md5('squad-os:legacy-tournament-cycle:' || tc.id::text)::uuid
+        OR src.team_id IS DISTINCT FROM tc.team_id
+      )
+  ) THEN
+    RAISE EXCEPTION 'historical_tournament_session_mapping_incomplete_or_conflicting';
+  END IF;
+END;
+$$;
