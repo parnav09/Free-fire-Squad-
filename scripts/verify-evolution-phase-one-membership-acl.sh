@@ -292,6 +292,17 @@ BEGIN
 
   denied := false;
   BEGIN
+    PERFORM public.set_member_assignment(
+      '20000000-0000-4000-8000-000000000003'::uuid,2::smallint,'Third Rusher'::text,true
+    );
+    RAISE EXCEPTION 'SECURITY FAILURE: non-owner assigned a different team member';
+  EXCEPTION WHEN raise_exception THEN
+    IF SQLERRM='Not allowed' THEN denied := true; ELSE RAISE; END IF;
+  END;
+  IF NOT denied THEN RAISE EXCEPTION 'cross-team assignment RPC was not denied'; END IF;
+
+  denied := false;
+  BEGIN
     PERFORM public.assign_member(
       '20000000-0000-4000-8000-000000000002'::uuid,3::smallint,true
     );
@@ -323,7 +334,52 @@ BEGIN
   END;
   IF NOT denied THEN RAISE EXCEPTION 'signed-out assignment RPC was not denied'; END IF;
 END;
-$$;
+$;
+COMMIT;
+SQL
+
+# Invalid role values and out-of-range slots are rejected before changing data.
+psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+BEGIN;
+SET LOCAL ROLE authenticated;
+SET LOCAL request.jwt.claim.sub = '30000000-0000-4000-8000-000000000001';
+DO $
+DECLARE denied boolean;
+BEGIN
+  denied := false;
+  BEGIN
+    PERFORM public.set_member_assignment(
+      '20000000-0000-4000-8000-000000000002'::uuid,3::smallint,'   '::text,true
+    );
+    RAISE EXCEPTION 'SECURITY FAILURE: blank assigned role accepted';
+  EXCEPTION WHEN raise_exception THEN
+    IF SQLERRM='Invalid assigned role' THEN denied := true; ELSE RAISE; END IF;
+  END;
+  IF NOT denied THEN RAISE EXCEPTION 'blank assigned role was not rejected'; END IF;
+
+  denied := false;
+  BEGIN
+    PERFORM public.set_member_assignment(
+      '20000000-0000-4000-8000-000000000002'::uuid,3::smallint,repeat('x',33),true
+    );
+    RAISE EXCEPTION 'SECURITY FAILURE: oversized assigned role accepted';
+  EXCEPTION WHEN raise_exception THEN
+    IF SQLERRM='Invalid assigned role' THEN denied := true; ELSE RAISE; END IF;
+  END;
+  IF NOT denied THEN RAISE EXCEPTION 'oversized assigned role was not rejected'; END IF;
+
+  denied := false;
+  BEGIN
+    PERFORM public.set_member_assignment(
+      '20000000-0000-4000-8000-000000000002'::uuid,5::smallint,'Fifth Rusher'::text,true
+    );
+    RAISE EXCEPTION 'SECURITY FAILURE: out-of-capacity player slot accepted';
+  EXCEPTION WHEN raise_exception THEN
+    IF SQLERRM='Player slot is outside configured roster capacity' THEN denied := true; ELSE RAISE; END IF;
+  END;
+  IF NOT denied THEN RAISE EXCEPTION 'out-of-capacity player slot was not rejected'; END IF;
+END;
+$;
 COMMIT;
 SQL
 
@@ -355,6 +411,7 @@ BEGIN
     RAISE EXCEPTION 'owner assignment failed or changed protected membership identity';
   END IF;
 END;
-$$;
+$;
+SQL
 
 echo "Phase One membership ACL PASS: member escalation denied; owner RPC enforced; loadout self-service preserved; cross-team and other-member writes denied."
