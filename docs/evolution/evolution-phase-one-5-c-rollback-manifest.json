@@ -1,0 +1,383 @@
+{
+  "schema_version": 1,
+  "scope": "Evolution Phase One.5-C historical rollback disposition",
+  "source": "Live supabase_migrations.schema_migrations ledger and exact 53-file active migration chain, read-only audit on 2026-11-18",
+  "excluded_versions": [
+    "20261116115255",
+    "20261116115907"
+  ],
+  "live_rollback_statement_count": 0,
+  "entries": [
+    {
+      "version": "20261107081456",
+      "name": "phase_0_security_performance",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "MIXED_STATE",
+      "reason": "Changes policies, grants, function search paths and indexes; prior privilege/policy definitions are not embedded."
+    },
+    {
+      "version": "20261107081539",
+      "name": "phase_0_revoke_public_definer",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Privilege revocation/grants have no captured pre-change ACL snapshot; broad reversal could expose privileged functions."
+    },
+    {
+      "version": "20261107130445",
+      "name": "weekly_tournament_cycles_and_matches",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_STATE",
+      "reason": "Creates/changes durable tournament tables and constraints; dropping them could destroy live match history."
+    },
+    {
+      "version": "20261107130547",
+      "name": "auto_seed_42_weekly_match_slots",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "FUNCTION_AND_DATA",
+      "reason": "Seeds rows and installs trigger/function behavior; seeded slots may now contain user-entered results."
+    },
+    {
+      "version": "20261107133318",
+      "name": "player_drill_assignments",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_AND_DATA",
+      "reason": "Creates a durable assignment table and policies; live assignment records must be preserved."
+    },
+    {
+      "version": "20261107153344",
+      "name": "harden_assignments_and_sync_training_notes",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "MIXED_STATE",
+      "reason": "Changes table shape, policies, grants, indexes and synchronization behavior; exact prior definitions are not retained."
+    },
+    {
+      "version": "20261107153641",
+      "name": "remove_overlapping_team_settings_policy",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Removes an overlapping policy; restoring it without its exact predicate may widen team access."
+    },
+    {
+      "version": "20261107154200",
+      "name": "enable_realtime_for_squad_operations",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "EXTERNAL_STATE",
+      "reason": "Changes publication membership; prior publication membership snapshot is not stored in the migration."
+    },
+    {
+      "version": "20261107164949",
+      "name": "unique_squad_usernames",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_STATE",
+      "reason": "Adds uniqueness behavior; removing it could reintroduce duplicate identity labels and break dependent assumptions."
+    },
+    {
+      "version": "20261107175635",
+      "name": "team_avatars_and_optional_logo",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "MIXED_STATE",
+      "reason": "Adds team fields and policy/data behavior; dropping fields can erase user-supplied avatar metadata."
+    },
+    {
+      "version": "20261108052253",
+      "name": "account_recovery_email_and_otp",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_AND_DATA",
+      "reason": "Creates recovery/OTP storage and access controls; dropping it risks account recovery records and security boundaries."
+    },
+    {
+      "version": "20261108061922",
+      "name": "team_join_approval_and_role_assignments",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "MIXED_STATE",
+      "reason": "Adds join/role schema, data and privileged RPC/policy behavior; prior function and ACL state is not captured."
+    },
+    {
+      "version": "20261108062141",
+      "name": "guard_fifth_slot_in_join_approval",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "FUNCTION_AND_SECURITY",
+      "reason": "Replaces join-approval logic and privileges; restoring an older guard could bypass roster-capacity checks."
+    },
+    {
+      "version": "20261108064303",
+      "name": "team_leave_and_empty_cleanup",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "DESTRUCTIVE_FUNCTION",
+      "reason": "Adds leave/cleanup behavior including row deletion; rollback cannot restore rows already removed by runtime cleanup."
+    },
+    {
+      "version": "20261108064524",
+      "name": "team_backup_export_restore",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "DESTRUCTIVE_FUNCTION",
+      "reason": "Adds backup/restore RPCs that replace team-owned rows; rollback cannot undo restore operations or recreate overwritten data."
+    },
+    {
+      "version": "20261108064840",
+      "name": "tighten_empty_team_cleanup_schedule",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "DESTRUCTIVE_FUNCTION",
+      "reason": "Changes scheduled cleanup logic that can delete team records; reversing code cannot restore deleted records."
+    },
+    {
+      "version": "20261108064910",
+      "name": "lock_cleanup_trigger_function",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Changes function execution privileges; no exact prior ACL snapshot is retained."
+    },
+    {
+      "version": "20261108064937",
+      "name": "restrict_join_review_rpc_to_signed_in_users",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Changes RPC grants; restoring public execution without a reviewed baseline would weaken access control."
+    },
+    {
+      "version": "20261108072713",
+      "name": "scope_player_igns_to_each_team",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "MIXED_STATE",
+      "reason": "Changes schema/data and RPC behavior to team-scoped identity; reversing may merge or expose cross-team player records."
+    },
+    {
+      "version": "20261108072831",
+      "name": "scope_backup_restore_to_selected_team",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Changes backup/restore RPC grants; prior ACL state is unavailable and broader grants are unsafe."
+    },
+    {
+      "version": "20261108072846",
+      "name": "scope_leave_action_to_selected_team",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Changes leave RPC grants; automatic reversal could allow unscoped team-leave actions."
+    },
+    {
+      "version": "20261108072905",
+      "name": "remove_legacy_global_ign_check",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "FUNCTION_AND_DATA",
+      "reason": "Changes stored IGN validation behavior and data; old global uniqueness semantics are not safely restorable."
+    },
+    {
+      "version": "20261108072946",
+      "name": "disable_legacy_unscoped_team_admin_rpcs",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Disables legacy unscoped admin RPC execution; re-enabling it would reopen an unsafe path."
+    },
+    {
+      "version": "20261108073010",
+      "name": "restore_owner_team_scoped_ign_from_backup",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "FUNCTION_STATE",
+      "reason": "Changes backup restoration behavior; exact prior function body and safe data mapping are not preserved."
+    },
+    {
+      "version": "20261108105554",
+      "name": "phase_2_configurable_roster_capacity",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_AND_DATA",
+      "reason": "Adds configurable capacity and updates data/function rules; reverting can invalidate teams already using custom capacity."
+    },
+    {
+      "version": "20261108105653",
+      "name": "phase_2_capacity_guard_member_assignment",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "FUNCTION_AND_SECURITY",
+      "reason": "Changes membership assignment guard and RPC privileges; old behavior could permit capacity bypass."
+    },
+    {
+      "version": "20261108122752",
+      "name": "fix_set_display_name_rpc_ambiguity",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "FUNCTION_AND_SECURITY",
+      "reason": "Replaces a public RPC implementation and grants; previous function body/ACL cannot be reconstructed safely from this migration alone."
+    },
+    {
+      "version": "20261108170059",
+      "name": "phase_2_3_planning_training",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_STATE",
+      "reason": "Creates Planning/Training tables, indexes and RLS; dropping tables would destroy user-created plans and training records."
+    },
+    {
+      "version": "20261108170508",
+      "name": "phase_2_3_player_task_updates",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Changes task policies; restoring previous policies without exact predicate review could expose or block team data."
+    },
+    {
+      "version": "20261108170609",
+      "name": "phase_2_3_seed_drill_templates",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SEEDED_DATA",
+      "reason": "Seeds/updates drill templates that may have been edited or referenced; do not delete or overwrite them automatically."
+    },
+    {
+      "version": "20261108170923",
+      "name": "phase_2_3_session_participants",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_STATE",
+      "reason": "Creates session-participant schema and RLS; live participant history and dependencies must remain intact."
+    },
+    {
+      "version": "20261108171644",
+      "name": "phase_2_3_tactical_plan_fields",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_STATE",
+      "reason": "Adds tactical-plan columns; dropping them could destroy saved tactical-plan content."
+    },
+    {
+      "version": "20261108174411",
+      "name": "phase_2_3_role_drill_templates",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SEEDED_DATA",
+      "reason": "Seeds role-specific templates that may now be referenced or customized; preserve rows."
+    },
+    {
+      "version": "20261108174835",
+      "name": "phase_2_3_task_blocked_reason_and_category",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_STATE",
+      "reason": "Adds task metadata columns; dropping them could erase blocker reasons/categories."
+    },
+    {
+      "version": "20261108175900",
+      "name": "phase_2_3_followup_task_session_link",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_STATE",
+      "reason": "Adds a task/session relationship field; dropping it would lose follow-up linkage."
+    },
+    {
+      "version": "20261108193820",
+      "name": "expand_drill_library_to_50",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SEEDED_DATA",
+      "reason": "Adds/updates drill catalogue rows; preserve catalogue IDs and any user references/customizations."
+    },
+    {
+      "version": "20261108195004",
+      "name": "role_specific_drill_progression",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SEEDED_DATA",
+      "reason": "Adds/updates progression content; automatic deletion could break player progression references."
+    },
+    {
+      "version": "20261108195112",
+      "name": "complete_role_drill_library_to_100",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SEEDED_DATA",
+      "reason": "Adds/updates drill records; preserve rows and references rather than deleting a historical seed batch."
+    },
+    {
+      "version": "20261109033737",
+      "name": "anonymous_daily_player_evaluation_feedback",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_AND_PRIVACY",
+      "reason": "Changes evaluation/feedback schema; rollback could expose or discard anonymous feedback data."
+    },
+    {
+      "version": "20261109033815",
+      "name": "enforce_daily_evaluation_date_and_anonymity",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "FUNCTION_AND_PRIVACY",
+      "reason": "Replaces the date/anonymization trigger; reverting without exact prior function body could weaken anonymity/date enforcement."
+    },
+    {
+      "version": "20261109033916",
+      "name": "allow_anonymous_daily_evaluation_insert",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Changes Daily Evaluation INSERT policy; restoring or removing it without policy review risks breaking privacy or access."
+    },
+    {
+      "version": "20261109034550",
+      "name": "daily_score_feedback_private_rls",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "MIXED_STATE",
+      "reason": "Creates/changes feedback table, functions, policies and grants; exact prior state and private feedback data must be preserved."
+    },
+    {
+      "version": "20261109034618",
+      "name": "daily_score_feedback_private_rls",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "MIXED_STATE",
+      "reason": "A second distinct live version with the same name; treat independently by version and preserve later privacy state."
+    },
+    {
+      "version": "20261109093254",
+      "name": "smart_task_deadlines_and_retention",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "DESTRUCTIVE_MIXED",
+      "reason": "Changes task schema, triggers, policies and cleanup/deletion behavior; deleted historical rows cannot be restored by code rollback."
+    },
+    {
+      "version": "20261109093320",
+      "name": "fix_task_lifecycle_event_order",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "FUNCTION_AND_DATA",
+      "reason": "Changes task lifecycle function/trigger and data ordering; old ordering may have already changed persisted event sequences."
+    },
+    {
+      "version": "20261109093531",
+      "name": "igl_task_management_rls",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Changes IGL task policies; exact prior policy state must be reviewed before any reversal."
+    },
+    {
+      "version": "20261109094759",
+      "name": "retention_settings_owner_access",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Changes owner access policy/grants; restoring prior access may expose retention settings to non-owners."
+    },
+    {
+      "version": "20261109095926",
+      "name": "team_scoped_retention_policies",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "DESTRUCTIVE_MIXED",
+      "reason": "Creates retention settings, policies and cleanup function that deletes data; deleted rows are not recoverable through rollback."
+    },
+    {
+      "version": "20261109095952",
+      "name": "seed_team_retention_on_team_create",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "FUNCTION_AND_DATA",
+      "reason": "Seeds per-team retention settings through trigger/function behavior; preserve customized team settings."
+    },
+    {
+      "version": "20261110181415",
+      "name": "scrims_personal_team_review",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_AND_PRIVACY",
+      "reason": "Creates Scrims review data structures and policies; dropping them would destroy private team review records."
+    },
+    {
+      "version": "20261110181550",
+      "name": "scrims_owner_update_team_scope",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SECURITY_STATE",
+      "reason": "Changes owner update policy; automatic reversal could widen write access beyond the owning team."
+    },
+    {
+      "version": "20261114100112",
+      "name": "create_character_profiles_table",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SCHEMA_AND_CATALOGUE",
+      "reason": "Creates the canonical profile table and public read policy; dropping it would remove the runtime catalogue mirror."
+    },
+    {
+      "version": "20261116092206",
+      "name": "sync_all_67_character_profiles",
+      "disposition": "forward_only_no_automatic_rollback",
+      "risk_class": "SEEDED_CATALOGUE_DATA",
+      "reason": "Upserts 67 profile records; preserve later corrections and edits instead of deleting or reverting catalogue rows."
+    }
+  ]
+}

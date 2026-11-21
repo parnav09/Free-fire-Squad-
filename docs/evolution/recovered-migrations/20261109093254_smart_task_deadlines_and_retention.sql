@@ -1,0 +1,33 @@
+-- Smart task deadlines, IGL completion trail, and scheduled retention.
+create table if not exists public.data_retention_settings(id boolean primary key default true check(id),daily_evolution_days int not null default 90 check(daily_evolution_days between 30 and 730),tournament_days int not null default 30 check(tournament_days between 7 and 365),completed_task_days int not null default 90 check(completed_task_days between 30 and 730),completed_training_days int not null default 90 check(completed_training_days between 30 and 730),updated_at timestamptz not null default now());
+insert into public.data_retention_settings(id) values(true) on conflict(id) do nothing;
+alter table public.data_retention_settings enable row level security; revoke all on public.data_retention_settings from anon,authenticated; grant select on public.data_retention_settings to authenticated;
+drop policy if exists retention_read_authenticated on public.data_retention_settings; create policy retention_read_authenticated on public.data_retention_settings for select to authenticated using(true);
+alter table public.practice_tasks add column if not exists due_at timestamptz;
+alter table public.practice_tasks add column if not exists completion_submitted_by uuid references auth.users(id) on delete set null;
+alter table public.practice_tasks add column if not exists completion_acknowledged_at timestamptz;
+create index if not exists practice_tasks_due_at_status_idx on public.practice_tasks(due_at,status) where status not in ('completed','reviewed','cancelled');
+create table if not exists public.practice_task_events(id uuid primary key default gen_random_uuid(),task_id uuid not null references public.practice_tasks(id) on delete cascade,team_id uuid not null references public.teams(id) on delete cascade,actor_id uuid references auth.users(id) on delete set null,event_type text not null check(event_type in ('assigned','started','submitted','reviewed','blocked','reopened','cancelled')),from_status text,to_status text,note text not null default '',created_at timestamptz not null default now());
+create index if not exists practice_task_events_task_time_idx on public.practice_task_events(task_id,created_at desc);
+alter table public.practice_task_events enable row level security; revoke all on public.practice_task_events from anon,authenticated; grant select,insert on public.practice_task_events to authenticated;
+drop policy if exists task_events_team_read on public.practice_task_events; create policy task_events_team_read on public.practice_task_events for select to authenticated using(exists(select 1 from public.team_members tm where tm.team_id=practice_task_events.team_id and tm.user_id=auth.uid() and tm.status='active'));
+drop policy if exists task_events_member_insert on public.practice_task_events; create policy task_events_member_insert on public.practice_task_events for insert to authenticated with check(actor_id=auth.uid() and exists(select 1 from public.team_members tm where tm.team_id=practice_task_events.team_id and tm.user_id=auth.uid() and tm.status='active'));
+create or replace function public.track_practice_task_lifecycle() returns trigger language plpgsql security definer set search_path=public as $$ declare evt text; begin
+if tg_op='INSERT' then insert into public.practice_task_events(task_id,team_id,actor_id,event_type,to_status,note) values(new.id,new.team_id,new.assigned_by,'assigned',new.status,'Task assigned'); return new; end if;
+if new.status is distinct from old.status then
+evt:=case new.status when 'in_progress' then 'started' when 'completed' then 'submitted' when 'reviewed' then 'reviewed' when 'blocked' then 'blocked' when 'cancelled' then 'cancelled' else 'reopened' end;
+if new.status='completed' then new.completed_at:=coalesce(new.completed_at,now()); new.completion_submitted_by:=auth.uid(); new.completion_acknowledged_at:=null;
+elsif new.status='reviewed' then new.reviewed_at:=coalesce(new.reviewed_at,now()); new.completion_acknowledged_at:=coalesce(new.completion_acknowledged_at,now());
+elsif old.status in ('completed','reviewed') and new.status in ('assigned','in_progress') then new.completed_at:=null;new.completion_submitted_by:=null;new.completion_acknowledged_at:=null;new.reviewed_at:=null;end if;
+insert into public.practice_task_events(task_id,team_id,actor_id,event_type,from_status,to_status,note) values(new.id,new.team_id,auth.uid(),evt,old.status,new.status,coalesce(new.completion_note,new.blocked_reason,''));end if; return new;end;$$;
+drop trigger if exists practice_task_lifecycle on public.practice_tasks; create trigger practice_task_lifecycle before insert or update of status on public.practice_tasks for each row execute function public.track_practice_task_lifecycle();
+create or replace function public.run_squad_os_retention_cleanup() returns jsonb language plpgsql security definer set search_path=public as $$ declare cfg public.data_retention_settings%rowtype; ds bigint;tc bigint;pt bigint;ts bigint;tl bigint;begin
+select * into cfg from public.data_retention_settings where id=true;
+delete from public.daily_scores where score_date<((now() at time zone 'Asia/Kolkata')::date-cfg.daily_evolution_days);get diagnostics ds=row_count;
+delete from public.tournament_cycles where cycle_end<((now() at time zone 'Asia/Kolkata')::date-cfg.tournament_days) and status in ('completed','cancelled','archived');get diagnostics tc=row_count;
+delete from public.practice_tasks where status in ('completed','reviewed','cancelled') and coalesce(reviewed_at,completed_at,updated_at)<now()-make_interval(days=>cfg.completed_task_days);get diagnostics pt=row_count;
+delete from public.training_sessions where status='completed' and completed_at<now()-make_interval(days=>cfg.completed_training_days);get diagnostics ts=row_count;
+delete from public.training_log where created_at<now()-interval '180 days';get diagnostics tl=row_count;
+return jsonb_build_object('daily_scores_deleted',ds,'tournaments_deleted',tc,'tasks_deleted',pt,'sessions_deleted',ts,'training_logs_deleted',tl,'ran_at',now());end;$$;
+revoke all on function public.run_squad_os_retention_cleanup() from public,anon,authenticated;
+do $$ begin if exists(select 1 from cron.job where jobname='squad-os-retention-daily') then perform cron.unschedule('squad-os-retention-daily');end if;perform cron.schedule('squad-os-retention-daily','30 21 * * *','select public.run_squad_os_retention_cleanup();');end $$;

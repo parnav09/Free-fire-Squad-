@@ -1,0 +1,11 @@
+REVOKE EXECUTE ON FUNCTION public.can_rate(uuid,uuid) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.is_team_member(uuid) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.is_team_owner(uuid) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.mirror_profile() FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.rls_auto_enable() FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.shares_team_with(uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.can_rate(uuid,uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_team_member(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_team_owner(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.shares_team_with(uuid) TO authenticated;

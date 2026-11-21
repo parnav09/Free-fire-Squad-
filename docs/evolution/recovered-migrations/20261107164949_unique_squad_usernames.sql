@@ -1,0 +1,1 @@
+create unique index if not exists profiles_display_name_lower_uidx on public.profiles (lower(display_name));

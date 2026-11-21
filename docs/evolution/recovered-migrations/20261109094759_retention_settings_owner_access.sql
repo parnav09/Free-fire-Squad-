@@ -1,0 +1,3 @@
+drop policy if exists retention_owner_update on public.data_retention_settings;
+create policy retention_owner_update on public.data_retention_settings for update to authenticated using(exists(select 1 from public.team_members tm where tm.user_id=auth.uid() and tm.status='active' and tm.membership_role='owner')) with check(exists(select 1 from public.team_members tm where tm.user_id=auth.uid() and tm.status='active' and tm.membership_role='owner'));
+grant update on public.data_retention_settings to authenticated;
