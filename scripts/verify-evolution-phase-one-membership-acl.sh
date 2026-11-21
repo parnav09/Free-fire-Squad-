@@ -5,11 +5,16 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MIGRATION="$ROOT/supabase/migrations/20261122000000_phase_one_membership_update_guard.sql"
+TEST_DB="squad_os_membership_acl_ci"
+createdb --maintenance-db="$DATABASE_URL" "$TEST_DB"
+TEST_DATABASE_URL="${DATABASE_URL%/*}/$TEST_DB"
+cleanup() { dropdb --maintenance-db="$DATABASE_URL" --if-exists "$TEST_DB"; }
+trap cleanup EXIT
 
 echo "Disposable PostgreSQL version:"
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -Atc "SHOW server_version"
+psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 -Atc "SHOW server_version"
 
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN CREATE ROLE anon NOLOGIN; END IF;
@@ -143,10 +148,10 @@ VALUES
 SQL
 
 # Apply only the targeted migration under test to the disposable database.
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$MIGRATION"
+psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 -f "$MIGRATION"
 
 # Verify the least-privilege column grant and RPC execution boundary.
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 DO $$
 DECLARE
   fn oid := 'public.set_member_assignment(uuid,smallint,text,boolean)'::regprocedure;
@@ -193,7 +198,7 @@ $$;
 SQL
 
 # A normal member cannot edit identity, role, status, slot, or display columns.
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 BEGIN;
 SET LOCAL ROLE authenticated;
 SET LOCAL request.jwt.claim.sub = '30000000-0000-4000-8000-000000000002';
@@ -301,7 +306,7 @@ COMMIT;
 SQL
 
 # Signed-out RPC invocation is rejected.
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 BEGIN;
 SET LOCAL ROLE authenticated;
 SET LOCAL request.jwt.claim.sub = '';
@@ -323,7 +328,7 @@ COMMIT;
 SQL
 
 # Owner-only assignment works; role-only updates preserve the existing slot.
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 BEGIN;
 SET LOCAL ROLE authenticated;
 SET LOCAL request.jwt.claim.sub = '30000000-0000-4000-8000-000000000001';
