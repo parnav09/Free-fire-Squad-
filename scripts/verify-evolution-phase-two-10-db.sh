@@ -233,9 +233,11 @@ BEGIN
   END IF;
 END $$;
 
--- Exercise the drill reassignment/reference race with two independent transactions.
--- The referencing trigger must wait for an in-flight ownership change and then
--- reject the stale-team insert rather than committing a cross-team reference.
+SQL
+
+# Exercise the drill reassignment/reference race with two independent transactions.
+# The referencing trigger must wait for an in-flight ownership change and then
+# reject the stale-team insert rather than committing a cross-team reference.
 INSERT INTO public.training_drills(id,team_id,is_template,title)
 VALUES ('dd100000-0000-0000-0000-000000000004',
         'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',false,'Concurrent drill fixture');
@@ -289,9 +291,9 @@ if ! grep -q "training_drill_team_mismatch" /tmp/phase210-stale-drill-reference.
 fi
 rm -f /tmp/phase210-drill-owner-update.log /tmp/phase210-stale-drill-reference.log
 
--- Verify the documented rollback against this disposable database only.
--- The three parent composite indexes below predate Point 2.10 (Point 2.2);
--- they are deliberately preserved and must not be removed by this rollback.
+# Verify the documented rollback against this disposable database only.
+# The three parent composite indexes below predate Point 2.10 (Point 2.2);
+# they are deliberately preserved and must not be removed by this rollback.
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 BEGIN;
 DROP TRIGGER IF EXISTS training_sessions_team_drill_guard ON public.training_sessions;
@@ -363,8 +365,9 @@ BEGIN
     THEN RAISE EXCEPTION 'Phase 2.10 rollback removed a parent index owned by Point 2.2'; END IF;
 END
 $rollback$;
+SQL
 
--- Re-apply after rollback to prove the forward path is recoverable and repeatable.
+# Re-apply after rollback to prove the forward path is recoverable and repeatable.
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$ROOT/supabase/migrations/20261121000000_evolution_phase_two_10_database_integrity.sql"
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 DO $reapply$
@@ -393,7 +396,5 @@ BEGIN
     THEN RAISE EXCEPTION 'Forward re-apply did not restore its helper function'; END IF;
 END
 $reapply$;
-SQL
-
 SELECT 'Evolution Phase 2.10 PostgreSQL integrity integration PASS' AS verification;
 SQL
