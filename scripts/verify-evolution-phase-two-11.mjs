@@ -94,7 +94,7 @@ test("Result audit events and version history are visible", async () => {
 test("All interactive controls meet the 44px target and retain focus visibility", async () => {
   const css = await read("../src/components/CanonicalSessionsWorkspace.css");
   assert.match(css, /\.canonical-workspace button\{min-height:44px/);
-  assert.match(css, /\.canonical-icon-button\{width:44px;height:44px/);
+  assert.match(css, /\.canonical-workspace \.canonical-icon-button\{width:44px;height:44px/);
   assert.match(css, /:focus-visible/);
   assert.match(css, /@media\(max-width:820px\)/);
   assert.match(css, /@media\(max-width:520px\)/);
