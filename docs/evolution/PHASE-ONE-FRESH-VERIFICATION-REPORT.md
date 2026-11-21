@@ -45,7 +45,13 @@ No production SQL, migration, schema, data, RLS, grants, triggers, or Auth setti
 2. **Security boundary:** broad authenticated UPDATE grants on `team_members` require separate security review/remediation. Do not treat UI capability helpers as authorization, and do not silently change production grants in this Phase One PR.
 3. **Physical-device QA:** GitHub browser automation is not the same as owner-run Android/tablet/laptop QA. Record those checks separately if they are required for final release acceptance.
 
-## Exact-head CI evidence\n\nGitHub Actions run #1041 (`44954150550`) completed successfully on code head `1932582bc9e4cccd048658119a5eafd4e8056920`. It passed dependency installation, all disposable PostgreSQL integration checks (Phase Two.2–2.10), Phase One.5-B forward/rollback verification, staged trigger ACL verification, responsive Chromium checks, the full configured test/build chain, and Vite production build. The Phase One identity suite passed 21/21; Phase One.5 A/B/C/D/E source suites passed 6/6, 7/7, 6/6, 6/6, and 8/8 respectively. The separate Vercel status was failure due to the account build-rate limit; this is not a GitHub Actions test/build failure.\n\nThe subsequent PR checklist-only commit does not change application code; final PR head still requires the current workflow rerun before calling the final head verified.\n\n## CI trigger correction
+## Exact-head CI evidence
+
+GitHub Actions run #1041 (`44954150550`) completed successfully on code head `1932582bc9e4cccd048658119a5eafd4e8056920`. It passed dependency installation, all disposable PostgreSQL integration checks (Phase Two.2–2.10), Phase One.5-B forward/rollback verification, staged trigger ACL verification, responsive Chromium checks, the full configured test/build chain, and Vite production build. The Phase One identity suite passed 21/21; Phase One.5 A/B/C/D/E source suites passed 6/6, 7/7, 6/6, 6/6, and 8/8 respectively. The separate Vercel status was failure due to the account build-rate limit; this is not a GitHub Actions test/build failure.
+
+The subsequent PR checklist-only commit does not change application code; final PR head still requires the current workflow rerun before calling the final head verified.
+
+## CI trigger correction
 
 The existing workflow did not include this PR's Phase Two.12 base in its `pull_request.branches` list. This PR adds the Phase One implementation branch to push triggers and the Phase Two.12 base to pull-request triggers so the complete configured build/test suite runs for PR #142.
 
