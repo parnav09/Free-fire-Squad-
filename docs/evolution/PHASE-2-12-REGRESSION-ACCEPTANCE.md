@@ -48,12 +48,34 @@ It checks:
 
 The new Point 2.12 source tests assert that these cases remain present. They do not claim that the database scripts have executed successfully on the current PR head.
 
+## Manual device/browser execution sheet
+
+Run these scenarios only after the build and disposable database gates are available. Record browser/device, OS, viewport, tester, date, and a screenshot or video for every failure.
+
+| Target | Viewport | Required checks | Status |
+|---|---:|---|---|
+| Android phone | 390 × 844 | No horizontal page overflow; create/filter/select a session; open details; use roster and match controls; verify 44px touch targets; test offline read-only warning | **Pending physical-device run** |
+| Tablet portrait | 768 × 1024 | List/detail stack correctly; filters remain usable; no clipped actions; keyboard/accessibility focus remains visible | **Pending device/browser run** |
+| Tablet landscape | 1024 × 768 | Two-column layout remains usable; no hidden detail actions; scroll regions do not trap content | **Pending browser run** |
+| Laptop | 1280 × 800 | Full session workflow fits without horizontal overflow; forms and result panels remain readable | **Pending browser run** |
+| Desktop | 1440 × 900 | Full workflow, audit history, filters and result controls remain aligned and reachable | **Pending browser run** |
+
+Functional scenarios on each available target:
+1. Owner/Coach can create a Training session and perform allowed lifecycle actions; Player cannot.
+2. Search and each filter update the visible session list without stale selection or stale request results.
+3. Roster selection/lock, participation, role assignment and substitution preserve the selected session/match context.
+4. Result draft, submission, verification, rejection and correction expose the right states; unverified values never appear as official aggregates.
+5. Offline mode is read-only, with no queued or silently replayed writes.
+6. Keyboard-only navigation reaches every action in a logical order; focus remains visible; status/error messages are announced semantically.
+
+No result is marked PASS until a real run and its evidence are attached.
+
 ## Acceptance evidence
 
 | Gate | Current evidence | Status |
 |---|---|---|
 | Earlier source-contract suites | Historical full build completed on `271c1e3eb1764802ea6660538bf1a28eb82eb5ec`; this is not the current PR head | **Historical PASS; exact-head rerun pending** |
-| TypeScript + production bundle | Historical Vercel Preview for `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` reached READY; current PR head is `5c3387a82baedd620e1bc4484428bfcf0ab0caa8` and has no matching Vercel deployment record | **Historical PASS; exact-head build pending** |
+| TypeScript + production bundle | Historical Vercel Preview for `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` reached READY; current PR head of PR #130 has not yet produced a successful exact-head Vercel build | **Historical PASS; exact-head build pending** |
 | Phase 2.10 source contract | 4/4 passed on exact preview commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` | **PASS (source contract only)** |
 | Phase 2.10 PostgreSQL integration | Latest associated run `44727576628` failed before runner steps; job has no step output/logs | **BLOCKED** |
 | Phase 2.11 source contract | 6/6 passed on exact preview commit `271c1e3eb1764802ea6660538bf1a28eb82eb5ec` | **PASS (source contract only)** |
