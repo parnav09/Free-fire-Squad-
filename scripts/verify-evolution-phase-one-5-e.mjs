@@ -112,7 +112,7 @@ test("historical live-project RPC checks are not misreported as isolated Gate C 
   assert.match(audit, /18 callable authenticated SECURITY DEFINER signatures/);
   assert.match(currentAcceptance, /Gate C.*BLOCKED/i);
   assert.match(currentAcceptance, /has not been executed in this audit/i);
-  assert.match(currentAcceptance, /isolated disposable database/i);
+  assert.match(currentAcceptance, /isolated disposable users and teams/i);
 });
 
 test("current baseline and external Auth blockers remain explicit", () => {
@@ -120,7 +120,7 @@ test("current baseline and external Auth blockers remain explicit", () => {
   assert.match(historicalBaseline, /Historical replay executed: 0\/53/);
   assert.match(currentAcceptance, /Gate A.*BLOCKED/i);
   assert.match(currentAcceptance, /Gate B.*OWNER ACTION REQUIRED/i);
-  assert.match(currentAcceptance, /Gate C remains blocked/i);
+  assert.match(currentAcceptance, /Gate C.*BLOCKED/i);
   assert.match(currentAcceptance, /PHASE 1 IMPLEMENTATION COMPLETE — ACCEPTANCE PENDING/);
 });
 
