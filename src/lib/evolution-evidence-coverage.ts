@@ -31,7 +31,8 @@ export type EvidenceCoverageResult = {
   status: EvidenceCoverageStatus;
 };
 
-const validEvidence = new Set<CoverageEvidenceState>(["pending", "verified", "corrected"]);
+const knownEvidence = new Set<CoverageEvidenceState>([null, "pending", "verified", "corrected", "rejected", "archived"]);
+const countableEvidence = new Set<CoverageEvidenceState>(["pending", "verified", "corrected"]);
 
 /**
  * Coverage is observed applicable dimensions / all historically applicable
@@ -49,8 +50,8 @@ export function calculateEvidenceCoverage(
     if (item.assessmentState === "not_applicable") {
       throw new Error("Not Applicable dimensions must be excluded by the bound role-weight set.");
     }
-    if (item.assessmentState === "observed" && !validEvidence.has(item.evidenceState)) {
-      throw new Error("Observed coverage requires pending, verified or corrected evidence.");
+    if (!knownEvidence.has(item.evidenceState)) {
+      throw new Error("Unknown evidence state cannot be used in coverage.");
     }
     if (item.assessmentState !== "observed" && item.evidenceState !== null) {
       throw new Error("Only observed dimensions may contribute an evidence verification state.");
@@ -61,11 +62,19 @@ export function calculateEvidenceCoverage(
   }
 
   const applicableDimensionCount = dimensions.length;
-  const observed = dimensions.filter((item) => item.assessmentState === "observed");
+  // Match the database calculator: an Observed assessment whose evidence is
+  // rejected, archived or absent is not valid observed coverage; it is counted
+  // in the rejected-evidence bucket instead of being silently accepted.
+  const observed = dimensions.filter((item) =>
+    item.assessmentState === "observed" && countableEvidence.has(item.evidenceState)
+  );
   const observedDimensionCount = observed.length;
   const notObservedDimensionCount = dimensions.filter((item) => item.assessmentState === "not_observed").length;
   const incompleteDimensionCount = dimensions.filter((item) => item.assessmentState === "incomplete").length;
-  const rejectedEvidenceDimensionCount = dimensions.filter((item) => item.assessmentState === "rejected_evidence").length;
+  const rejectedEvidenceDimensionCount = dimensions.filter((item) =>
+    item.assessmentState === "rejected_evidence"
+    || (item.assessmentState === "observed" && !countableEvidence.has(item.evidenceState))
+  ).length;
   const missingDimensionCount = dimensions.filter((item) => item.assessmentState === null).length;
   const verifiedEvidenceDimensionCount = observed.filter((item) => item.evidenceState === "verified").length;
   const unverifiedEvidenceDimensionCount = observed.filter((item) => item.evidenceState === "pending" || item.evidenceState === "corrected").length;
