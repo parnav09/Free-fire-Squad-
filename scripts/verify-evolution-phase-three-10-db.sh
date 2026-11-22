@@ -80,14 +80,12 @@ END $$;
 RESET ROLE;
 SET ROLE postgres;
 INSERT INTO public.evolution_evidence_verification_events(
-  team_id,evidence_item_id,from_status,to_status,actor_user_id,evidence_version_id
+  team_id,evidence_item_id,from_status,to_status,actor_user_id
 )
 SELECT e.team_id,e.id,'pending','verified',
-  '80000000-0000-0000-0000-000000000008',ev.id
+  '80000000-0000-0000-0000-000000000008'
 FROM public.evolution_evidence_items e
-JOIN phase_310_verified_evidence fixture ON fixture.id=e.id
-JOIN public.evolution_evidence_versions ev
-  ON ev.evidence_item_id=e.id AND ev.team_id=e.team_id AND ev.version_number=1;
+JOIN phase_310_verified_evidence fixture ON fixture.id=e.id;
 
 RESET ROLE;
 SET ROLE authenticated;
