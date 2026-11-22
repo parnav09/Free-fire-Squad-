@@ -196,13 +196,13 @@ BEGIN
     team_id,evaluation_context_id,role_assignment_id,weight_set_id,role_key,bound_by
   ) VALUES (v_team,v_next_context,v_role_assignment,v_set_two,v_role_key,auth.uid());
 
-  BEGIN
-    UPDATE public.evolution_role_dimension_weights
-    SET weight_basis_points=weight_basis_points
-    WHERE weight_set_id=v_set_two;
-    RAISE EXCEPTION 'Published dimension weights unexpectedly remained editable';
-  EXCEPTION WHEN SQLSTATE '55000' THEN NULL;
-  END;
+  UPDATE public.evolution_role_dimension_weights
+  SET weight_basis_points=weight_basis_points
+  WHERE weight_set_id=v_set_two;
+  GET DIAGNOSTICS v_bad_count = ROW_COUNT;
+  IF v_bad_count <> 0 THEN
+    RAISE EXCEPTION 'RLS unexpectedly allowed published dimension weight edits';
+  END IF;
 
   BEGIN
     INSERT INTO public.evolution_evaluation_role_weight_bindings(
@@ -266,7 +266,28 @@ BEGIN
 END $$;
 RESET ROLE;
 
-DO $$
+-- Bypass RLS as the disposable database owner to prove the immutable trigger itself rejects edits.
+SET ROLE postgres;
+SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
+DO $
+BEGIN
+  BEGIN
+    UPDATE public.evolution_role_dimension_weights
+    SET weight_basis_points=weight_basis_points
+    WHERE weight_set_id=(SELECT id FROM public.evolution_role_weight_sets WHERE lifecycle_status='active' LIMIT 1);
+    RAISE EXCEPTION 'Immutable active dimension weight trigger unexpectedly allowed an edit';
+  EXCEPTION WHEN SQLSTATE '55000' THEN NULL;
+  END;
+  BEGIN
+    DELETE FROM public.evolution_role_weight_sets
+    WHERE lifecycle_status='retired';
+    RAISE EXCEPTION 'Immutable retired weight-set trigger unexpectedly allowed deletion';
+  EXCEPTION WHEN SQLSTATE '55000' THEN NULL;
+  END;
+END $;
+RESET ROLE;
+
+DO $
 BEGIN
   IF has_table_privilege('authenticated','public.evolution_role_weight_sets','DELETE')
     OR has_table_privilege('authenticated','public.evolution_role_dimension_weights','TRUNCATE')
