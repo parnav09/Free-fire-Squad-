@@ -620,7 +620,7 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - Added server-side `calculate_evolution_player_score_snapshot(uuid,text)`, which persists exact evaluation/player/role-snapshot, rubric version, role-weight set, calculation/policy versions, raw assessment/evidence inputs, deterministic score/coverage/status, exact rational values, reasons, actor and timestamp.
 - Raw input JSON captures rubric criteria and rating anchors, dimension-definition versions, role weights, assessment revisions/states/ratings, evidence identities, current verification state, evidence-version reference and immutable evidence content metadata.
 - Final, Provisional and Insufficient outputs are stored in separate constrained score columns. Insufficient results never expose a final or provisional score.
-- Identical input fingerprints return the existing snapshot. Changed inputs append a new snapshot linked to the prior one and require a reason; old snapshots are immutable and remain explainable.
+- Identical input fingerprints return the existing snapshot. Changed inputs append a new snapshot linked to the prior one and require a 3–1000 character `recalculation_reason`; old snapshots are immutable and remain explainable.
 - Added transaction-scoped per-context locking, unique idempotency constraints, composite team/context/rubric/weight/role foreign keys, owner/coach-only RLS reads and denial of direct client writes.
 - Private evidence authored by another member fails closed. No tournament outcomes are score inputs.
 - Added the Phase 3.10 PostgreSQL migration replay/integration harness, source-contract tests, npm build-chain test, GitHub Actions database step and implementation report.
