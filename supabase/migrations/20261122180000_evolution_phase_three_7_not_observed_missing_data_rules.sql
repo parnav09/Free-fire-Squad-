@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS public.evolution_evaluation_dimension_assessment_even
   CONSTRAINT evolution_eval_dimension_assessment_revision_unique
     UNIQUE (evaluation_context_id, dimension_key, revision_number),
   CONSTRAINT evolution_eval_dimension_assessment_value_shape CHECK (
-    (assessment_state = 'observed' AND rating_value BETWEEN 0 AND 10 AND evidence_item_id IS NOT NULL)
+    (assessment_state = 'observed' AND rating_value IS NOT NULL AND rating_value BETWEEN 0 AND 10 AND evidence_item_id IS NOT NULL)
     OR (assessment_state = 'not_observed' AND rating_value IS NULL AND evidence_item_id IS NULL
       AND char_length(btrim(coalesce(reason,''))) BETWEEN 3 AND 1000)
     OR (assessment_state = 'not_applicable' AND rating_value IS NULL AND evidence_item_id IS NULL
