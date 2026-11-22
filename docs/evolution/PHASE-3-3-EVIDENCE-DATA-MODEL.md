@@ -31,14 +31,15 @@
 - Evidence identity/context cannot be updated or deleted.
 - Authenticated access is governed by RLS; anonymous reads are revoked.
 - Evidence status is constrained to pending on client creation; status transitions require the later provenance/verification point.
+- Private evidence content versions and dimension links are author-only; other coaches cannot append revisions or dimension links to private evidence.
 - Context creation and evidence creation are limited to active team owners/coaches for this initial data-model boundary.
 - No policy queries the rubric tables; this point does not import the unmerged rubric candidate or repeat its recursive-RLS policy graph.
 - No legacy daily_scores or training_results are backfilled, converted, rewritten or deleted.
 
 ## Verification
 
-**Exact tested code head:** 064fdc00d21a303f4dabd0558b3f71738e101ed9  
-**GitHub Actions run:** #45030533118 — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45030533118 — SUCCESS.
+**Exact tested code head:** 5373d5e122148ff032161cebce3f10028eb8d61f  
+**GitHub Actions run:** #45031066921 — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45031066921 — SUCCESS.
 
 Targeted checks:
 - npm run test:evolution-phase-three-3
@@ -72,6 +73,7 @@ This standard is a continuing UI acceptance rule; Point 3.3 itself adds no UI be
 - Workflow run #45030533118 completed **SUCCESS** on commit 064fdc00d21a303f4dabd0558b3f71738e101ed9.
 - Point 3.3 disposable PostgreSQL integration: **PASS**, including applying the migration twice, canonical Phase 2.2–2.6 dependencies, exact match/role snapshot references, initial version seeding, append-only sequential corrections, invalid VOD locator rejection, pending-only creation, team/coach/private visibility, cross-team isolation and ACL checks.
 - Point 3.3 source-contract tests: **12/12 PASS**.
+- Coach attempts to append a version or dimension link to another author's private evidence are denied by RLS; the owner/author-only boundary is covered by the PostgreSQL harness.
 - Point 3.2 PostgreSQL integration: **PASS**.
 - Point 3.2 source-contract tests: **10/10 PASS**.
 - Point 3.1 audit tests: **9/9 PASS**.
@@ -85,5 +87,6 @@ This standard is a continuing UI acceptance rule; Point 3.3 itself adds no UI be
 3. The first visibility test reused a user fixture that did not represent a member of the target team. Replaced it with explicit disposable Alpha player and coach fixtures and asserted the three visibility levels independently.
 4. Corrected PostgreSQL harness DO-block delimiters and adjusted negative tests to accept the expected RLS/privilege denial paths.
 5. Added pending-only client creation so clients cannot mark their own evidence verified.
+6. A further privacy review found that coaches could otherwise append revisions/links to private evidence they could not read. Both write policies now enforce author-only private writes; the disposable database test verifies the denial.
 
 All fixes are included in the exact tested head above.
