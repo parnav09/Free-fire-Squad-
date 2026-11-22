@@ -480,7 +480,7 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 
 ## 13. Evolution Phase 3.5 — Versioned Rubric Engine (2026-11-22)
 
-**Status: IMPLEMENTED — exact-head verification pending.**
+**Status: IMPLEMENTED AND VERIFIED.**
 
 - Active PR: #131 — the single consolidated Evolution Phase Three PR; Draft/unmerged.
 - Branch: feat/evolution-phase-three-1-existing-evaluation-audit.
@@ -491,15 +491,28 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - Criteria reference the exact Phase 3.2 canonical dimension-definition version. Optional role guidance is checked against that definition's applicable canonical roles.
 - Effective start/end dates and publication/retirement actor timestamps are retained. A rubric identity may have only one active version at a time.
 - Added immutable evaluation-context-to-rubric-version bindings. A binding accepts only the active version effective when the context was created; one context cannot be rebound to another rubric version.
-- Added team-scoped RLS and grants: active team members can read active rubric content; active owners/coaches can manage drafts and lifecycle transitions; anonymous reads and direct mutation of published/bound records are denied.
+- Added team-scoped RLS and grants: active team members can read active and retired published rubric content for historical interpretation; active owners/coaches can manage drafts and lifecycle transitions; anonymous reads and direct mutation of published/bound records are denied.
 - Added src/lib/evolution-rubrics.ts using the existing canonical dimension and role registry; no duplicate registry was introduced.
 - Added scripts/verify-evolution-phase-three-5.mjs and scripts/verify-evolution-phase-three-5-db.sh. The PostgreSQL harness chains from the Phase 3.4 disposable integration, applies the new migration twice, and tests publication, version progression, immutable history, effective dates, exact binding, invalid anchors/roles, RLS and grants.
 - Added the Phase 3.5 source test to npm run build and its disposable PostgreSQL harness to GitHub Actions.
 - Added docs/evolution/PHASE-3-5-VERSIONED-RUBRIC-ENGINE.md.
 - No scoring formula, role weights, evidence coverage calculator, score snapshots, evaluation UI, legacy conversion, production migration, production deployment, merge to main or data reset.
 
-### Exact-head acceptance
+### Exact-head acceptance — 2026-11-22
 
-Pending. The full GitHub Actions workflow must execute the Phase 3.5 PostgreSQL integration, all source-contract/regression tests, responsive UI/touch-target checks, TypeScript typecheck and Vite production build on the exact latest PR head. Any failure must be fixed and the full workflow rerun on the resulting final head. Do not mark Point 3.5 VERIFIED based only on code presence or an earlier SHA.
+- Tested PR head: 7fead06b13da3a937c1fff619809859c234db28a.
+- GitHub Actions run #45053929515: **SUCCESS** — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45053929515.
+- Phase 3.5 disposable PostgreSQL integration: **PASS**. The migration was applied twice after the Phase 3.4 dependency chain.
+- Database acceptance: complete six-dimension publication; all eleven 0–10 anchors; invalid anchor/role rejection; serialized sequential version creation; one active version per rubric; effective dates; immutable active/retired history; exact immutable evaluation-context binding; duplicate binding denial; team isolation; coach/player RLS; retired published rubric history remains readable; anonymous/direct-write denial.
+- Point 3.5 source-contract tests: **13/13 PASS**.
+- Phase 3.2–3.4 and Phase 2.2–2.10 PostgreSQL integrations: **PASS**.
+- Staged migration and security-trigger ACL checks: **PASS**.
+- Responsive UI/touch-target/permission/offline-write checks: **PASS**; responsive screenshots uploaded.
+- Full regression/source-contract suite and TypeScript typecheck: **PASS**.
+- Vite production build: **PASS**. Existing non-fatal chunk-size warning remains.
+- Verification defects fixed before the successful run: corrected a PL/pgSQL trigger CASE-expression syntax error; corrected a database assertion that expected an exception where RLS correctly filtered a published-criteria update. The final test verifies zero updated rows and unchanged historical criteria.
+- No production migration, data reset, merge to main or production deployment occurred.
 
-**Next action:** inspect the first exact-head CI run, correct any migration/test/typecheck/build failures, and rerun until the exact latest PR head is green. Then record the final SHA and workflow run ID here before beginning Point 3.6.
+**Point 3.5 acceptance: VERIFIED.**
+
+**Next point:** 3.6 — Role-Based Weight Configuration. Do not begin it until explicitly requested.
