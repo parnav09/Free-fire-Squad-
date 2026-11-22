@@ -64,7 +64,7 @@ BEGIN
           'calculate_evolution_player_score_snapshot'
         )))
   LOOP
-    IF NOT COALESCE(v_function.proconfig::text,'') LIKE '%search_path=""%' THEN
+    IF NOT ('search_path=""' = ANY(COALESCE(v_function.proconfig,ARRAY[]::text[]))) THEN
       RAISE EXCEPTION 'SECURITY DEFINER function % has no pinned empty search_path',v_function.signature;
     END IF;
     IF has_function_privilege('anon',v_function.signature,'EXECUTE') THEN
