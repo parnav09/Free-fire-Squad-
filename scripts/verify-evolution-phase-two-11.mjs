@@ -8,6 +8,7 @@ const css = readFileSync("src/components/CanonicalSessionsWorkspace.css", "utf8"
 const tokens = readFileSync("src/styles/tokens.css", "utf8");
 const legacyScrims = readFileSync("src/components/ScrimsSection.tsx", "utf8");
 const legacyPlanning = readFileSync("src/components/PlanningTrainingCenter.tsx", "utf8");
+const pickerCss = readFileSync("src/components/PlacementPicker.css", "utf8");
 
 test("Point 2.11 workspace is reachable without replacing legacy workspaces", () => {
   assert.match(app, /CanonicalSessionsWorkspace/);
@@ -108,4 +109,14 @@ test("responsive UI retains the existing dark design tokens and accessible hitbo
   assert.match(tokens, /--color-canvas:\s*var\(--brand-onyx-950\)/);
   assert.match(css, /var\(--color-surface-raised\)/);
   assert.match(css, /var\(--brand-cyan-300\)/);
+});
+
+
+test("Tournament mirrors Scrims champion-only gold placement behavior without changing Scrims", () => {
+  assert.match(app, /className=\{\`match-card\$\{m\.placement===1\?" match-card-top1":""\}\`\}/);
+  assert.match(pickerCss, /\.match-card-top1 \.scrims-placement-trigger/);
+  assert.match(pickerCss, /\.match-card-top1 \.scrims-placement-menu button\.is-selected/);
+  assert.match(pickerCss, /\.match-card \.scrims-placement-menu[\s\S]*max-height:min\(240px,34vh\);overflow-y:auto/);
+  assert.match(pickerCss, /\.match-card:has\(\.scrims-placement-picker\.is-open\)/);
+  assert.match(legacyScrims, /scrims-match-top1/);
 });

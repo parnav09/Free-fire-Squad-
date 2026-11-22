@@ -32,3 +32,65 @@
  box-shadow:inset 0 1px 0 rgba(255,230,175,.16),0 0 12px rgba(198,161,91,.12);
 }
 .scrims-placement-check{color:#f4d28a;font-weight:900}
+
+
+/* Tournament parity: mirror Scrims' champion-only gold treatment without changing Scrims styles. */
+.match-grid{align-items:stretch;isolation:isolate;overflow:visible}
+.match-card{position:relative;overflow:visible;isolation:isolate;min-width:0}
+.match-card:has(.scrims-placement-picker.is-open){z-index:50}
+.match-card .scrims-placement-picker{position:relative;min-width:0;z-index:1}
+.match-card .scrims-placement-picker.is-open{z-index:100}
+.match-card .scrims-placement-trigger{
+  min-height:46px;color:#8ce8fa;border-color:#2c5068;
+  background:linear-gradient(135deg,#12364b,#102337);
+  font-size:14px;font-weight:700;box-shadow:none;
+}
+.match-card .scrims-placement-trigger:hover:not(:disabled){color:#b8f5ff;border-color:#4ba7c5;background:linear-gradient(135deg,#17465d,#142c43)}
+.match-card .scrims-placement-chevron{color:#8ce8fa}
+.match-card .scrims-placement-menu{
+  position:absolute;top:calc(100% + 7px);left:0;right:0;width:100%;box-sizing:border-box;
+  max-height:min(240px,34vh);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+  background:#0d1524;border-color:#2c5068;border-radius:13px;z-index:120;
+  box-shadow:0 14px 30px rgba(0,0,0,.65);scrollbar-color:#28516a #0d1524;scrollbar-width:thin;
+}
+.match-card .scrims-placement-menu button{width:100%;min-height:42px;color:#b9cde5;background:transparent;border-color:transparent}
+.match-card .scrims-placement-menu button:hover,.match-card .scrims-placement-menu button:focus-visible{background:#15354a;border-color:#2c5068;color:#b8f5ff}
+.match-card .scrims-placement-menu button.is-selected{background:linear-gradient(135deg,#12364b,#102337);border-color:#3a829c;color:#8ce8fa;box-shadow:none}
+.match-card .scrims-placement-check{color:#8ce8fa}
+.match-card:has(.scrims-placement-picker.is-open) label:nth-of-type(2){visibility:hidden}
+.match-card:has(.scrims-placement-picker.is-open)::after{
+  content:"";position:absolute;left:10px;right:10px;top:104px;bottom:10px;border-radius:12px;
+  background:rgba(5,9,16,.35);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  pointer-events:none;z-index:2;
+}
+.match-card:has(.scrims-placement-picker.is-open) .scrims-placement-picker{z-index:5}
+
+/* Tournament TOP 1 card and picker only: Scrims champion obsidian/gold state. */
+.match-card-top1{
+  border:1px solid #5a421d;
+  background:radial-gradient(ellipse at 90% 0%,rgba(198,161,91,.12),transparent 52%),linear-gradient(145deg,#15110a 0%,#0b0b0c 52%,#080706 100%);
+  box-shadow:inset 0 1px 0 rgba(231,204,145,.08),0 6px 20px rgba(0,0,0,.28);
+}
+.match-card-top1 .card-index,.match-card-top1 h3{color:#d9b45e}
+.match-card-top1 label{color:#cdb47b;font-weight:650}
+.match-card-top1 input:not([type=checkbox]){
+  border-color:#8b682f!important;background:linear-gradient(180deg,#1b1307,#0d0904)!important;
+  color:#f6d78e!important;font-weight:750!important;
+}
+.match-card-top1 .scrims-placement-trigger{
+  color:#ffe6a4;border-color:#c99c45;
+  background:linear-gradient(180deg,#493211,#241806 58%,#140e05);
+  box-shadow:inset 0 1px 0 rgba(255,231,173,.2),0 4px 12px rgba(0,0,0,.28);
+}
+.match-card-top1 .scrims-placement-trigger:hover:not(:disabled){border-color:#f0ce7c;color:#fff0bd}
+.match-card-top1 .scrims-placement-chevron{color:#ffd777;font-size:25px;font-weight:900;text-shadow:0 0 9px rgba(255,202,91,.3)}
+.match-card-top1 .scrims-placement-menu{
+  background:linear-gradient(160deg,#30220e,#100b04);border-color:#a27a35;
+  scrollbar-color:#b58b43 #1c1307;
+}
+.match-card-top1 .scrims-placement-menu button{color:#dfc17e;background:rgba(72,51,20,.15);border-color:rgba(142,104,41,.22)}
+.match-card-top1 .scrims-placement-menu button:hover,.match-card-top1 .scrims-placement-menu button:focus-visible{background:#503716;border-color:#b88d43;color:#ffedbd}
+.match-card-top1 .scrims-placement-menu button.is-selected{background:linear-gradient(145deg,#a27a31,#704e19 45%,#3e280b);border-color:#f0ce7c;color:#fff3cb}
+.match-card-top1 .scrims-placement-check{color:#fff0bd}
+.match-card-top1:focus-within{border-color:#8d6828;box-shadow:inset 0 1px 0 rgba(231,204,145,.09),0 0 0 2px rgba(198,161,91,.09),0 7px 20px rgba(0,0,0,.25)}
+@media(prefers-reduced-motion:reduce){.match-card,.match-card .scrims-placement-trigger{transition:none}}
