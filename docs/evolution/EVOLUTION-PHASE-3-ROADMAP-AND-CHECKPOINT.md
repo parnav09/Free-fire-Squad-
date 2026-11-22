@@ -597,7 +597,7 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 
 ## Point 3.9 implementation checkpoint — Deterministic Scoring Engine
 
-**Status: IMPLEMENTED — exact-head verification pending.**
+**Status: IMPLEMENTED AND VERIFIED.**
 
 - Implemented the pure deterministic score engine using the Evolution v2 canonical formula: weighted average of eligible 0–10 dimension ratings, normalized to 0–100.
 - Added a versioned policy v1 with a 50% minimum evidence-coverage gate, integer half-up rounding to two decimal places, and separate final/provisional/insufficient outcomes.
@@ -607,4 +607,4 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - Added `docs/evolution/PHASE-3-9-DETERMINISTIC-SCORING-ENGINE.md`, an executable 3.9 behavior suite, npm build-chain registration and the consolidated CI workflow update.
 - No database migration, score snapshot, legacy conversion/backfill, UI change, production migration, data reset, merge to main or production deployment.
 
-**Verification status:** pending. Run the new 3.9 test suite and complete full CI on the exact latest PR head; fix any failure and rerun before marking VERIFIED.
+**Verification status: PASS on the exact PR head.** Commit `66898956a1630c5b436d76bd53ac6113f4b3d85f`; GitHub Actions run [45071794146](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45071794146) completed with `success`. The dedicated Phase 3.9 suite passed **23/23** tests (0 failures). TypeScript, the full existing regression/build chain, PostgreSQL integration checks for Phase 3.2–3.8 and the applicable Phase 2 migrations, responsive UI/touch-target/permission/offline-write acceptance, screenshot upload and Vite production build all passed on this exact commit.
