@@ -8,6 +8,7 @@ const css = readFileSync("src/components/CanonicalSessionsWorkspace.css", "utf8"
 const tokens = readFileSync("src/styles/tokens.css", "utf8");
 const legacyScrims = readFileSync("src/components/ScrimsSection.tsx", "utf8");
 const legacyPlanning = readFileSync("src/components/PlanningTrainingCenter.tsx", "utf8");
+const pickerCss = readFileSync("src/components/PlacementPicker.css", "utf8");
 
 test("Point 2.11 workspace is reachable without replacing legacy workspaces", () => {
   assert.match(app, /CanonicalSessionsWorkspace/);
