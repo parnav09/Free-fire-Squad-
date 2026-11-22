@@ -44,7 +44,7 @@ BEGIN
   SELECT v_team,v_context,w.dimension_key,w.dimension_definition_version,1,
     'not_observed','No reliable observation was available.',auth.uid()
   FROM public.evolution_role_dimension_weights w
-  WHERE w.weight_set_id=v_set AND w.dimension_key<>v_dim;
+  WHERE w.weight_set_id=v_set AND w.dimension_key<>v_dim AND w.dimension_key<>v_dim2;
 
   SELECT rating_value INTO v_rating FROM public.evolution_evaluation_current_dimension_assessments
   WHERE evaluation_context_id=v_context AND dimension_key=v_dim;
@@ -52,7 +52,7 @@ BEGIN
   SELECT missing_dimension_count,not_observed_dimension_count,assessment_status
     INTO v_missing,v_no,v_state FROM public.evolution_evaluation_assessment_readiness
   WHERE evaluation_context_id=v_context;
-  IF v_missing<>0 OR v_no<1 OR v_state<>'provisional' THEN
+  IF v_missing<>1 OR v_no<1 OR v_state<>'provisional' THEN
     RAISE EXCEPTION 'Not Observed / pending evidence readiness mismatch: %, %, %',v_missing,v_no,v_state;
   END IF;
 
