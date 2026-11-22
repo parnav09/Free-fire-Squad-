@@ -80,7 +80,7 @@ test("Tournament match ledger keeps results editable and hides zero-valued kill 
   assert.match(app, /const m=matches\[key\]\?\?\(\(signedIn&&team&&remote\)/);
   assert.equal((app.match(/disabled=\{!!team&&\!\(team\.membership_role==="coach"\|\|team\.membership_role==="owner"\)\}/g) || []).length, 2);
   assert.match(app, /value=\{killDrafts\[key\] \?\? \(m\.kills > 0 \? String\(m\.kills\) : ""\)\}/);
-  assert.match(app, /saveMatch\(key,"kills",raw===""\?0:Math\.max\(0,Number\(raw\)\)\)/);
+  assert.match(app, /if\(raw===""\)\{if\(m\.kills>0\)saveMatch\(key,"kills",0\);\}else\{saveMatch\(key,"kills",Math\.max\(0,Number\(raw\)\)\);\}/);
   assert.doesNotMatch(app, /42 MATCH SLOTS|42 match slots|Link canonical IDs/);
 });
 
