@@ -141,7 +141,8 @@ BEGIN
   END IF;
   IF NOT EXISTS (
     SELECT 1 FROM public.team_members tm
-    WHERE tm.team_id = NEW.team_id AND tm.user_id = auth.uid()
+    WHERE tm.team_id = CASE WHEN TG_OP = 'DELETE' THEN OLD.team_id ELSE NEW.team_id END
+      AND tm.user_id = auth.uid()
       AND tm.status = 'active' AND tm.membership_role IN ('owner','coach')
   ) THEN
     RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501';
