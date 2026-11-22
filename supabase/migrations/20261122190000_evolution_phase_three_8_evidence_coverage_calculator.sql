@@ -150,6 +150,22 @@ BEGIN
     RAISE EXCEPTION 'active_team_owner_or_coach_required' USING ERRCODE = '42501';
   END IF;
 
+  -- SECURITY DEFINER bypasses evidence RLS; fail closed rather than exposing another
+  -- author's private evidence through the reproducibility snapshot.
+  IF EXISTS (
+    SELECT 1
+    FROM public.evolution_evaluation_current_dimension_assessments a
+    JOIN public.evolution_evidence_items e
+      ON e.id = a.evidence_item_id AND e.team_id = a.team_id
+    WHERE a.evaluation_context_id = p_evaluation_context_id
+      AND a.team_id = v_team
+      AND e.visibility = 'private'
+      AND e.created_by IS DISTINCT FROM v_actor
+  ) THEN
+    RAISE EXCEPTION 'private_evidence_not_available_to_coverage_calculator'
+      USING ERRCODE = '42501';
+  END IF;
+
   SELECT coalesce(jsonb_agg(jsonb_build_object(
     'dimension_key', w.dimension_key,
     'dimension_definition_version', w.dimension_definition_version,
