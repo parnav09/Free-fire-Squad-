@@ -76,6 +76,14 @@ test("permission-denied and empty/loading/error states are explicit", () => {
   assert.match(ui, /membershipRole==="owner" \|\| membershipRole==="coach"/);
 });
 
+test("Tournament match ledger keeps results editable and hides zero-valued kill placeholders", () => {
+  assert.match(app, /const m=matches\[key\]\?\?\(\(signedIn&&team&&remote\)/);
+  assert.equal((app.match(/disabled=\{!!team&&\!\(team\.membership_role==="coach"\|\|team\.membership_role==="owner"\)\}/g) || []).length, 2);
+  assert.match(app, /value=\{killDrafts\[key\] \?\? \(m\.kills > 0 \? String\(m\.kills\) : ""\)\}/);
+  assert.match(app, /saveMatch\(key,"kills",raw===""\?0:Math\.max\(0,Number\(raw\)\)\)/);
+  assert.doesNotMatch(app, /42 MATCH SLOTS|42 match slots|Link canonical IDs/);
+});
+
 test("responsive UI retains the existing dark design tokens and accessible hitboxes", () => {
   assert.match(css, /@media\(max-width:1050px\)/);
   assert.match(css, /@media\(max-width:760px\)/);
