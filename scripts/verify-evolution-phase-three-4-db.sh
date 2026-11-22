@@ -68,6 +68,17 @@ BEGIN
   WHERE evidence_item_id=v_evidence;
   IF v_count <> 4 THEN RAISE EXCEPTION 'expected initial + three transitions, got %',v_count; END IF;
 
+  -- Archival is reason-backed and terminal.
+  PERFORM public.transition_evolution_evidence_status(v_evidence,'archived','Evidence retained for historical audit');
+  SELECT status INTO v_status
+  FROM public.evolution_evidence_current_status WHERE evidence_item_id=v_evidence;
+  IF v_status <> 'archived' THEN RAISE EXCEPTION 'archival transition did not become current'; END IF;
+  BEGIN
+    PERFORM public.transition_evolution_evidence_status(v_evidence,'pending',NULL,NULL);
+    RAISE EXCEPTION 'archived evidence unexpectedly reopened';
+  EXCEPTION WHEN check_violation THEN NULL;
+  END;
+
   -- Rejection without a reason must fail.
   BEGIN
     PERFORM public.transition_evolution_evidence_status(v_evidence,'rejected',NULL,NULL);
