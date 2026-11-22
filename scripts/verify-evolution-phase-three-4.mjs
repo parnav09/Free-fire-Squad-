@@ -57,7 +57,7 @@ test("corrections reference an existing evidence version and never erase prior h
   assert.match(migration, /evidence_version_id uuid/);
   assert.match(migration, /FOREIGN KEY \(evidence_version_id, evidence_item_id, team_id\)/);
   assert.match(migration, /Correction must reference a version belonging to this evidence/);
-  assert.match(migration, /Correction must reference a newly appended evidence version/);
+  assert.match(migration, /Correction must reference the latest newly appended evidence version/);
 });
 
 test("current status is derived from the latest immutable event", () => {
