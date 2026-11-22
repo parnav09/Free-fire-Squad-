@@ -205,7 +205,7 @@ SELECT wb.team_id, wb.evaluation_context_id, wb.weight_set_id,
    WHERE na.evaluation_context_id = wb.evaluation_context_id AND na.team_id = wb.team_id
      AND na.assessment_state = 'not_applicable') AS not_applicable_dimension_count,
   CASE
-    WHEN count(a.id) = 0 THEN 'draft'
+    WHEN count(a.revision_number) = 0 THEN 'draft'
     WHEN count(*) FILTER (WHERE a.assessment_state = 'observed') = 0 THEN 'insufficient'
     WHEN count(*) FILTER (WHERE a.assessment_state IS NULL OR a.assessment_state IN ('incomplete','rejected_evidence')) > 0
       OR count(*) FILTER (WHERE a.assessment_state = 'observed' AND coalesce(es.status,'') <> 'verified') > 0
