@@ -180,11 +180,11 @@ WITH (security_invoker = true)
 AS
 SELECT DISTINCT ON (v.evidence_item_id)
   v.team_id, v.evidence_item_id, v.to_status AS status,
+  v.actor_user_id AS last_actor_user_id, v.created_at AS status_changed_at,
+  v.reason, v.evidence_version_id,
   e.created_by, e.created_at AS evidence_created_at,
   CASE WHEN v.to_status = 'verified' THEN v.actor_user_id END AS verified_by,
-  CASE WHEN v.to_status = 'verified' THEN v.created_at END AS verified_at,
-  v.actor_user_id AS last_actor_user_id, v.created_at AS status_changed_at,
-  v.reason, v.evidence_version_id
+  CASE WHEN v.to_status = 'verified' THEN v.created_at END AS verified_at
 FROM public.evolution_evidence_verification_events v
 JOIN public.evolution_evidence_items e
   ON e.id = v.evidence_item_id AND e.team_id = v.team_id
