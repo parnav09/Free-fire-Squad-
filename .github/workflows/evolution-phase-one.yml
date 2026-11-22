@@ -120,5 +120,9 @@ jobs:
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_three_7_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_three_7_ci bash scripts/verify-evolution-phase-three-7-db.sh
-      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.12 and Phase Three.1–3.7 audits and production bundle
+      - name: Verify Evolution Phase Three.8 evidence coverage calculator against isolated disposable PostgreSQL
+        run: |
+          PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_three_8_ci
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_three_8_ci bash scripts/verify-evolution-phase-three-8-db.sh
+      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.12 and Phase Three.1–3.8 audits and production bundle
         run: npm run build
