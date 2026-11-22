@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-: "\${DATABASE_URL:?DATABASE_URL must point to a disposable CI PostgreSQL database}"
-ROOT="$(cd "$(dirname "\${BASH_SOURCE[0]}")/.." && pwd)"
+: "${DATABASE_URL:?DATABASE_URL must point to a disposable CI PostgreSQL database}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MIGRATION="$ROOT/supabase/migrations/20261122180000_evolution_phase_three_7_not_observed_missing_data_rules.sql"
 DATABASE_URL="$DATABASE_URL" bash "$ROOT/scripts/verify-evolution-phase-three-6-db.sh"
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$MIGRATION"
