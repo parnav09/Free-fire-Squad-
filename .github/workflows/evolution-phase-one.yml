@@ -66,6 +66,10 @@ jobs:
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_three_5_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_three_5_ci bash scripts/verify-evolution-phase-three-5-db.sh
+      - name: Verify Evolution Phase Three.6 role-based weight configuration against isolated disposable PostgreSQL
+        run: |
+          PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_three_6_ci
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_three_6_ci bash scripts/verify-evolution-phase-three-6-db.sh
       - name: Verify Evolution Phase Two.3 match identity migration against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_two_3_ci
