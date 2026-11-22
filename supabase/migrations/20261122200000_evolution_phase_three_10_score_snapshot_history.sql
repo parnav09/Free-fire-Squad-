@@ -420,7 +420,7 @@ BEGIN
       END IF;
       IF v_row.evidence_context_id IS DISTINCT FROM p_evaluation_context_id
         OR NOT coalesce(v_row.exact_dimension_link,false)
-        OR v_row.evidence_status NOT IN ('pending','verified','corrected') THEN
+        OR coalesce(v_row.evidence_status,'') NOT IN ('pending','verified','corrected') THEN
         v_rejected := v_rejected + 1;
       ELSE
         v_observed := v_observed + 1;
