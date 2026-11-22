@@ -67,6 +67,14 @@ test("public SECURITY DEFINER RPCs deny PUBLIC and anon while explicit grants st
   }
 });
 
+test("Evolution read views run as the caller so underlying RLS remains effective", () => {
+  const views = [...combined.matchAll(/CREATE OR REPLACE VIEW\\s+public\\.(evolution_[\\w]+)\\s+WITH\\s*\\(\\s*security_invoker\\s*=\\s*true\\s*\\)/gi)];
+  assert.ok(views.length >= 3, `Expected the complete security-invoker view inventory; found ${views.length}`);
+  for (const view of views) {
+    assert.match(combined, new RegExp(`GRANT SELECT ON ${view[1]} TO authenticated`, "i"), `${view[1]} must grant read access only to authenticated users`);
+  }
+});
+
 test("security acceptance rebuilds the isolated Phase 3.2–3.11 dependency chain", () => {
   assert.match(dbHarness, /verify-evolution-phase-three-11-db\.sh/);
   assert.match(dbHarness, /pg_class/);
@@ -81,6 +89,9 @@ test("security tests reject anonymous policy grants and unsafe definer routines 
   assert.match(dbHarness, /search_path/);
   assert.match(dbHarness, /SECURITY DEFINER/);
   assert.match(dbHarness, /evolution_private/);
+  assert.match(dbHarness, /has_table_privilege/);
+  assert.match(dbHarness, /has_schema_privilege/);
+  assert.match(dbHarness, /security_invoker=true/);
 });
 
 test("Phase 3.12 checks are part of the normal build and GitHub Actions workflow", () => {
