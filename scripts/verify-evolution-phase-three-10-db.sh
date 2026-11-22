@@ -118,6 +118,9 @@ DECLARE
   v_revision integer;
   v_old_score numeric(5,2);
   v_new_score numeric(5,2);
+  v_basis integer;
+  v_recalculation_reason text;
+  v_role_key text;
   v_status text;
   v_previous uuid;
   v_input jsonb;
@@ -130,7 +133,7 @@ BEGIN
   END IF;
 
   SELECT score_status,score100,score_basis_points,input_snapshot
-    INTO v_status,v_old_score,v_dimension,v_input
+    INTO v_status,v_old_score,v_basis,v_input
   FROM public.evolution_player_score_snapshots WHERE id=v_snapshot_one;
   IF v_status<>'final' OR v_old_score IS DISTINCT FROM 60.00::numeric
     OR v_input->>'calculation_version'<>'deterministic-scoring-v1'
@@ -172,10 +175,11 @@ BEGIN
   END IF;
 
   SELECT score100,previous_snapshot_id,recalculation_reason,input_snapshot
-    INTO v_new_score,v_previous,v_input,v_input
+    INTO v_new_score,v_previous,v_recalculation_reason,v_input
   FROM public.evolution_player_score_snapshots WHERE id=v_snapshot_two;
   IF v_previous IS DISTINCT FROM v_snapshot_one
     OR v_new_score IS NOT DISTINCT FROM 60.00::numeric
+    OR v_recalculation_reason IS DISTINCT FROM 'Corrected assessment rating after coach review.'
     OR v_input IS NULL THEN
     RAISE EXCEPTION 'Recalculation history chain or changed score was not retained';
   END IF;
@@ -197,7 +201,7 @@ BEGIN
   SELECT c.player_member_id,c.player_user_id,c.canonical_session_id,
          c.canonical_session_match_id,c.role_assignment_id,
          wb.weight_set_id,wb.role_assignment_id,rb.rubric_version_id,wb.role_key
-    INTO v_player_member,v_player_user,v_session,v_match,v_role,v_set,v_role,v_rubric,v_status
+    INTO v_player_member,v_player_user,v_session,v_match,v_role,v_set,v_role_key,v_rubric,v_status
   FROM public.evolution_evaluation_contexts c
   JOIN public.evolution_evaluation_role_weight_bindings wb
     ON wb.evaluation_context_id=c.id AND wb.team_id=c.team_id
@@ -215,7 +219,7 @@ BEGIN
   ) VALUES(v_team,v_provisional_context,v_rubric,auth.uid());
   INSERT INTO public.evolution_evaluation_role_weight_bindings(
     team_id,evaluation_context_id,role_assignment_id,weight_set_id,role_key,bound_by
-  ) VALUES(v_team,v_provisional_context,v_role,v_set,v_status,auth.uid());
+  ) VALUES(v_team,v_provisional_context,v_role,v_set,v_role_key,auth.uid());
 
   FOR v_dimension,v_definition IN
     SELECT dimension_key,dimension_definition_version
@@ -257,7 +261,7 @@ BEGIN
   ) VALUES(v_team,v_insufficient_context,v_rubric,auth.uid());
   INSERT INTO public.evolution_evaluation_role_weight_bindings(
     team_id,evaluation_context_id,role_assignment_id,weight_set_id,role_key,bound_by
-  ) VALUES(v_team,v_insufficient_context,v_role,v_set,v_status,auth.uid());
+  ) VALUES(v_team,v_insufficient_context,v_role,v_set,v_role_key,auth.uid());
 
   v_insufficient_snapshot := public.calculate_evolution_player_score_snapshot(v_insufficient_context);
   SELECT score_status,score100,provisional_score100 INTO v_status,v_old_score,v_new_score
