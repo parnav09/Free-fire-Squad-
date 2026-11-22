@@ -44,6 +44,7 @@ DECLARE
   v_member uuid;
   v_context uuid;
   v_evidence uuid;
+  v_private_evidence uuid;
   v_dimension_version integer;
   v_version_count integer;
 BEGIN
@@ -159,7 +160,7 @@ BEGIN
   ) VALUES (
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',v_context,'private',
     'manual_observation','Private coach note','Only its author can read this.',auth.uid()
-  );
+  ) RETURNING id INTO v_private_evidence;
 
   INSERT INTO public.evolution_evidence_items(
     team_id,evaluation_context_id,visibility,source_type,title,observation,created_by
