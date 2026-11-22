@@ -8,7 +8,7 @@ import {
   type AssessmentReadinessInput,
   type EvidenceCurrentState,
 } from "./evolution-assessment-states";
-import type { CanonicalDimensionKey, CanonicalRoleKey } from "./evolution-dimensions";
+import { CANONICAL_DIMENSION_KEYS, CANONICAL_ROLE_KEYS, type CanonicalDimensionKey, type CanonicalRoleKey } from "./evolution-dimensions";
 
 export const DETERMINISTIC_SCORING_ENGINE_VERSION = "deterministic-scoring-v1" as const;
 export const DETERMINISTIC_SCORING_POLICY_V1 = {
@@ -91,6 +91,9 @@ export type DeterministicScoringResult = {
   score100: number | null;
   /** Diagnostic candidate shown only to a later review workflow; never a final score. */
   provisionalScore100: number | null;
+  /** Exact rational score before display rounding: exactScoreNumerator / exactScoreDenominator. */
+  exactScoreNumerator: number | null;
+  exactScoreDenominator: number | null;
   /** Integer hundredths of a point (e.g. 8750 = 87.50). */
   scoreBasisPoints: number | null;
   provisionalScoreBasisPoints: number | null;
@@ -138,6 +141,12 @@ function assertEffectiveAtContext(
   }
 }
 
+function assertLifecycle(status: "active" | "retired", effectiveUntil: string | null, label: string): void {
+  if (status !== "active" && status !== "retired") throw new Error(label + " lifecycle status is invalid.");
+  if (status === "active" && effectiveUntil !== null) throw new Error(label + " active version cannot have an effective end date.");
+  if (status === "retired" && effectiveUntil === null) throw new Error(label + " retired version must have an effective end date.");
+}
+
 function assertReason(reason: string | null, label: string): void {
   if (typeof reason !== "string" || reason.trim().length < 3 || reason.trim().length > 1000) {
     throw new TypeError(label + " requires a reason of 3–1000 characters.");
@@ -145,7 +154,7 @@ function assertReason(reason: string | null, label: string): void {
 }
 
 function roundHalfUp(numerator: number, denominator: number): number {
-  if (!Number.isSafeInteger(numerator) || !Number.isSafeInteger(denominator) || denominator <= 0) {
+  if (!Number.isSafeInteger(numerator) || numerator < 0 || !Number.isSafeInteger(denominator) || denominator <= 0) {
     throw new RangeError("Score rounding requires safe non-negative integer arithmetic.");
   }
   return Math.floor((numerator + Math.floor(denominator / 2)) / denominator);
@@ -164,6 +173,10 @@ export function calculateDeterministicPlayerScore(
   assertNonEmpty(context.roleAssignmentSnapshotId, "Historical role-assignment snapshot ID");
   assertNonEmpty(rubric.id, "Rubric version ID");
   assertNonEmpty(weightSet.id, "Role weight-set ID");
+  if (!CANONICAL_ROLE_KEYS.includes(context.roleKey) || !CANONICAL_ROLE_KEYS.includes(weightSet.roleKey)) throw new Error("Scoring context and role weight set must use a canonical role key.");
+  if (!Array.isArray(rubric.criteria) || !Array.isArray(weightSet.dimensions) || !Array.isArray(input.assessments)) throw new TypeError("Rubric criteria, role weights and assessments must be arrays.");
+  assertLifecycle(rubric.status, rubric.effectiveUntil, "Rubric");
+  assertLifecycle(weightSet.status, weightSet.effectiveUntil, "Role weight set");
 
   const contextTime = timestamp(context.createdAt, "Evaluation context createdAt");
   if (weightSet.evaluationContextId !== context.id) {
@@ -185,6 +198,8 @@ export function calculateDeterministicPlayerScore(
 
   const criteriaByKey = new Map<CanonicalDimensionKey, ScoringRubric["criteria"][number]>();
   for (const criterion of rubric.criteria) {
+    if (!CANONICAL_DIMENSION_KEYS.includes(criterion.dimensionKey)) throw new Error("Rubric contains a non-canonical dimension key.");
+    if (!Array.isArray(criterion.applicableRoleKeys) || criterion.applicableRoleKeys.some((key) => !CANONICAL_ROLE_KEYS.includes(key)) || new Set(criterion.applicableRoleKeys).size !== criterion.applicableRoleKeys.length) throw new Error("Rubric criterion role applicability must contain unique canonical role keys.");
     if (criteriaByKey.has(criterion.dimensionKey)) {
       throw new Error("Duplicate rubric criterion for " + criterion.dimensionKey + ".");
     }
@@ -202,6 +217,7 @@ export function calculateDeterministicPlayerScore(
   const weightByKey = new Map<CanonicalDimensionKey, number>();
   let totalWeight = 0;
   for (const weight of weightSet.dimensions) {
+    if (!CANONICAL_DIMENSION_KEYS.includes(weight.dimensionKey)) throw new Error("Role weight set contains a non-canonical dimension key.");
     if (weightByKey.has(weight.dimensionKey)) {
       throw new Error("Duplicate role weight for " + weight.dimensionKey + ".");
     }
@@ -225,6 +241,7 @@ export function calculateDeterministicPlayerScore(
 
   const assessmentByKey = new Map<CanonicalDimensionKey, ScoringAssessment>();
   for (const assessment of input.assessments) {
+    if (!CANONICAL_DIMENSION_KEYS.includes(assessment.dimensionKey)) throw new Error("Assessment contains a non-canonical dimension key.");
     if (assessmentByKey.has(assessment.dimensionKey)) {
       throw new Error("Duplicate assessment for " + assessment.dimensionKey + ".");
     }
@@ -247,6 +264,7 @@ export function calculateDeterministicPlayerScore(
   let incompleteCount = 0;
   let rejectedCount = 0;
   let missingCount = 0;
+  const seenEvidenceIds = new Set<string>();
   const coverageInputs: {
     dimensionKey: string;
     assessmentState: CoverageDimensionState;
@@ -285,6 +303,9 @@ export function calculateDeterministicPlayerScore(
       if (assessment.ratingValue !== null || !assessment.evidence || assessment.evidence.status !== "rejected") {
         throw new Error("Rejected evidence assessments must reference currently rejected evidence and no rating.");
       }
+      assertNonEmpty(assessment.evidence.id, "Rejected evidence ID");
+      if (seenEvidenceIds.has(assessment.evidence.id)) throw new Error("Evidence identity cannot be reused across dimensions.");
+      seenEvidenceIds.add(assessment.evidence.id);
       if (!KNOWN_EVIDENCE_STATES.has(assessment.evidence.status)) {
         throw new Error("Unknown evidence state cannot be scored.");
       }
@@ -307,6 +328,10 @@ export function calculateDeterministicPlayerScore(
     }
 
     const evidence = assessment.evidence;
+    if (evidence && typeof evidence.id === "string" && evidence.id.trim().length > 0) {
+      if (seenEvidenceIds.has(evidence.id)) throw new Error("Evidence identity cannot be reused across dimensions.");
+      seenEvidenceIds.add(evidence.id);
+    }
     const evidenceState = evidence?.status ?? null;
     if (evidenceState !== null && !KNOWN_EVIDENCE_STATES.has(evidenceState)) {
       throw new Error("Unknown evidence state cannot be scored.");
@@ -357,9 +382,13 @@ export function calculateDeterministicPlayerScore(
   const canCalculateCandidate = observedCount > 0 && observedWeight > 0;
   // score100 has two decimal places. Integer arithmetic and half-up rounding
   // avoid floating-point drift and make repeated inputs byte-for-byte stable.
+  if (!Number.isSafeInteger(weightedRatingNumerator) || !Number.isSafeInteger(observedWeight)) throw new RangeError("Scoring inputs exceed safe integer precision.");
+  const exactScoreNumerator = canCalculateCandidate ? weightedRatingNumerator * 1_000 : null;
+  const exactScoreDenominator = canCalculateCandidate ? observedWeight : null;
   const candidateScoreBasisPoints = canCalculateCandidate
-    ? roundHalfUp(weightedRatingNumerator * 1_000, observedWeight)
+    ? roundHalfUp(exactScoreNumerator as number, exactScoreDenominator as number)
     : null;
+  if (candidateScoreBasisPoints !== null && (candidateScoreBasisPoints < 0 || candidateScoreBasisPoints > 10_000)) throw new RangeError("Normalized score is outside the canonical 0–100 range.");
   const candidateScore100 = candidateScoreBasisPoints === null ? null : candidateScoreBasisPoints / 100;
   const coveragePasses = (coverage.coverageBasisPoints ?? 0)
     >= DETERMINISTIC_SCORING_POLICY_V1.minimumCoverageBasisPoints;
@@ -374,6 +403,8 @@ export function calculateDeterministicPlayerScore(
     scoringPolicyVersion: DETERMINISTIC_SCORING_POLICY_V1.version,
     status,
     score100: status === "final" ? candidateScore100 : null,
+    exactScoreNumerator,
+    exactScoreDenominator,
     provisionalScore100: status === "provisional" ? candidateScore100 : null,
     scoreBasisPoints: status === "final" ? candidateScoreBasisPoints : null,
     provisionalScoreBasisPoints: status === "provisional" ? candidateScoreBasisPoints : null,
