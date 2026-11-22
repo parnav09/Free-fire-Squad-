@@ -392,4 +392,28 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - Evidence model, provenance, rubric engine, role weights, scoring, snapshots and evaluation UI remain later points; they were not pulled into 3.2.
 - Previous Point 3.1 remains verified; its tests also passed in the full run above.
 
-**Next point:** 3.3 — Evidence Data Model. Do not begin it until this checkpoint is retained and the user requests continuation.
+**Next point:** 3.3 — Evidence Data Model. (This checkpoint is superseded by the session update below.)
+
+
+## 11. Evolution Phase 3.3 — Evidence Data Model (2026-11-22)
+
+**Status: IMPLEMENTED — exact-head CI verification pending.**
+
+- Active PR: #131 — https://github.com/parnav09/Free-fire-Squad-/pull/131 (single consolidated Evolution Phase Three PR; Draft, unmerged).
+- Branch: feat/evolution-phase-three-1-existing-evaluation-audit.
+- Point 3.3 migration: supabase/migrations/20261122140000_evolution_phase_three_3_evidence_data_model.sql.
+- Added evidence context, stable identity, append-only version history and canonical dimension links.
+- Evaluation contexts reference team/player membership, canonical session, canonical match and the exact player role-assignment snapshot. Session-only contexts remain valid without inventing match or role references.
+- Evidence identity is immutable. Initial content creates version 1 automatically; later corrections append sequential immutable versions.
+- VOD/match reference types require an HTTP(S) locator; no automatic VOD analysis or Storage attachment is implied.
+- Dimension links reference exact Phase 3.2 dimension definition versions.
+- RLS differentiates team-visible, coach-visible and author-private evidence; anonymous access and client update/delete privileges are denied.
+- Added source-contract tests and a disposable PostgreSQL harness that runs the Phase 2.2–2.6 dependency chain, applies the Phase 3.2 registry, applies the Phase 3.3 migration twice and checks match/role linkage, version history, invalid references, team isolation, visibility and grants.
+- Added Point 3.3 tests to the normal build chain and PostgreSQL integration to GitHub Actions.
+- Added docs/evolution/PHASE-3-3-EVIDENCE-DATA-MODEL.md.
+- No legacy score conversion/backfill, scoring engine, rubric version engine, production migration, data reset, production deployment or merge to main.
+- No UI was added because Point 3.3 is a data-model point. A continuing UI acceptance standard is documented for all later UI points: preserve current dark theme/color grading; responsive Android/tablet/desktop QA; 44×44 CSS px hitboxes where practical; precise alignment; readable text/wrapping; role-aware visibility; accessible focus/names; loading/empty/error/retry/save states; automated touch-target checks and screenshot review.
+
+**Verification state:** source and database harness have been added, but no CI run is yet associated with the latest PR head. Do not mark 3.3 VERIFIED until GitHub Actions executes all steps and passes on the exact latest head SHA. Fix all failures and rerun on the final head.
+
+**Next action:** inspect the first exact-head CI run, fix any migration, test, RLS, typecheck, regression or build failures, update this checkpoint with the exact successful run and SHA, then mark Point 3.3 VERIFIED. Do not start 3.4 before that.
