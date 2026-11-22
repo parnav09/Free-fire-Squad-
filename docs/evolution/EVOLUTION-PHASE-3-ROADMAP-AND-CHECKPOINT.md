@@ -591,3 +591,20 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - Full typecheck, all repository tests, responsive UI/touch-target/permission/offline-write checks, screenshot upload and production build: PASS.
 - Remaining warnings are non-fatal: Vite main chunk 383.56 kB > 250 kB; `punycode` deprecation; GitHub Actions Node 20 action deprecation.
 - Vercel Preview is not covered by this workflow and remains unverified because of the earlier build-rate-limit failure.
+
+
+---
+
+## Point 3.9 implementation checkpoint — Deterministic Scoring Engine
+
+**Status: IMPLEMENTED — exact-head verification pending.**
+
+- Implemented the pure deterministic score engine using the Evolution v2 canonical formula: weighted average of eligible 0–10 dimension ratings, normalized to 0–100.
+- Added a versioned policy v1 with a 50% minimum evidence-coverage gate, integer half-up rounding to two decimal places, and separate final/provisional/insufficient outcomes.
+- Not Observed remains in the coverage denominator but is excluded from the score denominator. Missing, Incomplete, Rejected, Archived and mismatched evidence never silently become zero.
+- Final score requires the coverage gate, exact historical context/rubric/role-weight binding, eligible observed evidence, and final assessment readiness. Pending/Corrected evidence may only yield a provisional candidate.
+- Retained exact rational score numerator/denominator for deterministic recomputation; no tournament outcome, kills, placement or match-points are inputs.
+- Added `docs/evolution/PHASE-3-9-DETERMINISTIC-SCORING-ENGINE.md`, an executable 3.9 behavior suite, npm build-chain registration and the consolidated CI workflow update.
+- No database migration, score snapshot, legacy conversion/backfill, UI change, production migration, data reset, merge to main or production deployment.
+
+**Verification status:** pending. Run the new 3.9 test suite and complete full CI on the exact latest PR head; fix any failure and rerun before marking VERIFIED.
