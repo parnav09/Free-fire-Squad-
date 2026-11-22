@@ -213,7 +213,7 @@ BEGIN
     JOIN public.evolution_dimension_definition_versions dd
       ON dd.dimension_key = rc.dimension_key
      AND dd.definition_version = rc.dimension_definition_version
-    JOIN public.evolution_dimension_registry dr USING (dimension_key)
+    JOIN public.evolution_dimension_registry dr ON dr.dimension_key = dd.dimension_key
     WHERE rc.rubric_version_id = OLD.rubric_version_id
       AND dr.lifecycle_status = 'active'
       AND OLD.role_key = ANY(dd.applicable_role_keys);
@@ -229,7 +229,7 @@ BEGIN
       JOIN public.evolution_dimension_definition_versions dd
         ON dd.dimension_key = w.dimension_key
        AND dd.definition_version = w.dimension_definition_version
-      JOIN public.evolution_dimension_registry dr USING (dimension_key)
+      JOIN public.evolution_dimension_registry dr ON dr.dimension_key = dd.dimension_key
       WHERE w.weight_set_id = OLD.id AND w.team_id = OLD.team_id
         AND (dr.lifecycle_status <> 'active' OR NOT (OLD.role_key = ANY(dd.applicable_role_keys))
           OR NOT EXISTS (
