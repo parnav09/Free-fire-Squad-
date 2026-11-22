@@ -75,29 +75,54 @@ BEGIN
   VALUES(v_team,v_context,'team','pending','manual_observation','Phase 3.7 rejected evidence','Evidence to reject.',auth.uid()) RETURNING id INTO v_ev2;
   INSERT INTO public.evolution_evidence_dimension_links(team_id,evidence_item_id,dimension_key,definition_version,created_by)
   VALUES(v_team,v_ev2,v_dim2,v_def2,auth.uid());
-  RESET ROLE; SET ROLE postgres;
-  INSERT INTO public.evolution_evidence_verification_events(team_id,evidence_item_id,from_status,to_status,actor_user_id,reason)
-  VALUES(v_team,v_ev2,'pending','rejected','80000000-0000-0000-0000-000000000008','Rejected in integration test.');
-  RESET ROLE; SET ROLE authenticated;
-  SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
+END $$;
+
+-- The disposable database owner exercises the append-only provenance transition;
+-- the production RPC continues to enforce coach-only, no-self-verification rules.
+RESET ROLE;
+SET ROLE postgres;
+INSERT INTO public.evolution_evidence_verification_events(team_id,evidence_item_id,from_status,to_status,actor_user_id,reason)
+SELECT e.team_id,e.id,'pending','rejected','80000000-0000-0000-0000-000000000008','Rejected in integration test.'
+FROM public.evolution_evidence_items e WHERE e.title='Phase 3.7 rejected evidence';
+RESET ROLE;
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
+DO $$
+DECLARE
+  v_team uuid := 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+  v_context uuid; v_dim text; v_def integer; v_ev uuid; v_state text; v_rejected integer;
+BEGIN
+  SELECT wb.evaluation_context_id INTO v_context
+  FROM public.evolution_evaluation_role_weight_bindings wb
+  JOIN public.evolution_role_weight_sets ws ON ws.id=wb.weight_set_id
+  WHERE ws.lifecycle_status='active' ORDER BY wb.bound_at DESC LIMIT 1;
+  SELECT w.dimension_key,w.dimension_definition_version INTO v_dim,v_def
+  FROM public.evolution_role_dimension_weights w
+  WHERE w.weight_set_id=(SELECT weight_set_id FROM public.evolution_evaluation_role_weight_bindings WHERE evaluation_context_id=v_context)
+    AND w.dimension_key<>(SELECT dimension_key FROM public.evolution_evaluation_dimension_assessment_events
+      WHERE evaluation_context_id=v_context AND assessment_state='observed' ORDER BY created_at LIMIT 1)
+  ORDER BY w.dimension_key LIMIT 1;
+  SELECT id INTO v_ev FROM public.evolution_evidence_items WHERE title='Phase 3.7 rejected evidence';
   INSERT INTO public.evolution_evaluation_dimension_assessment_events(
     team_id,evaluation_context_id,dimension_key,dimension_definition_version,revision_number,
     assessment_state,evidence_item_id,reason,actor_user_id)
-  VALUES(v_team,v_context,v_dim2,v_def2,2,'rejected_evidence',v_ev2,'Evidence was rejected.',auth.uid());
+  VALUES(v_team,v_context,v_dim,v_def,2,'rejected_evidence',v_ev,'Evidence was rejected.',auth.uid());
   SELECT rejected_evidence_dimension_count,assessment_status INTO v_rejected,v_state
   FROM public.evolution_evaluation_assessment_readiness WHERE evaluation_context_id=v_context;
   IF v_rejected<>1 OR v_state<>'provisional' THEN RAISE EXCEPTION 'Rejected evidence not separated'; END IF;
   INSERT INTO public.evolution_evaluation_dimension_assessment_events(
     team_id,evaluation_context_id,dimension_key,dimension_definition_version,revision_number,
     assessment_state,reason,actor_user_id)
-  VALUES(v_team,v_context,v_dim2,v_def2,3,'not_observed','No valid observation remains.',auth.uid());
+  VALUES(v_team,v_context,v_dim,v_def,3,'not_observed','No valid observation remains.',auth.uid());
 END $$;
 
-RESET ROLE; SET ROLE postgres;
+RESET ROLE;
+SET ROLE postgres;
 INSERT INTO public.evolution_evidence_verification_events(team_id,evidence_item_id,from_status,to_status,actor_user_id)
 SELECT e.team_id,e.id,'pending','verified','80000000-0000-0000-0000-000000000008'
 FROM public.evolution_evidence_items e WHERE e.title='Phase 3.7 zero rating';
-RESET ROLE; SET ROLE authenticated;
+RESET ROLE;
+SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
 DO $$
 DECLARE v_status text; v_missing integer; v_not_observed integer;
@@ -106,7 +131,9 @@ BEGIN
     INTO v_status,v_missing,v_not_observed
   FROM public.evolution_evaluation_assessment_readiness
   WHERE evaluation_context_id=(SELECT evaluation_context_id
-    FROM public.evolution_evaluation_role_weight_bindings ORDER BY bound_at DESC LIMIT 1);
+    FROM public.evolution_evaluation_role_weight_bindings wb
+    JOIN public.evolution_role_weight_sets ws ON ws.id=wb.weight_set_id
+    WHERE ws.lifecycle_status='active' ORDER BY wb.bound_at DESC LIMIT 1);
   IF v_status<>'final' OR v_missing<>0 OR v_not_observed<1 THEN
     RAISE EXCEPTION 'Verified observation plus explicit Not Observed should be final: %, %, %',v_status,v_missing,v_not_observed;
   END IF;
