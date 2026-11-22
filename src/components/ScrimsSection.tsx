@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { integrateCanonicalSource } from "../lib/canonical-module-integration";
 import "./ScrimsSection.css";
+import PlacementPicker from "./PlacementPicker";
 
 type MatchRow = { placement: number; kills: number };
 type Review = { strengths: string[]; mistakes: string[]; notes: string; nextGoal: string; reviewed: boolean };
@@ -12,18 +13,6 @@ const strengthOptions = ["Good rotation","Clear communication","Strong coordinat
 const emptyReview: Review = { strengths: [], mistakes: [], notes: "", nextGoal: "", reviewed: false };
 const dateLabel = (iso: string) => new Date(iso+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
 const rankPoints = (rank:number) => [12,9,8,7,6,5,4,3,2,1,0,0][Math.max(1,Math.min(12,rank))-1] ?? 0;
-function PlacementPicker({value,disabled,onChange}:{value:number;disabled:boolean;onChange:(n:number)=>void}) {
- const [open,setOpen]=useState(false);
- const label=(n:number)=>n===12?"12+ / Other":n+(n===1?"st":n===2?"nd":n===3?"rd":"th");
- return <div className={`scrims-placement-picker${open?" is-open":""}`}>
-  <button type="button" className="scrims-placement-trigger" disabled={disabled} aria-haspopup="listbox" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>
-   <span>{label(value)}</span><span className="scrims-placement-chevron" aria-hidden="true">⌄</span>
-  </button>
-  {open&&!disabled&&<div className="scrims-placement-menu" role="listbox" aria-label="Placement">
-   {Array.from({length:12},(_,j)=>j+1).map(n=><button type="button" role="option" aria-selected={value===n} className={value===n?"is-selected":""} key={n} onClick={()=>{onChange(n);setOpen(false)}}>{label(n)}{value===n&&<span className="scrims-placement-check">✓</span>}</button>)}
-  </div>}
- </div>;
-}
 export default function ScrimsSection({supabase,teamId,userId,teamMembers=[]}:{supabase:SupabaseClient|null;teamId:string;userId:string;teamMembers?:Array<{user_id:string;display_name?:string}>}) {
  const [records,setRecords]=useState<Scrim[]>([]),[teamReviews,setTeamReviews]=useState<TeamReview[]>([]);
  const [loading,setLoading]=useState(true),[notice,setNotice]=useState(""),[view,setView]=useState<"overview"|"form"|"detail"|"team">("overview"),[activeId,setActiveId]=useState("");

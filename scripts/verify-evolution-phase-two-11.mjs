@@ -76,6 +76,19 @@ test("permission-denied and empty/loading/error states are explicit", () => {
   assert.match(ui, /membershipRole==="owner" \|\| membershipRole==="coach"/);
 });
 
+test("Tournament and Scrims share the same scrollable PlacementPicker", () => {
+  const picker = readFileSync("src/components/PlacementPicker.tsx", "utf8");
+  const pickerCss = readFileSync("src/components/PlacementPicker.css", "utf8");
+  assert.match(app, /import PlacementPicker from "\.\/components\/PlacementPicker"/);
+  assert.match(app, /<PlacementPicker value=\{m\.placement\}[^>]*onChange=\{n=>saveMatch\(key,"placement",n\)\}/);
+  assert.match(legacyScrims, /import PlacementPicker from "\.\/PlacementPicker"/);
+  assert.match(legacyScrims, /<PlacementPicker value=\{m\.placement\}/);
+  assert.match(picker, /role="listbox"/);
+  assert.match(picker, /role="option"/);
+  assert.match(pickerCss, /max-height:245px;overflow-y:auto/);
+  assert.match(pickerCss, /scrims-placement-menu button\.is-selected/);
+});
+
 test("Tournament match ledger keeps results editable and hides zero-valued kill placeholders", () => {
   assert.match(app, /const m=matches\[key\]\?\?\(\(signedIn&&team&&remote\)/);
   assert.equal((app.match(/disabled=\{!!team&&\!\(team\.membership_role==="coach"\|\|team\.membership_role==="owner"\)\}/g) || []).length, 2);
