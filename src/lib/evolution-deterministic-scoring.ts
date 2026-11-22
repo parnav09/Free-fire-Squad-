@@ -199,7 +199,7 @@ export function calculateDeterministicPlayerScore(
   const criteriaByKey = new Map<CanonicalDimensionKey, ScoringRubric["criteria"][number]>();
   for (const criterion of rubric.criteria) {
     if (!CANONICAL_DIMENSION_KEYS.includes(criterion.dimensionKey)) throw new Error("Rubric contains a non-canonical dimension key.");
-    if (!Array.isArray(criterion.applicableRoleKeys) || criterion.applicableRoleKeys.some((key) => !CANONICAL_ROLE_KEYS.includes(key)) || new Set(criterion.applicableRoleKeys).size !== criterion.applicableRoleKeys.length) throw new Error("Rubric criterion role applicability must contain unique canonical role keys.");
+    if (!Array.isArray(criterion.applicableRoleKeys) || criterion.applicableRoleKeys.some((key: CanonicalRoleKey) => !CANONICAL_ROLE_KEYS.includes(key)) || new Set(criterion.applicableRoleKeys).size !== criterion.applicableRoleKeys.length) throw new Error("Rubric criterion role applicability must contain unique canonical role keys.");
     if (criteriaByKey.has(criterion.dimensionKey)) {
       throw new Error("Duplicate rubric criterion for " + criterion.dimensionKey + ".");
     }
