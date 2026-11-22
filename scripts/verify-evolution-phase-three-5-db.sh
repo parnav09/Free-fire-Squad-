@@ -108,13 +108,19 @@ BEGIN
   EXCEPTION WHEN SQLSTATE '55000' THEN NULL;
   END;
 
-  BEGIN
-    UPDATE public.evolution_rubric_dimension_criteria
-    SET criteria_guidance='Mutated published criterion'
-    WHERE rubric_version_id=v_version_one AND dimension_key='communication';
-    RAISE EXCEPTION 'Published rubric criteria mutation unexpectedly succeeded';
-  EXCEPTION WHEN SQLSTATE '55000' THEN NULL;
-  END;
+  UPDATE public.evolution_rubric_dimension_criteria
+  SET criteria_guidance='Mutated published criterion'
+  WHERE rubric_version_id=v_version_one AND dimension_key='communication';
+  GET DIAGNOSTICS v_count = ROW_COUNT;
+  IF v_count <> 0 THEN
+    RAISE EXCEPTION 'RLS unexpectedly allowed a published rubric criterion update';
+  END IF;
+  SELECT criteria_guidance INTO v_status
+  FROM public.evolution_rubric_dimension_criteria
+  WHERE rubric_version_id=v_version_one AND dimension_key='communication';
+  IF v_status <> 'Evaluate communication using observed match context.' THEN
+    RAISE EXCEPTION 'Published rubric criteria content changed';
+  END IF;
 
   INSERT INTO public.evolution_rubric_versions(
     rubric_id,team_id,version_number,title,description,effective_from,created_by
