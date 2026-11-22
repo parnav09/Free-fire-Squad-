@@ -31,7 +31,7 @@ test("every Phase 3-owned table enables RLS and declares an explicit policy", ()
   for (const table of tables) {
     const escaped = table.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     assert.match(combined, new RegExp(`ALTER TABLE(?: IF EXISTS)? public\\.${escaped} ENABLE ROW LEVEL SECURITY`, "i"), `${table} must enable RLS`);
-    assert.match(combined, new RegExp(`CREATE POLICY [^;]+ ON public\\.${escaped}`, "i"), `${table} must declare an explicit policy`);
+    assert.match(combined, new RegExp(`CREATE POLICY [^;]+\\s+ON public\\.${escaped}`, "i"), `${table} must declare an explicit policy`);
   }
 });
 
