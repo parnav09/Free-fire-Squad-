@@ -664,13 +664,14 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 
 ## Point 3.12 — Security, RLS & Permissions
 
-**Implementation added; exact-head verification pending.**
+**Implementation and verification complete on the feature branch.**
 
-- Added a dedicated source-contract suite covering all Phase 3.2–3.11 SQL migrations: RLS enablement and explicit policies for every Phase 3-owned table; fixed empty `search_path` on SECURITY DEFINER functions; no direct client execution of private trigger/lock helpers; and explicit anonymous-execution denial for public SECURITY DEFINER RPCs.
-- Added an isolated PostgreSQL catalog audit that rebuilds the Phase 3.2–3.11 dependency chain and inspects `pg_class`, `pg_policy` and `pg_proc` for RLS state, policy exposure, definer search paths and function ACLs.
+- Added a source-contract suite covering all Phase 3.2–3.11 SQL migrations: RLS and explicit policies across all 18 Phase 3-owned tables; fixed empty `search_path` on all 27 SECURITY DEFINER definitions; revoked client execution on all 24 private helpers; explicit authenticated grants and anonymous-execution denial for public SECURITY DEFINER RPCs; and caller-context security for all 3 Evolution read views.
+- Added an isolated PostgreSQL catalog audit that rebuilds the Phase 3.2–3.11 dependency chain and verifies RLS, explicit policies, no anon/PUBLIC policy exposure, no anon table/view privileges, no client access to the private schema, security-invoker views, fixed definer search paths and function execution ACLs.
 - Registered Phase 3.12 source tests in `npm run build` and its disposable PostgreSQL audit in the consolidated GitHub Actions workflow.
 - Added `docs/evolution/PHASE-3-12-SECURITY-RLS-PERMISSIONS.md` with the security contract, scope and acceptance boundary.
-- **Important source-of-truth constraint:** the existing security review records that live Supabase migration history is not fully represented by checked-in migration files. Therefore this point deliberately does not invent a production migration baseline or mutate live policies/grants. The new audit is confined to a disposable CI database. Production schema/grant remediation remains blocked until live migration history and schema are reconciled.
+- **Exact-head CI verification passed:** push run [#45084488305](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45084488305) and PR run [#45084493225](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45084493225), both successful on commit `8c16ab99d73d68fea203b49eedc27fa86cfdb934`. Phase 3.12 source tests (9/9), PostgreSQL security/RLS audit, full regression/build chain and production bundle all passed.
+- **Important source-of-truth constraint:** the existing security review records that live Supabase migration history is not fully represented by checked-in migration files. This point deliberately does not invent a production migration baseline or mutate live policies/grants. The audit runs against a disposable CI database. Production schema/grant remediation remains blocked until live migration history and schema are reconciled.
 - No production migration, data write, legacy backfill, data reset, merge to main or production deployment.
 
-**Verification:** pending the exact latest PR-head source-contract and disposable PostgreSQL CI results. Do not mark 3.12 complete until both pass.
+**Verification:** PASS on the exact latest PR head. Phase 3.12 is implemented and CI-verified; PR #131 remains draft/open and is not merged.
