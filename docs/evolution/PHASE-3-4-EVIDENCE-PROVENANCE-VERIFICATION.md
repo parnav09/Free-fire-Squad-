@@ -1,6 +1,6 @@
 # Evolution Phase 3.4 — Evidence Provenance & Verification
 
-**Status:** IMPLEMENTED; awaiting exact-head GitHub Actions verification.  
+**Status:** IMPLEMENTED AND VERIFIED.  
 **PR:** #131 (single consolidated Evolution Phase Three PR; Draft/unmerged).  
 **Migration:** `supabase/migrations/20261122150000_evolution_phase_three_4_evidence_provenance_verification.sql`
 
@@ -36,3 +36,18 @@ A correction is a provenance/adjudication event, not an edit to an earlier versi
 - The workflow now runs this integration harness and the source-contract suite in the normal build chain.
 
 No scoring, rubric, role-weight, coverage or score-snapshot logic is included. No production migration, data reset, production deployment or merge to main is performed by this point. Point 3.4 is a data/provenance workflow and does not introduce a new UI surface; existing app color grading/layout remains untouched. If a later point adds verification UI, the continuing acceptance gate applies: current dark theme, responsive Android/tablet/desktop, at least 44×44 CSS px hit targets, precise control/text alignment, no collisions, accessible focus, role-aware visibility and loading/empty/error/retry/save states.
+
+## Exact-head CI acceptance — 2026-11-22
+
+- Exact tested code head: `be33196f2008127c141b93bd4bf343f9f41d31ef`.
+- GitHub Actions run #45033317911: **SUCCESS** — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45033317911.
+- Phase 3.4 disposable PostgreSQL integration: **PASS**. Migration applied twice after the Phase 3.3 dependency chain; initial pending state, coach verification, correction/version linkage, return-to-pending, rejection reason enforcement, terminal archival, private evidence denial, author self-verification denial, player denial, non-destructive duplicate detection, direct-write denial and anonymous ACLs passed.
+- Phase 3.4 source-contract tests: **12/12 PASS**.
+- Existing Phase 3.2 and 3.3 database integrations: **PASS**.
+- Phase 2.2–2.10 PostgreSQL integration, staged migration and trigger ACL checks: **PASS**.
+- Responsive UI/touch-target/permission/offline-write checks and screenshot artifact upload: **PASS**.
+- Full source/regression suite, TypeScript typecheck and Vite production build: **PASS**. Existing non-fatal Vite chunk-size warning remains.
+- One source-contract assertion initially expected a different wording for the correction guard; corrected the assertion to match the implemented database error message. The PostgreSQL integration itself passed on the first run.
+- No production migration, merge to main, production deployment or data reset occurred.
+
+**Point 3.4 acceptance: VERIFIED on the exact tested code head above.**
