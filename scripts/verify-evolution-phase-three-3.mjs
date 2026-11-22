@@ -82,7 +82,7 @@ test("RLS visibility differentiates team, coach-only and private evidence", () =
   assert.match(migration, /evolution_evidence_items_visibility_read/);
   assert.match(migration, /visibility = 'team'/);
   assert.match(migration, /visibility = 'coaches'/);
-  assert.match(migration, /e\\.visibility <> 'private' OR e\\.created_by = \\(SELECT auth\\.uid\\(\\)\\)/);
+  assert.match(migration, /e\.visibility <> 'private' OR e\.created_by = \(SELECT auth\.uid\(\)\)/);
   assert.match(migration, /created_by = \(SELECT auth\.uid\(\)\)/);
   assert.match(migration, /evolution_evidence_items_staff_insert/);
   assert.match(migration, /membership_role IN \('owner', 'coach'\)/);
