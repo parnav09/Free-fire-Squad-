@@ -269,7 +269,7 @@ RESET ROLE;
 -- Bypass RLS as the disposable database owner to prove the immutable trigger itself rejects edits.
 SET ROLE postgres;
 SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
-DO $
+DO $$
 BEGIN
   BEGIN
     UPDATE public.evolution_role_dimension_weights
@@ -284,10 +284,10 @@ BEGIN
     RAISE EXCEPTION 'Immutable retired weight-set trigger unexpectedly allowed deletion';
   EXCEPTION WHEN SQLSTATE '55000' THEN NULL;
   END;
-END $;
+END $$;
 RESET ROLE;
 
-DO $
+DO $$
 BEGIN
   IF has_table_privilege('authenticated','public.evolution_role_weight_sets','DELETE')
     OR has_table_privilege('authenticated','public.evolution_role_dimension_weights','TRUNCATE')
