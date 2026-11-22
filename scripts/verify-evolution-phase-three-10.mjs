@@ -130,9 +130,9 @@ test("score calculation excludes tournament results and consumes only the canoni
 test("PostgreSQL acceptance replays the additive migration and verifies final, provisional, insufficient and history paths", () => {
   assert.match(dbHarness, /verify-evolution-phase-three-8-db\.sh/);
   assert.equal((dbHarness.match(/-f "\$MIGRATION"/g) || []).length, 2);
-  assert.match(dbHarness, /score_status<>'final'/);
-  assert.match(dbHarness, /score_status<>'provisional'/);
-  assert.match(dbHarness, /score_status<>'insufficient'/);
+  assert.match(dbHarness, /v_status<>'final'/);
+  assert.match(dbHarness, /v_status<>'provisional'/);
+  assert.match(dbHarness, /v_status<>'insufficient'/);
   assert.match(dbHarness, /previous_snapshot_id/);
   assert.match(dbHarness, /idempotent snapshot/);
   assert.match(dbHarness, /prior immutable score snapshot changed/);
