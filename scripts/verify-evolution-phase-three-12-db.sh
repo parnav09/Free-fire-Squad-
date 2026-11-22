@@ -115,6 +115,10 @@ BEGIN
     IF has_function_privilege('anon',v_function.signature,'EXECUTE') THEN
       RAISE EXCEPTION 'Anonymous role can execute SECURITY DEFINER function %',v_function.signature;
     END IF;
+    IF v_function.nspname='public'
+      AND NOT has_function_privilege('authenticated',v_function.signature,'EXECUTE') THEN
+      RAISE EXCEPTION 'Authenticated role lacks the explicit RPC grant for %',v_function.signature;
+    END IF;
     IF v_function.nspname='evolution_private'
       AND has_function_privilege('authenticated',v_function.signature,'EXECUTE') THEN
       RAISE EXCEPTION 'Authenticated role can directly execute private helper %',v_function.signature;
