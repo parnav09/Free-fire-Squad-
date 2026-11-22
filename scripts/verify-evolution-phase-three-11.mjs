@@ -45,7 +45,7 @@ test("evidence status transitions serialize with scoring", () => {
 
 test("assessment revisions serialize with scoring", () => {
   assert.match(migration, /CREATE TRIGGER evolution_eval_dimension_assessment_scoring_lock\s+BEFORE INSERT ON public\.evolution_evaluation_dimension_assessment_events/);
-  assert.match(migration, /lock_assessment_context_for_scoring\(NEW\.evaluation_context_id\)/);
+  assert.match(migration, /lock_evaluation_context_for_scoring\(NEW\.evaluation_context_id\)/);
 });
 
 test("all score-affecting write triggers call the shared lock helper", () => {
