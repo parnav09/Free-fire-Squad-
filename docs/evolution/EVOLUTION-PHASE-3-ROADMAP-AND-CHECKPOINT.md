@@ -658,3 +658,19 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - PR workflow [#45076780236](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45076780236) and push workflow [#45076776854](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45076776854): **SUCCESS** on exact PR head `65e862f13f8047cd62cfcc008e0b45cbd720a394`.
 - Existing non-fatal Vite chunk-size, punycode and GitHub Actions Node 20 warnings remain.
 - No production migration, production data write, legacy backfill, data reset, UI change, merge to main or production deployment occurred.
+
+
+---
+
+## Point 3.12 — Security, RLS & Permissions
+
+**Implementation added; exact-head verification pending.**
+
+- Added a dedicated source-contract suite covering all Phase 3.2–3.11 SQL migrations: RLS enablement and explicit policies for every Phase 3-owned table; fixed empty `search_path` on SECURITY DEFINER functions; no direct client execution of private trigger/lock helpers; and explicit anonymous-execution denial for public SECURITY DEFINER RPCs.
+- Added an isolated PostgreSQL catalog audit that rebuilds the Phase 3.2–3.11 dependency chain and inspects `pg_class`, `pg_policy` and `pg_proc` for RLS state, policy exposure, definer search paths and function ACLs.
+- Registered Phase 3.12 source tests in `npm run build` and its disposable PostgreSQL audit in the consolidated GitHub Actions workflow.
+- Added `docs/evolution/PHASE-3-12-SECURITY-RLS-PERMISSIONS.md` with the security contract, scope and acceptance boundary.
+- **Important source-of-truth constraint:** the existing security review records that live Supabase migration history is not fully represented by checked-in migration files. Therefore this point deliberately does not invent a production migration baseline or mutate live policies/grants. The new audit is confined to a disposable CI database. Production schema/grant remediation remains blocked until live migration history and schema are reconciled.
+- No production migration, data write, legacy backfill, data reset, merge to main or production deployment.
+
+**Verification:** pending the exact latest PR-head source-contract and disposable PostgreSQL CI results. Do not mark 3.12 complete until both pass.
