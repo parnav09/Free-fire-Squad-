@@ -64,6 +64,7 @@ test("public SECURITY DEFINER RPCs deny PUBLIC and anon while explicit grants st
     const revokeAt = combined.indexOf(`REVOKE ALL ON FUNCTION ${name}`);
     assert.ok(revokeAt >= 0, `${name} must revoke default execution`);
     assert.match(combined.slice(revokeAt, revokeAt + 320), /FROM PUBLIC,\s*anon/i, `${name} must deny PUBLIC and anon`);
+    assert.match(combined, new RegExp(`GRANT EXECUTE ON FUNCTION public\\.${name.split(".")[1]}\\([\\s\\S]*?TO authenticated`, "i"), `${name} must have an explicit authenticated grant`);
   }
 });
 
