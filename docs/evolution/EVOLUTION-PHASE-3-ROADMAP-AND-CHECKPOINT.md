@@ -640,7 +640,7 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 
 ## Point 3.11 — Atomic Scoring RPC & Database Integrity
 
-**Status: IMPLEMENTED — exact-head verification pending.**
+**Status: IMPLEMENTED AND VERIFIED — exact PR head `65e862f13f8047cd62cfcc008e0b45cbd720a394`; GitHub Actions PR workflow #45076780236 and push workflow #45076776854 both SUCCESS.**
 
 - Added additive migration `20261122210000_evolution_phase_three_11_atomic_scoring_integrity.sql`.
 - Added one shared transaction-scoped advisory lock per evaluation context. The Phase 3.10 scoring RPC and all writes that change scoring inputs now use the same lock.
@@ -651,4 +651,10 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - Added helper/trigger ACL hardening, source-contract tests, disposable PostgreSQL concurrency harness (`scripts/verify-evolution-phase-three-11-db.sh`), npm build-chain registration and GitHub Actions integration.
 - No legacy evaluation/evidence/score data rewrite, backfill, UI change, production migration, data reset, merge to main or production deployment.
 
-**Acceptance to verify:** migration replay twice; all four input-mutation lock triggers enabled; shared lock key parity between source writes and RPC; historical configuration and membership row locks; concurrent lock blocking and transaction-end release; single-child snapshot history index; helper/RPC ACLs; complete repository typecheck, regression and production build.
+**Exact-head verification result**
+- Phase 3.11 source-contract suite: **19/19 PASS**, 0 failures.
+- Isolated disposable PostgreSQL harness: **PASS**; migration replayed twice, all four score-input lock triggers enabled, shared lock key parity verified, historical configuration/membership row locks verified, concurrent lock blocking and transaction-end release verified, single-child history index and helper/RPC ACLs verified.
+- Full TypeScript typecheck, repository regression suite, Phase 2 and Phase 3.2–3.10 database integrations, responsive UI/touch-target/permission/offline-write acceptance, screenshot upload and Vite production build: **PASS**.
+- PR workflow [#45076780236](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45076780236) and push workflow [#45076776854](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45076776854): **SUCCESS** on exact PR head `65e862f13f8047cd62cfcc008e0b45cbd720a394`.
+- Existing non-fatal Vite chunk-size, punycode and GitHub Actions Node 20 warnings remain.
+- No production migration, production data write, legacy backfill, data reset, UI change, merge to main or production deployment occurred.
