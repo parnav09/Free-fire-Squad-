@@ -148,6 +148,21 @@ BEGIN
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',v_context,'coaches',
     'manual_observation','Coach review note','Visible to active coaches only.',auth.uid()
   );
+
+  BEGIN
+    INSERT INTO public.evolution_evidence_items(
+      team_id,evaluation_context_id,visibility,status,source_type,title,observation,created_by
+    ) VALUES (
+      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',v_context,'team','verified',
+      'manual_observation','Forged verified state','Clients cannot self-verify evidence.',auth.uid()
+    );
+    RAISE EXCEPTION 'client unexpectedly inserted verified evidence';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+
+  IF (SELECT count(*) FROM public.evolution_evidence_items WHERE status='pending') <> 3 THEN
+    RAISE EXCEPTION 'new evidence items must start pending';
+  END IF;
 END $$;
 
 -- Player in Alpha can read team-visible evidence, but not coach/private notes.
