@@ -49,7 +49,7 @@ test("assessment revisions serialize with scoring", () => {
 });
 
 test("all score-affecting write triggers call the shared lock helper", () => {
-  assert.equal((migration.match(/PERFORM evolution_private\.lock_evaluation_context_for_scoring\(/g) || []).length, 2);
+  assert.equal((migration.match(/PERFORM evolution_private\.lock_evaluation_context_for_scoring\(/g) || []).length, 3);
   assert.equal((migration.match(/EXECUTE FUNCTION evolution_private\.lock_evidence_context_for_scoring_write\(\)/g) || []).length, 3);
   assert.equal((migration.match(/EXECUTE FUNCTION evolution_private\.lock_assessment_context_for_scoring_write\(\)/g) || []).length, 1);
 });
