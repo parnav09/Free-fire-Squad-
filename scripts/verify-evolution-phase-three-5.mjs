@@ -21,6 +21,7 @@ test("Point 3.5 creates stable rubric identities and separately versioned lifecy
 test("rubric version numbers are sequential and cannot be reassigned", () => {
   assert.match(migration, /COALESCE\(max\(v\.version_number\), 0\) \+ 1/);
   assert.match(migration, /Next rubric version must be %/);
+  assert.match(migration, /FOR UPDATE/);
   assert.match(migration, /Rubric version identity and creation provenance are immutable/);
 });
 
