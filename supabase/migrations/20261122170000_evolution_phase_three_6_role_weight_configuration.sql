@@ -194,7 +194,7 @@ BEGIN
     END IF;
     IF NEW.effective_from IS NULL OR NEW.effective_to IS NOT NULL
       OR NEW.published_by IS DISTINCT FROM auth.uid()
-      OR NEW.published_at IS NULL OR NEW.retired_at IS NOT NULL THEN
+      OR NEW.published_at IS NOT NULL OR NEW.retired_at IS NOT NULL THEN
       RAISE EXCEPTION 'role_weight_set_publication_metadata_invalid' USING ERRCODE = '23514';
     END IF;
 
@@ -204,14 +204,13 @@ BEGIN
     WHERE w.weight_set_id = OLD.id AND w.team_id = OLD.team_id;
 
     SELECT count(*) INTO v_applicable_count
-    FROM public.evolution_dimension_registry dr
+    FROM public.evolution_rubric_dimension_criteria rc
     JOIN public.evolution_dimension_definition_versions dd
-      ON dd.dimension_key = dr.dimension_key
-    JOIN public.evolution_rubric_dimension_criteria rc
-      ON rc.rubric_version_id = OLD.rubric_version_id
-     AND rc.dimension_key = dd.dimension_key
-     AND rc.dimension_definition_version = dd.definition_version
-    WHERE dr.lifecycle_status = 'active'
+      ON dd.dimension_key = rc.dimension_key
+     AND dd.definition_version = rc.dimension_definition_version
+    JOIN public.evolution_dimension_registry dr USING (dimension_key)
+    WHERE rc.rubric_version_id = OLD.rubric_version_id
+      AND dr.lifecycle_status = 'active'
       AND OLD.role_key = ANY(dd.applicable_role_keys);
 
     IF v_applicable_count = 0 OR v_weight_count <> v_applicable_count
@@ -238,18 +237,23 @@ BEGIN
       RAISE EXCEPTION 'role_weight_set_contains_non_applicable_or_unrubriced_dimension' USING ERRCODE = '23514';
     END IF;
 
-    NEW.published_at := coalesce(NEW.published_at,clock_timestamp());
+    NEW.published_at := clock_timestamp();
     RETURN NEW;
   END IF;
 
   IF OLD.lifecycle_status = 'active' AND NEW.lifecycle_status = 'retired' THEN
     IF NEW.effective_from IS DISTINCT FROM OLD.effective_from
-      OR NEW.effective_to IS NULL OR NEW.effective_to <= OLD.effective_from
+      OR NEW.effective_to IS NOT NULL
       OR NEW.published_by IS DISTINCT FROM OLD.published_by
       OR NEW.published_at IS DISTINCT FROM OLD.published_at
-      OR NEW.retired_at IS NULL THEN
+      OR NEW.retired_at IS NOT NULL THEN
       RAISE EXCEPTION 'role_weight_set_retirement_metadata_invalid' USING ERRCODE = '23514';
     END IF;
+    NEW.effective_to := clock_timestamp();
+    IF NEW.effective_to <= OLD.effective_from THEN
+      RAISE EXCEPTION 'role_weight_set_retirement_must_follow_effective_start' USING ERRCODE = '23514';
+    END IF;
+    NEW.retired_at := NEW.effective_to;
     RETURN NEW;
   END IF;
 
@@ -269,6 +273,11 @@ DECLARE
   v_set_status text;
   v_applicable_roles text[];
 BEGIN
+  -- Serialize edits with publication so an activation cannot validate a partial weight set.
+  PERFORM 1 FROM public.evolution_role_weight_sets ws
+  WHERE ws.id = CASE WHEN TG_OP = 'DELETE' THEN OLD.weight_set_id ELSE NEW.weight_set_id END
+    AND ws.team_id = CASE WHEN TG_OP = 'DELETE' THEN OLD.team_id ELSE NEW.team_id END
+  FOR UPDATE;
   IF NOT EXISTS (
     SELECT 1 FROM public.team_members tm
     WHERE tm.team_id = CASE WHEN TG_OP = 'DELETE' THEN OLD.team_id ELSE NEW.team_id END
