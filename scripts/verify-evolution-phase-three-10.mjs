@@ -141,7 +141,7 @@ test("PostgreSQL acceptance replays the additive migration and verifies final, p
 
 test("Phase 3.10 source test is in the normal build chain and database test is in CI", () => {
   assert.equal(pkg.scripts["test:evolution-phase-three-10"], "node --test scripts/verify-evolution-phase-three-10.mjs");
-  assert.ok(pkg.scripts.build.includes("npm run test:evolution-phase-three-9 && npm run test:evolution-phase-three-10 && npm run test:evolution-phase-three-11 && vite build"));
+  assert.ok(pkg.scripts.build.includes("npm run test:evolution-phase-three-9 && npm run test:evolution-phase-three-10 && npm run test:evolution-phase-three-11 && npm run test:evolution-phase-three-12 && vite build"));
   assert.match(workflow, /Verify Evolution Phase Three\.10 score snapshot history against isolated disposable PostgreSQL/);
   assert.match(workflow, /scripts\/verify-evolution-phase-three-10-db\.sh/);
 });
