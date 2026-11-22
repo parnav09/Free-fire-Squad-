@@ -380,7 +380,7 @@ BEGIN
             AND el.definition_version=w.dimension_definition_version
         ),
         'evidence_status',es.status,
-        'evidence_version_id',es.evidence_version_id,
+        'evidence_version_id',coalesce(es.evidence_version_id,latest_ev.id),
         'evidence_status_changed_at',es.status_changed_at,
         'evidence_content',CASE WHEN ev.id IS NULL THEN NULL ELSE jsonb_build_object(
           'version_number',ev.version_number,'source_type',ev.source_type,
@@ -397,9 +397,16 @@ BEGIN
         ON e.id=a.evidence_item_id AND e.team_id=a.team_id
       LEFT JOIN public.evolution_evidence_current_status es
         ON es.evidence_item_id=a.evidence_item_id AND es.team_id=a.team_id
+      LEFT JOIN LATERAL (
+        SELECT ver.id,ver.version_number,ver.source_type,ver.title,ver.observation,
+          ver.source_locator,ver.occurred_at,ver.source_metadata
+        FROM public.evolution_evidence_versions ver
+        WHERE ver.evidence_item_id=a.evidence_item_id AND ver.team_id=a.team_id
+        ORDER BY ver.version_number DESC LIMIT 1
+      ) latest_ev ON true
       LEFT JOIN public.evolution_evidence_versions ev
-        ON ev.id=es.evidence_version_id AND ev.evidence_item_id=es.evidence_item_id
-        AND ev.team_id=es.team_id
+        ON ev.id=coalesce(es.evidence_version_id,latest_ev.id)
+        AND ev.evidence_item_id=a.evidence_item_id AND ev.team_id=a.team_id
       WHERE w.weight_set_id=ws.id AND w.team_id=v_team
     )
   )
