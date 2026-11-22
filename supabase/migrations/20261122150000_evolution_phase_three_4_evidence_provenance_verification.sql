@@ -61,6 +61,8 @@ AS $function$
 DECLARE
   latest_status text;
   latest_version_id uuid;
+  candidate_version_number integer;
+  latest_version_number integer;
 BEGIN
   IF TG_OP <> 'INSERT' THEN
     RAISE EXCEPTION 'Evidence verification history is append-only'
@@ -87,9 +89,20 @@ BEGIN
   END IF;
 
   IF NEW.to_status = 'corrected' THEN
+    SELECT ver.version_number INTO candidate_version_number
+    FROM public.evolution_evidence_versions ver
+    WHERE ver.id = NEW.evidence_version_id
+      AND ver.evidence_item_id = NEW.evidence_item_id
+      AND ver.team_id = NEW.team_id;
+    SELECT COALESCE(max(ver.version_number), 0) INTO latest_version_number
+    FROM public.evolution_evidence_versions ver
+    WHERE ver.evidence_item_id = NEW.evidence_item_id
+      AND ver.team_id = NEW.team_id;
     IF NEW.evidence_version_id IS NULL
-      OR NEW.evidence_version_id IS NOT DISTINCT FROM latest_version_id THEN
-      RAISE EXCEPTION 'Correction must reference a newly appended evidence version'
+      OR NEW.evidence_version_id IS NOT DISTINCT FROM latest_version_id
+      OR candidate_version_number IS NULL
+      OR candidate_version_number <> latest_version_number THEN
+      RAISE EXCEPTION 'Correction must reference the latest newly appended evidence version'
         USING ERRCODE = '23514';
     END IF;
   ELSIF NEW.evidence_version_id IS NOT NULL
@@ -179,6 +192,11 @@ BEGIN
       AND tm.status = 'active' AND tm.membership_role IN ('owner','coach')
   ) THEN
     RAISE EXCEPTION 'Only active team owners/coaches may manage evidence verification'
+      USING ERRCODE = '42501';
+  END IF;
+
+  IF v_evidence.visibility = 'private' THEN
+    RAISE EXCEPTION 'Private evidence cannot be adjudicated by another team member'
       USING ERRCODE = '42501';
   END IF;
 
