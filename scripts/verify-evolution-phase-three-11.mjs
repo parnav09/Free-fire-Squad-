@@ -54,6 +54,10 @@ test("all score-affecting write triggers call the shared lock helper", () => {
   assert.equal((migration.match(/EXECUTE FUNCTION evolution_private\.lock_assessment_context_for_scoring_write\(\)/g) || []).length, 1);
 });
 
+test("the assessment raw-input JSON aggregate is a valid scalar subquery", () => {
+  assert.match(migration, /'assessments',\(\s*SELECT coalesce\(jsonb_agg\(jsonb_build_object\([\s\S]*?\),'\[\]'::jsonb\)\s*FROM public\.evolution_role_dimension_weights/);
+});
+
 test("the scoring RPC uses the same lock before reading inputs", () => {
   const lock = migration.indexOf("PERFORM evolution_private.lock_evaluation_context_for_scoring(p_evaluation_context_id)");
   const read = migration.indexOf("FROM public.evolution_evaluation_contexts c", lock);
