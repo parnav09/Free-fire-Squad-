@@ -120,7 +120,7 @@ BEGIN
       'manual_observation','Cross-team','Invalid context ownership.',auth.uid()
     );
     RAISE EXCEPTION 'cross-team context reference unexpectedly succeeded';
-  EXCEPTION WHEN foreign_key_violation THEN NULL;
+  EXCEPTION WHEN foreign_key_violation OR insufficient_privilege THEN NULL;
   END;
 
   BEGIN
