@@ -547,3 +547,22 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - No UI controls were added because this point is data integrity only; existing dark theme/color grading, layout and responsive UI remain unchanged.
 
 **Verification evidence (2026-11-23):** exact PR head `628934b68f8c7c16fe9cfb5736a4e9cb89a27adf`; GitHub Actions run [#45059143040](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45059143040) succeeded. The disposable PostgreSQL harness reapplied the migration twice and reported `Evolution Phase 3.7 Not Observed & Missing Data PostgreSQL PASS`; all 9 Phase 3.7 source-contract tests passed (9/9); TypeScript typecheck and the full production build/test chain passed. The responsive UI/touch-target/permissions/offline-write acceptance step and screenshot upload also passed. Existing non-fatal Vite chunk-size and dependency/Actions deprecation warnings remain; no Phase 3.7 test failed.
+
+
+---
+
+## Point 3.8 checkpoint — Evidence Coverage Calculator
+
+**IMPLEMENTED — verification intentionally deferred to the next user-requested step.**
+
+- Added `src/lib/evolution-evidence-coverage.ts` with typed, deterministic coverage calculation.
+- Denominator is the exact historical role-weight set bound to the evaluation context; numerator counts applicable dimensions with a current Observed assessment and Pending, Verified or Corrected evidence.
+- Not Observed remains in the denominator; Not Applicable dimensions must already be excluded by the bound role configuration. Missing, Incomplete and Rejected Evidence remain distinct.
+- Verified and unverified observed evidence are reported separately. Coverage is rounded to 0.01 percentage point using integer basis points.
+- Status contract: Complete requires 100% observed coverage and all supporting evidence Verified; Partial means at least one valid observed dimension but not Complete; Insufficient means no applicable dimensions or no valid observed dimensions.
+- Added calculation version `evidence-coverage-v1`, exact input snapshots, MD5 input fingerprint for idempotent retries, append-only snapshots and owner/coach-only access to raw evidence references.
+- Added the Phase 3.8 PostgreSQL migration, source test, disposable database harness, npm build-chain registration, GitHub Actions database step and implementation report.
+- No performance score, score snapshot, tournament metrics, legacy backfill or UI changes. Existing visual design, color grading, controls and hitboxes remain unchanged.
+- No production migration, data reset, merge to main or production deployment.
+
+**Verification status:** Not run by design in this implementation step. The next requested verification must run the Phase 3.8 source tests, apply/reapply its migration through the Phase 3.7 dependency harness, exercise snapshot idempotency/ACL/immutability, and run the complete CI/build chain.
