@@ -40,6 +40,7 @@ test("raw input snapshot pins rubric criteria, definition versions, weights, ass
   assert.match(migration, /'assessments'/);
   assert.match(migration, /evidence_dimension_link_matches/);
   assert.match(migration, /evidence_dimension_link_id/);
+  assert.match(migration, /coalesce\(es\.evidence_version_id,latest_ev\.id\)/);
 });
 
 test("deterministic scoring policy and coverage gate are version-pinned", () => {
