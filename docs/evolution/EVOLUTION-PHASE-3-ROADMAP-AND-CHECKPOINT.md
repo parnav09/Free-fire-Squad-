@@ -608,3 +608,23 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - No database migration, score snapshot, legacy conversion/backfill, UI change, production migration, data reset, merge to main or production deployment.
 
 **Verification status: PASS on the exact PR head.** Commit `66898956a1630c5b436d76bd53ac6113f4b3d85f`; GitHub Actions run [45071794146](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45071794146) completed with `success`. The dedicated Phase 3.9 suite passed **23/23** tests (0 failures). TypeScript, the full existing regression/build chain, PostgreSQL integration checks for Phase 3.2–3.8 and the applicable Phase 2 migrations, responsive UI/touch-target/permission/offline-write acceptance, screenshot upload and Vite production build all passed on this exact commit.
+
+
+---
+
+## Point 3.10 — Score Snapshot & Calculation History
+
+**Status: IMPLEMENTED — exact-head verification pending.**
+
+- Added additive migration `20261122200000_evolution_phase_three_10_score_snapshot_history.sql` and immutable `evolution_player_score_snapshots`.
+- Added server-side `calculate_evolution_player_score_snapshot(uuid,text)`, which persists exact evaluation/player/role-snapshot, rubric version, role-weight set, calculation/policy versions, raw assessment/evidence inputs, deterministic score/coverage/status, exact rational values, reasons, actor and timestamp.
+- Raw input JSON captures rubric criteria and rating anchors, dimension-definition versions, role weights, assessment revisions/states/ratings, evidence identities, current verification state, evidence-version reference and immutable evidence content metadata.
+- Final, Provisional and Insufficient outputs are stored in separate constrained score columns. Insufficient results never expose a final or provisional score.
+- Identical input fingerprints return the existing snapshot. Changed inputs append a new snapshot linked to the prior one and require a reason; old snapshots are immutable and remain explainable.
+- Added transaction-scoped per-context locking, unique idempotency constraints, composite team/context/rubric/weight/role foreign keys, owner/coach-only RLS reads and denial of direct client writes.
+- Private evidence authored by another member fails closed. No tournament outcomes are score inputs.
+- Added the Phase 3.10 PostgreSQL migration replay/integration harness, source-contract tests, npm build-chain test, GitHub Actions database step and implementation report.
+- No legacy score backfill/conversion, production migration, data reset, UI change, merge to main or production deployment.
+
+**Acceptance to verify:** final score persistence, provisional-only output, insufficient/no-score behavior, exact raw input reproducibility, idempotent retry, reasoned recalculation, previous-snapshot preservation, migration replay, RLS/ACL and immutability.
+
