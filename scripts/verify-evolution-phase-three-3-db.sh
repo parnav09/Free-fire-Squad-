@@ -98,7 +98,7 @@ BEGIN
     UPDATE public.evolution_evidence_versions SET title='Mutated history'
     WHERE evidence_item_id=v_evidence AND version_number=1;
     RAISE EXCEPTION 'evidence version mutation unexpectedly succeeded';
-  EXCEPTION WHEN SQLSTATE '55000' THEN NULL;
+  EXCEPTION WHEN SQLSTATE '55000' OR insufficient_privilege THEN NULL;
   END;
 
   BEGIN
@@ -140,6 +140,13 @@ BEGIN
   ) VALUES (
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',v_context,'private',
     'manual_observation','Private coach note','Only its author can read this.',auth.uid()
+  );
+
+  INSERT INTO public.evolution_evidence_items(
+    team_id,evaluation_context_id,visibility,source_type,title,observation,created_by
+  ) VALUES (
+    'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',v_context,'coaches',
+    'manual_observation','Coach review note','Visible to active coaches only.',auth.uid()
   );
 END $$;
 
