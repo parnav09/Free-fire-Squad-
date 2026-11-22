@@ -396,7 +396,7 @@ BEGIN
   WHERE ws.id = NEW.weight_set_id AND ws.team_id = NEW.team_id
     AND ws.rubric_version_id = v_rubric_binding.rubric_version_id
     AND ws.role_key = v_resolved_role;
-  IF NOT FOUND OR v_set.lifecycle_status <> 'active'
+  IF NOT FOUND OR v_set.lifecycle_status NOT IN ('active','retired')
     OR v_context.created_at < v_set.effective_from
     OR (v_set.effective_to IS NOT NULL AND v_context.created_at >= v_set.effective_to) THEN
     RAISE EXCEPTION 'Active effective role weight set for the bound rubric and historical role is required' USING ERRCODE = '23514';
