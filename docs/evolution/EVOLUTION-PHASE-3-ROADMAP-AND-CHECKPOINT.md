@@ -434,3 +434,35 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - No production migration, data conversion/backfill, production deployment, merge or reset occurred.
 
 **Point 3.3 acceptance: VERIFIED.** Do not begin Point 3.4 until the checkpoint-only commit is also checked by the full workflow, then proceed one point at a time.
+
+
+## 12. Evolution Phase 3.4 — Evidence Provenance & Verification (2026-11-22)
+
+**Status: IMPLEMENTED — exact-head CI verification pending.**
+
+- Active PR: #131 — single consolidated Evolution Phase Three PR, Draft/unmerged.
+- Migration: `supabase/migrations/20261122150000_evolution_phase_three_4_evidence_provenance_verification.sql`.
+- Added an append-only provenance/adjudication event ledger. Existing Phase 3.3 evidence identity and content are not mutated.
+- Existing evidence receives an initial pending event; future evidence receives the same event automatically.
+- Allowed transitions: pending → verified/rejected/corrected/archived; verified → corrected/archived; rejected → corrected/archived; corrected → pending/verified/rejected/archived; archived is terminal.
+- Rejection, correction and archival require a meaningful reason.
+- Only active team owners/coaches may adjudicate; the evidence author cannot adjudicate their own evidence; private evidence cannot be adjudicated by another team member.
+- Transitions are serialized and stale state writes are rejected. Corrections must reference the latest newly appended evidence version and cannot reuse a previously adjudicated version.
+- Added current-status view with creator/verifier attribution and an advisory duplicate-candidate RPC. Duplicate candidates are never automatically merged or deleted.
+- Event history inherits Phase 3.3 evidence visibility through RLS. Authenticated clients can read events but cannot write directly; the guarded RPC is the only client transition path. Anonymous RPC execution is denied.
+- Added source-contract tests, disposable PostgreSQL integration, normal build-chain integration, GitHub Actions database verification and `docs/evolution/PHASE-3-4-EVIDENCE-PROVENANCE-VERIFICATION.md`.
+- No score/rubric/weight/coverage/snapshot logic, new UI surface, production migration, data reset, production deployment or merge to main.
+
+### Point 3.4 acceptance checks
+
+- Apply Phase 3.4 migration twice after the Phase 3.3 disposable dependency chain.
+- Verify initial pending-state backfill and automatic seeding for future evidence.
+- Verify coach verification, author self-verification denial, player denial and private-evidence denial.
+- Verify correction event links the latest appended evidence version; invalid/missing reasons and invalid transitions fail.
+- Verify duplicate lookup is advisory and non-destructive.
+- Verify event ledger is append-only, authenticated direct writes and anonymous RPC execution are denied.
+- Run complete source-contract, PostgreSQL, typecheck, regression, responsive UI/touch-target and Vite production build checks on the exact latest PR head.
+
+**Exact-head CI result:** pending. Do not mark Point 3.4 VERIFIED until the full GitHub Actions workflow passes on the final exact PR head. Fix all failures and rerun after the final code/documentation update.
+
+**Next point:** 3.5 — Versioned Rubric Engine, only after Point 3.4 exact-head CI is green.
