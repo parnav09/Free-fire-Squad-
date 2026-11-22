@@ -137,7 +137,7 @@ DO $$
 DECLARE visible_count integer;
 BEGIN
   SELECT count(*) INTO visible_count FROM public.evolution_dimension_registry;
-  IF visible_count <> 5 THEN RAISE EXCEPTION 'authenticated registry read expected 5 active+retired rows, got %', visible_count; END IF;
+  IF visible_count <> 6 THEN RAISE EXCEPTION 'authenticated registry read expected all 6 canonical dimensions, got %', visible_count; END IF;
 
   BEGIN
     INSERT INTO public.evolution_dimension_registry(dimension_key, lifecycle_status, sort_order)
