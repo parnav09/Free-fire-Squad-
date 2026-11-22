@@ -52,6 +52,26 @@ WHERE NOT EXISTS (
   WHERE v.evidence_item_id = e.id
 );
 
+CREATE OR REPLACE FUNCTION evolution_private.seed_evolution_evidence_verification_event()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $function$
+BEGIN
+  INSERT INTO public.evolution_evidence_verification_events(
+    team_id, evidence_item_id, from_status, to_status, actor_user_id,
+    reason, evidence_version_id
+  ) VALUES (
+    NEW.team_id, NEW.id, NULL, 'pending', NEW.created_by,
+    'Initial state recorded from immutable evidence creation', NULL
+  );
+  RETURN NEW;
+END;
+$function$;
+REVOKE ALL ON FUNCTION evolution_private.seed_evolution_evidence_verification_event()
+  FROM PUBLIC, anon, authenticated;
+
 CREATE OR REPLACE FUNCTION evolution_private.guard_evolution_evidence_verification_event()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -116,6 +136,12 @@ END;
 $function$;
 REVOKE ALL ON FUNCTION evolution_private.guard_evolution_evidence_verification_event()
   FROM PUBLIC, anon, authenticated;
+
+DROP TRIGGER IF EXISTS evolution_evidence_seed_verification_state
+  ON public.evolution_evidence_items;
+CREATE TRIGGER evolution_evidence_seed_verification_state
+AFTER INSERT ON public.evolution_evidence_items
+FOR EACH ROW EXECUTE FUNCTION evolution_private.seed_evolution_evidence_verification_event();
 
 DROP TRIGGER IF EXISTS evolution_evidence_verification_append_only
   ON public.evolution_evidence_verification_events;
