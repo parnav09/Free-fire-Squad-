@@ -46,11 +46,16 @@ BEGIN
   SELECT r.id,r.player_user_id,r.canonical_session_id,r.canonical_session_match_id,
          CASE lower(btrim(r.role_key_snapshot))
            WHEN 'primary rusher' THEN 'primary_rusher'
+           WHEN 'primary-rusher' THEN 'primary_rusher'
            WHEN 'secondary rusher' THEN 'secondary_rusher'
+           WHEN 'secondary-rusher' THEN 'secondary_rusher'
            WHEN 'third rusher flanker' THEN 'third_rusher_flanker'
+           WHEN 'third-rusher-flanker' THEN 'third_rusher_flanker'
            WHEN 'sniper + igl' THEN 'sniper_igl'
            WHEN 'sniper igl' THEN 'sniper_igl'
+           WHEN 'sniper-igl' THEN 'sniper_igl'
            WHEN 'substitute flex' THEN 'substitute_flex'
+           WHEN 'substitute-flex' THEN 'substitute_flex'
            WHEN 'other' THEN 'other'
            ELSE NULL END,
          tm.id
@@ -61,8 +66,9 @@ BEGIN
   WHERE r.team_id=v_team
     AND r.role_assignment_status IN ('assigned','retired')
     AND lower(btrim(r.role_key_snapshot)) IN (
-      'primary rusher','secondary rusher','third rusher flanker',
-      'sniper + igl','sniper igl','substitute flex','other'
+      'primary rusher','primary-rusher','secondary rusher','secondary-rusher',
+      'third rusher flanker','third-rusher-flanker','sniper + igl','sniper igl','sniper-igl',
+      'substitute flex','substitute-flex','other'
     )
   ORDER BY r.changed_at,r.id LIMIT 1;
   IF v_role_assignment IS NULL THEN
