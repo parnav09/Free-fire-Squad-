@@ -87,7 +87,7 @@ test("duplicate dimensions, role-inapplicable states and unknown evidence states
   assert.equal(rejected.coveragePercent, 0);
   assert.equal(rejected.status, "insufficient");
   assert.throws(() => calculateEvidenceCoverage([
-    { dimensionKey: "a", assessmentState: "observed", evidenceState: "unknown" as never },
+    { dimensionKey: "a", assessmentState: "observed", evidenceState: "unknown" },
   ]), /Unknown evidence state/);
 });
 
