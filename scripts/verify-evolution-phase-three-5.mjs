@@ -33,6 +33,7 @@ test("only active team owners and coaches can create or manage rubric definition
 test("published rubric versions cannot be edited and retired versions are terminal", () => {
   assert.match(migration, /Published rubric content and effective start are immutable/);
   assert.match(migration, /Retired rubric versions are immutable/);
+  assert.match(migration, /lifecycle_status IN \('active','retired'\)/);
   assert.match(migration, /Rubric criteria can be changed only while their version is a draft/);
   assert.match(migration, /evolution_rubric_versions_one_active_uidx/);
 });
