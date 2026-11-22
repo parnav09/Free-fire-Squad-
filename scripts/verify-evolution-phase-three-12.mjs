@@ -82,6 +82,7 @@ test("security acceptance rebuilds the isolated Phase 3.2–3.11 dependency chai
   assert.match(dbHarness, /relrowsecurity/);
   assert.match(dbHarness, /pg_policies|pg_policy/);
   assert.match(dbHarness, /has_function_privilege/);
+  assert.match(dbHarness, /has_function_privilege\\('authenticated'/);
   assert.match(dbHarness, /anon/);
 });
 
