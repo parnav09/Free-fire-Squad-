@@ -133,7 +133,7 @@ test("PostgreSQL acceptance replays the additive migration and verifies final, p
   assert.match(dbHarness, /score_status<>'provisional'/);
   assert.match(dbHarness, /score_status<>'insufficient'/);
   assert.match(dbHarness, /previous_snapshot_id/);
-  assert.match(dbHarness, /idempotent score snapshot/);
+  assert.match(dbHarness, /idempotent snapshot/);
   assert.match(dbHarness, /prior immutable score snapshot changed/);
 });
 
