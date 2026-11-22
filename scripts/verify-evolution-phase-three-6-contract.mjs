@@ -68,6 +68,6 @@ test("database policies and privileges isolate teams and restrict administration
 });
 
 test("role-weight checks are part of the normal production build test chain", () => {
-  assert.equal(packageJson.scripts["test:evolution-phase-three-6"], "node --test scripts/verify-evolution-phase-three-6.mjs");
+  assert.equal(packageJson.scripts["test:evolution-phase-three-6"], "node --test scripts/verify-evolution-phase-three-6.mjs scripts/verify-evolution-phase-three-6-contract.mjs");
   assert.match(packageJson.scripts.build, /test:evolution-phase-three-6/);
 });
