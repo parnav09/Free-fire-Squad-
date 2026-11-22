@@ -22,6 +22,8 @@ test("observed ratings require exact-context, exact-dimension evidence", () => {
   assert.match(migration, /dl\.dimension_key = NEW\.dimension_key/);
   assert.match(migration, /dl\.definition_version = NEW\.dimension_definition_version/);
   assert.match(migration, /Observed ratings require non-rejected, non-archived evidence/);
+  assert.match(migration, /es\.status IN \('pending','verified','corrected'\)/);
+  assert.match(migration, /coalesce\(es\.status,''\) NOT IN/);
 });
 test("Not Applicable is rejected for a role-applicable dimension", () => {
   assert.match(migration, /A role-applicable dimension cannot be marked not_applicable/);
