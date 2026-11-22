@@ -16,9 +16,11 @@ async function compileModule(path, replacements = {}) {
 }
 const assessmentUrl = await compileModule("src/lib/evolution-assessment-states.ts");
 const coverageUrl = await compileModule("src/lib/evolution-evidence-coverage.ts");
+const dimensionsUrl = await compileModule("src/lib/evolution-dimensions.ts");
 const scoringUrl = await compileModule("src/lib/evolution-deterministic-scoring.ts", {
   "./evolution-assessment-states": assessmentUrl,
   "./evolution-evidence-coverage": coverageUrl,
+  "./evolution-dimensions": dimensionsUrl,
 });
 const { calculateDeterministicPlayerScore, DETERMINISTIC_SCORING_POLICY_V1 } = await import(scoringUrl);
 
