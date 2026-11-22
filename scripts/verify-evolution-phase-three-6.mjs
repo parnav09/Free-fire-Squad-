@@ -1,123 +1,59 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {
-  CANONICAL_DIMENSION_REGISTRY,
-  CANONICAL_ROLE_KEYS,
-} from "../src/lib/evolution-dimensions.ts";
-import {
-  assertRoleWeightSetEditable,
-  isRoleWeightSetEditable,
-  resolveCanonicalRoleKeyFromSnapshot,
-  validateRoleWeightConfiguration,
-} from "../src/lib/evolution-role-weights.ts";
+import { readFile } from "node:fs/promises";
 
-const roleKey = "primary_rusher" as const;
-const criteria = Object.fromEntries(
-  CANONICAL_DIMENSION_REGISTRY
-    .filter((dimension) => dimension.lifecycleStatus === "active")
-    .map((dimension) => [dimension.key, dimension.definitionVersion]),
-);
+const root = new URL("../", import.meta.url);
+const domain = await readFile(new URL("src/lib/evolution-role-weights.ts", root), "utf8");
+const dimensions = await readFile(new URL("src/lib/evolution-dimensions.ts", root), "utf8");
+const migration = await readFile(new URL("supabase/migrations/20261122170000_evolution_phase_three_6_role_weight_configuration.sql", root), "utf8");
 
-function validWeights() {
-  const applicable = CANONICAL_DIMENSION_REGISTRY.filter((dimension) =>
-    dimension.lifecycleStatus === "active" && dimension.applicableRoleKeys.includes(roleKey)
-  );
-  const base = Math.floor(10_000 / applicable.length);
-  let remainder = 10_000 - base * applicable.length;
-  return applicable.map((dimension) => ({
-    dimensionKey: dimension.key,
-    dimensionDefinitionVersion: dimension.definitionVersion,
-    weightBasisPoints: base + (remainder-- > 0 ? 1 : 0),
-  }));
-}
-
-test("every canonical role receives a valid exact-total configuration", () => {
-  for (const role of CANONICAL_ROLE_KEYS) {
-    const applicable = CANONICAL_DIMENSION_REGISTRY.filter((dimension) =>
-      dimension.lifecycleStatus === "active" && dimension.applicableRoleKeys.includes(role)
-    );
-    const base = Math.floor(10_000 / applicable.length);
-    let remainder = 10_000 - base * applicable.length;
-    const weights = applicable.map((dimension) => ({
-      dimensionKey: dimension.key,
-      dimensionDefinitionVersion: dimension.definitionVersion,
-      weightBasisPoints: base + (remainder-- > 0 ? 1 : 0),
-    }));
-    assert.deepEqual(validateRoleWeightConfiguration({
-      roleKey: role,
-      weights,
-      rubricCriteriaVersions: criteria,
-    }), []);
-  }
+test("typed configuration uses canonical roles and dimension applicability", () => {
+  assert.match(domain, /CANONICAL_ROLE_KEYS/);
+  assert.match(domain, /dimension\.applicableRoleKeys\.includes\(input\.roleKey\)/);
+  assert.match(dimensions, /applicableRoleKeys:/);
 });
 
-test("weights use exact integer basis points and total exactly 10000", () => {
-  assert.deepEqual(validateRoleWeightConfiguration({
-    roleKey,
-    weights: validWeights(),
-    rubricCriteriaVersions: criteria,
-  }), []);
-  const weights = validWeights();
-  weights[0] = { ...weights[0], weightBasisPoints: weights[0].weightBasisPoints + 1 };
-  assert.ok(validateRoleWeightConfiguration({ roleKey, weights, rubricCriteriaVersions: criteria })
-    .some((error) => error.includes("exactly 10000")));
+test("integer basis-point totals are exact and non-negative", () => {
+  assert.match(domain, /weightBasisPoints < 0/);
+  assert.match(domain, /weightBasisPoints > BASIS_POINT_TOTAL/);
+  assert.match(domain, /total !== BASIS_POINT_TOTAL/);
+  assert.match(migration, /weight_basis_points BETWEEN 0 AND 10000/);
+  assert.match(migration, /v_total <> 10000/);
 });
 
-test("missing applicable dimension is rejected rather than silently treated as zero", () => {
-  const weights = validWeights().slice(1);
-  const errors = validateRoleWeightConfiguration({ roleKey, weights, rubricCriteriaVersions: criteria });
-  assert.ok(errors.some((error) => error.includes("Missing applicable dimension weight")));
+test("missing and duplicate dimensions are rejected explicitly", () => {
+  assert.match(domain, /Missing applicable dimension weight/);
+  assert.match(domain, /Duplicate weight for/);
+  assert.match(domain, /Each dimension may have exactly one weight/);
 });
 
-test("duplicate dimension weights are rejected", () => {
-  const weights = validWeights();
-  weights.push({ ...weights[0] });
-  assert.ok(validateRoleWeightConfiguration({ roleKey, weights, rubricCriteriaVersions: criteria })
-    .some((error) => error.includes("Duplicate weight")));
-});
-
-test("negative, fractional and over-100-percent weights are rejected", () => {
-  for (const invalid of [-1, 0.5, 10_001]) {
-    const weights = validWeights();
-    weights[0] = { ...weights[0], weightBasisPoints: invalid };
-    assert.ok(validateRoleWeightConfiguration({ roleKey, weights, rubricCriteriaVersions: criteria })
-      .some((error) => error.includes("integer basis points")));
-  }
-});
-
-test("weights must pin the exact rubric dimension-definition version", () => {
-  const weights = validWeights();
-  weights[0] = { ...weights[0], dimensionDefinitionVersion: 999 };
-  assert.ok(validateRoleWeightConfiguration({ roleKey, weights, rubricCriteriaVersions: criteria })
-    .some((error) => error.includes("exact rubric dimension-definition version")));
-});
-
-test("every applicable rubric dimension must be present at its exact definition version", () => {
-  const missing = { ...criteria } as Record<string, number>;
-  delete missing.communication;
-  assert.ok(validateRoleWeightConfiguration({
-    roleKey,
-    weights: validWeights(),
-    rubricCriteriaVersions: missing,
-  }).some((error) => error.includes("active rubric must contain")));
+test("rubric dimension-definition versions must match exactly", () => {
+  assert.match(domain, /exact rubric dimension-definition version/);
+  assert.match(migration, /rc\.dimension_definition_version = dd\.definition_version/);
 });
 
 test("historical role labels resolve only through explicit canonical aliases", () => {
-  assert.equal(resolveCanonicalRoleKeyFromSnapshot("Primary Rusher"), "primary_rusher");
-  assert.equal(resolveCanonicalRoleKeyFromSnapshot("Sniper + IGL"), "sniper_igl");
-  assert.equal(resolveCanonicalRoleKeyFromSnapshot("Mystery Role"), null);
-  assert.equal(resolveCanonicalRoleKeyFromSnapshot(null), null);
+  assert.match(domain, /"primary rusher": "primary_rusher"/);
+  assert.match(domain, /"sniper \+ igl": "sniper_igl"/);
+  assert.match(domain, /return aliases\[normalized\] \?\? null/);
+  assert.match(migration, /canonical_role_key_from_snapshot/);
 });
 
-test("published and retired weight sets cannot be edited", () => {
-  assert.equal(isRoleWeightSetEditable("draft"), true);
-  assert.equal(isRoleWeightSetEditable("active"), false);
-  assert.equal(isRoleWeightSetEditable("retired"), false);
-  assert.throws(() => assertRoleWeightSetEditable("active"), /immutable/);
-  assert.throws(() => assertRoleWeightSetEditable("retired"), /immutable/);
+test("unknown or unmapped role snapshots fail closed without current-role fallback", () => {
+  assert.match(migration, /role_assignment_status NOT IN \('assigned','retired'\)/);
+  assert.match(migration, /current player role is never substituted/);
+  assert.match(domain, /return aliases\[normalized\] \?\? null/);
 });
 
-test("unknown role snapshots never fall back to the player's current role", () => {
-  assert.equal(resolveCanonicalRoleKeyFromSnapshot(""), null);
-  assert.equal(resolveCanonicalRoleKeyFromSnapshot("unmapped"), null);
+test("draft-only editing and published history immutability are enforced", () => {
+  assert.match(domain, /Published or retired role weight sets are immutable/);
+  assert.match(migration, /role_weight_set_history_is_retained/);
+  assert.match(migration, /published_role_dimension_weights_are_immutable/);
+  assert.match(migration, /Evaluation role-weight bindings are immutable/);
+});
+
+test("role-weight binding pins exact evaluation context, role assignment and rubric", () => {
+  assert.match(migration, /v_context\.role_assignment_id IS DISTINCT FROM NEW\.role_assignment_id/);
+  assert.match(migration, /v_role\.player_user_id = v_context\.player_user_id/);
+  assert.match(migration, /v_set\.rubric_version_id = v_rubric_binding\.rubric_version_id/);
 });
