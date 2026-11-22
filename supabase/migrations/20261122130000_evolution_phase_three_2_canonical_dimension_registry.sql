@@ -158,7 +158,26 @@ DECLARE
   expected_version integer;
   supplied_role_count integer;
   distinct_role_count integer;
+  existing_version public.evolution_dimension_definition_versions%ROWTYPE;
 BEGIN
+  SELECT * INTO existing_version
+  FROM public.evolution_dimension_definition_versions
+  WHERE dimension_key = NEW.dimension_key
+    AND definition_version = NEW.definition_version;
+
+  IF FOUND THEN
+    IF existing_version.canonical_label IS DISTINCT FROM NEW.canonical_label
+      OR existing_version.definition IS DISTINCT FROM NEW.definition
+      OR existing_version.applicable_role_keys IS DISTINCT FROM NEW.applicable_role_keys
+      OR existing_version.rating_min IS DISTINCT FROM NEW.rating_min
+      OR existing_version.rating_max IS DISTINCT FROM NEW.rating_max
+      OR existing_version.rating_step IS DISTINCT FROM NEW.rating_step THEN
+      RAISE EXCEPTION 'Existing canonical definition version is immutable'
+        USING ERRCODE = '55000';
+    END IF;
+    RETURN NEW;
+  END IF;
+
   SELECT lifecycle_status INTO current_status
   FROM public.evolution_dimension_registry
   WHERE dimension_key = NEW.dimension_key;
