@@ -530,3 +530,20 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 **Point 3.5 acceptance: VERIFIED.**
 
 **Next point:** 3.6 — Role-Based Weight Configuration. Do not begin it until explicitly requested.
+
+
+---
+
+## Point 3.7 checkpoint — Not Observed & Missing Data Rules
+
+**IMPLEMENTED — exact-head CI verification pending.** Point 3.7 is the next Evolution Phase Three point after verified 3.6.
+
+- Added append-only per-dimension assessment events with serialized revisions and exact context, rubric, historical role-weight and dimension-definition binding.
+- Added distinct states: Observed (integer 0–10; zero is valid), Not Observed, Not Applicable, Incomplete and Rejected Evidence. A dimension with no assessment event remains Missing.
+- Observed ratings require evidence linked to the same context and exact dimension; rejected/archived evidence cannot support an observed rating.
+- Not Applicable is accepted only for dimensions excluded from the historical role's active weight set.
+- Added current-state and readiness views. Readiness distinguishes Draft, Provisional, Insufficient and Final; Final means complete verified assessment dispositions only, not a score or score-eligibility promise.
+- No weighted score, coverage percentage, score snapshot or legacy backfill is introduced. Points 3.8 and 3.9 remain separate.
+- No UI controls were added because this point is data integrity only; existing dark theme/color grading, layout and responsive UI remain unchanged.
+
+**Verification:** migration is reapplied twice in the disposable PostgreSQL harness; source contracts and the normal build/CI chain include Point 3.7. Exact-head GitHub Actions result will determine final VERIFIED status.
