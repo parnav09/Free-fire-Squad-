@@ -278,6 +278,8 @@ AS $function$
   ORDER BY other.created_at DESC
   LIMIT 20;
 $function$;
+REVOKE ALL ON FUNCTION public.find_evolution_evidence_duplicate_candidates(uuid)
+  FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.find_evolution_evidence_duplicate_candidates(uuid)
   TO authenticated;
 
