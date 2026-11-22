@@ -320,7 +320,7 @@ export function calculateDeterministicPlayerScore(
 
     if (!evidenceEligible) {
       rejectedCount += 1;
-      coverageInputs.push({ dimensionKey, assessmentState: "observed", evidenceState: evidenceState as CoverageEvidenceState });
+      coverageInputs.push({ dimensionKey, assessmentState: "observed", evidenceState: null });
       continue;
     }
 
