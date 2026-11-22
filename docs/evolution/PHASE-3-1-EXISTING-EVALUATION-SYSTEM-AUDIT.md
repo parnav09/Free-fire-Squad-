@@ -297,3 +297,20 @@ The Evolution master blueprint docs/evolution-version-2.md and the candidate Pha
 The existing systems, data shapes, scales, visibility boundaries, unmerged candidate implementation, naming conflicts, Phase 2 dependencies, migration risks and concrete blockers are now documented. The separate canonical scoring branch is explicitly **NOT PASS**: its exact-head database integration failed with recursive RLS policy evaluation. The 3.1 audit PR's exact head also has a GitHub Actions job failure with zero executed steps; two retries ended the same way, so the audit test/build result is unverified rather than passed. Vercel also reports the existing build-rate-limit failure. These infrastructure failures are not counted as successful CI and are not evidence of a source-test failure.
 
 **Next point:** 3.2 Canonical Dimension Registry, after the Phase 2 acceptance dependency is resolved and the existing unmerged registry is reviewed/reused rather than duplicated.
+
+
+## 11. Verification addendum — 2026-11-22
+
+The original CI statement in Section 10 records the earlier runner-start failures accurately as historical events. The audit branch was subsequently synchronized with current `main`, and its build pipeline was corrected to preserve all existing Phase One and Phase Two checks while registering the Phase 3.1 contract test.
+
+**Successful exact code-head verification:**
+- Commit: `43f6a4c5f2e35097ab80e2f49ad79886e19642d0`
+- GitHub Actions run: #45026365956 — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45026365956
+- Result: **SUCCESS**.
+- Phase 3.1 contract tests: **9 passed, 0 failed**.
+- The same production build also completed typecheck, the existing regression test chain, and Vite production bundling successfully.
+- PostgreSQL and responsive UI acceptance steps in the workflow also completed successfully.
+
+The only changes after the verified code head are documentation-only checkpoint/audit updates; no application source, test source, package manifest, migration, or build configuration changed after the green run.
+
+**Superseding status:** Evolution Phase 3.1 Existing Evaluation System Audit is **IMPLEMENTED AND VERIFIED** on the tested code head. The separate canonical scoring candidate remains unmerged and is not certified by this audit; its recursive-RLS and active role-weight immutability defects remain downstream implementation blockers.
