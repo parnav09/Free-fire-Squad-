@@ -536,7 +536,7 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 
 ## Point 3.7 checkpoint — Not Observed & Missing Data Rules
 
-**IMPLEMENTED — exact-head CI verification pending.** Point 3.7 is the next Evolution Phase Three point after verified 3.6.
+**IMPLEMENTED AND VERIFIED — exact PR head CI run #45059143040 succeeded.** Point 3.7 is the next Evolution Phase Three point after verified 3.6.
 
 - Added append-only per-dimension assessment events with serialized revisions and exact context, rubric, historical role-weight and dimension-definition binding.
 - Added distinct states: Observed (integer 0–10; zero is valid), Not Observed, Not Applicable, Incomplete and Rejected Evidence. A dimension with no assessment event remains Missing.
@@ -546,4 +546,4 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - No weighted score, coverage percentage, score snapshot or legacy backfill is introduced. Points 3.8 and 3.9 remain separate.
 - No UI controls were added because this point is data integrity only; existing dark theme/color grading, layout and responsive UI remain unchanged.
 
-**Verification:** migration is reapplied twice in the disposable PostgreSQL harness; source contracts and the normal build/CI chain include Point 3.7. Exact-head GitHub Actions result will determine final VERIFIED status.
+**Verification evidence (2026-11-23):** exact PR head `628934b68f8c7c16fe9cfb5736a4e9cb89a27adf`; GitHub Actions run [#45059143040](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45059143040) succeeded. The disposable PostgreSQL harness reapplied the migration twice and reported `Evolution Phase 3.7 Not Observed & Missing Data PostgreSQL PASS`; all 9 Phase 3.7 source-contract tests passed (9/9); TypeScript typecheck and the full production build/test chain passed. The responsive UI/touch-target/permissions/offline-write acceptance step and screenshot upload also passed. Existing non-fatal Vite chunk-size and dependency/Actions deprecation warnings remain; no Phase 3.7 test failed.
