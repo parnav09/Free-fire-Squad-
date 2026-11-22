@@ -213,12 +213,14 @@ BEGIN
   SELECT rv.lifecycle_status,rv.effective_from,rv.effective_to
     INTO v_rubric_status,v_rubric_from,v_rubric_to
   FROM public.evolution_rubric_versions rv
-  WHERE rv.id=v_rubric AND rv.team_id=v_team;
+  WHERE rv.id=v_rubric AND rv.team_id=v_team
+  FOR SHARE;
   SELECT ws.lifecycle_status,ws.effective_from,ws.effective_to
     INTO v_weight_status,v_weight_from,v_weight_to
   FROM public.evolution_role_weight_sets ws
   WHERE ws.id=v_weight_set AND ws.team_id=v_team
-    AND ws.rubric_version_id=v_rubric AND ws.role_key=v_bound_role_key;
+    AND ws.rubric_version_id=v_rubric AND ws.role_key=v_bound_role_key
+  FOR SHARE;
 
   IF v_rubric_status NOT IN ('active','retired') OR v_weight_status NOT IN ('active','retired')
     OR v_rubric_from IS NULL OR v_weight_from IS NULL
