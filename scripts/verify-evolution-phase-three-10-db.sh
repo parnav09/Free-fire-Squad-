@@ -10,10 +10,9 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$MIGRATION"
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$MIGRATION"
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+SET ROLE authenticated;
 CREATE TEMP TABLE phase_310_verified_evidence (id uuid PRIMARY KEY);
 CREATE TEMP TABLE phase_310_contexts (kind text PRIMARY KEY, id uuid NOT NULL);
-
-SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
 
 DO $$
