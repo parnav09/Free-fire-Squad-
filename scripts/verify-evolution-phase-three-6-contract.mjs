@@ -45,6 +45,7 @@ test("historical bindings require the exact match role snapshot and rubric versi
   assert.match(migration, /v_set\.rubric_version_id = v_rubric_binding\.rubric_version_id/);
   assert.match(migration, /NEW\.effective_from < OLD\.created_at/);
   assert.match(migration, /v_context\.created_at < v_set\.effective_from/);
+  assert.match(migration, /v_set\.lifecycle_status NOT IN \('active','retired'\)/);
   assert.match(migration, /current player role is never substituted/);
 });
 
