@@ -83,6 +83,7 @@ DECLARE
   latest_version_id uuid;
   candidate_version_number integer;
   latest_version_number integer;
+  previously_adjudicated_version_number integer;
 BEGIN
   IF TG_OP <> 'INSERT' THEN
     RAISE EXCEPTION 'Evidence verification history is append-only'
@@ -118,16 +119,24 @@ BEGIN
     FROM public.evolution_evidence_versions ver
     WHERE ver.evidence_item_id = NEW.evidence_item_id
       AND ver.team_id = NEW.team_id;
+    SELECT COALESCE(max(ver.version_number), 0) INTO previously_adjudicated_version_number
+    FROM public.evolution_evidence_verification_events prior
+    JOIN public.evolution_evidence_versions ver
+      ON ver.id = prior.evidence_version_id
+     AND ver.evidence_item_id = prior.evidence_item_id
+     AND ver.team_id = prior.team_id
+    WHERE prior.evidence_item_id = NEW.evidence_item_id
+      AND prior.to_status = 'corrected';
     IF NEW.evidence_version_id IS NULL
       OR NEW.evidence_version_id IS NOT DISTINCT FROM latest_version_id
       OR candidate_version_number IS NULL
-      OR candidate_version_number <> latest_version_number THEN
+      OR candidate_version_number <> latest_version_number
+      OR candidate_version_number <= COALESCE(previously_adjudicated_version_number, 0) THEN
       RAISE EXCEPTION 'Correction must reference the latest newly appended evidence version'
         USING ERRCODE = '23514';
     END IF;
-  ELSIF NEW.evidence_version_id IS NOT NULL
-    AND NEW.evidence_version_id IS NOT DISTINCT FROM latest_version_id THEN
-    RAISE EXCEPTION 'Verification event must not repeat the previous evidence version'
+  ELSIF NEW.evidence_version_id IS NOT NULL THEN
+    RAISE EXCEPTION 'Only a corrected status may reference an evidence version'
       USING ERRCODE = '23514';
   END IF;
 
@@ -171,9 +180,14 @@ WITH (security_invoker = true)
 AS
 SELECT DISTINCT ON (v.evidence_item_id)
   v.team_id, v.evidence_item_id, v.to_status AS status,
+  e.created_by, e.created_at AS evidence_created_at,
+  CASE WHEN v.to_status = 'verified' THEN v.actor_user_id END AS verified_by,
+  CASE WHEN v.to_status = 'verified' THEN v.created_at END AS verified_at,
   v.actor_user_id AS last_actor_user_id, v.created_at AS status_changed_at,
   v.reason, v.evidence_version_id
 FROM public.evolution_evidence_verification_events v
+JOIN public.evolution_evidence_items e
+  ON e.id = v.evidence_item_id AND e.team_id = v.team_id
 ORDER BY v.evidence_item_id, v.created_at DESC, v.id DESC;
 
 GRANT SELECT ON public.evolution_evidence_current_status TO authenticated;
