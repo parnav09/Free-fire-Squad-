@@ -69,17 +69,6 @@ BEGIN
     RAISE EXCEPTION 'Phase 2.6 canonical match role snapshot fixture missing';
   END IF;
 
-  INSERT INTO public.evolution_evaluation_contexts(
-    team_id,player_member_id,player_user_id,canonical_session_id,
-    canonical_session_match_id,role_assignment_id,created_by
-  ) VALUES (
-    v_team,v_player_member,v_player_user,v_session,v_match,v_role_assignment,auth.uid()
-  ) RETURNING id INTO v_context;
-
-  INSERT INTO public.evolution_evaluation_rubric_bindings(
-    team_id,evaluation_context_id,rubric_version_id,bound_by
-  ) VALUES (v_team,v_context,v_rubric_version,auth.uid());
-
   INSERT INTO public.evolution_role_weight_sets(
     team_id,rubric_version_id,role_key,version_number,created_by
   ) VALUES (v_team,v_rubric_version,v_role_key,1,auth.uid())
@@ -108,9 +97,20 @@ BEGIN
 
   UPDATE public.evolution_role_weight_sets
   SET lifecycle_status='active',
-      effective_from=(SELECT created_at FROM public.evolution_evaluation_contexts WHERE id=v_context)-interval '1 second',
+      effective_from=clock_timestamp(),
       published_by=auth.uid()
   WHERE id=v_set_one;
+
+  -- The weight set must exist and become effective before the evaluation context is created.
+  INSERT INTO public.evolution_evaluation_contexts(
+    team_id,player_member_id,player_user_id,canonical_session_id,
+    canonical_session_match_id,role_assignment_id,created_by
+  ) VALUES (
+    v_team,v_player_member,v_player_user,v_session,v_match,v_role_assignment,auth.uid()
+  ) RETURNING id INTO v_context;
+  INSERT INTO public.evolution_evaluation_rubric_bindings(
+    team_id,evaluation_context_id,rubric_version_id,bound_by
+  ) VALUES (v_team,v_context,v_rubric_version,auth.uid());
 
   INSERT INTO public.evolution_evaluation_role_weight_bindings(
     team_id,evaluation_context_id,role_assignment_id,weight_set_id,role_key,bound_by
@@ -145,7 +145,7 @@ BEGIN
   BEGIN
     UPDATE public.evolution_role_weight_sets
     SET lifecycle_status='active',
-        effective_from=(SELECT created_at FROM public.evolution_evaluation_contexts WHERE id=v_context)-interval '1 second',
+        effective_from=clock_timestamp(),
         published_by=auth.uid()
     WHERE id=v_set_two;
     RAISE EXCEPTION 'Invalid 10001-basis-point configuration unexpectedly activated';
@@ -173,7 +173,7 @@ BEGIN
 
   UPDATE public.evolution_role_weight_sets
   SET lifecycle_status='active',
-      effective_from=(SELECT created_at FROM public.evolution_evaluation_contexts WHERE id=v_context)-interval '1 second',
+      effective_from=clock_timestamp(),
       published_by=auth.uid()
   WHERE id=v_set_two;
 
