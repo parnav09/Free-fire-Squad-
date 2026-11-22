@@ -44,7 +44,6 @@ DECLARE
   v_member uuid;
   v_context uuid;
   v_evidence uuid;
-  v_private_evidence uuid;
   v_dimension_version integer;
   v_version_count integer;
 BEGIN
@@ -160,7 +159,7 @@ BEGIN
   ) VALUES (
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',v_context,'private',
     'manual_observation','Private coach note','Only its author can read this.',auth.uid()
-  ) RETURNING id INTO v_private_evidence;
+  );
 
   INSERT INTO public.evolution_evidence_items(
     team_id,evaluation_context_id,visibility,source_type,title,observation,created_by
@@ -202,20 +201,16 @@ END $$;
 -- Active coach can read team and coach-only evidence, but not private evidence.
 SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
 DO $$
-DECLARE team_count integer; private_count integer; coach_count integer; version_count integer; private_evidence_id uuid;
+DECLARE team_count integer; private_count integer; coach_count integer; version_count integer;
 BEGIN
   SELECT count(*) INTO team_count FROM public.evolution_evidence_items WHERE visibility='team';
   SELECT count(*) INTO private_count FROM public.evolution_evidence_items WHERE visibility='private';
   SELECT count(*) INTO coach_count FROM public.evolution_evidence_items WHERE visibility='coaches';
-  SELECT v.evidence_item_id INTO private_evidence_id
-  FROM public.evolution_evidence_versions v
-  WHERE v.title='Private coach note' AND v.version_number=1;
-
   BEGIN
     INSERT INTO public.evolution_evidence_versions(
       team_id,evidence_item_id,version_number,source_type,title,observation,created_by
     ) VALUES (
-      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',private_evidence_id,2,
+      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','e3000000-0000-0000-0000-000000000003',2,
       'manual_observation','Unauthorized private revision','Coach must not edit private evidence.',auth.uid()
     );
     RAISE EXCEPTION 'coach unexpectedly appended a private evidence version';
@@ -226,7 +221,7 @@ BEGIN
     INSERT INTO public.evolution_evidence_dimension_links(
       team_id,evidence_item_id,dimension_key,definition_version,created_by
     ) VALUES (
-      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',private_evidence_id,
+      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','e3000000-0000-0000-0000-000000000003',
       'communication',1,auth.uid()
     );
     RAISE EXCEPTION 'coach unexpectedly linked a dimension to private evidence';
