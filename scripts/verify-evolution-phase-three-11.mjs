@@ -66,6 +66,11 @@ test("authorization remains stable through the scoring transaction", () => {
   assert.match(migration, /FROM public\.team_members tm[\s\S]*?FOR SHARE/);
 });
 
+test("historical rubric and weight-set lifecycle rows stay stable during calculation", () => {
+  assert.match(migration, /WHERE rv\.id=v_rubric AND rv\.team_id=v_team\s+FOR SHARE/);
+  assert.match(migration, /AND ws\.rubric_version_id=v_rubric AND ws\.role_key=v_bound_role_key\s+FOR SHARE/);
+});
+
 test("history cannot fork from a prior snapshot", () => {
   assert.match(migration, /CREATE UNIQUE INDEX IF NOT EXISTS evolution_score_snapshot_single_child_uidx/);
   assert.match(migration, /ON public\.evolution_player_score_snapshots\(previous_snapshot_id\)/);
