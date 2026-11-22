@@ -106,16 +106,28 @@ Acceptance: user can inspect who recorded and who verified evidence, when, and w
 Acceptance: historical evaluation can be interpreted using the exact rubric that existed when it was scored.
 
 ### 3.6 Role-Based Weight Configuration
-**IMPLEMENTED — exact-head verification pending.**
+**IMPLEMENTED AND VERIFIED — 2026-11-22.**
 - Added team-scoped weight sets for an exact rubric version and canonical role, with sequential draft/active/retired versions.
 - Added integer basis-point weights. Activation requires each applicable active rubric dimension exactly once and exactly 10,000 basis points total (100%); non-applicable dimensions must be omitted.
 - Each weight row pins the exact canonical dimension-definition version used by the rubric. Published sets and rows are immutable; retirement closes the effective range and preserves history.
 - Added immutable evaluation-context binding to the exact match role-assignment snapshot and exact rubric version. Explicit legacy role aliases are supported; unknown/unmapped role snapshots are rejected, and current team roles are never consulted.
+- Weight-set effective dates cannot predate the weight-set creation time; a historical evaluation can bind a retired set only when the evaluation timestamp falls within that set's effective range.
 - Added transaction-safe version allocation and serialization between draft weight edits and publication.
 - Added team-scoped RLS, owner/coach administration, team-member reads of published/retired history, draft privacy, anonymous denial and direct mutation restrictions.
-- Added typed validation, source-contract tests, repeatable migration, disposable PostgreSQL integration harness and GitHub Actions/build-chain wiring.
+- Added typed validation, 17 source-contract tests, repeatable migration, disposable PostgreSQL integration harness and GitHub Actions/build-chain wiring.
 - Point 3.6 adds no UI because it is a configuration/data-model point; the later evaluation UI point retains the existing dark theme/color grading, precise 44×44 CSS px hitboxes, alignment/no-collision and Android/tablet/laptop/desktop responsive gates.
-Acceptance: the exact historical role snapshot and exact rubric/weight-set versions are bound immutably; invalid/missing role configuration fails closed.
+
+**Exact-head acceptance**
+- Tested PR head: `16058db847e144544ebb569f8d5853323754751a`.
+- GitHub Actions run #45056896882: **SUCCESS** — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45056896882.
+- Phase 3.6 PostgreSQL integration, migration re-application, role/rubric versioning, exact totals, history, historical snapshot binding, RLS and ACLs: **PASS**.
+- Phase 3.6 source-contract tests: **17/17 PASS**.
+- Existing Phase 3.2–3.5 and Phase 2.2–2.10 database integrations, staged security checks, responsive UI/touch-target/permission/offline-write checks, screenshot upload, full regression, TypeScript typecheck and Vite production build: **PASS**.
+- Existing non-fatal Vite chunk-size and dependency deprecation warnings remain; Vercel Preview separately reports a build-rate-limit failure.
+- Verification fixes: qualified ambiguous dimension joins; corrected RLS-versus-trigger test expectations; fixed DELETE trigger OLD-team lookup; corrected SQL alias source assertions.
+- No production migration, production deployment, data reset, merge to main or legacy backfill.
+
+**Point 3.6 acceptance: VERIFIED.**
 
 ### 3.7 Not Observed & Missing Data Rules
 - Represent Not Observed as an explicit state, distinct from numeric zero.
