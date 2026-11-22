@@ -118,18 +118,6 @@ BEGIN
     team_id,evaluation_context_id,rubric_version_id,bound_by
   ) VALUES (v_team,v_context,v_rubric_version,auth.uid());
 
-  INSERT INTO public.evolution_evaluation_role_weight_bindings(
-    team_id,evaluation_context_id,role_assignment_id,weight_set_id,role_key,bound_by
-  ) VALUES (v_team,v_context,v_role_assignment,v_set_one,v_role_key,auth.uid());
-
-  IF NOT EXISTS (
-    SELECT 1 FROM public.evolution_evaluation_role_weight_bindings
-    WHERE evaluation_context_id=v_context AND role_assignment_id=v_role_assignment
-      AND weight_set_id=v_set_one AND role_key=v_role_key
-  ) THEN
-    RAISE EXCEPTION 'Exact historical role-weight binding was not persisted';
-  END IF;
-
   SELECT dimension_key INTO v_first_dimension
   FROM public.evolution_role_dimension_weights
   WHERE weight_set_id=v_set_one ORDER BY dimension_key LIMIT 1;
@@ -182,6 +170,19 @@ BEGIN
       effective_from=clock_timestamp(),
       published_by=auth.uid()
   WHERE id=v_set_two;
+
+  -- A delayed bind may use a retired set only when its effective range covered the evaluation.
+  INSERT INTO public.evolution_evaluation_role_weight_bindings(
+    team_id,evaluation_context_id,role_assignment_id,weight_set_id,role_key,bound_by
+  ) VALUES (v_team,v_context,v_role_assignment,v_set_one,v_role_key,auth.uid());
+
+  IF NOT EXISTS (
+    SELECT 1 FROM public.evolution_evaluation_role_weight_bindings
+    WHERE evaluation_context_id=v_context AND role_assignment_id=v_role_assignment
+      AND weight_set_id=v_set_one AND role_key=v_role_key
+  ) THEN
+    RAISE EXCEPTION 'Exact historical role-weight binding was not persisted';
+  END IF;
 
   INSERT INTO public.evolution_evaluation_contexts(
     team_id,player_member_id,player_user_id,canonical_session_id,
