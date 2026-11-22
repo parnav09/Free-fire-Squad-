@@ -93,3 +93,9 @@ test("Point 3.4 does not add score calculation, rubric or evaluation UI prematur
   assert.doesNotMatch(migration, /weighted_average|canonical_score_100|evolution_score_snapshots/i);
   assert.doesNotMatch(migration, /DROP TABLE|TRUNCATE|DELETE FROM public\.(daily_scores|training_results)/i);
 });
+
+test("archived evidence is terminal and archival remains reason-backed", () => {
+  assert.match(migration, /from_status = 'corrected' AND to_status IN \('pending','verified','rejected','archived'\)/);
+  assert.doesNotMatch(migration, /from_status = 'archived'/);
+  assert.match(migration, /to_status NOT IN \('rejected', 'corrected', 'archived'\)/);
+});
