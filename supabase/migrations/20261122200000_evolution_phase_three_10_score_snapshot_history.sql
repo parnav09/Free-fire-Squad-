@@ -363,6 +363,22 @@ BEGIN
         'rating_value',a.rating_value,
         'reason',a.reason,
         'evidence_item_id',a.evidence_item_id,
+        'evidence_context_id',e.evaluation_context_id,
+        'evidence_visibility',e.visibility,
+        'evidence_created_by',e.created_by,
+        'evidence_dimension_link_id',(
+          SELECT el.id FROM public.evolution_evidence_dimension_links el
+          WHERE el.evidence_item_id=e.id AND el.team_id=e.team_id
+            AND el.dimension_key=w.dimension_key
+            AND el.definition_version=w.dimension_definition_version
+          LIMIT 1
+        ),
+        'evidence_dimension_link_matches',EXISTS (
+          SELECT 1 FROM public.evolution_evidence_dimension_links el
+          WHERE el.evidence_item_id=e.id AND el.team_id=e.team_id
+            AND el.dimension_key=w.dimension_key
+            AND el.definition_version=w.dimension_definition_version
+        ),
         'evidence_status',es.status,
         'evidence_version_id',es.evidence_version_id,
         'evidence_status_changed_at',es.status_changed_at,
@@ -377,6 +393,8 @@ BEGIN
       LEFT JOIN public.evolution_evaluation_current_dimension_assessments a
         ON a.evaluation_context_id=p_evaluation_context_id AND a.team_id=v_team
         AND a.dimension_key=w.dimension_key
+      LEFT JOIN public.evolution_evidence_items e
+        ON e.id=a.evidence_item_id AND e.team_id=a.team_id
       LEFT JOIN public.evolution_evidence_current_status es
         ON es.evidence_item_id=a.evidence_item_id AND es.team_id=a.team_id
       LEFT JOIN public.evolution_evidence_versions ev
