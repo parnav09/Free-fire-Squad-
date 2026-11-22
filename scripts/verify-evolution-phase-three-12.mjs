@@ -68,7 +68,7 @@ test("public SECURITY DEFINER RPCs deny PUBLIC and anon while explicit grants st
 });
 
 test("Evolution read views run as the caller so underlying RLS remains effective", () => {
-  const views = [...combined.matchAll(/CREATE OR REPLACE VIEW\\s+public\\.(evolution_[\\w]+)\\s+WITH\\s*\\(\\s*security_invoker\\s*=\\s*true\\s*\\)/gi)];
+  const views = [...combined.matchAll(/CREATE OR REPLACE VIEW\s+public\.(evolution_[\w]+)\s+WITH\s*\(\s*security_invoker\s*=\s*true\s*\)/gi)];
   assert.ok(views.length >= 3, `Expected the complete security-invoker view inventory; found ${views.length}`);
   for (const view of views) {
     assert.match(combined, new RegExp(`GRANT SELECT ON ${view[1]} TO authenticated`, "i"), `${view[1]} must grant read access only to authenticated users`);
