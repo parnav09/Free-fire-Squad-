@@ -316,8 +316,8 @@ BEGIN
       FROM public.evolution_role_dimension_weights w
       WHERE w.weight_set_id=ws.id AND w.team_id=c.team_id
     ),'[]'::jsonb),
-    'assessments',coalesce((
-      SELECT jsonb_agg(jsonb_build_object(
+    'assessments',(
+      SELECT coalesce(jsonb_agg(jsonb_build_object(
         'dimension_key',w.dimension_key,
         'dimension_definition_version',w.dimension_definition_version,
         'revision_number',a.revision_number,
