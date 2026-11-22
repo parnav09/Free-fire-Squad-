@@ -30,9 +30,9 @@ CREATE TABLE IF NOT EXISTS public.evolution_role_weight_sets (
   CONSTRAINT evolution_role_weight_sets_lifecycle_pair CHECK (
     (lifecycle_status = 'draft' AND effective_from IS NULL AND effective_to IS NULL
       AND published_by IS NULL AND published_at IS NULL AND retired_at IS NULL)
-    OR (lifecycle_status = 'active' AND effective_from IS NOT NULL AND effective_to IS NULL
+    OR (lifecycle_status = 'active' AND effective_from IS NOT NULL AND effective_from >= created_at AND effective_to IS NULL
       AND published_by IS NOT NULL AND published_at IS NOT NULL AND retired_at IS NULL)
-    OR (lifecycle_status = 'retired' AND effective_from IS NOT NULL AND effective_to IS NOT NULL
+    OR (lifecycle_status = 'retired' AND effective_from IS NOT NULL AND effective_from >= created_at AND effective_to IS NOT NULL
       AND published_by IS NOT NULL AND published_at IS NOT NULL AND retired_at IS NOT NULL)
   )
 );
@@ -192,7 +192,7 @@ BEGIN
     IF v_rubric_status IS DISTINCT FROM 'active' THEN
       RAISE EXCEPTION 'role_weight_set_requires_an_active_rubric_version' USING ERRCODE = '23514';
     END IF;
-    IF NEW.effective_from IS NULL OR NEW.effective_to IS NOT NULL
+    IF NEW.effective_from IS NULL OR NEW.effective_from < OLD.created_at OR NEW.effective_to IS NOT NULL
       OR NEW.published_by IS DISTINCT FROM auth.uid()
       OR NEW.published_at IS NOT NULL OR NEW.retired_at IS NOT NULL THEN
       RAISE EXCEPTION 'role_weight_set_publication_metadata_invalid' USING ERRCODE = '23514';
