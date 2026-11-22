@@ -634,3 +634,21 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - Full TypeScript, repository regression/build chain, Phase 2 and Phase 3.2–3.8 PostgreSQL integrations, responsive UI/touch-target/permission/offline-write checks, screenshot artifact and Vite production build: **PASS**.
 - No production migration, production data write, legacy backfill, data reset, merge to main or production deployment occurred.
 
+
+
+---
+
+## Point 3.11 — Atomic Scoring RPC & Database Integrity
+
+**Status: IMPLEMENTED — exact-head verification pending.**
+
+- Added additive migration `20261122210000_evolution_phase_three_11_atomic_scoring_integrity.sql`.
+- Added one shared transaction-scoped advisory lock per evaluation context. The Phase 3.10 scoring RPC and all writes that change scoring inputs now use the same lock.
+- Evidence identity inserts lock before becoming visible; evidence content-version inserts, evidence verification/status events and assessment revision events serialize on the same context lock.
+- The calculator holds shared row locks on the exact evaluation context/role snapshot, active owner/coach membership authorization, historical rubric version and historical role-weight-set lifecycle rows.
+- The transaction lock remains held through the score snapshot insert and is released automatically on commit/rollback. Concurrent evidence or assessment writes cannot interleave with the calculation's input read and produce a mixed-state snapshot.
+- Added a partial unique index that prevents two child snapshots from branching from one prior snapshot.
+- Added helper/trigger ACL hardening, source-contract tests, a disposable PostgreSQL concurrency harness, npm build-chain registration and GitHub Actions integration.
+- No legacy evaluation/evidence/score data rewrite, backfill, UI change, production migration, data reset, merge to main or production deployment.
+
+**Acceptance to verify:** migration replay twice; all four input-mutation lock triggers enabled; shared lock key parity between source writes and RPC; historical configuration and membership row locks; concurrent lock blocking and transaction-end release; single-child snapshot history index; helper/RPC ACLs; complete repository typecheck, regression and production build.
