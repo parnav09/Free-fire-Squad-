@@ -69,7 +69,7 @@ test("incomplete, rejected and missing states remain distinct", () => {
   assert.equal(result.status, "insufficient");
 });
 
-test("duplicate dimensions, role-inapplicable states and invalid evidence states fail closed", () => {
+test("duplicate dimensions, role-inapplicable states and unknown evidence states fail closed", () => {
   assert.throws(() => calculateEvidenceCoverage([
     { dimensionKey: "a", assessmentState: null, evidenceState: null },
     { dimensionKey: "a", assessmentState: null, evidenceState: null },
@@ -77,9 +77,18 @@ test("duplicate dimensions, role-inapplicable states and invalid evidence states
   assert.throws(() => calculateEvidenceCoverage([
     { dimensionKey: "a", assessmentState: "not_applicable", evidenceState: null },
   ]), /excluded by the bound role-weight set/);
+  const rejected = calculateEvidenceCoverage([
+    { dimensionKey: "a", assessmentState: "observed", evidenceState: "rejected" },
+    { dimensionKey: "b", assessmentState: "observed", evidenceState: "archived" },
+    { dimensionKey: "c", assessmentState: "observed", evidenceState: null },
+  ]);
+  assert.equal(rejected.observedDimensionCount, 0);
+  assert.equal(rejected.rejectedEvidenceDimensionCount, 3);
+  assert.equal(rejected.coveragePercent, 0);
+  assert.equal(rejected.status, "insufficient");
   assert.throws(() => calculateEvidenceCoverage([
-    { dimensionKey: "a", assessmentState: "observed", evidenceState: "archived" },
-  ]), /pending, verified or corrected/);
+    { dimensionKey: "a", assessmentState: "observed", evidenceState: "unknown" as never },
+  ]), /Unknown evidence state/);
 });
 
 test("coverage precision is deterministic integer basis-point rounding", () => {
