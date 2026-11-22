@@ -14,7 +14,9 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$EVIDENCE_MIGRATION"
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$EVIDENCE_MIGRATION"
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
-INSERT INTO auth.users(id) VALUES ('70000000-0000-0000-0000-000000000007');
+INSERT INTO auth.users(id) VALUES
+ ('70000000-0000-0000-0000-000000000007'),
+ ('80000000-0000-0000-0000-000000000008');
 INSERT INTO public.team_members(
   id,team_id,user_id,membership_role,status,display_name,player_number,assigned_role
 ) VALUES (
@@ -22,6 +24,11 @@ INSERT INTO public.team_members(
   'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   '70000000-0000-0000-0000-000000000007',
   'coach','active','Coach Seven',4,NULL
+),(
+  'a8000000-0000-0000-0000-000000000008',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  '80000000-0000-0000-0000-000000000008',
+  'player','active','Player Eight',5,NULL
 );
 SQL
 
@@ -178,7 +185,7 @@ BEGIN
 END $$;
 
 -- Player in Alpha can read team-visible evidence, but not coach/private notes.
-SELECT set_config('request.jwt.claim.sub','30000000-0000-0000-0000-000000000003',false);
+SELECT set_config('request.jwt.claim.sub','80000000-0000-0000-0000-000000000008',false);
 DO $$
 DECLARE team_count integer; private_count integer; coach_count integer;
 BEGIN
