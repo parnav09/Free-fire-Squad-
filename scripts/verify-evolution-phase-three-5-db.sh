@@ -263,17 +263,19 @@ RESET ROLE;
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','80000000-0000-0000-0000-000000000008',false);
 DO $$
-DECLARE visible_active integer; visible_draft integer; visible_criteria integer;
+DECLARE visible_active integer; visible_retired integer; visible_draft integer; visible_criteria integer;
 BEGIN
   SELECT count(*) INTO visible_active
   FROM public.evolution_rubric_versions WHERE lifecycle_status='active';
+  SELECT count(*) INTO visible_retired
+  FROM public.evolution_rubric_versions WHERE lifecycle_status='retired';
   SELECT count(*) INTO visible_draft
   FROM public.evolution_rubric_versions WHERE lifecycle_status='draft';
   SELECT count(*) INTO visible_criteria
   FROM public.evolution_rubric_dimension_criteria;
-  IF visible_active <> 1 OR visible_draft <> 0 OR visible_criteria <> 6 THEN
-    RAISE EXCEPTION 'Player rubric visibility mismatch: active %, draft %, criteria %',
-      visible_active,visible_draft,visible_criteria;
+  IF visible_active <> 1 OR visible_retired <> 1 OR visible_draft <> 0 OR visible_criteria <> 12 THEN
+    RAISE EXCEPTION 'Player rubric visibility mismatch: active %, retired %, draft %, criteria %',
+      visible_active,visible_retired,visible_draft,visible_criteria;
   END IF;
 
   BEGIN
