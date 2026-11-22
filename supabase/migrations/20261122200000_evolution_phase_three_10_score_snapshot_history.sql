@@ -477,17 +477,23 @@ BEGIN
   END LOOP;
 
   v_coverage := round((v_observed::numeric * 10000) / v_applicable)::integer;
+  IF v_observed=0 OR v_observed_weight=0 THEN
+    v_reasons := v_reasons || jsonb_build_array('no_valid_observed_weight');
+  END IF;
+  IF v_coverage<5000 THEN
+    v_reasons := v_reasons || jsonb_build_array('coverage_below_minimum');
+  END IF;
+  IF v_missing>0 THEN v_reasons := v_reasons || jsonb_build_array('missing_dimensions'); END IF;
+  IF v_incomplete>0 THEN v_reasons := v_reasons || jsonb_build_array('incomplete_dimensions'); END IF;
+  IF v_rejected>0 THEN v_reasons := v_reasons || jsonb_build_array('rejected_or_ineligible_evidence'); END IF;
+  IF v_unverified>0 THEN v_reasons := v_reasons || jsonb_build_array('unverified_evidence'); END IF;
+
   IF v_observed=0 OR v_observed_weight=0 OR v_coverage<5000 THEN
     v_score_status := 'insufficient';
-    v_reasons := v_reasons || jsonb_build_array('coverage_below_minimum_or_no_valid_observed_weight');
   ELSE
     v_exact_numerator := v_weighted_rating * 1000;
     v_exact_denominator := v_observed_weight;
     v_score_basis := round(v_exact_numerator / v_exact_denominator)::integer;
-    IF v_missing>0 THEN v_reasons := v_reasons || jsonb_build_array('missing_dimensions'); END IF;
-    IF v_incomplete>0 THEN v_reasons := v_reasons || jsonb_build_array('incomplete_dimensions'); END IF;
-    IF v_rejected>0 THEN v_reasons := v_reasons || jsonb_build_array('rejected_or_ineligible_evidence'); END IF;
-    IF v_unverified>0 THEN v_reasons := v_reasons || jsonb_build_array('unverified_evidence'); END IF;
     IF v_missing>0 OR v_incomplete>0 OR v_rejected>0 OR v_unverified>0 THEN
       v_score_status := 'provisional';
       v_provisional_basis := v_score_basis;
