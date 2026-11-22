@@ -71,7 +71,7 @@ test("Not Observed, missing, incomplete, rejected and unverified evidence stay d
 });
 
 test("evidence must match the exact evaluation context and canonical dimension version", () => {
-  assert.match(migration, /e\.evaluation_context_id IS DISTINCT FROM p_evaluation_context_id/);
+  assert.match(migration, /evidence_context_id IS DISTINCT FROM p_evaluation_context_id/);
   assert.match(migration, /el\.dimension_key=w\.dimension_key/);
   assert.match(migration, /el\.definition_version=w\.dimension_definition_version/);
   assert.match(migration, /assessment_dimension_definition_version_mismatch/);
