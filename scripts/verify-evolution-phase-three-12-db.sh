@@ -40,10 +40,21 @@ BEGIN
     SELECT count(*) INTO v_anon_policy_count
     FROM pg_policy p
     JOIN pg_class c ON c.oid=p.polrelid
-    WHERE c.relname=v_table.relname
-      AND 0 = ANY(p.polroles);
+    JOIN pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public'
+      AND c.relname=v_table.relname
+      -- PUBLIC (OID 0) policies also apply to anon, even when anon is not
+      -- explicitly listed in polroles.
+      AND (
+        0 = ANY(p.polroles)
+        OR EXISTS (
+          SELECT 1 FROM pg_roles anon_role
+          WHERE anon_role.rolname='anon'
+            AND anon_role.oid = ANY(p.polroles)
+        )
+      );
     IF v_anon_policy_count>0 THEN
-      RAISE EXCEPTION 'Anonymous role is directly named by an RLS policy on %',v_table.relname;
+      RAISE EXCEPTION 'RLS policy grants anon or PUBLIC access on Phase 3 table %',v_table.relname;
     END IF;
   END LOOP;
 
