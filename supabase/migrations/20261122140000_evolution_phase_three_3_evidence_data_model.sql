@@ -61,11 +61,27 @@ CREATE TABLE IF NOT EXISTS public.evolution_evidence_items (
   evaluation_context_id uuid NOT NULL,
   visibility text NOT NULL DEFAULT 'coaches'
     CHECK (visibility IN ('team', 'coaches', 'private')),
+  source_type text NOT NULL CHECK (
+    source_type IN ('manual_observation', 'vod_reference', 'round_note', 'match_reference')
+  ),
+  title text NOT NULL CHECK (char_length(btrim(title)) BETWEEN 1 AND 160),
+  observation text NOT NULL CHECK (char_length(btrim(observation)) BETWEEN 1 AND 4000),
+  source_locator text CHECK (
+    source_locator IS NULL OR
+    (char_length(btrim(source_locator)) BETWEEN 1 AND 2048
+      AND source_locator ~* '^https?://')
+  ),
+  occurred_at timestamptz,
+  source_metadata jsonb NOT NULL DEFAULT '{}'::jsonb
+    CHECK (jsonb_typeof(source_metadata) = 'object'),
   created_by uuid NOT NULL REFERENCES auth.users(id) ON DELETE RESTRICT,
   created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
   CONSTRAINT evolution_evidence_context_team_fk
     FOREIGN KEY (evaluation_context_id, team_id)
     REFERENCES public.evolution_evaluation_contexts(id, team_id) ON DELETE RESTRICT,
+  CONSTRAINT evolution_evidence_external_locator_required CHECK (
+    source_type NOT IN ('vod_reference', 'match_reference') OR source_locator IS NOT NULL
+  ),
   CONSTRAINT evolution_evidence_item_id_team_unique UNIQUE (id, team_id)
 );
 
@@ -144,12 +160,8 @@ BEGIN
     observation, source_locator, occurred_at, source_metadata, created_by
   ) VALUES (
     NEW.team_id, NEW.id, 1,
-    current_setting('app.evolution_evidence_source_type', true),
-    current_setting('app.evolution_evidence_title', true),
-    current_setting('app.evolution_evidence_observation', true),
-    NULLIF(current_setting('app.evolution_evidence_source_locator', true), ''),
-    NULLIF(current_setting('app.evolution_evidence_occurred_at', true), '')::timestamptz,
-    COALESCE(NULLIF(current_setting('app.evolution_evidence_source_metadata', true), '')::jsonb, '{}'::jsonb),
+    NEW.source_type, NEW.title, NEW.observation, NEW.source_locator,
+    NEW.occurred_at, NEW.source_metadata,
     NEW.created_by
   );
   RETURN NEW;
