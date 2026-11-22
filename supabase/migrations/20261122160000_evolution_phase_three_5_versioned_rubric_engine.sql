@@ -146,6 +146,10 @@ BEGIN
       RAISE EXCEPTION 'Rubric identity does not belong to the supplied team'
         USING ERRCODE = '23503';
     END IF;
+    -- Serialize version allocation per rubric identity before reading max(version_number).
+    PERFORM 1 FROM public.evolution_rubrics r
+    WHERE r.id = NEW.rubric_id AND r.team_id = NEW.team_id
+    FOR UPDATE;
     SELECT COALESCE(max(v.version_number), 0) + 1 INTO expected_version
     FROM public.evolution_rubric_versions v WHERE v.rubric_id = NEW.rubric_id;
     IF NEW.version_number <> expected_version THEN
@@ -252,6 +256,7 @@ AS $function$
 DECLARE
   rubric_status text;
   rubric_team uuid;
+  target_team uuid;
   allowed_roles text[];
   supplied_key text;
   supplied_value jsonb;
@@ -260,14 +265,15 @@ BEGIN
     SELECT v.lifecycle_status, v.team_id INTO rubric_status, rubric_team
     FROM public.evolution_rubric_versions v
     WHERE v.id = OLD.rubric_version_id;
+    target_team := OLD.team_id;
   ELSE
     SELECT v.lifecycle_status, v.team_id INTO rubric_status, rubric_team
     FROM public.evolution_rubric_versions v
     WHERE v.id = NEW.rubric_version_id;
+    target_team := NEW.team_id;
   END IF;
 
-  IF rubric_status IS DISTINCT FROM 'draft' OR rubric_team IS DISTINCT FROM
-    CASE WHEN TG_OP = 'DELETE' THEN OLD.team_id ELSE NEW.team_id END THEN
+  IF rubric_status IS DISTINCT FROM 'draft' OR rubric_team IS DISTINCT FROM target_team THEN
     RAISE EXCEPTION 'Rubric criteria can be changed only while their version is a draft'
       USING ERRCODE = '55000';
   END IF;
