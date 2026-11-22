@@ -135,7 +135,7 @@ test("PostgreSQL acceptance replays the additive migration and verifies final, p
   assert.match(dbHarness, /v_status<>'insufficient'/);
   assert.match(dbHarness, /previous_snapshot_id/);
   assert.match(dbHarness, /idempotent snapshot/);
-  assert.match(dbHarness, /prior immutable score snapshot changed/);
+  assert.match(dbHarness, /Prior immutable score snapshot changed/);
 });
 
 test("Phase 3.10 source test is in the normal build chain and database test is in CI", () => {
