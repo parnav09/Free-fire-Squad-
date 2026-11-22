@@ -106,14 +106,14 @@ BEGIN
   INSERT INTO public.evolution_evaluation_dimension_assessment_events(
     team_id,evaluation_context_id,dimension_key,dimension_definition_version,revision_number,
     assessment_state,evidence_item_id,reason,actor_user_id)
-  VALUES(v_team,v_context,v_dim,v_def,2,'rejected_evidence',v_ev,'Evidence was rejected.',auth.uid());
+  VALUES(v_team,v_context,v_dim,v_def,1,'rejected_evidence',v_ev,'Evidence was rejected.',auth.uid());
   SELECT rejected_evidence_dimension_count,assessment_status INTO v_rejected,v_state
   FROM public.evolution_evaluation_assessment_readiness WHERE evaluation_context_id=v_context;
   IF v_rejected<>1 OR v_state<>'provisional' THEN RAISE EXCEPTION 'Rejected evidence not separated'; END IF;
   INSERT INTO public.evolution_evaluation_dimension_assessment_events(
     team_id,evaluation_context_id,dimension_key,dimension_definition_version,revision_number,
     assessment_state,reason,actor_user_id)
-  VALUES(v_team,v_context,v_dim,v_def,3,'not_observed','No valid observation remains.',auth.uid());
+  VALUES(v_team,v_context,v_dim,v_def,2,'not_observed','No valid observation remains.',auth.uid());
 END $$;
 
 RESET ROLE;
