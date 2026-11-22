@@ -106,14 +106,16 @@ Acceptance: user can inspect who recorded and who verified evidence, when, and w
 Acceptance: historical evaluation can be interpreted using the exact rubric that existed when it was scored.
 
 ### 3.6 Role-Based Weight Configuration
-- Define explicit weights by role and rubric version.
-- Validate non-negative weights and valid totals.
-- Define behavior for dimensions not applicable to a role.
-- Use the canonical role snapshot that applied to the evaluated session/match.
-- Never apply a player's current role retroactively to an old evaluation.
-- Version weight sets and preserve their history.
-- Define safe behavior for missing/invalid role configuration.
-Acceptance: score is reproducible from the role snapshot and weight-set version that applied at evaluation time.
+**IMPLEMENTED — exact-head verification pending.**
+- Added team-scoped weight sets for an exact rubric version and canonical role, with sequential draft/active/retired versions.
+- Added integer basis-point weights. Activation requires each applicable active rubric dimension exactly once and exactly 10,000 basis points total (100%); non-applicable dimensions must be omitted.
+- Each weight row pins the exact canonical dimension-definition version used by the rubric. Published sets and rows are immutable; retirement closes the effective range and preserves history.
+- Added immutable evaluation-context binding to the exact match role-assignment snapshot and exact rubric version. Explicit legacy role aliases are supported; unknown/unmapped role snapshots are rejected, and current team roles are never consulted.
+- Added transaction-safe version allocation and serialization between draft weight edits and publication.
+- Added team-scoped RLS, owner/coach administration, team-member reads of published/retired history, draft privacy, anonymous denial and direct mutation restrictions.
+- Added typed validation, source-contract tests, repeatable migration, disposable PostgreSQL integration harness and GitHub Actions/build-chain wiring.
+- Point 3.6 adds no UI because it is a configuration/data-model point; the later evaluation UI point retains the existing dark theme/color grading, precise 44×44 CSS px hitboxes, alignment/no-collision and Android/tablet/laptop/desktop responsive gates.
+Acceptance: the exact historical role snapshot and exact rubric/weight-set versions are bound immutably; invalid/missing role configuration fails closed.
 
 ### 3.7 Not Observed & Missing Data Rules
 - Represent Not Observed as an explicit state, distinct from numeric zero.
