@@ -350,6 +350,7 @@ WITH CHECK (
     WHERE e.id = evolution_evidence_versions.evidence_item_id
       AND e.team_id = evolution_evidence_versions.team_id
       AND (e.created_by = (SELECT auth.uid()) OR tm.membership_role IN ('owner','coach'))
+      AND (e.visibility <> 'private' OR e.created_by = (SELECT auth.uid()))
       AND tm.user_id = (SELECT auth.uid()) AND tm.status = 'active'
   )
 );
@@ -373,6 +374,7 @@ WITH CHECK (
     WHERE e.id = evolution_evidence_dimension_links.evidence_item_id
       AND e.team_id = evolution_evidence_dimension_links.team_id
       AND (e.created_by = (SELECT auth.uid()) OR tm.membership_role IN ('owner','coach'))
+      AND (e.visibility <> 'private' OR e.created_by = (SELECT auth.uid()))
       AND tm.user_id = (SELECT auth.uid()) AND tm.status = 'active'
   )
 );
