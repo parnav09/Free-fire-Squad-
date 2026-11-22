@@ -1,6 +1,6 @@
 # Evolution Phase 3.2 — Canonical Dimension Registry
 
-**Status:** implementation added to the single Evolution Phase Three PR; exact-head CI pending.  
+**Status:** IMPLEMENTED AND VERIFIED in the single Evolution Phase Three PR.  
 **Scope:** stable dimension identity, versioned definitions, role applicability, rating metadata, lifecycle, ordering and audited legacy aliases.
 
 ## Canonical registry
@@ -47,3 +47,16 @@ Only these exact semantic aliases are recorded: communication, decision_making, 
 ## Scope boundary
 
 No scoring formula, evidence record model, rubric editor, score snapshot, production migration, legacy data conversion, production deployment or merge is included in Point 3.2. Those belong to later Evolution points or separately approved rollout work.
+
+
+## Exact-head verification result — 2026-11-22
+
+- Tested code head: `203378e4664c4fe07dc738515b2a06c5860c8dbd`.
+- GitHub Actions run #45027381290: **SUCCESS** — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45027381290.
+- Disposable PostgreSQL registry migration and invariant harness: PASS, including repeat application of the migration.
+- Phase 3.2 source-contract tests: **10 passed, 0 failed**.
+- Phase 3.1 source-contract tests in the same build: **9 passed, 0 failed**.
+- Existing Phase 2 PostgreSQL checks, staged migration/ACL checks, responsive UI checks, typecheck, complete regression test chain and Vite production build: PASS.
+- The only build warning is the existing non-fatal main chunk size warning (383.56 kB / 95.32 kB gzip).
+- No application code, migration, test code or build configuration was changed after this tested code head; only the roadmap and this report are being updated.
+- No production migration, production data change, merge or deployment occurred.
