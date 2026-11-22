@@ -9,7 +9,7 @@ const roadmap = await readFile(new URL("docs/evolution/EVOLUTION-PHASE-3-ROADMAP
 test("zero is valid observed data and Not Observed is explicitly non-numeric", () => {
   assert.match(domain, /"observed"/); assert.match(domain, /"not_observed"/);
   assert.match(migration, /rating_value BETWEEN 0 AND 10/);
-  assert.match(migration, /assessment_state = 'not_observed'[\\s\\S]*?rating_value IS NULL/);
+  assert.match(migration, /assessment_state = 'not_observed'[\s\S]*?rating_value IS NULL/);
 });
 test("Not Applicable, incomplete and rejected evidence remain distinct from missing", () => {
   for (const s of ["not_applicable","incomplete","rejected_evidence"]) {
@@ -18,9 +18,9 @@ test("Not Applicable, incomplete and rejected evidence remain distinct from miss
   assert.match(migration, /missing_dimension_count/); assert.match(migration, /assessment_state IS NULL/);
 });
 test("observed ratings require exact-context, exact-dimension evidence", () => {
-  assert.match(migration, /e\\.evaluation_context_id = NEW\\.evaluation_context_id/);
-  assert.match(migration, /dl\\.dimension_key = NEW\\.dimension_key/);
-  assert.match(migration, /dl\\.definition_version = NEW\\.dimension_definition_version/);
+  assert.match(migration, /e\.evaluation_context_id = NEW\.evaluation_context_id/);
+  assert.match(migration, /dl\.dimension_key = NEW\.dimension_key/);
+  assert.match(migration, /dl\.definition_version = NEW\.dimension_definition_version/);
   assert.match(migration, /Observed ratings require non-rejected, non-archived evidence/);
 });
 test("Not Applicable is rejected for a role-applicable dimension", () => {
@@ -34,7 +34,7 @@ test("assessment history is append-only with serialized sequential revisions", (
 });
 test("only active team owners and coaches may write assessment states", () => {
   assert.match(migration, /Active team owner or coach required/);
-  assert.match(migration, /membership_role IN \\('owner','coach'\\)/);
+  assert.match(migration, /membership_role IN \('owner','coach'\)/);
   assert.match(migration, /ENABLE ROW LEVEL SECURITY/);
 });
 test("readiness distinguishes draft, provisional, insufficient and final without a score", () => {
@@ -44,9 +44,9 @@ test("readiness distinguishes draft, provisional, insufficient and final without
 });
 test("legacy evaluations are not backfilled or rewritten", () => {
   assert.match(migration, /legacy evaluation values are deliberately not backfilled or rewritten/);
-  assert.doesNotMatch(migration, /UPDATE public\\.(daily|training|player)_/i);
+  assert.doesNotMatch(migration, /UPDATE public\.(daily|training|player)_/i);
 });
 test("coverage and deterministic scoring remain separate roadmap points", () => {
-  assert.match(roadmap, /### 3\\.8 Evidence Coverage Calculator/);
-  assert.match(roadmap, /### 3\\.9 Deterministic Scoring Engine/);
+  assert.match(roadmap, /### 3\.8 Evidence Coverage Calculator/);
+  assert.match(roadmap, /### 3\.9 Deterministic Scoring Engine/);
 });
