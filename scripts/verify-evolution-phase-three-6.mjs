@@ -55,6 +55,6 @@ test("draft-only editing and published history immutability are enforced", () =>
 
 test("role-weight binding pins exact evaluation context, role assignment and rubric", () => {
   assert.match(migration, /v_context\.role_assignment_id IS DISTINCT FROM NEW\.role_assignment_id/);
-  assert.match(migration, /v_role\.player_user_id = v_context\.player_user_id/);
+  assert.match(migration, /r\.player_user_id = v_context\.player_user_id/);
   assert.match(migration, /v_set\.rubric_version_id = v_rubric_binding\.rubric_version_id/);
 });
