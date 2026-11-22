@@ -179,7 +179,7 @@ END $$;
 
 -- Player in Alpha can read team-visible evidence, but not coach/private notes.
 SELECT set_config('request.jwt.claim.sub','30000000-0000-0000-0000-000000000003',false);
-DO $
+DO $$
 DECLARE team_count integer; private_count integer; coach_count integer;
 BEGIN
   SELECT count(*) INTO team_count FROM public.evolution_evidence_items WHERE visibility='team';
@@ -193,7 +193,7 @@ END $$;
 
 -- Active coach can read team and coach-only evidence, but not private evidence.
 SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
-DO $
+DO $$
 DECLARE team_count integer; private_count integer; coach_count integer; version_count integer;
 BEGIN
   SELECT count(*) INTO team_count FROM public.evolution_evidence_items WHERE visibility='team';
@@ -204,7 +204,7 @@ BEGIN
     RAISE EXCEPTION 'coach visibility mismatch: team %, private %, coaches %, versions %',
       team_count,private_count,coach_count,version_count;
   END IF;
-END $;
+END $$;
 
 -- Unrelated team cannot read Alpha evidence or contexts.
 SELECT set_config('request.jwt.claim.sub','20000000-0000-0000-0000-000000000002',false);
