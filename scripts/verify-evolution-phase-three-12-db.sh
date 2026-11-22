@@ -14,6 +14,12 @@ DECLARE
   v_anon_policy_count integer;
   v_function record;
 BEGIN
+  -- The private helper namespace must not be discoverable by client roles.
+  IF has_schema_privilege('anon','evolution_private','USAGE')
+    OR has_schema_privilege('authenticated','evolution_private','USAGE') THEN
+    RAISE EXCEPTION 'Client roles must not have USAGE on evolution_private';
+  END IF;
+
   -- Every Phase 3-owned public table must be protected by RLS and have an
   -- explicit policy. A table with RLS enabled but no policy is deny-all;
   -- it is still flagged here so future additions cannot silently become
@@ -55,6 +61,34 @@ BEGIN
       );
     IF v_anon_policy_count>0 THEN
       RAISE EXCEPTION 'RLS policy grants anon or PUBLIC access on Phase 3 table %',v_table.relname;
+    END IF;
+
+    -- RLS does not replace SQL privileges. Ensure anon has no direct or
+    -- inherited table privilege, including privileges granted to PUBLIC.
+    IF has_table_privilege('anon',format('public.%I',v_table.relname),'SELECT')
+      OR has_table_privilege('anon',format('public.%I',v_table.relname),'INSERT')
+      OR has_table_privilege('anon',format('public.%I',v_table.relname),'UPDATE')
+      OR has_table_privilege('anon',format('public.%I',v_table.relname),'DELETE')
+      OR has_table_privilege('anon',format('public.%I',v_table.relname),'TRUNCATE')
+      OR has_table_privilege('anon',format('public.%I',v_table.relname),'REFERENCES')
+      OR has_table_privilege('anon',format('public.%I',v_table.relname),'TRIGGER') THEN
+      RAISE EXCEPTION 'Anonymous role has direct SQL privileges on Phase 3 table %',v_table.relname;
+    END IF;
+  END LOOP;
+
+  -- Views must execute with the caller's privileges so underlying RLS applies.
+  FOR v_table IN
+    SELECT c.relname,c.reloptions
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname='public' AND c.relkind='v'
+      AND c.relname LIKE 'evolution_%'
+  LOOP
+    IF NOT ('security_invoker=true' = ANY(COALESCE(v_table.reloptions,ARRAY[]::text[]))) THEN
+      RAISE EXCEPTION 'Evolution view % is missing security_invoker=true',v_table.relname;
+    END IF;
+    IF has_table_privilege('anon',format('public.%I',v_table.relname),'SELECT') THEN
+      RAISE EXCEPTION 'Anonymous role can read Evolution view %',v_table.relname;
     END IF;
   END LOOP;
 
