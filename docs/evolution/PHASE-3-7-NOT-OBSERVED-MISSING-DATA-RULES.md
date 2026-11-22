@@ -11,7 +11,7 @@
 - **Rejected Evidence:** references evidence whose current provenance state is rejected; never treated as an observed rating.
 - **Missing:** no assessment event exists for an applicable dimension. No default rating is synthesized.
 
-Non-observed states are non-numeric and require a reason. Observed entries require evidence and a 0–10 integer rating. Rejected/archived evidence cannot support an observed rating. Pending/corrected evidence is unverified and keeps the evaluation provisional.
+Non-observed states are non-numeric and require a reason. Observed entries require evidence and a 0–10 integer rating. Rejected/archived evidence cannot support an observed rating. Pending/corrected evidence is unverified and keeps the evaluation provisional. If evidence is later rejected or archived, the readiness view stops counting that assessment as an observed dimension and treats the evidence as invalid.
 
 ## Readiness semantics
 - **Draft:** no dimension assessment has been recorded.
