@@ -344,3 +344,52 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - The final build step invokes `npm run build`; the corrected `package.json` includes `npm run test:evolution-phase-three-1`, so all 9 Phase 3.1 audit contract tests were included in that successful build.
 - At this exact head, 3.1's audit contract and full build pipeline passed. The separate canonical Evolution scoring candidate remains outside 3.1 and retains its separately documented recursive-RLS/role-weight immutability blockers; this run's Phase 2 PostgreSQL checks do not certify that separate candidate migration.
 - This checkpoint-only update follows the verified code head and does not alter application code or test configuration. A new exact-head PR run should be observed for this final checkpoint commit before claiming the current PR head is green.
+
+
+## 10. Evolution Phase 3.2 — Canonical Dimension Registry (2026-11-22)
+
+**Status: IMPLEMENTED AND VERIFIED.**
+
+- Active PR: #131 — https://github.com/parnav09/Free-fire-Squad-/pull/131 (single combined Evolution Phase Three PR; Draft, unmerged).
+- Branch: `feat/evolution-phase-three-1-existing-evaluation-audit`.
+- Exact tested code head: `203378e4664c4fe07dc738515b2a06c5860c8dbd`.
+- GitHub Actions run #45027381290: **SUCCESS** — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45027381290.
+- Branch comparison: 24 commits ahead, 0 behind `main`; PR is mergeable.
+
+### Implemented
+- Added six stable canonical dimension IDs and a single shared TypeScript registry with versioned definitions, display labels, sort order, lifecycle state, six-role applicability and integer 0–10 rating metadata.
+- Added safe key lookup and rating validation helpers.
+- Added an additive, standalone PostgreSQL registry migration independent of the later Evidence/Rubric model migration.
+- Added immutable definition-version and legacy-alias records, sequential version insertion, duplicate role-key rejection, active-order uniqueness, retirement timestamps, and prevention of retired-dimension reactivation/reordering.
+- Added exact-semantic legacy aliases only; partial categories `coordination`, `trade_support`, `map_awareness` and `consistency` remain unmapped.
+- Authenticated clients have read-only registry access; anonymous access and client writes are denied.
+- Added 10 source-contract tests and a disposable PostgreSQL integration harness. The migration is applied twice in the harness to prove repeatability.
+- Added the Phase 3.2 source tests to the normal `npm run build` chain and the PostgreSQL harness to GitHub Actions.
+
+### Verification evidence
+- Phase 3.2 PostgreSQL migration/invariant step: **PASS**.
+- Existing Evolution Phase 2.2–2.10 PostgreSQL integration steps: **PASS**.
+- Staged migration and trigger ACL checks: **PASS**.
+- Responsive UI/touch-target/permission/offline-write checks: **PASS**.
+- TypeScript typecheck: **PASS**.
+- Existing regression/source-contract test chain: **PASS**.
+- Phase 3.1 audit contract tests: **9/9 PASS**.
+- Phase 3.2 registry contract tests: **10/10 PASS**.
+- Vite production build: **PASS**. Existing chunk-size warning remains non-fatal (main JS chunk 383.56 kB / 95.32 kB gzip).
+- All job steps completed successfully on the exact code head above.
+
+### Problems found and resolved
+1. Previous Point 3.2 PR #133 was stacked on an unmerged parent branch and its comparison with current `main` was 305 commits ahead / 15 behind. It was not safe to merge wholesale.
+2. Its registry migration depended on the separate Evidence/Rubric base migration, which is not present on current `main` and belongs to a later implementation layer. Point 3.2 was isolated into a standalone registry migration.
+3. The first draft's insert trigger would have rejected its own seed rows on migration re-application. The trigger now permits only an identical existing version for `ON CONFLICT DO NOTHING`; changed definitions remain rejected.
+4. The PostgreSQL harness originally expected five rows after retirement even though retired rows must remain queryable. The assertion was corrected to expect all six historical registry entries.
+5. The previous #133 CI failure was before runner steps and therefore supplied no test evidence. The consolidated #131 CI run executed all steps and passed.
+
+### Safety and boundaries
+- No production Supabase migration or backfill.
+- No legacy evaluation/training score conversion or mutation.
+- No production deployment, merge to `main`, Auth/RLS changes outside the new registry grants/policies, or data reset.
+- Evidence model, provenance, rubric engine, role weights, scoring, snapshots and evaluation UI remain later points; they were not pulled into 3.2.
+- Previous Point 3.1 remains verified; its tests also passed in the full run above.
+
+**Next point:** 3.3 — Evidence Data Model. Do not begin it until this checkpoint is retained and the user requests continuation.
