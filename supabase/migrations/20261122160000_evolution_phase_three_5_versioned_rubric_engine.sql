@@ -309,7 +309,7 @@ BEGIN
   END IF;
 
   IF jsonb_typeof(NEW.rating_anchors) <> 'object'
-    OR jsonb_object_length(NEW.rating_anchors) <> 11 THEN
+    OR (SELECT count(*) FROM jsonb_object_keys(NEW.rating_anchors)) <> 11 THEN
     RAISE EXCEPTION 'Every rubric dimension must define exactly eleven rating anchors, 0 through 10'
       USING ERRCODE = '23514';
   END IF;
