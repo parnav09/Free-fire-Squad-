@@ -200,8 +200,8 @@ BEGIN
   -- it passes the 50% gate but must remain provisional.
   SELECT c.player_member_id,c.player_user_id,c.canonical_session_id,
          c.canonical_session_match_id,c.role_assignment_id,
-         wb.weight_set_id,wb.role_assignment_id,rb.rubric_version_id,wb.role_key
-    INTO v_player_member,v_player_user,v_session,v_match,v_role,v_set,v_role_key,v_rubric,v_status
+         wb.weight_set_id,rb.rubric_version_id,wb.role_key
+    INTO v_player_member,v_player_user,v_session,v_match,v_role,v_set,v_rubric,v_role_key
   FROM public.evolution_evaluation_contexts c
   JOIN public.evolution_evaluation_role_weight_bindings wb
     ON wb.evaluation_context_id=c.id AND wb.team_id=c.team_id
