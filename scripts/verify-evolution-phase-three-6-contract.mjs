@@ -41,7 +41,7 @@ test("weights pin the exact rubric dimension-definition version", () => {
 
 test("historical bindings require the exact match role snapshot and rubric version", () => {
   assert.match(migration, /v_context\.role_assignment_id IS DISTINCT FROM NEW\.role_assignment_id/);
-  assert.match(migration, /v_role\.player_user_id = v_context\.player_user_id/);
+  assert.match(migration, /r\.player_user_id = v_context\.player_user_id/);
   assert.match(migration, /v_set\.rubric_version_id = v_rubric_binding\.rubric_version_id/);
   assert.match(migration, /NEW\.effective_from < OLD\.created_at/);
   assert.match(migration, /v_context\.created_at < v_set\.effective_from/);
