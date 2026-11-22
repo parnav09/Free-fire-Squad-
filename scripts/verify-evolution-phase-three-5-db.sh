@@ -126,7 +126,7 @@ BEGIN
     rubric_id,team_id,version_number,title,description,effective_from,created_by
   ) VALUES (
     v_rubric,v_team,2,'Competitive Core','Version two rubric fixture',
-    clock_timestamp() - interval '1 minute',auth.uid()
+    clock_timestamp() - interval '1 day',auth.uid()
   ) RETURNING id INTO v_version_two;
 
   INSERT INTO public.evolution_rubric_dimension_criteria(
