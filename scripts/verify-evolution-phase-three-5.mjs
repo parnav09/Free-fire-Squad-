@@ -47,7 +47,7 @@ test("every canonical dimension criterion stores an exact definition version", (
 });
 
 test("each dimension requires explicit text anchors for all eleven integer ratings", () => {
-  assert.match(migration, /(SELECT count(*) FROM jsonb_object_keys(NEW.rating_anchors)) <> 11/);
+  assert.match(migration, /\(SELECT count\(\*\) FROM jsonb_object_keys\(NEW\.rating_anchors\)\) <> 11/);
   assert.match(migration, /'0','1','2','3','4','5','6','7','8','9','10'/);
   assert.match(migration, /Every rubric dimension must define exactly eleven rating anchors/);
   assert.match(domain, /RATING_KEYS/);
