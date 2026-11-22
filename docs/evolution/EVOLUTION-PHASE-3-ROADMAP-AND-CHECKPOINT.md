@@ -579,3 +579,15 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - Non-fatal warnings: Vite 383.56 kB main JS chunk, punycode deprecation, GitHub Actions Node 20 deprecation.
 - Vercel check remains separate and failed on build-rate-limit; Preview deployment is not verified.
 - No main merge, production migration, production deployment or data reset.
+
+
+### Point 3.8 final verification and consistency fix
+
+Manual comparison of the TypeScript and SQL implementations found a classification mismatch for Observed assessments backed by rejected/archived/missing evidence. Fixed the TypeScript implementation to classify these in the rejected-evidence bucket, matching PostgreSQL; unknown evidence states still fail closed. Added explicit source tests for the rejected/archived/missing cases.
+
+- Follow-up full workflow #45060733258: **SUCCESS** on code head `65c8c5daebb5d93b05916c87ba008738a853b79c`.
+- Phase 3.8 source-contract tests: 8/8 PASS.
+- Phase 3.8 PostgreSQL migration replay twice and integration: PASS.
+- Full typecheck, all repository tests, responsive UI/touch-target/permission/offline-write checks, screenshot upload and production build: PASS.
+- Remaining warnings are non-fatal: Vite main chunk 383.56 kB > 250 kB; `punycode` deprecation; GitHub Actions Node 20 action deprecation.
+- Vercel Preview is not covered by this workflow and remains unverified because of the earlier build-rate-limit failure.
