@@ -332,3 +332,15 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - CI remains NOT VERIFIED: prior exact-head runner jobs had zero executed steps; no workflow run is associated with merge commit `106ebfc43dcef632fa959a77eacfaf176d129260`. Do not mark 3.1 VERIFIED without a green exact-head run that executes the audit tests, all existing regression tests, typecheck and production build.
 - No later Evolution point has been started. The recursive-RLS and active-role-weight immutability defects belong to the existing canonical scoring candidate and remain documented blockers for its implementation/acceptance, not changes made by read-only audit point 3.1.
 - Next action: obtain a real exact-head GitHub Actions run with executed steps and green results when CI execution is permitted; otherwise keep 3.1 at AUDIT COMPLETE / CI UNVERIFIED.
+
+
+## 9. Exact-head CI result — 2026-11-22
+
+- GitHub Actions run: #45026365956 — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45026365956
+- Verified commit: `43f6a4c5f2e35097ab80e2f49ad79886e19642d0` (PR #131 head at run time).
+- Workflow: SQUAD OS — Evolution Phase Two.1–2.12 Full Verification.
+- Result: **SUCCESS**. Job completed; every listed step completed successfully.
+- Completed checks included dependency installation, Chromium setup, disposable PostgreSQL startup, Phase 2.2–2.10 migration/integration checks, staged migration and ACL hardening, responsive UI/touch-target/permission/offline-write checks, screenshot upload, and the final typecheck/test/production-bundle step.
+- The final build step invokes `npm run build`; the corrected `package.json` includes `npm run test:evolution-phase-three-1`, so all 9 Phase 3.1 audit contract tests were included in that successful build.
+- At this exact head, 3.1's audit contract and full build pipeline passed. The separate canonical Evolution scoring candidate remains outside 3.1 and retains its separately documented recursive-RLS/role-weight immutability blockers; this run's Phase 2 PostgreSQL checks do not certify that separate candidate migration.
+- This checkpoint-only update follows the verified code head and does not alter application code or test configuration. A new exact-head PR run should be observed for this final checkpoint commit before claiming the current PR head is green.
