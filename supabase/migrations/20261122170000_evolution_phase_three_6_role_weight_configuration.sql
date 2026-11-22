@@ -273,11 +273,6 @@ DECLARE
   v_set_status text;
   v_applicable_roles text[];
 BEGIN
-  -- Serialize edits with publication so an activation cannot validate a partial weight set.
-  PERFORM 1 FROM public.evolution_role_weight_sets ws
-  WHERE ws.id = CASE WHEN TG_OP = 'DELETE' THEN OLD.weight_set_id ELSE NEW.weight_set_id END
-    AND ws.team_id = CASE WHEN TG_OP = 'DELETE' THEN OLD.team_id ELSE NEW.team_id END
-  FOR UPDATE;
   IF NOT EXISTS (
     SELECT 1 FROM public.team_members tm
     WHERE tm.team_id = CASE WHEN TG_OP = 'DELETE' THEN OLD.team_id ELSE NEW.team_id END
@@ -286,6 +281,11 @@ BEGIN
   ) THEN
     RAISE EXCEPTION 'active_owner_or_coach_required' USING ERRCODE = '42501';
   END IF;
+  -- Serialize edits with publication so an activation cannot validate a partial weight set.
+  PERFORM 1 FROM public.evolution_role_weight_sets ws
+  WHERE ws.id = CASE WHEN TG_OP = 'DELETE' THEN OLD.weight_set_id ELSE NEW.weight_set_id END
+    AND ws.team_id = CASE WHEN TG_OP = 'DELETE' THEN OLD.team_id ELSE NEW.team_id END
+  FOR UPDATE;
 
   IF TG_OP = 'UPDATE' AND (
     NEW.weight_set_id IS DISTINCT FROM OLD.weight_set_id
