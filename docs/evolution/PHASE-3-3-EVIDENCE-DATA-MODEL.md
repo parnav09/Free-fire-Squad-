@@ -12,6 +12,7 @@
 - Evidence identity is separate from its content history. The evidence row is immutable; version 1 is inserted automatically from the initial submitted content, and later corrections append sequential versions.
 - Dimension links reference the exact immutable (dimension_key, definition_version) from the Phase 3.2 canonical registry.
 - Evidence sources are explicit: manual observation, VOD reference, round note and match reference. VOD/match references require an HTTP(S) locator. This stores a reference only; it does not claim automatic VOD analysis.
+- Every new evidence item starts with status pending. Clients cannot self-verify, reject or mark evidence corrected; provenance/verification transitions are deferred to Point 3.4.
 - Visibility is explicit: team, coaches or private. The author can read their own record; team members can read team-visible records; active owners/coaches can read coach-visible records; private records remain author-only.
 - Attachments are not enabled in this point. No Storage bucket, public file URL or unreviewed attachment access policy is introduced.
 
@@ -29,6 +30,7 @@
 - Version and dimension-link records cannot be updated or deleted.
 - Evidence identity/context cannot be updated or deleted.
 - Authenticated access is governed by RLS; anonymous reads are revoked.
+- Evidence status is constrained to pending on client creation; status transitions require the later provenance/verification point.
 - Context creation and evidence creation are limited to active team owners/coaches for this initial data-model boundary.
 - No policy queries the rubric tables; this point does not import the unmerged rubric candidate or repeat its recursive-RLS policy graph.
 - No legacy daily_scores or training_results are backfilled, converted, rewritten or deleted.
