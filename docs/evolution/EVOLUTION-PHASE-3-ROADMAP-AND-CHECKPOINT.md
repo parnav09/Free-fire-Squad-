@@ -320,3 +320,15 @@ NON-NEGOTIABLE:
 
 START HERE:
 Perform the mandatory resume procedure. The roadmap currently records Phase 3 as roadmap-only and point 3.1 as not started unless newer repository evidence proves otherwise. Start/continue Evolution Phase 3.1 Existing Evaluation System Audit. Do not ask the user where work stopped until you have exhausted repository/PR/commit/CI/checkpoint evidence.
+
+
+## 8. Session update — 2026-11-22
+
+- Re-inspected PR #131, the exact PR head, the current `main` package manifest, audit report, contract test, and GitHub Actions job metadata.
+- Found and fixed a PR integration regression: the stale branch's `package.json` build script omitted the existing Evolution Phase One and Phase Two test commands present on current `main`. Restored the current `main` build/test pipeline and appended `test:evolution-phase-three-1`; no existing test commands were removed.
+- Fix commit: `01cadd7e1343ffa6a7754f7aa24b5b5b806859dc`.
+- Reconciled the feature branch with current `main` commit `5c2e9f6a46ec88d33059f5072acf469d032fadce` using merge commit `106ebfc43dcef632fa959a77eacfaf176d129260`. Compare result at that head: 12 commits ahead, 0 behind; only the intended four Phase 3.1 files differ from `main`.
+- PR #131 remains open and Draft. No merge to `main`, no production deployment, no Supabase migration, and no data changes.
+- CI remains NOT VERIFIED: prior exact-head runner jobs had zero executed steps; no workflow run is associated with merge commit `106ebfc43dcef632fa959a77eacfaf176d129260`. Do not mark 3.1 VERIFIED without a green exact-head run that executes the audit tests, all existing regression tests, typecheck and production build.
+- No later Evolution point has been started. The recursive-RLS and active-role-weight immutability defects belong to the existing canonical scoring candidate and remain documented blockers for its implementation/acceptance, not changes made by read-only audit point 3.1.
+- Next action: obtain a real exact-head GitHub Actions run with executed steps and green results when CI execution is permitted; otherwise keep 3.1 at AUDIT COMPLETE / CI UNVERIFIED.
