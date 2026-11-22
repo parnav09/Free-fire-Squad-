@@ -14,6 +14,18 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$EVIDENCE_MIGRATION"
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$EVIDENCE_MIGRATION"
 
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+INSERT INTO auth.users(id) VALUES ('70000000-0000-0000-0000-000000000007');
+INSERT INTO public.team_members(
+  id,team_id,user_id,membership_role,status,display_name,player_number,assigned_role
+) VALUES (
+  'a7000000-0000-0000-0000-000000000007',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  '70000000-0000-0000-0000-000000000007',
+  'coach','active','Coach Seven',4,NULL
+);
+SQL
+
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','10000000-0000-0000-0000-000000000001',false);
 DO $$
@@ -166,8 +178,8 @@ BEGIN
 END $$;
 
 -- Player in Alpha can read team-visible evidence, but not coach/private notes.
-SELECT set_config('request.jwt.claim.sub','20000000-0000-0000-0000-000000000002',false);
-DO $$
+SELECT set_config('request.jwt.claim.sub','30000000-0000-0000-0000-000000000003',false);
+DO $
 DECLARE team_count integer; private_count integer; coach_count integer;
 BEGIN
   SELECT count(*) INTO team_count FROM public.evolution_evidence_items WHERE visibility='team';
@@ -179,8 +191,23 @@ BEGIN
   END IF;
 END $$;
 
+-- Active coach can read team and coach-only evidence, but not private evidence.
+SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
+DO $
+DECLARE team_count integer; private_count integer; coach_count integer; version_count integer;
+BEGIN
+  SELECT count(*) INTO team_count FROM public.evolution_evidence_items WHERE visibility='team';
+  SELECT count(*) INTO private_count FROM public.evolution_evidence_items WHERE visibility='private';
+  SELECT count(*) INTO coach_count FROM public.evolution_evidence_items WHERE visibility='coaches';
+  SELECT count(*) INTO version_count FROM public.evolution_evidence_versions;
+  IF team_count <> 1 OR private_count <> 0 OR coach_count <> 1 OR version_count <> 3 THEN
+    RAISE EXCEPTION 'coach visibility mismatch: team %, private %, coaches %, versions %',
+      team_count,private_count,coach_count,version_count;
+  END IF;
+END $;
+
 -- Unrelated team cannot read Alpha evidence or contexts.
-SELECT set_config('request.jwt.claim.sub','30000000-0000-0000-0000-000000000003',false);
+SELECT set_config('request.jwt.claim.sub','20000000-0000-0000-0000-000000000002',false);
 DO $$
 DECLARE evidence_count integer; context_count integer; version_count integer;
 BEGIN
