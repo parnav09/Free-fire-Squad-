@@ -58,6 +58,7 @@ test("final, provisional and insufficient outcomes cannot leak into the wrong sc
   assert.match(migration, /v_score_status := 'insufficient'/);
   assert.match(migration, /v_score_status := 'provisional'/);
   assert.match(migration, /v_score_status := 'final'/);
+  for (const reason of ['no_valid_observed_weight','coverage_below_minimum','missing_dimensions','incomplete_dimensions','rejected_or_ineligible_evidence','unverified_evidence']) assert.ok(migration.includes(reason));
 });
 
 test("Not Observed, missing, incomplete, rejected and unverified evidence stay distinct", () => {
