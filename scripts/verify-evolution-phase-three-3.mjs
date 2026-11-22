@@ -49,6 +49,8 @@ test("evidence has stable identity, explicit source types, bounded content and v
   assert.match(migration, /source_type IN \('manual_observation', 'vod_reference', 'round_note', 'match_reference'\)/);
   assert.match(migration, /title text NOT NULL CHECK/);
   assert.match(migration, /observation text NOT NULL CHECK/);
+  assert.match(migration, /status text NOT NULL DEFAULT 'pending'/);
+  assert.match(migration, /AND status = 'pending'/);
   assert.match(migration, /visibility IN \('team', 'coaches', 'private'\)/);
   assert.match(migration, /source_locator ~\* '\^https\?:\/\/'/);
   assert.match(migration, /source_metadata jsonb NOT NULL/);
