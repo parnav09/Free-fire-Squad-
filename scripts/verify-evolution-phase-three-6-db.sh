@@ -88,7 +88,7 @@ BEGIN
     JOIN public.evolution_dimension_definition_versions dd
       ON dd.dimension_key=rc.dimension_key
      AND dd.definition_version=rc.dimension_definition_version
-    JOIN public.evolution_dimension_registry dr USING (dimension_key)
+    JOIN public.evolution_dimension_registry dr ON dr.dimension_key=rc.dimension_key
     WHERE rc.rubric_version_id=v_rubric_version
       AND dr.lifecycle_status='active'
       AND v_role_key=ANY(dd.applicable_role_keys)
