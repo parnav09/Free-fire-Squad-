@@ -40,7 +40,9 @@ BEGIN
     coverage_percent,coverage_status
   INTO v_count,v_observed,v_verified,v_unverified,v_percent,v_status
   FROM public.evolution_evidence_coverage_snapshots WHERE id=v_snapshot;
-  IF v_count < 2 OR v_observed < 1 OR v_verified < 1 OR v_percent IS NULL OR v_status NOT IN ('partial','complete','insufficient') THEN
+  IF v_count < 2 OR v_observed <> 1 OR v_verified <> 1 OR v_unverified <> 0
+    OR v_percent IS DISTINCT FROM round(10000::numeric / v_count)::numeric / 100
+    OR v_status <> 'partial' THEN
     RAISE EXCEPTION 'Coverage snapshot counts/status mismatch: %, %, %, %, %, %',
       v_count,v_observed,v_verified,v_unverified,v_percent,v_status;
   END IF;
