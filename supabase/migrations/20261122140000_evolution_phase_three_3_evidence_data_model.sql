@@ -260,6 +260,7 @@ GRANT SELECT, INSERT ON public.evolution_evidence_items TO authenticated;
 GRANT SELECT, INSERT ON public.evolution_evidence_versions TO authenticated;
 GRANT SELECT, INSERT ON public.evolution_evidence_dimension_links TO authenticated;
 
+DROP POLICY IF EXISTS evolution_evaluation_contexts_team_read ON public.evolution_evaluation_contexts;
 CREATE POLICY evolution_evaluation_contexts_team_read
 ON public.evolution_evaluation_contexts FOR SELECT TO authenticated
 USING (EXISTS (
@@ -275,6 +276,7 @@ USING (EXISTS (
     AND tm.user_id = (SELECT auth.uid())
     AND tm.status = 'active'
 ));
+DROP POLICY IF EXISTS evolution_evaluation_contexts_staff_insert ON public.evolution_evaluation_contexts;
 CREATE POLICY evolution_evaluation_contexts_staff_insert
 ON public.evolution_evaluation_contexts FOR INSERT TO authenticated
 WITH CHECK (
@@ -287,6 +289,7 @@ WITH CHECK (
   )
 );
 
+DROP POLICY IF EXISTS evolution_evidence_items_visibility_read ON public.evolution_evidence_items;
 CREATE POLICY evolution_evidence_items_visibility_read
 ON public.evolution_evidence_items FOR SELECT TO authenticated
 USING (
@@ -307,6 +310,7 @@ USING (
     )
   )
 );
+DROP POLICY IF EXISTS evolution_evidence_items_staff_insert ON public.evolution_evidence_items;
 CREATE POLICY evolution_evidence_items_staff_insert
 ON public.evolution_evidence_items FOR INSERT TO authenticated
 WITH CHECK (
@@ -324,6 +328,7 @@ WITH CHECK (
   )
 );
 
+DROP POLICY IF EXISTS evolution_evidence_versions_visibility_read ON public.evolution_evidence_versions;
 CREATE POLICY evolution_evidence_versions_visibility_read
 ON public.evolution_evidence_versions FOR SELECT TO authenticated
 USING (EXISTS (
@@ -331,6 +336,7 @@ USING (EXISTS (
   WHERE e.id = evolution_evidence_versions.evidence_item_id
     AND e.team_id = evolution_evidence_versions.team_id
 ));
+DROP POLICY IF EXISTS evolution_evidence_versions_staff_insert ON public.evolution_evidence_versions;
 CREATE POLICY evolution_evidence_versions_staff_insert
 ON public.evolution_evidence_versions FOR INSERT TO authenticated
 WITH CHECK (
@@ -345,6 +351,7 @@ WITH CHECK (
   )
 );
 
+DROP POLICY IF EXISTS evolution_evidence_dimension_links_visibility_read ON public.evolution_evidence_dimension_links;
 CREATE POLICY evolution_evidence_dimension_links_visibility_read
 ON public.evolution_evidence_dimension_links FOR SELECT TO authenticated
 USING (EXISTS (
@@ -352,6 +359,7 @@ USING (EXISTS (
   WHERE e.id = evolution_evidence_dimension_links.evidence_item_id
     AND e.team_id = evolution_evidence_dimension_links.team_id
 ));
+DROP POLICY IF EXISTS evolution_evidence_dimension_links_staff_insert ON public.evolution_evidence_dimension_links;
 CREATE POLICY evolution_evidence_dimension_links_staff_insert
 ON public.evolution_evidence_dimension_links FOR INSERT TO authenticated
 WITH CHECK (
