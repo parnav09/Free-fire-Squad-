@@ -28,15 +28,20 @@ export function resolveCanonicalRoleKeyFromSnapshot(value: unknown): CanonicalRo
   const normalized = value.trim().toLowerCase();
   const aliases: Readonly<Record<string, CanonicalRoleKey>> = {
     "primary rusher": "primary_rusher",
+    "primary-rusher": "primary_rusher",
     primary_rusher: "primary_rusher",
     "secondary rusher": "secondary_rusher",
+    "secondary-rusher": "secondary_rusher",
     secondary_rusher: "secondary_rusher",
     "third rusher flanker": "third_rusher_flanker",
+    "third-rusher-flanker": "third_rusher_flanker",
     third_rusher_flanker: "third_rusher_flanker",
     "sniper + igl": "sniper_igl",
     "sniper igl": "sniper_igl",
+    "sniper-igl": "sniper_igl",
     sniper_igl: "sniper_igl",
     "substitute flex": "substitute_flex",
+    "substitute-flex": "substitute_flex",
     substitute_flex: "substitute_flex",
     other: "other",
   };
