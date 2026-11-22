@@ -37,7 +37,7 @@ test("every Phase 3-owned table enables RLS and declares an explicit policy", ()
 
 test("every Phase 3 SECURITY DEFINER function pins an empty search_path", () => {
   const definitions = [...combined.matchAll(/CREATE OR REPLACE FUNCTION\s+([\w.]+)\s*\(([\s\S]*?)\)\s*RETURNS[\s\S]*?AS \$function\$/gi)];
-  const privileged = definitions.filter((m) => /SECURITY DEFINER/i.test(m[0].slice(0, m[0].indexOf("AS $function$")));
+  const privileged = definitions.filter((m) => /SECURITY DEFINER/i.test(m[0].slice(0, m[0].indexOf("AS $function$"))));
   assert.ok(privileged.length >= 20, `Expected trigger/RPC security-definer inventory; found ${privileged.length}`);
   for (const definition of privileged) {
     const header = definition[0].slice(0, definition[0].indexOf("AS $function$"));
@@ -57,7 +57,7 @@ test("private trigger and lock functions revoke every client execution grant", (
 
 test("public SECURITY DEFINER RPCs deny PUBLIC and anon while explicit grants stay deliberate", () => {
   const definitions = [...combined.matchAll(/CREATE OR REPLACE FUNCTION\s+(public\.[\w]+)\s*\(([\s\S]*?)\)\s*RETURNS[\s\S]*?AS \$function\$/gi)];
-  const privileged = definitions.filter((m) => /SECURITY DEFINER/i.test(m[0].slice(0, m[0].indexOf("AS $function$")));
+  const privileged = definitions.filter((m) => /SECURITY DEFINER/i.test(m[0].slice(0, m[0].indexOf("AS $function$"))));
   assert.ok(privileged.length >= 3);
   for (const definition of privileged) {
     const name = definition[1];
