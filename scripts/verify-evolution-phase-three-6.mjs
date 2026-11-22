@@ -34,6 +34,7 @@ test("rubric dimension-definition versions must match exactly", () => {
 
 test("historical role labels resolve only through explicit canonical aliases", () => {
   assert.match(domain, /"primary rusher": "primary_rusher"/);
+  assert.match(domain, /"primary-rusher": "primary_rusher"/);
   assert.match(domain, /"sniper \+ igl": "sniper_igl"/);
   assert.match(domain, /return aliases\[normalized\] \?\? null/);
   assert.match(migration, /canonical_role_key_from_snapshot/);
