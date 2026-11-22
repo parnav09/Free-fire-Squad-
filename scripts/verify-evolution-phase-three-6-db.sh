@@ -44,7 +44,15 @@ BEGIN
   END IF;
 
   SELECT r.id,r.player_user_id,r.canonical_session_id,r.canonical_session_match_id,
-         evolution_private.canonical_role_key_from_snapshot(r.role_key_snapshot),
+         CASE lower(btrim(r.role_key_snapshot))
+           WHEN 'primary rusher' THEN 'primary_rusher'
+           WHEN 'secondary rusher' THEN 'secondary_rusher'
+           WHEN 'third rusher flanker' THEN 'third_rusher_flanker'
+           WHEN 'sniper + igl' THEN 'sniper_igl'
+           WHEN 'sniper igl' THEN 'sniper_igl'
+           WHEN 'substitute flex' THEN 'substitute_flex'
+           WHEN 'other' THEN 'other'
+           ELSE NULL END,
          tm.id
     INTO v_role_assignment,v_player_user,v_session,v_match,v_role_key,v_player_member
   FROM public.canonical_session_match_roles r
@@ -52,7 +60,10 @@ BEGIN
     ON tm.team_id=r.team_id AND tm.user_id=r.player_user_id AND tm.status='active'
   WHERE r.team_id=v_team
     AND r.role_assignment_status IN ('assigned','retired')
-    AND evolution_private.canonical_role_key_from_snapshot(r.role_key_snapshot) IS NOT NULL
+    AND lower(btrim(r.role_key_snapshot)) IN (
+      'primary rusher','secondary rusher','third rusher flanker',
+      'sniper + igl','sniper igl','substitute flex','other'
+    )
   ORDER BY r.changed_at,r.id LIMIT 1;
   IF v_role_assignment IS NULL THEN
     RAISE EXCEPTION 'Phase 2.6 canonical match role snapshot fixture missing';
