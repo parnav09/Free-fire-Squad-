@@ -61,6 +61,8 @@ CREATE TABLE IF NOT EXISTS public.evolution_evidence_items (
   evaluation_context_id uuid NOT NULL,
   visibility text NOT NULL DEFAULT 'coaches'
     CHECK (visibility IN ('team', 'coaches', 'private')),
+  status text NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending', 'verified', 'rejected', 'corrected')),
   source_type text NOT NULL CHECK (
     source_type IN ('manual_observation', 'vod_reference', 'round_note', 'match_reference')
   ),
@@ -315,6 +317,7 @@ CREATE POLICY evolution_evidence_items_staff_insert
 ON public.evolution_evidence_items FOR INSERT TO authenticated
 WITH CHECK (
   created_by = (SELECT auth.uid())
+  AND status = 'pending'
   AND EXISTS (
     SELECT 1 FROM public.team_members tm
     WHERE tm.team_id = evolution_evidence_items.team_id
