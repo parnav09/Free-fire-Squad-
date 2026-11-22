@@ -566,3 +566,16 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - No production migration, data reset, merge to main or production deployment.
 
 **Verification status:** Not run by design in this implementation step. The next requested verification must run the Phase 3.8 source tests, apply/reapply its migration through the Phase 3.7 dependency harness, exercise snapshot idempotency/ACL/immutability, and run the complete CI/build chain.
+
+
+### Point 3.8 verification checkpoint
+
+- Phase 3.8 PostgreSQL migration replayed twice in the isolated disposable CI database: PASS.
+- Database integration: `Evolution Phase 3.8 evidence coverage calculator PostgreSQL PASS`.
+- Phase 3.8 source-contract tests: 8/8 PASS.
+- PostgreSQL behavior checked: historical binding lookup, calculation output/count consistency, deterministic idempotent repeat, immutable snapshots, restricted insert/update/delete and anonymous read ACLs.
+- Full workflow #45060071552: SUCCESS on exact PR head `e514de2d9317948fd77069cfb7a7422904ce715b`.
+- Typecheck, full source-test chain, responsive UI/touch-target/permission/offline-write checks, screenshot artifact and production build: PASS.
+- Non-fatal warnings: Vite 383.56 kB main JS chunk, punycode deprecation, GitHub Actions Node 20 deprecation.
+- Vercel check remains separate and failed on build-rate-limit; Preview deployment is not verified.
+- No main merge, production migration, production deployment or data reset.
