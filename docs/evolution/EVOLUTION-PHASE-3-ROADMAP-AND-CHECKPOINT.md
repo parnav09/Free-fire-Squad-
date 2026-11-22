@@ -438,7 +438,7 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 
 ## 12. Evolution Phase 3.4 — Evidence Provenance & Verification (2026-11-22)
 
-**Status: IMPLEMENTED — exact-head CI verification pending.**
+**Status: IMPLEMENTED AND VERIFIED.**
 
 - Active PR: #131 — single consolidated Evolution Phase Three PR, Draft/unmerged.
 - Migration: `supabase/migrations/20261122150000_evolution_phase_three_4_evidence_provenance_verification.sql`.
@@ -463,6 +463,16 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 - Verify event ledger is append-only, authenticated direct writes and anonymous RPC execution are denied.
 - Run complete source-contract, PostgreSQL, typecheck, regression, responsive UI/touch-target and Vite production build checks on the exact latest PR head.
 
-**Exact-head CI result:** pending. Do not mark Point 3.4 VERIFIED until the full GitHub Actions workflow passes on the final exact PR head. Fix all failures and rerun after the final code/documentation update.
+### Exact-head CI acceptance
 
-**Next point:** 3.5 — Versioned Rubric Engine, only after Point 3.4 exact-head CI is green.
+- Tested code head: `be33196f2008127c141b93bd4bf343f9f41d31ef`.
+- GitHub Actions run #45033317911: **SUCCESS** — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45033317911.
+- Point 3.4 disposable PostgreSQL integration: **PASS**, including migration re-application, pending event seeding, coach verification, correction version linkage, return-to-pending, rejection reason enforcement, terminal archival, private evidence denial, author self-verification denial, player denial, duplicate candidate lookup without merging, direct event write denial and anonymous ACLs.
+- Point 3.4 source-contract tests: **12/12 PASS**.
+- Phase 3.2 and 3.3 PostgreSQL integrations, Phase 2.2–2.10 database checks, staged migration/trigger ACL checks, responsive UI/touch-target/permission/offline-write checks, screenshot upload, full regression/source tests, TypeScript typecheck and Vite production build: **PASS**.
+- Existing non-fatal Vite chunk-size warning remains.
+- One source-contract assertion wording mismatch was corrected after the first run; the Phase 3.4 PostgreSQL integration passed on that first run. The final exact-head run passed all checks.
+
+**Point 3.4 acceptance: VERIFIED.**
+
+**Next point:** 3.5 — Versioned Rubric Engine. Do not start it until explicitly requested.
