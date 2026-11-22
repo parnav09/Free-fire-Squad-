@@ -201,7 +201,7 @@ END $$;
 
 -- Active coach can read team and coach-only evidence, but not private evidence.
 SELECT set_config('request.jwt.claim.sub','70000000-0000-0000-0000-000000000007',false);
-DO $
+DO $$
 DECLARE team_count integer; private_count integer; coach_count integer; version_count integer; private_evidence_id uuid;
 BEGIN
   SELECT count(*) INTO team_count FROM public.evolution_evidence_items WHERE visibility='team';
