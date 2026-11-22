@@ -448,7 +448,7 @@ CREATE POLICY evolution_rubrics_team_read ON public.evolution_rubrics
           tm.membership_role IN ('owner','coach')
           OR EXISTS (
             SELECT 1 FROM public.evolution_rubric_versions v
-            WHERE v.rubric_id = evolution_rubrics.id AND v.lifecycle_status = 'active'
+            WHERE v.rubric_id = evolution_rubrics.id AND v.lifecycle_status IN ('active','retired')
           )
         )
     )
@@ -477,7 +477,7 @@ CREATE POLICY evolution_rubric_versions_team_read ON public.evolution_rubric_ver
         AND tm.user_id = auth.uid() AND tm.status = 'active'
         AND (
           tm.membership_role IN ('owner','coach')
-          OR evolution_rubric_versions.lifecycle_status = 'active'
+          OR evolution_rubric_versions.lifecycle_status IN ('active','retired')
         )
     )
   );
@@ -528,7 +528,7 @@ CREATE POLICY evolution_rubric_criteria_team_read ON public.evolution_rubric_dim
         AND tm.user_id = auth.uid() AND tm.status = 'active'
         AND (
           tm.membership_role IN ('owner','coach')
-          OR v.lifecycle_status = 'active'
+          OR v.lifecycle_status IN ('active','retired')
         )
     )
   );
