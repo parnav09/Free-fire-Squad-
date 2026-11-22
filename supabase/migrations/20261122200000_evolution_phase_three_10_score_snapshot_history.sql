@@ -290,6 +290,20 @@ BEGIN
   END IF;
 
   IF EXISTS (
+    SELECT a.evidence_item_id
+    FROM public.evolution_evaluation_current_dimension_assessments a
+    JOIN public.evolution_role_dimension_weights w
+      ON w.weight_set_id=v_weight_set AND w.team_id=v_team
+      AND w.dimension_key=a.dimension_key
+    WHERE a.evaluation_context_id=p_evaluation_context_id
+      AND a.team_id=v_team AND a.evidence_item_id IS NOT NULL
+    GROUP BY a.evidence_item_id
+    HAVING count(DISTINCT a.dimension_key)>1
+  ) THEN
+    RAISE EXCEPTION 'evidence_identity_reused_across_dimensions' USING ERRCODE = '23514';
+  END IF;
+
+  IF EXISTS (
     SELECT 1
     FROM public.evolution_evaluation_current_dimension_assessments a
     JOIN public.evolution_evidence_items e
@@ -412,6 +426,12 @@ BEGIN
       RAISE EXCEPTION 'not_applicable_dimension_cannot_exist_in_bound_role_weight_set'
         USING ERRCODE = '23514';
     ELSIF v_row.assessment_state='rejected_evidence' THEN
+      IF v_row.evidence_context_id IS DISTINCT FROM p_evaluation_context_id
+        OR NOT coalesce(v_row.exact_dimension_link,false)
+        OR coalesce(v_row.evidence_status,'')<>'rejected' THEN
+        RAISE EXCEPTION 'rejected_evidence_assessment_must_reference_exact_rejected_evidence'
+          USING ERRCODE = '23514';
+      END IF;
       v_rejected := v_rejected + 1;
     ELSIF v_row.assessment_state='observed' THEN
       IF v_row.rating_value IS NULL OR v_row.rating_value NOT BETWEEN 0 AND 10 THEN
