@@ -52,7 +52,7 @@ No scoring formula, rubric version engine, role weights, verification workflow, 
 Whenever a later Evolution point introduces or changes UI, its acceptance gate must include:
 - Preserve the existing Squad OS dark theme, color grading, component tokens and visual language.
 - Responsive QA on narrow Android/mobile, tablet and desktop widths.
-- Interactive hitboxes at least 44×44 CSS px where practical, with no clipped or overlapping targets.
+- All interactive touch targets at least 44×44 CSS px, with the full visible control surface clickable and no clipped, overlapping or dead hit areas.
 - Consistent alignment for controls, labels, helper text, cards, headings and action rows.
 - Clear text hierarchy, readable contrast, natural wrapping and no truncation of important actions or values.
 - Role-based visibility: show only actions/data the current user is authorized to see, while backend RLS remains authoritative.
