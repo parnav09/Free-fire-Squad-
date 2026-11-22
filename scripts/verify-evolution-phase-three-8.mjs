@@ -1,7 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { calculateEvidenceCoverage } from "../src/lib/evolution-evidence-coverage.js";
+import ts from "typescript";
+const domainSource = await readFile(new URL("src/lib/evolution-evidence-coverage.ts", new URL("../", import.meta.url)), "utf8");
+const compiledDomain = ts.transpileModule(domainSource, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+}).outputText;
+const moduleUrl = `data:text/javascript;base64,${Buffer.from(compiledDomain).toString("base64")}`;
+const { calculateEvidenceCoverage } = await import(moduleUrl);
 
 const root = new URL("../", import.meta.url);
 const migration = await readFile(new URL("supabase/migrations/20261122190000_evolution_phase_three_8_evidence_coverage_calculator.sql", root), "utf8");
