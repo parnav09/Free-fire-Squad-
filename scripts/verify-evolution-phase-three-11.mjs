@@ -94,7 +94,7 @@ test("database harness replays migration twice and checks trigger/ACL/lock behav
   }
   assert.match(dbHarness, /pg_try_advisory_xact_lock/);
   assert.match(dbHarness, /pg_sleep\(2\)/);
-  assert.match(dbHarness, /AFTER RELEASE/);
+  assert.match(dbHarness, /AFTER_RELEASE/);
 });
 
 test("database harness validates the single-child uniqueness invariant", () => {
