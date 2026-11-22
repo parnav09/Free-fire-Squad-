@@ -97,6 +97,7 @@ USING (EXISTS (
   SELECT 1 FROM public.team_members tm
   WHERE tm.team_id = evolution_evidence_coverage_snapshots.team_id
     AND tm.user_id = auth.uid() AND tm.status = 'active'
+    AND tm.membership_role IN ('owner','coach')
 ));
 
 CREATE OR REPLACE FUNCTION public.calculate_evolution_evidence_coverage(p_evaluation_context_id uuid)
@@ -175,7 +176,7 @@ BEGIN
   WITH dimensions AS (
     SELECT item->>'assessment_state' AS assessment_state,
       item->>'evidence_status' AS evidence_status
-    FROM jsonb_array_elements(v_inputs) item
+    FROM jsonb_array_elements(v_inputs) AS d(item)
   )
   SELECT count(*)::integer,
     count(*) FILTER (WHERE assessment_state = 'observed'
