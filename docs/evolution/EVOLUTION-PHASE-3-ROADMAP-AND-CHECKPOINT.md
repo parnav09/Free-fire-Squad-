@@ -475,4 +475,31 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 
 **Point 3.4 acceptance: VERIFIED.**
 
-**Next point:** 3.5 — Versioned Rubric Engine. Do not start it until explicitly requested.
+**Next point:** 3.5 — Versioned Rubric Engine. (Superseded by the implementation checkpoint in Section 13.)
+
+
+## 13. Evolution Phase 3.5 — Versioned Rubric Engine (2026-11-22)
+
+**Status: IMPLEMENTED — exact-head verification pending.**
+
+- Active PR: #131 — the single consolidated Evolution Phase Three PR; Draft/unmerged.
+- Branch: feat/evolution-phase-three-1-existing-evaluation-audit.
+- Migration: supabase/migrations/20261122160000_evolution_phase_three_5_versioned_rubric_engine.sql.
+- Added stable team-scoped rubric identities and sequential rubric-version records.
+- Added draft, active and retired lifecycle enforcement. Only active team owners/coaches may create or manage rubric definitions.
+- Draft versions remain editable. Activation publishes an immutable version only after every active canonical dimension has complete criteria and eleven explicit 0–10 text anchors.
+- Criteria reference the exact Phase 3.2 canonical dimension-definition version. Optional role guidance is checked against that definition's applicable canonical roles.
+- Effective start/end dates and publication/retirement actor timestamps are retained. A rubric identity may have only one active version at a time.
+- Added immutable evaluation-context-to-rubric-version bindings. A binding accepts only the active version effective when the context was created; one context cannot be rebound to another rubric version.
+- Added team-scoped RLS and grants: active team members can read active rubric content; active owners/coaches can manage drafts and lifecycle transitions; anonymous reads and direct mutation of published/bound records are denied.
+- Added src/lib/evolution-rubrics.ts using the existing canonical dimension and role registry; no duplicate registry was introduced.
+- Added scripts/verify-evolution-phase-three-5.mjs and scripts/verify-evolution-phase-three-5-db.sh. The PostgreSQL harness chains from the Phase 3.4 disposable integration, applies the new migration twice, and tests publication, version progression, immutable history, effective dates, exact binding, invalid anchors/roles, RLS and grants.
+- Added the Phase 3.5 source test to npm run build and its disposable PostgreSQL harness to GitHub Actions.
+- Added docs/evolution/PHASE-3-5-VERSIONED-RUBRIC-ENGINE.md.
+- No scoring formula, role weights, evidence coverage calculator, score snapshots, evaluation UI, legacy conversion, production migration, production deployment, merge to main or data reset.
+
+### Exact-head acceptance
+
+Pending. The full GitHub Actions workflow must execute the Phase 3.5 PostgreSQL integration, all source-contract/regression tests, responsive UI/touch-target checks, TypeScript typecheck and Vite production build on the exact latest PR head. Any failure must be fixed and the full workflow rerun on the resulting final head. Do not mark Point 3.5 VERIFIED based only on code presence or an earlier SHA.
+
+**Next action:** inspect the first exact-head CI run, correct any migration/test/typecheck/build failures, and rerun until the exact latest PR head is green. Then record the final SHA and workflow run ID here before beginning Point 3.6.
