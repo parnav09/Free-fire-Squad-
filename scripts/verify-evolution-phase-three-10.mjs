@@ -73,6 +73,8 @@ test("evidence must match the exact evaluation context and canonical dimension v
   assert.match(migration, /el\.dimension_key=w\.dimension_key/);
   assert.match(migration, /el\.definition_version=w\.dimension_definition_version/);
   assert.match(migration, /assessment_dimension_definition_version_mismatch/);
+  assert.match(migration, /evidence_identity_reused_across_dimensions/);
+  assert.match(migration, /rejected_evidence_assessment_must_reference_exact_rejected_evidence/);
 });
 
 test("private evidence is not copied into a staff snapshot by another author", () => {
