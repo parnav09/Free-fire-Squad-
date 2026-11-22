@@ -421,15 +421,16 @@ Perform the mandatory resume procedure. The roadmap currently records Phase 3 as
 
 ### Point 3.3 exact-head CI acceptance — 2026-11-22
 
-- Tested code head: 064fdc00d21a303f4dabd0558b3f71738e101ed9.
-- GitHub Actions run #45030533118: **SUCCESS** — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45030533118.
+- Tested code head: 5373d5e122148ff032161cebce3f10028eb8d61f.
+- GitHub Actions run #45031066921: **SUCCESS** — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45031066921.
 - Point 3.3 PostgreSQL integration: **PASS**; the harness applied the 3.3 migration twice and verified the full Phase 2.2–2.6 canonical dependency chain, exact player/match/role references, version 1 creation, sequential immutable corrections, source-locator constraints, pending-only client creation, team/coach/private visibility, cross-team isolation and API grants.
 - Point 3.3 source-contract tests: **12/12 PASS**.
+- Private evidence write isolation: **PASS** — coaches cannot append content versions or dimension links to another author's private evidence.
 - Point 3.2 PostgreSQL integration and 10/10 source tests: **PASS**.
 - Point 3.1 audit tests: **9/9 PASS**.
 - Existing Phase 2.2–2.10 PostgreSQL checks, staged migration and trigger ACL checks, responsive UI/touch-target/permission/offline-write checks, full regression chain, TypeScript typecheck and Vite production build: **PASS**.
 - Non-fatal existing Vite bundle-size warning remains.
-- Defects fixed before the successful run: policy migration repeatability, server-side initial version seeding, incorrect player visibility fixture, PostgreSQL DO block delimiters and expected RLS/privilege-denial handling.
+- Defects fixed before the successful run: policy migration repeatability, server-side initial version seeding, incorrect player visibility fixture, PostgreSQL DO block delimiters, expected RLS/privilege-denial handling and author-only writes for private evidence.
 - No production migration, data conversion/backfill, production deployment, merge or reset occurred.
 
 **Point 3.3 acceptance: VERIFIED.** Do not begin Point 3.4 until the checkpoint-only commit is also checked by the full workflow, then proceed one point at a time.
