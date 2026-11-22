@@ -1,6 +1,6 @@
 # Evolution Phase 3.3 — Evidence Data Model
 
-**Status:** IMPLEMENTED — exact-head CI verification pending.  
+**Status:** IMPLEMENTED AND VERIFIED.  
 **Active PR:** #131 (single consolidated Evolution Phase Three PR; Draft, unmerged).  
 **Scope:** stable evidence identity, evaluation context, canonical player/session/match/role references, evidence source/content, dimension links and append-only evidence history.
 
@@ -37,6 +37,9 @@
 
 ## Verification
 
+**Exact tested code head:** 064fdc00d21a303f4dabd0558b3f71738e101ed9  
+**GitHub Actions run:** #45030533118 — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45030533118 — SUCCESS.
+
 Targeted checks:
 - npm run test:evolution-phase-three-3
 - bash scripts/verify-evolution-phase-three-3-db.sh against a disposable PostgreSQL database
@@ -62,3 +65,25 @@ Whenever a later Evolution point introduces or changes UI, its acceptance gate m
 - No unrelated layout, color, data or permission changes outside the point's scope.
 
 This standard is a continuing UI acceptance rule; Point 3.3 itself adds no UI because its accepted scope is the evidence data model.
+
+
+## Exact-head CI result — 2026-11-22
+
+- Workflow run #45030533118 completed **SUCCESS** on commit 064fdc00d21a303f4dabd0558b3f71738e101ed9.
+- Point 3.3 disposable PostgreSQL integration: **PASS**, including applying the migration twice, canonical Phase 2.2–2.6 dependencies, exact match/role snapshot references, initial version seeding, append-only sequential corrections, invalid VOD locator rejection, pending-only creation, team/coach/private visibility, cross-team isolation and ACL checks.
+- Point 3.3 source-contract tests: **12/12 PASS**.
+- Point 3.2 PostgreSQL integration: **PASS**.
+- Point 3.2 source-contract tests: **10/10 PASS**.
+- Point 3.1 audit tests: **9/9 PASS**.
+- Existing Phase 2.2–2.10 PostgreSQL integration, staged migration/trigger ACL checks, responsive UI/touch-target/permission/offline-write checks, complete regression chain, TypeScript typecheck and Vite production build: **PASS**.
+- Existing non-fatal Vite bundle-size warning remains; it does not fail the build.
+
+## CI defects found and fixed before final successful run
+
+1. The first migration draft created RLS policies without dropping existing names, so the required second migration application was not repeatable. Added explicit DROP POLICY IF EXISTS before policy recreation.
+2. The first version-seeding trigger depended on client-set session variables. Reworked it to copy the initial evidence fields directly from the inserted evidence row.
+3. The first visibility test reused a user fixture that did not represent a member of the target team. Replaced it with explicit disposable Alpha player and coach fixtures and asserted the three visibility levels independently.
+4. Corrected PostgreSQL harness DO-block delimiters and adjusted negative tests to accept the expected RLS/privilege denial paths.
+5. Added pending-only client creation so clients cannot mark their own evidence verified.
+
+All fixes are included in the exact tested head above.
