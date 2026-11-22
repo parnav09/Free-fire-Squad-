@@ -1,6 +1,6 @@
 # Evolution Phase 3.6 — Role-Based Weight Configuration
 
-**Status:** IMPLEMENTED — exact-head verification pending  
+**Status:** IMPLEMENTED AND VERIFIED  
 **Scope:** Evolution Phase Three, Point 3.6 only  
 **Repository:** parnav09/Free-fire-Squad-  
 **PR:** #131 — consolidated Evolution Phase Three PR, Draft/unmerged
@@ -33,13 +33,20 @@ Weights are stored as integer basis points to avoid floating-point drift:
 
 Point 3.6 is a data/configuration point and introduces no new UI controls. Existing UI is intentionally unchanged. When the configuration editor is introduced in the later scoring UI point, it must preserve the existing Squad OS dark theme/color grading, minimum 44×44 CSS px interactive targets, precise full-surface hitboxes, aligned labels, no text/control collisions, and responsive Android/mobile, tablet, laptop and desktop layouts.
 
-## Verification
+## Exact-head verification — 2026-11-22
 
-Pending exact latest PR-head GitHub Actions run:
-- Reapply the Phase 3.6 migration twice after the Phase 3.5 and canonical role-snapshot dependency chain.
-- Verify per-role sequential versioning, exact 100% totals, dimension applicability, rubric-version pinning, immutable publication/retirement and effective date behavior.
-- Verify exact historical role snapshot binding, role mismatch rejection, unknown/unmapped role rejection and no current-role fallback.
-- Verify team isolation, owner/coach write access, member published-history reads, draft privacy, anonymous denial and database privileges.
-- Run source-contract tests, full PostgreSQL integration chain, TypeScript typecheck, full regression and Vite production build.
+- Tested PR head: `16058db847e144544ebb569f8d5853323754751a`.
+- GitHub Actions run #45056896882: **SUCCESS** — https://github.com/parnav09/Free-fire-Squad-/actions/runs/45056896882.
+- Phase 3.6 disposable PostgreSQL integration: **PASS**. The migration was applied twice after the Phase 3.5 and canonical role-snapshot dependency chain.
+- Database checks: sequential role/rubric-scoped versions; exact 10,000 basis-point total; missing/duplicate/invalid weights; exact dimension-definition pins; active/retired lifecycle; effective dates that cannot be retroactive; delayed binding to a historically effective retired set; exact context/player/match/role snapshot and rubric binding; role mismatch and role-less context rejection; published immutability; RLS, team scope, owner/coach writes, member historical reads, draft privacy and ACL denial.
+- Phase 3.6 source-contract tests: **17/17 PASS**.
+- Existing Phase 3.2–3.5 and Phase 2.2–2.10 PostgreSQL integrations, staged migration/security checks: **PASS**.
+- Responsive UI, touch-target, permission and offline-write regression: **PASS**; screenshot upload: **PASS**. Point 3.6 adds no UI controls, so existing UI/layout/color grading remains unchanged.
+- Full regression, TypeScript typecheck and Vite production build: **PASS**.
+- Existing non-fatal Vite chunk-size warning (largest emitted app chunk 383.56 kB), dependency deprecation warnings and GitHub Actions Node 20 deprecation warning remain.
+- Verification defects fixed before this successful run: qualified ambiguous dimension joins; changed the RLS test to assert zero updated rows while separately exercising immutable triggers with a privileged role; corrected DELETE trigger team lookup to use OLD; corrected source-contract SQL alias assertions.
+- Vercel Preview check separately reports build-rate-limit failure; GitHub Actions is green. No production migration, production deployment, data reset or merge to main occurred.
+
+**Point 3.6 acceptance: VERIFIED.**
 
 No production migration or deployment is authorized by this point.
