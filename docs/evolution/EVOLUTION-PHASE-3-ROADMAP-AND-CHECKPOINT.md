@@ -614,7 +614,7 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 
 ## Point 3.10 — Score Snapshot & Calculation History
 
-**Status: IMPLEMENTED — exact-head verification pending.**
+**Status: IMPLEMENTED AND VERIFIED — exact code PR head `5097e581594761b3c46ac79cd8034e2ec6aeeda1`; GitHub Actions PR workflow #45073773602 SUCCESS.**
 
 - Added additive migration `20261122200000_evolution_phase_three_10_score_snapshot_history.sql` and immutable `evolution_player_score_snapshots`.
 - Added server-side `calculate_evolution_player_score_snapshot(uuid,text)`, which persists exact evaluation/player/role-snapshot, rubric version, role-weight set, calculation/policy versions, raw assessment/evidence inputs, deterministic score/coverage/status, exact rational values, reasons, actor and timestamp.
@@ -626,5 +626,11 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - Added the Phase 3.10 PostgreSQL migration replay/integration harness, source-contract tests, npm build-chain test, GitHub Actions database step and implementation report.
 - No legacy score backfill/conversion, production migration, data reset, UI change, merge to main or production deployment.
 
-**Acceptance to verify:** final score persistence, provisional-only output, insufficient/no-score behavior, exact raw input reproducibility, idempotent retry, reasoned recalculation, previous-snapshot preservation, migration replay, RLS/ACL and immutability.
+**Exact-head verification result**
+- GitHub Actions PR workflow [#45073773602](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45073773602): **SUCCESS** on exact code head `5097e581594761b3c46ac79cd8034e2ec6aeeda1`.
+- GitHub Actions push workflow [#45073771107](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45073771107): **SUCCESS** on the same commit.
+- Phase 3.10 source-contract suite: **17/17 PASS**, 0 failures.
+- Disposable PostgreSQL harness: **PASS**; migration replayed twice. Final/provisional/insufficient outcomes, idempotent retries, required recalculation reason, linked history, prior snapshot immutability, exact evidence-version/link provenance, and RLS/ACL checks passed.
+- Full TypeScript, repository regression/build chain, Phase 2 and Phase 3.2–3.8 PostgreSQL integrations, responsive UI/touch-target/permission/offline-write checks, screenshot artifact and Vite production build: **PASS**.
+- No production migration, production data write, legacy backfill, data reset, merge to main or production deployment occurred.
 
