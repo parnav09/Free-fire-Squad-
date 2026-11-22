@@ -155,8 +155,9 @@ BEGIN
 
   -- A second private item proves visibility is not inferred from coach status.
   INSERT INTO public.evolution_evidence_items(
-    team_id,evaluation_context_id,visibility,source_type,title,observation,created_by
+    id,team_id,evaluation_context_id,visibility,source_type,title,observation,created_by
   ) VALUES (
+    'e3000000-0000-0000-0000-000000000003',
     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',v_context,'private',
     'manual_observation','Private coach note','Only its author can read this.',auth.uid()
   );
