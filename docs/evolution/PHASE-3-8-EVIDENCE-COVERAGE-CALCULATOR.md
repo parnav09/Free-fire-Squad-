@@ -1,6 +1,6 @@
 # Evolution Phase 3.8 — Evidence Coverage Calculator
 
-**Status:** IMPLEMENTED AND VERIFIED — GitHub Actions run #45060071552 succeeded on exact PR head `e514de2d9317948fd77069cfb7a7422904ce715b`  
+**Status:** IMPLEMENTED AND VERIFIED — final full workflow #45060733258 succeeded on code head `65c8c5daebb5d93b05916c87ba008738a853b79c`  
 **PR:** #131 — consolidated Evolution Phase Three PR
 
 ## Calculation contract
@@ -53,3 +53,15 @@ Not run in this implementation step by explicit instruction. Run the dedicated s
 - Existing non-fatal Vite large-chunk warning (383.56 kB main JS chunk), `punycode` deprecation and GitHub Actions Node 20 action deprecation warnings remain.
 - Separate Vercel status is **FAILURE** due build-rate-limit. This is not a GitHub Actions test failure; Vercel Preview is not verified by this run.
 - No production migration, data reset, merge to main or production deployment.
+
+
+### Follow-up verification and consistency fix
+
+A manual cross-implementation review found a mismatch: PostgreSQL treated Observed assessments backed by rejected/archived (or absent) evidence as rejected-evidence coverage, while the TypeScript helper rejected the input instead of producing the same counts. The TypeScript calculator now mirrors the SQL classification; source tests cover rejected, archived and absent evidence, while unknown evidence states still fail closed.
+
+- Follow-up full workflow #45060733258: **SUCCESS** on code head `65c8c5daebb5d93b05916c87ba008738a853b79c`.
+- Phase 3.8 source-contract tests: **8/8 PASS**.
+- Phase 3.8 disposable PostgreSQL migration replay and integration: **PASS**.
+- Full TypeScript, all repository test suites, responsive UI/touch-target/permission/offline-write acceptance, screenshot artifact and production build: **PASS**.
+- Non-fatal warnings remain: main JS bundle exceeds 250 kB (383.56 kB in the previous identical build), `punycode` deprecation, and GitHub Actions Node 20 action deprecation.
+- Vercel Preview is separate from this GitHub Actions workflow and remains unverified due the earlier build-rate-limit failure.
