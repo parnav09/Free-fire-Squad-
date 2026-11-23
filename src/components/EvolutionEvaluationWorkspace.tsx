@@ -6,8 +6,8 @@ import "./EvolutionEvaluationWorkspace.css";
 type Row = Record<string, any>;
 type Member = { id: string; user_id: string; display_name: string; player_number: number | null; assigned_role?: string | null; membership_role: string; status: string };
 type Props = { client: SupabaseClient | null; teamId: string; userId: string; membershipRole: string; members: Member[] };
-type Draft = { state: "observed" | "not_observed" | "not_applicable" | "incomplete" | "rejected_evidence"; rating: number; evidenceId: string; title: string; observation: string; visibility: "team" | "coaches" | "private"; sourceLocator: string; reason: string };
-const blankDraft = (): Draft => ({ state: "observed", rating: 5, evidenceId: "", title: "", observation: "", visibility: "coaches", sourceLocator: "", reason: "" });
+type Draft = { state: "observed" | "not_observed" | "not_applicable" | "incomplete" | "rejected_evidence"; rating: number; evidenceId: string; title: string; observation: string; visibility: "team" | "coaches" | "private"; sourceType: "manual_observation" | "round_note" | "vod_reference" | "match_reference"; sourceLocator: string; reason: string };
+const blankDraft = (): Draft => ({ state: "observed", rating: 5, evidenceId: "", title: "", observation: "", visibility: "coaches", sourceType: "manual_observation", sourceLocator: "", reason: "" });
 const roleKey = (value: unknown): string | null => {
   const key = typeof value === "string" ? value.trim().toLowerCase() : "";
   const aliases: Record<string,string> = {
@@ -196,6 +196,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
         evidenceId = d.evidenceId || null;
         if (d.state==="observed" && !evidenceId) {
           if (d.title.trim().length<1 || d.observation.trim().length<1) throw new Error("Evidence title and observation are required before recording a rating.");
+          if ((d.sourceType==="vod_reference"||d.sourceType==="match_reference")&&!d.sourceLocator.trim()) throw new Error("VOD and match references require a source URL.");
           if (d.sourceLocator.trim()) {
             let parsed:URL;
             try { parsed = new URL(d.sourceLocator.trim()); } catch { throw new Error("Source reference must be a valid HTTP or HTTPS URL."); }
@@ -203,7 +204,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
           }
           const item = await client.from("evolution_evidence_items").insert({
             team_id:teamId,evaluation_context_id:context.id,visibility:d.visibility,
-            source_type:"manual_observation",title:d.title.trim(),observation:d.observation.trim(),
+            source_type:d.sourceType,title:d.title.trim(),observation:d.observation.trim(),
             source_locator:d.sourceLocator.trim()||null,created_by:userId
           }).select("*").single();
           if (item.error) throw item.error;
@@ -346,7 +347,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
                 {draft.state==="observed" && <>
                   <label>Observed rating <output>{draft.rating}/10</output><input type="range" min="0" max="10" step="1" value={draft.rating} onChange={e=>updateDraft(criterion.dimension_key,{rating:Number(e.target.value)})}/></label>
                   <label>Existing evidence<select value={draft.evidenceId} onChange={e=>updateDraft(criterion.dimension_key,{evidenceId:e.target.value})}><option value="">Create new evidence below</option>{availableEvidence.filter(x=>["pending","verified","corrected"].includes(statusFor(x.id)?.status||"pending")).map(x=><option key={x.id} value={x.id}>{x.title} · {statusFor(x.id)?.status||"pending"}</option>)}</select></label>
-                  {!draft.evidenceId && <div className="evolution-eval-evidence-form"><label>Evidence title<input maxLength={160} value={draft.title} onChange={e=>updateDraft(criterion.dimension_key,{title:e.target.value})} placeholder="Specific observed behavior"/></label><label>Observation<textarea maxLength={4000} value={draft.observation} onChange={e=>updateDraft(criterion.dimension_key,{observation:e.target.value})} placeholder="Describe what happened, without inferring intent or match outcome."/></label><div className="evolution-eval-form-row"><label>Visibility<select value={draft.visibility} onChange={e=>updateDraft(criterion.dimension_key,{visibility:e.target.value as Draft["visibility"]})}><option value="coaches">Coaches</option><option value="team">Team</option><option value="private">Private to author</option></select></label><label>Source link (optional)<input type="url" value={draft.sourceLocator} onChange={e=>updateDraft(criterion.dimension_key,{sourceLocator:e.target.value})} placeholder="https://…"/></label></div></div>}
+                  {!draft.evidenceId && <div className="evolution-eval-evidence-form"><label>Evidence source<select value={draft.sourceType} onChange={e=>updateDraft(criterion.dimension_key,{sourceType:e.target.value as Draft["sourceType"]})}><option value="manual_observation">Manual observation</option><option value="round_note">Round note</option><option value="vod_reference">VOD reference</option><option value="match_reference">Match reference</option></select></label><label>Evidence title<input maxLength={160} value={draft.title} onChange={e=>updateDraft(criterion.dimension_key,{title:e.target.value})} placeholder="Specific observed behavior"/></label><label>Observation<textarea maxLength={4000} value={draft.observation} onChange={e=>updateDraft(criterion.dimension_key,{observation:e.target.value})} placeholder="Describe what happened, without inferring intent or match outcome."/></label><div className="evolution-eval-form-row"><label>Visibility<select value={draft.visibility} onChange={e=>updateDraft(criterion.dimension_key,{visibility:e.target.value as Draft["visibility"]})}><option value="coaches">Coaches</option><option value="team">Team</option><option value="private">Private to author</option></select></label><label>Source link {(draft.sourceType==="vod_reference"||draft.sourceType==="match_reference")?"(required)":"(optional)"}<input type="url" value={draft.sourceLocator} onChange={e=>updateDraft(criterion.dimension_key,{sourceLocator:e.target.value})} placeholder="https://…"/></label></div></div>}
                 </>}
                 {draft.state==="rejected_evidence" && <label>Rejected evidence<select value={draft.evidenceId} onChange={e=>updateDraft(criterion.dimension_key,{evidenceId:e.target.value})}><option value="">Select rejected evidence</option>{linked.filter(x=>statusFor(x.id)?.status==="rejected").map(x=><option key={x.id} value={x.id}>{x.title}</option>)}</select></label>}
                 {draft.state!=="observed" && <label>Reason (required)<textarea maxLength={1000} minLength={3} value={draft.reason} onChange={e=>updateDraft(criterion.dimension_key,{reason:e.target.value})} placeholder="Explain why this dimension is not currently rated."/></label>}
