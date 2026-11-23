@@ -113,7 +113,7 @@ test("database harness validates the single-child uniqueness invariant", () => {
 
 test("Phase 3.11 test is included in the full production build chain", () => {
   assert.equal(pkg.scripts["test:evolution-phase-three-11"], "node --test scripts/verify-evolution-phase-three-11.mjs");
-  assert.match(pkg.scripts.build, /test:evolution-phase-three-10 && npm run test:evolution-phase-three-11 && npm run test:evolution-phase-three-12 && npm run test:evolution-phase-three-13 && vite build/);
+  assert.match(pkg.scripts.build, /test:evolution-phase-three-10 && npm run test:evolution-phase-three-11 && npm run test:evolution-phase-three-12 && npm run test:evolution-phase-three-13 && npm run test:evolution-phase-three-14 && vite build/);
 });
 
 test("GitHub Actions runs the isolated Phase 3.11 PostgreSQL harness", () => {
