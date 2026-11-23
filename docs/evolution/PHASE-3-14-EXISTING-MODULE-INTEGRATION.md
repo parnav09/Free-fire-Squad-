@@ -15,6 +15,7 @@ Connect existing Scrims, Tournament, Training, Player, Evaluation and Analytics 
 - Archived canonical sessions remain visible in historical lineage.
 - Reads are team-scoped and RLS-governed. All six datasets are read in stable 500-row pages; no fixed row limit silently truncates older team history.
 - Loading, empty, error and retry states are implemented. A team switch or failed refresh clears previously loaded rows so stale data cannot appear under another team.
+- Score snapshot reads respect the existing staff-only RLS policy. If a member cannot read snapshots, the panel still renders permitted source and evaluation lineage and clearly marks score history as restricted; it does not weaken database permissions.
 - Competitive results remain separate: kills, placement, Booyah and tournament points are never used as internal player-development score inputs.
 - No source records, evaluation contexts or score snapshots are mutated by the lineage panel.
 
