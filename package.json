@@ -47,7 +47,8 @@
     "test:evolution-phase-three-11": "node --test scripts/verify-evolution-phase-three-11.mjs",
     "test:evolution-phase-three-12": "node --test scripts/verify-evolution-phase-three-12.mjs",
     "test:evolution-phase-three-13": "node --test scripts/verify-evolution-phase-three-13.mjs",
-    "test:evolution-phase-three-14": "node --test scripts/verify-evolution-phase-three-14.mjs"
+    "test:evolution-phase-three-14": "node --test scripts/verify-evolution-phase-three-14.mjs",
+    "test:evolution-phase-three-14-visual": "node scripts/run-evolution-phase-three-14-visual.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.1",
