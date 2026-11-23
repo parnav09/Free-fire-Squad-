@@ -68,6 +68,11 @@ DECLARE
   v_after integer;
   v_rubric_bindings integer;
   v_weight_bindings integer;
+  v_sniper_role uuid;
+  v_sniper_member uuid;
+  v_sniper_user uuid;
+  v_sniper_session uuid;
+  v_sniper_match uuid;
 BEGIN
   SELECT c.* INTO v_source
   FROM public.evolution_evaluation_contexts c
@@ -140,7 +145,46 @@ BEGIN
   IF v_after<>v_before THEN
     RAISE EXCEPTION 'Failed atomic context creation left an orphan evaluation context';
   END IF;
-END $$;
+
+  -- This fixture has an assigned Sniper + IGL role but only a Primary Rusher
+  -- weight set. The RPC must fail after the context insert and roll it back.
+  SELECT r.id,tm.id,r.player_user_id,r.canonical_session_id,r.canonical_session_match_id
+    INTO v_sniper_role,v_sniper_member,v_sniper_user,v_sniper_session,v_sniper_match
+  FROM public.canonical_session_match_roles r
+  JOIN public.team_members tm
+    ON tm.team_id=r.team_id AND tm.user_id=r.player_user_id AND tm.status='active'
+  WHERE r.team_id=v_source.team_id
+    AND r.role_assignment_status='assigned'
+    AND lower(btrim(r.role_key_snapshot)) IN ('sniper + igl','sniper igl','sniper-igl','sniper_igl')
+  ORDER BY r.changed_at,r.id
+  LIMIT 1;
+
+  IF v_sniper_role IS NULL THEN
+    RAISE EXCEPTION 'Phase 3.13 rollback fixture requires an assigned Sniper + IGL snapshot';
+  END IF;
+
+  SELECT count(*) INTO v_before
+  FROM public.evolution_evaluation_contexts
+  WHERE team_id=v_source.team_id;
+
+  BEGIN
+    PERFORM public.create_evolution_evaluation_context(
+      v_source.team_id,v_sniper_member,v_sniper_user,
+      v_sniper_session,v_sniper_match,v_sniper_role
+    );
+    RAISE EXCEPTION 'Missing historical role weights unexpectedly created an evaluation context';
+  EXCEPTION WHEN SQLSTATE '23514' THEN
+    NULL;
+  END;
+
+  SELECT count(*) INTO v_after
+  FROM public.evolution_evaluation_contexts
+  WHERE team_id=v_source.team_id;
+
+  IF v_after<>v_before THEN
+    RAISE EXCEPTION 'Missing role-weight configuration left an orphan evaluation context';
+  END IF;
+END $;
 
 RESET ROLE;
 SELECT 'Evolution Phase 3.13 atomic context creation behavior PASS' AS result;
