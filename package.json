@@ -11,7 +11,7 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "test:foundation": "node --test scripts/verify-foundation.mjs",
-    "build": "npm run typecheck && npm run test:foundation && npm run test:characters && npm run test:evolution && npm run test:evolution-phase-one && npm run test:evolution-phase-one-5 && npm run test:evolution-phase-one-5-b && npm run test:evolution-phase-one-5-c && npm run test:evolution-phase-one-5-d && npm run test:evolution-phase-one-5-e && npm run test:evolution-phase-two-1 && npm run test:evolution-phase-two-2 && npm run test:evolution-phase-two-3 && npm run test:evolution-phase-two-4 && npm run test:evolution-phase-two-5 && npm run test:evolution-phase-two-6 && npm run test:evolution-phase-two-7 && npm run test:evolution-phase-two-8 && npm run test:evolution-phase-two-9 && npm run test:evolution-phase-two-10 && npm run test:evolution-phase-two-11 && npm run test:evolution-phase-two-12 && npm run test:evolution-phase-three-1 && npm run test:evolution-phase-three-2 && npm run test:evolution-phase-three-3 && npm run test:evolution-phase-three-4 && npm run test:evolution-phase-three-5 && npm run test:evolution-phase-three-6 && npm run test:evolution-phase-three-7 && npm run test:evolution-phase-three-8 && npm run test:evolution-phase-three-9 && npm run test:evolution-phase-three-10 && npm run test:evolution-phase-three-11 && npm run test:evolution-phase-three-12 && vite build",
+    "build": "npm run typecheck && npm run test:foundation && npm run test:characters && npm run test:evolution && npm run test:evolution-phase-one && npm run test:evolution-phase-one-5 && npm run test:evolution-phase-one-5-b && npm run test:evolution-phase-one-5-c && npm run test:evolution-phase-one-5-d && npm run test:evolution-phase-one-5-e && npm run test:evolution-phase-two-1 && npm run test:evolution-phase-two-2 && npm run test:evolution-phase-two-3 && npm run test:evolution-phase-two-4 && npm run test:evolution-phase-two-5 && npm run test:evolution-phase-two-6 && npm run test:evolution-phase-two-7 && npm run test:evolution-phase-two-8 && npm run test:evolution-phase-two-9 && npm run test:evolution-phase-two-10 && npm run test:evolution-phase-two-11 && npm run test:evolution-phase-two-12 && npm run test:evolution-phase-three-1 && npm run test:evolution-phase-three-2 && npm run test:evolution-phase-three-3 && npm run test:evolution-phase-three-4 && npm run test:evolution-phase-three-5 && npm run test:evolution-phase-three-6 && npm run test:evolution-phase-three-7 && npm run test:evolution-phase-three-8 && npm run test:evolution-phase-three-9 && npm run test:evolution-phase-three-10 && npm run test:evolution-phase-three-11 && npm run test:evolution-phase-three-12 && npm run test:evolution-phase-three-13 && vite build",
     "preview": "vite preview",
     "test:characters": "node --test scripts/verify-character-profile.mjs",
     "test:evolution": "node --test scripts/verify-evolution-legacy-fixes.mjs",
@@ -45,7 +45,8 @@
     "test:evolution-phase-three-9": "node --test scripts/verify-evolution-phase-three-9.mjs",
     "test:evolution-phase-three-10": "node --test scripts/verify-evolution-phase-three-10.mjs",
     "test:evolution-phase-three-11": "node --test scripts/verify-evolution-phase-three-11.mjs",
-    "test:evolution-phase-three-12": "node --test scripts/verify-evolution-phase-three-12.mjs"
+    "test:evolution-phase-three-12": "node --test scripts/verify-evolution-phase-three-12.mjs",
+    "test:evolution-phase-three-13": "node --test scripts/verify-evolution-phase-three-13.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.1",
