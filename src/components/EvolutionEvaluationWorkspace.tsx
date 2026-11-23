@@ -221,7 +221,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
           if (link.error) throw new Error("Evidence was saved, but its dimension link failed: "+link.error.message+". Refresh; the unlinked evidence will remain available to attach without recreating it.");
         }
         if (d.state==="rejected_evidence" && statusFor(evidenceId)?.status!=="rejected") throw new Error("Rejected Evidence requires an item whose current verification status is Rejected.");
-        if (d.state==="observed" && !["pending","verified","corrected"].includes(statusFor(evidenceId)?.status || "")) {
+        if (d.state==="observed" && d.evidenceId && !["pending","verified","corrected"].includes(statusFor(evidenceId)?.status || "")) {
           throw new Error("Observed ratings require pending, verified or corrected evidence.");
         }
       }
