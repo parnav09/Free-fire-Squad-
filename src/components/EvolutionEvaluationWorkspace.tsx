@@ -290,7 +290,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
       <button type="button" className="evolution-eval-quiet" onClick={()=>void loadIndex()} disabled={loading||!!busy}>↻ Refresh</button>
     </header>
     {!client || !teamId ? <div className="evolution-eval-empty">Sign in and select a team to use canonical evaluations.</div> : null}
-    {error && <div className="evolution-eval-error" role="alert"><span>{error}</span><button type="button" onClick={()=>{setError("");if(selectedContext)void loadContext(selectedContext);else void loadIndex();}}>Retry</button></div>}
+    {error && <div className="evolution-eval-error" role="alert"><span>{error}</span><button type="button" onClick={()=>{setError("");if(selectedContext)void loadContext(selectedContext,unsavedDraftCount>0);else void loadIndex();}}>Retry</button></div>}
     {notice && <div className="evolution-eval-notice" role="status">{notice}</div>}
     {loading ? <div className="evolution-eval-empty" role="status">Loading canonical evaluation records…</div> : <>
       <div className="evolution-eval-create-grid">
@@ -300,7 +300,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
           <label>Canonical match<select value={selectedMatch} onChange={e=>{setSelectedMatch(e.target.value);setSelectedRole("");}} disabled={!canManage||!selectedSession}><option value="">Select match</option>{sessionMatches.map(m=><option key={m.id} value={m.id}>Match {m.match_sequence}{m.map_name?" · "+m.map_name:""}</option>)}</select></label>
           <label>Player & historical role<select value={selectedRole} onChange={e=>setSelectedRole(e.target.value)} disabled={!canManage||!selectedMatch}><option value="">Select player role snapshot</option>{matchRoles.map(r=>{const p=members.find(m=>m.user_id===r.player_user_id);return <option key={r.id} value={r.id}>{p?.display_name||"Player"} · {r.role_name_snapshot||r.role_key_snapshot}</option>;})}</select></label>
           {!canManage && <p className="evolution-eval-muted">Only active owners and coaches can create or score evaluations. Members retain the access granted by database RLS.</p>}
-          <button type="button" className="evolution-eval-primary" disabled={!canCreate||!selectedSession||!selectedMatch||!selectedRole||!!busy} onClick={startEvaluation}>{busy==="create"?"Creating context…":"Start canonical evaluation"}</button>
+          <button type="button" className="evolution-eval-primary" disabled={!canCreate||!selectedSession||!selectedMatch||!selectedRole||!!busy||unsavedDraftCount>0} onClick={startEvaluation}>{busy==="create"?"Creating context…":"Start canonical evaluation"}</button>
           {!sessions.length && <p className="evolution-eval-muted">No canonical sessions are available yet. Link a Scrim or Tournament source and create canonical match/role snapshots first.</p>}
           {selectedMatch && !matchRoles.length && <p className="evolution-eval-muted">This match has no assigned historical player-role snapshots. Do not infer roles from the current roster.</p>}
         </div>
