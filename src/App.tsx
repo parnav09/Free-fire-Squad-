@@ -3,6 +3,7 @@ import { getTeamUiCapabilities, indiaDateISO, indiaDateLabel, millisecondsUntilI
 import { createLatestRequestGuard } from "./lib/latest-request-guard";
 import { integrateCanonicalSource } from "./lib/canonical-module-integration";
 import CanonicalSessionsWorkspace from "./components/CanonicalSessionsWorkspace";
+import EvolutionEvaluationWorkspace from "./components/EvolutionEvaluationWorkspace";
 import PlacementPicker from "./components/PlacementPicker";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
@@ -1124,6 +1125,10 @@ export default function App() {
             </section>}{combatNexusView&&<div className="combat-nexus-detail" role="region" aria-live="polite"><div><div className="eyebrow">COMBAT NEXUS / {combatNexusView.toUpperCase()}</div><h4>{combatNexusView==="pets"?"Pet database":"Loadout"}</h4><p>{combatNexusView==="pets"?"The pet catalogue will contain skill details, level effects, cooldowns, activation conditions and verified character interactions.":"Loadout workspace reserved for verified character, pet and weapon combinations. No unverified presets are pre-filled."}</p></div><button type="button" className="secondary-button" onClick={()=>setCombatNexusView(null)}>Close</button></div>}</>}
           </>}
           {section==="Evaluation" && <>
+            <EvolutionEvaluationWorkspace client={supabase} teamId={team?.id||""} userId={sessionUserId} membershipRole={team?.membership_role||""} members={teamMembers as any}/>
+            <details className="legacy-evaluation-archive">
+              <summary>Legacy daily evaluation · historical compatibility</summary>
+              
             <div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · LEGACY FORM</div><h2>Legacy daily evaluation</h2><p className="daily-eval-helper">This is the existing five-dimension record form. The canonical session-linked Daily Evaluation is reserved for Evolution Phase Four.</p></div></div>
             <section className="connection-panel" style={{display:"block"}}>
               <div className="daily-eval-date-lock"><span className="date-lock-mark">▣</span><div><b>Today's evaluation · {evalDateLabel}</b><small>India date · UTC+05:30 · auto-selected and locked for today</small></div><span className="date-lock-badge">DATE LOCK</span></div>
@@ -1135,6 +1140,8 @@ export default function App() {
               <button className="primary-button daily-eval-submit" style={{marginTop:8}} disabled={!evalPlayer||!evaluationComplete||!signedIn||!team||evalSaving} onClick={saveEvaluation}>{evalSaving?"Saving…":"Submit anonymous evaluation"} <span>→</span></button>
             </section>
             <section className="connection-panel daily-eval-inbox" style={{display:"block",marginTop:18}}><div className="eyebrow">MY FEEDBACK INBOX · {(evalHistory.filter(e=>e.player_id===sessionUserId)).length}</div><p className="daily-eval-helper">Only feedback addressed to your signed-in player account appears here. Reviewer identity is never shown.</p><div className="player-list">{evalHistory.filter(e=>e.player_id===sessionUserId).map(e=><article className="player-row daily-eval-inbox-row" key={e.id}><span className="player-id">{e.score_date}</span><div><b>Daily score · {e.total??"—"}/50</b><small>Communication {e.communication}/10 · Coordination {e.coordination}/10 · Decision {e.decision_making}/10 · Role {e.role_execution}/10 · Map {e.map_awareness}/10</small>{e.improvement_target&&<small>Focus target: {e.improvement_target}</small>}{e.improvement_notes&&<small><strong>Improvement suggestions:</strong> {e.improvement_notes}</small>}{e.mistake_notes&&<small><strong>Mistakes / corrections:</strong> {e.mistake_notes}</small>}{e.notes&&<small><strong>Match context:</strong> {e.notes}</small>}</div></article>)}{!evalHistory.some(e=>e.player_id===sessionUserId)&&<div className="empty-state">No feedback received yet. Evaluations addressed to your account will appear here.</div>}</div></section>
+
+            </details>
           </>}
           {section==="Assignments" && <>
             <div className="section-heading"><div><div className="eyebrow">LEGACY TASK TRACKER</div><h2>Existing drill assignments</h2><p>New legacy assignments are paused. The unified development-task workflow is planned for Evolution Phase Six.</p></div><span className="phase-pill">{assignmentRows.filter(x=>x.status==="completed").length}/{assignmentRows.length} DONE</span></div>
