@@ -34,3 +34,8 @@ The current canonical scoring context requires an assigned historical match-role
 ## Acceptance boundary
 
 A player evaluation can be traced to its player, canonical match/session, exact historical role snapshot and source module without duplicate identities or mixing competitive results with player-development scores. Source sessions without an evaluation (including Training) remain visible as source lineage rather than being misrepresented as evaluated matches.
+
+
+## Final acceptance linkage
+
+Phase 3.14 is included in the Evolution Phase 3.15 final acceptance gate. Its status is considered verified only when the current exact PR-head workflow passes the dedicated Phase 3.14 contracts, five-viewport Playwright acceptance and the complete regression/build chain. Historical workflow runs on superseded commits are not evidence for the current head.

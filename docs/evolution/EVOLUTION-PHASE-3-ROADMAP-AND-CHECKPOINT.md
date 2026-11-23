@@ -720,3 +720,41 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 **Verification pending:** run the expanded dedicated Phase 3.14 contracts and full exact-head GitHub Actions workflow, including applicable disposable PostgreSQL integrations, TypeScript, repository regression, responsive UI/touch-target/permissions/offline-write acceptance, screenshot upload and Vite production build. Do not mark Phase 3.14 VERIFIED until the exact latest PR head passes.
 
 **Acceptance:** a player evaluation can be traced to its player, canonical match/session, exact historical role snapshot and source module; source sessions without evaluations remain visible without being misrepresented as evaluated matches.
+
+
+---
+
+## 13. Evolution Phase 3.15 — Regression, Integration & Final Acceptance
+
+**Implementation status: acceptance gate and report added; exact-head CI result is pending until this commit's workflow completes.**
+
+### Acceptance gate
+
+- Added `scripts/verify-evolution-phase-three-15.mjs` as a dedicated final acceptance contract.
+- The gate checks that every Phase 3.1–3.14 source-contract suite is registered, present and executed in strict numeric order by the production build chain.
+- The gate checks that all Phase 3.1–3.14 implementation reports exist and that every applicable isolated PostgreSQL migration harness is present and wired into the consolidated workflow.
+- The gate checks the Phase 3.13 atomic evaluation-context database test, Phase 3.14 cross-module integration contract, and the 3.14 Playwright responsive browser harness.
+- The browser acceptance contract covers 390px phone, 768px tablet portrait, 1024px tablet landscape, 1280px laptop and 1440px desktop; it verifies 502-row pagination, source lineage, archived history, retry recovery, staff-only score access and screenshot artifacts.
+- The gate checks the consolidated workflow's exact PR-head SHA input. For pull requests it must match `github.event.pull_request.head.sha`; for push events it must match the pushed commit SHA. A missing or mismatched SHA fails closed.
+- Registered the 3.15 contract in both `npm run build` and the consolidated GitHub Actions workflow before the production bundle step.
+- Added `docs/evolution/PHASE-3-15-FINAL-ACCEPTANCE.md` as the point-specific acceptance report.
+
+### Required acceptance layers
+
+1. Source contracts and typecheck for the complete Phase 3.1–3.14 implementation.
+2. Applicable additive migration replay and disposable PostgreSQL integration for Phase 3.2–3.8, 3.10–3.13.
+3. Database constraints, immutable history, idempotency, atomic rollback/concurrency and RPC ACL checks covered by the dedicated database harnesses.
+4. RLS, team isolation, anonymous denial and owner/coach/member access checks.
+5. Scrims, Tournament, Training, Player, Evaluation and Analytics lineage integration.
+6. Responsive browser regression, pagination, retry/error recovery, touch-target checks and screenshot artifact creation.
+7. Complete repository regression chain, TypeScript typecheck and Vite production build.
+8. Exact latest PR-head or push-SHA verification; stale/cancelled runs do not count.
+
+### Explicit release boundaries
+
+- This gate verifies repository code and disposable CI databases. It does not assert that the live Supabase schema/migration history has been reconciled; the Phase 3.12 production migration source-of-truth mismatch remains a release blocker until separately audited and explicitly authorized.
+- Training source sessions are integrated and visible, but Phase 3.13 scoring still requires a canonical competitive match and historical match-role snapshot. No phantom Training match/role is created.
+- Vercel Preview/deployment status is reported separately from GitHub Actions acceptance. A Vercel rate-limit or deployment failure cannot be represented as a passing preview.
+- No production migration, live data write, data reset, legacy backfill, merge to main or production deployment is authorized by Phase 3.15.
+
+**Acceptance rule:** Point 3.15 can be marked VERIFIED only when the dedicated final-acceptance suite and the complete GitHub Actions workflow succeed on the exact current PR head, all required screenshot artifacts exist, and no failure is waived or hidden.
