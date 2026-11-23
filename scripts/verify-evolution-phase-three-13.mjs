@@ -72,7 +72,7 @@ test("mobile controls and visible action hitboxes meet the 44px minimum", () => 
 test("role-inapplicable rubric dimensions expose Not Applicable without inventing a score", () => {
   assert.match(component, /not_applicable/);
   assert.match(component, /criteria\\.map\\(criterion/);
-  assert.match(component, /!weight\\?"not_applicable"/);
+  assert.match(component, /weight\\?"observed":"not_applicable"/);
   assert.match(component, /assessment state does not match the dimension's historical role applicability/);
   assert.match(component, /assessment_state:d\\.state/);
   assert.doesNotMatch(component, /key=\\{weight\\.dimension_key\\}/);
