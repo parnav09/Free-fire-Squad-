@@ -22,7 +22,7 @@ jobs:
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.81.3
       - name: Verify supported CLI dump and migration-list commands
         run: |
           supabase db dump --help >/dev/null
@@ -110,8 +110,13 @@ jobs:
         working-directory: ${{ github.workspace }}
       - name: Stop disposable local Supabase stack
         if: always()
-        run: supabase stop --no-backup || true
-        working-directory: ${{ runner.temp }}/squad-os-migration-replay
+        run: |
+          if [ -d "$RUNNER_TEMP/squad-os-migration-replay" ]; then
+            cd "$RUNNER_TEMP/squad-os-migration-replay"
+            supabase stop --no-backup || true
+          else
+            echo "Disposable Supabase project was not created; nothing to stop."
+          fi
   foundation:
     needs: migration-replay
     name: Typecheck, tests and production build
