@@ -707,7 +707,7 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - The panel separately lists linked source sessions and player evaluation contexts. Training source sessions are therefore visible even though they do not have competitive matches or Phase 3.13 match-role evaluation contexts.
 - Resolves canonical source record, session, match, player, historical role and latest immutable score snapshot. Final/provisional/insufficient score state and evidence coverage remain separate.
 - Archived sessions remain visible. Reads use team-scoped RLS and stable 500-row pagination; there are no silent fixed-row cutoffs.
-- The canonical session ledger and existing Scrims/Tournament/Training source-link picker also paginate, removing the prior 250-session and 100-source-row cutoffs.
+- The canonical session ledger and existing Scrims/Tournament/Training source-link picker also paginate, removing the prior 250-session and 100-source-row cutoffs. Their full-history lists are contained in bounded scroll regions.
 - Added explicit loading, empty, error and retry states. Failed refreshes and team switches clear stale rows.
 - Existing staff-only score snapshot RLS remains unchanged. Member views gracefully show source/evaluation lineage while marking restricted score history unavailable.
 - Competitive results remain separate: kills, placement, Booyah and tournament points are never internal player-performance score inputs.
