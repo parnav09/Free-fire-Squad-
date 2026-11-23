@@ -68,11 +68,11 @@ DECLARE
   v_after integer;
   v_rubric_bindings integer;
   v_weight_bindings integer;
-  v_sniper_role uuid;
-  v_sniper_member uuid;
-  v_sniper_user uuid;
-  v_sniper_session uuid;
-  v_sniper_match uuid;
+  v_missing_role uuid;
+  v_missing_member uuid;
+  v_missing_user uuid;
+  v_missing_session uuid;
+  v_missing_match uuid;
 BEGIN
   SELECT c.* INTO v_source
   FROM public.evolution_evaluation_contexts c
@@ -146,21 +146,68 @@ BEGIN
     RAISE EXCEPTION 'Failed atomic context creation left an orphan evaluation context';
   END IF;
 
-  -- This fixture has an assigned Sniper + IGL role but only a Primary Rusher
-  -- weight set. The RPC must fail after the context insert and roll it back.
+  -- Select any assigned, canonical role that has no active effective weight
+  -- set. The RPC inserts the context before resolving config, so this proves
+  -- that a post-insert configuration failure rolls the context back.
   SELECT r.id,tm.id,r.player_user_id,r.canonical_session_id,r.canonical_session_match_id
-    INTO v_sniper_role,v_sniper_member,v_sniper_user,v_sniper_session,v_sniper_match
+    INTO v_missing_role,v_missing_member,v_missing_user,v_missing_session,v_missing_match
   FROM public.canonical_session_match_roles r
   JOIN public.team_members tm
     ON tm.team_id=r.team_id AND tm.user_id=r.player_user_id AND tm.status='active'
   WHERE r.team_id=v_source.team_id
     AND r.role_assignment_status='assigned'
-    AND lower(btrim(r.role_key_snapshot)) IN ('sniper + igl','sniper igl','sniper-igl','sniper_igl')
+    AND (CASE lower(btrim(r.role_key_snapshot))
+      WHEN 'primary rusher' THEN 'primary_rusher'
+      WHEN 'primary-rusher' THEN 'primary_rusher'
+      WHEN 'primary_rusher' THEN 'primary_rusher'
+      WHEN 'secondary rusher' THEN 'secondary_rusher'
+      WHEN 'secondary-rusher' THEN 'secondary_rusher'
+      WHEN 'secondary_rusher' THEN 'secondary_rusher'
+      WHEN 'third rusher flanker' THEN 'third_rusher_flanker'
+      WHEN 'third-rusher-flanker' THEN 'third_rusher_flanker'
+      WHEN 'third_rusher_flanker' THEN 'third_rusher_flanker'
+      WHEN 'sniper + igl' THEN 'sniper_igl'
+      WHEN 'sniper igl' THEN 'sniper_igl'
+      WHEN 'sniper-igl' THEN 'sniper_igl'
+      WHEN 'sniper_igl' THEN 'sniper_igl'
+      WHEN 'substitute flex' THEN 'substitute_flex'
+      WHEN 'substitute-flex' THEN 'substitute_flex'
+      WHEN 'substitute_flex' THEN 'substitute_flex'
+      WHEN 'other' THEN 'other'
+      ELSE NULL
+    END) IS NOT NULL
+    AND NOT EXISTS (
+      SELECT 1 FROM public.evolution_role_weight_sets ws
+      WHERE ws.team_id=r.team_id
+        AND ws.role_key=(CASE lower(btrim(r.role_key_snapshot))
+          WHEN 'primary rusher' THEN 'primary_rusher'
+          WHEN 'primary-rusher' THEN 'primary_rusher'
+          WHEN 'primary_rusher' THEN 'primary_rusher'
+          WHEN 'secondary rusher' THEN 'secondary_rusher'
+          WHEN 'secondary-rusher' THEN 'secondary_rusher'
+          WHEN 'secondary_rusher' THEN 'secondary_rusher'
+          WHEN 'third rusher flanker' THEN 'third_rusher_flanker'
+          WHEN 'third-rusher-flanker' THEN 'third_rusher_flanker'
+          WHEN 'third_rusher_flanker' THEN 'third_rusher_flanker'
+          WHEN 'sniper + igl' THEN 'sniper_igl'
+          WHEN 'sniper igl' THEN 'sniper_igl'
+          WHEN 'sniper-igl' THEN 'sniper_igl'
+          WHEN 'sniper_igl' THEN 'sniper_igl'
+          WHEN 'substitute flex' THEN 'substitute_flex'
+          WHEN 'substitute-flex' THEN 'substitute_flex'
+          WHEN 'substitute_flex' THEN 'substitute_flex'
+          WHEN 'other' THEN 'other'
+          ELSE NULL
+        END)
+        AND ws.lifecycle_status='active'
+        AND ws.effective_from<=clock_timestamp()
+        AND (ws.effective_to IS NULL OR ws.effective_to>clock_timestamp())
+    )
   ORDER BY r.changed_at,r.id
   LIMIT 1;
 
-  IF v_sniper_role IS NULL THEN
-    RAISE EXCEPTION 'Phase 3.13 rollback fixture requires an assigned Sniper + IGL snapshot';
+  IF v_missing_role IS NULL THEN
+    RAISE EXCEPTION 'Phase 3.13 rollback fixture requires an assigned canonical role without active effective weights';
   END IF;
 
   SELECT count(*) INTO v_before
@@ -169,8 +216,8 @@ BEGIN
 
   BEGIN
     PERFORM public.create_evolution_evaluation_context(
-      v_source.team_id,v_sniper_member,v_sniper_user,
-      v_sniper_session,v_sniper_match,v_sniper_role
+      v_source.team_id,v_missing_member,v_missing_user,
+      v_missing_session,v_missing_match,v_missing_role
     );
     RAISE EXCEPTION 'Missing historical role weights unexpectedly created an evaluation context';
   EXCEPTION WHEN SQLSTATE '23514' THEN
