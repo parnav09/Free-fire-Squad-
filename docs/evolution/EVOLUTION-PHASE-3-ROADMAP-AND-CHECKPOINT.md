@@ -699,7 +699,7 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 
 ## 12. Evolution Phase 3.14 — Existing Module Integration (2026-11-23)
 
-**Status: IMPLEMENTED — exact-head CI verification pending.**
+**Status: IMPLEMENTED AND VERIFIED — exact-head CI PASS.**
 
 - Existing Scrims, Tournament and Training records continue to link through the Phase 2.9 server-authoritative, idempotent `integrate_canonical_source` adapter; Planning remains a plan until explicit Training promotion.
 - Evaluation contexts continue to bind the exact canonical session, match and historical match-role snapshot from Phase 3.13.
@@ -717,7 +717,7 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 
 **Training boundary:** the current scored evaluation context requires a canonical competitive match and its assigned historical match-role snapshot. Phase 3.14 exposes Training as a linked canonical source session without fabricating a match or role. A future training-specific scoring workflow requires an independently approved session-level role/roster binding contract.
 
-**Verification pending:** run the expanded dedicated Phase 3.14 contracts and full exact-head GitHub Actions workflow, including applicable disposable PostgreSQL integrations, TypeScript, repository regression, responsive UI/touch-target/permissions/offline-write acceptance, screenshot upload and Vite production build. Do not mark Phase 3.14 VERIFIED until the exact latest PR head passes.
+**Exact-head verification: PASS** on implementation commit `493d2affa639abd451a208165752c61468ee2874`. GitHub Actions push run [#1640](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45174525390) and PR run [#1641](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45174534373) both succeeded with 40/40 steps. Dedicated Phase 3.14 contracts, the five-viewport Playwright harness, pagination/retry/member-RLS checks, screenshot upload, full repository regression chain, TypeScript and Vite production build all passed. Earlier stale assertions and exact-head environment propagation defects were fixed and rerun; no failure was waived.
 
 **Acceptance:** a player evaluation can be traced to its player, canonical match/session, exact historical role snapshot and source module; source sessions without evaluations remain visible without being misrepresented as evaluated matches.
 
