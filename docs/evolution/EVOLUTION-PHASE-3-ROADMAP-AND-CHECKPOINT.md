@@ -701,17 +701,20 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 
 **Status: IMPLEMENTED — exact-head CI verification pending.**
 
-- Existing Scrims, Tournament and Training records continue to link through the Phase 2.9 server-authoritative `integrate_canonical_source` adapter; explicit Training promotion remains required for plans.
-- Evolution Evaluation continues to bind a player to the canonical session, match and exact historical role snapshot from Phase 3.13.
-- Added `CanonicalModuleIntegrationPanel`, a shared read-only lineage surface mounted in Player / Weekly Review / Player Trends and Analytics.
-- The panel resolves source module references (Scrims/Tournament/Training), canonical session and match identity, player context and the latest score snapshot. It presents score status and evidence coverage separately.
-- Competitive results remain separate: no kills, placement, Booyah or tournament points are used as internal player-performance score inputs.
-- Reads are team-scoped, bounded and RLS-governed. No source records, evaluation contexts or score snapshots are mutated.
-- Added `scripts/verify-evolution-phase-three-14.mjs` and registered it in the standard build chain and GitHub Actions.
-- Added `docs/evolution/PHASE-3-14-EXISTING-MODULE-INTEGRATION.md`.
-- No new database migration, production migration, live data write, legacy conversion/backfill, merge to main or production deployment.
+- Existing Scrims, Tournament and Training records continue to link through the Phase 2.9 server-authoritative, idempotent `integrate_canonical_source` adapter; Planning remains a plan until explicit Training promotion.
+- Evaluation contexts continue to bind the exact canonical session, match and historical match-role snapshot from Phase 3.13.
+- Added a shared read-only lineage panel in Player / Weekly Review / Player Trends and Analytics.
+- The panel separately lists linked source sessions and player evaluation contexts. Training source sessions are therefore visible even though they do not have competitive matches or Phase 3.13 match-role evaluation contexts.
+- Resolves canonical source record, session, match, player, historical role and latest immutable score snapshot. Final/provisional/insufficient score state and evidence coverage remain separate.
+- Archived sessions remain visible. Reads use team-scoped RLS and stable 500-row pagination; there are no silent fixed-row cutoffs.
+- Added explicit loading, empty, error and retry states. Failed refreshes and team switches clear stale rows.
+- Competitive results remain separate: kills, placement, Booyah and tournament points are never internal player-performance score inputs.
+- Added expanded Phase 3.14 source-contract coverage for adapter wiring, exact historical role identity, paginated reads, Training source visibility, archived history, retry recovery, read-only behavior, responsive hit targets and score-domain separation.
+- Updated the consolidated GitHub Actions workflow label to Phase 3.14.
+- No new database migration is needed; existing Phase 2.9 source mapping and Phase 3.13 context schema already provide the required lineage. No production migration, live data write, legacy conversion/backfill, data reset, merge to main or production deployment.
 
-**Verification pending:** run the dedicated Phase 3.14 contracts, full typecheck/regression/build chain, all applicable disposable PostgreSQL checks and responsive UI acceptance on the exact latest PR head. Do not mark 3.14 VERIFIED until the exact-head workflow succeeds and any failures are fixed and rerun.
+**Training boundary:** the current scored evaluation context requires a canonical competitive match and its assigned historical match-role snapshot. Phase 3.14 exposes Training as a linked canonical source session without fabricating a match or role. A future training-specific scoring workflow requires an independently approved session-level role/roster binding contract.
 
-**Acceptance:** an evaluation can be traced from player to canonical match/session and back to its source module without duplicate identities or mixing competitive results with player-development scores.
+**Verification pending:** run the expanded dedicated Phase 3.14 contracts and full exact-head GitHub Actions workflow, including applicable disposable PostgreSQL integrations, TypeScript, repository regression, responsive UI/touch-target/permissions/offline-write acceptance, screenshot upload and Vite production build. Do not mark Phase 3.14 VERIFIED until the exact latest PR head passes.
 
+**Acceptance:** a player evaluation can be traced to its player, canonical match/session, exact historical role snapshot and source module; source sessions without evaluations remain visible without being misrepresented as evaluated matches.
