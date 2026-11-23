@@ -675,3 +675,23 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - No production migration, data write, legacy backfill, data reset, merge to main or production deployment.
 
 **Verification:** PASS on the exact latest PR head. Phase 3.12 is implemented and CI-verified; PR #131 remains draft/open and is not merged.
+
+
+---
+
+## Point 3.13 implementation checkpoint — Scoring UI & Evaluation Experience
+
+**Status: IMPLEMENTED ON FEATURE BRANCH — exact-head CI verification pending.**
+
+- Added a dedicated canonical Evaluation workspace and mounted it in the existing Evaluation module. The legacy five-dimension daily form and feedback inbox remain available in a collapsed compatibility section; no legacy records are converted or deleted.
+- The creation flow selects an existing canonical session, canonical match and assigned historical match-role snapshot. Unknown/unmapped roles are excluded; the current roster role is never substituted.
+- New contexts pin the exact active/effective rubric version and matching active/effective role-weight set. If no valid configuration exists, the workflow fails closed with a setup message rather than inventing a rubric or weights.
+- Added dimension assessment controls for Observed (0–10, including zero), Not Observed, Incomplete and Rejected Evidence. Non-observed states require a reason; observed ratings require dimension-linked evidence.
+- Added evidence creation, dimension linkage, visibility, evidence register and separate verification through the existing owner/coach verification RPC.
+- Added readiness, independent evidence coverage, database-authoritative deterministic score calculation, final/provisional/insufficient states and immutable snapshot history. Recalculation requires a reason.
+- Added responsive dark-theme styling with 44px minimum action/input hitboxes and narrow-phone/tablet breakpoints.
+- Added scripts/verify-evolution-phase-three-13.mjs, registered it in the full build chain and added a dedicated GitHub Actions step.
+- Added docs/evolution/PHASE-3-13-SCORING-UI-EVALUATION-EXPERIENCE.md.
+- No new SQL migration, legacy conversion/backfill, fake score/evidence/rubric seed, production migration, live data write, merge to main or production deployment.
+
+**Verification still required:** exact latest PR-head source tests, full typecheck/regression/build, responsive browser checks and screenshot review. Do not mark Point 3.13 VERIFIED until the exact latest commit passes GitHub Actions and any failures are fixed and rerun.
