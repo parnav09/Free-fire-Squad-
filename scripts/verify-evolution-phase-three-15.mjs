@@ -70,6 +70,16 @@ test("the production build executes every Phase 3 suite once, in strict numeric 
   assert.equal(pkg.scripts["test:evolution-phase-three-15"], "node --test scripts/verify-evolution-phase-three-15.mjs");
 });
 
+test("earlier phase suites no longer assert a stale Phase 3.14 build-chain endpoint", () => {
+  for (const [index, source] of phaseScripts.entries()) {
+    assert.doesNotMatch(source, /test:evolution-phase-three-14\\s*&&\\s*vite build/, `Phase 3.${index + 1} contains a stale pre-3.15 build-chain assertion`);
+  }
+  assert.match(scripts[9], /test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && vite build/);
+  assert.match(scripts[10], /test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && vite build/);
+  assert.match(scripts[11], /test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && vite build/);
+  assert.match(scripts[13], /Phase Three\\.1–3\\.15 Final Acceptance/);
+});
+
 test("all applicable Phase 3 PostgreSQL harnesses exist and are wired into CI", () => {
   const pointNumbers = [2,3,4,5,6,7,8,10,11,12,13];
   assert.equal(dbScripts.length, pointNumbers.length);

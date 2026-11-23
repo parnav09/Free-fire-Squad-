@@ -133,7 +133,7 @@ test("Phase 3.14 is part of the normal production build and workflow", () => {
   assert.equal(packageJson.scripts["test:evolution-phase-three-14"], "node --test scripts/verify-evolution-phase-three-14.mjs");
   assert.match(packageJson.scripts.build, /test:evolution-phase-three-13 && npm run test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && vite build/);
   assert.match(workflow, /Phase Three\.14 existing module integration contracts/);
-  assert.match(workflow, /Phase Three\.1–3\.14 Full Verification/);
+  assert.match(workflow, /Phase Three\.1–3\.15 Final Acceptance/);
 });
 
 test("roadmap records the Phase 3.14 acceptance boundary", () => {
