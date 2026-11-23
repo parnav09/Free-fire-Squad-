@@ -144,6 +144,15 @@ jobs:
         run: npm run test:evolution-phase-three-13
       - name: Verify Evolution Phase Three.14 existing module integration contracts
         run: node --test scripts/verify-evolution-phase-three-14.mjs
+      - name: Verify Evolution Phase Three.14 responsive browser acceptance
+        run: npm run test:evolution-phase-three-14-visual
+      - name: Upload Evolution Phase Three.14 browser screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: evolution-phase-three-14-responsive-screenshots
+          path: test-results/phase-three-14/
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.12 and Phase Three.1–3.14 audits and production bundle
         run: npm run build
