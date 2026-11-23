@@ -1,4 +1,4 @@
-name: SQUAD OS — Evolution Phase Two.1–2.12 + Phase Three.1–3.12 Full Verification
+name: SQUAD OS — Evolution Phase Two.1–2.12 + Phase Three.1–3.13 Full Verification
 
 on:
   push:
@@ -136,5 +136,7 @@ jobs:
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_three_12_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_three_12_ci bash scripts/verify-evolution-phase-three-12-db.sh
-      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.12 and Phase Three.1–3.12 audits and production bundle
+      - name: Verify Evolution Phase Three.13 scoring UI and evaluation workflow contracts
+        run: npm run test:evolution-phase-three-13
+      - name: Verify typecheck, foundation contracts, character data, Evolution Phase Two.1–2.12 and Phase Three.1–3.13 audits and production bundle
         run: npm run build
