@@ -141,9 +141,12 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
       if (!rubricOptions.length) throw new Error("No active, effective rubric is configured for this team. An owner/coach must publish a versioned rubric before an evaluation can start.");
       const compatible = (weightRows.data||[]).filter((x:Row)=>rubricOptions.some((r:Row)=>r.id===x.rubric_version_id) && effective(x));
       if (!compatible.length) throw new Error("No active, effective role-weight set exists for this historical role. Publish a complete 100% weight set for the selected rubric and role before starting.");
-      const chosenRubric = rubricOptions.sort((a:Row,b:Row)=>Date.parse(b.effective_from)-Date.parse(a.effective_from))[0];
-      const chosenWeight = compatible.filter((x:Row)=>x.rubric_version_id===chosenRubric.id).sort((a:Row,b:Row)=>b.version_number-a.version_number)[0];
-      if (!chosenWeight) throw new Error("The active rubric has no matching active role-weight set. Select a rubric/role pair with a complete published weight set.");
+      const compatiblePairs = compatible.map((weight:Row)=>({weight,rubric:rubricOptions.find((row:Row)=>row.id===weight.rubric_version_id)})).filter((pair:any)=>!!pair.rubric);
+      compatiblePairs.sort((a:any,b:any)=>Date.parse(b.rubric.effective_from)-Date.parse(a.rubric.effective_from)||b.weight.version_number-a.weight.version_number);
+      const chosenPair = compatiblePairs[0];
+      if (!chosenPair) throw new Error("The active rubric has no matching active role-weight set. Select a rubric/role pair with a complete published weight set.");
+      const chosenRubric = chosenPair.rubric;
+      const chosenWeight = chosenPair.weight;
       const ctx = await client.from("evolution_evaluation_contexts").insert({
         team_id:teamId,player_member_id:member.id,player_user_id:member.user_id,
         canonical_session_id:selectedSessionRow.id,canonical_session_match_id:match.id,
