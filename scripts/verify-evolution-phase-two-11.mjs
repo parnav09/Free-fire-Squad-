@@ -23,7 +23,10 @@ test("session ledger filters canonical sessions by type, status, season and date
     assert.ok(ui.includes(token), "missing session ledger contract: " + token);
   }
   assert.match(ui, /order\("session_date"/);
-  assert.match(ui, /limit\(250\)/);
+  assert.match(ui, /const readAllRows = async/);
+  assert.match(ui, /\.range\(from,to\)/);
+  assert.doesNotMatch(ui, /\.limit\(250\)/);
+  assert.doesNotMatch(ui, /\.limit\(100\)/);
 });
 
 test("create and source-link actions preserve module ownership and canonical IDs", () => {
