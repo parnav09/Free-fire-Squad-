@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
-const [panel, css, app, scrims, training, analytics, player, roadmap, packageJson, workflow, phaseTwoNine, phaseThreeThirteen] = await Promise.all([
+const [panel, css, app, scrims, training, analytics, player, roadmap, packageJson, workflow, phaseTwoNine, phaseThreeThirteen, visualScript, visualFixture] = await Promise.all([
   read("../src/components/CanonicalModuleIntegrationPanel.tsx"),
   read("../src/components/CanonicalModuleIntegrationPanel.css"),
   read("../src/App.tsx"),
@@ -16,6 +16,8 @@ const [panel, css, app, scrims, training, analytics, player, roadmap, packageJso
   read("../.github/workflows/evolution-phase-one.yml"),
   read("../supabase/migrations/20261120230000_evolution_phase_two_9_existing_module_integration.sql"),
   read("../supabase/migrations/20261122220000_evolution_phase_three_13_atomic_context_creation.sql"),
+  read("./run-evolution-phase-three-14-visual.mjs"),
+  read("./phase-three-14-visual/main.tsx"),
 ]);
 
 test("Phase 3.14 reads the canonical source, session, match, role, context and score chain", () => {
