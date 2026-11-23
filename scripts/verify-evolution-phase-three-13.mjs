@@ -132,6 +132,10 @@ test("atomic context creation migration is applied and its RPC ACL is verified i
   assert.match(dbHarness, /verify-evolution-phase-three-12-db\.sh/);
   assert.match(dbHarness, /20261122220000_evolution_phase_three_13_atomic_context_creation\.sql/);
   assert.match(dbHarness, /has_function_privilege/);
+  assert.match(dbHarness, /create_evolution_evaluation_context/);
+  assert.match(dbHarness, /Invalid role snapshot unexpectedly created/);
+  assert.match(dbHarness, /orphan evaluation context/);
+  assert.match(dbHarness, /atomic context creation behavior PASS/);
   assert.match(dbHarness, /search_path/);
   assert.match(workflow, /Verify Evolution Phase Three\.13 atomic context creation/);
   assert.match(workflow, /verify-evolution-phase-three-13-db\.sh/);
