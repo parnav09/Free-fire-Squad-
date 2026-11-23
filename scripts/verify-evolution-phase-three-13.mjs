@@ -35,6 +35,10 @@ test("evaluation context creation atomically pins the effective rubric and histo
   assert.match(atomicMigration, /SECURITY DEFINER/);
   assert.match(atomicMigration, /SET search_path = ''/);
   assert.match(atomicMigration, /canonical_role_key_from_snapshot/);
+  assert.match(atomicMigration, /JOIN public\.evolution_role_weight_sets/);
+  assert.match(atomicMigration, /INSERT INTO public\.evolution_evaluation_contexts/);
+  assert.match(atomicMigration, /INSERT INTO public\.evolution_evaluation_rubric_bindings/);
+  assert.match(atomicMigration, /INSERT INTO public\.evolution_evaluation_role_weight_bindings/);
   assert.match(atomicMigration, /RETURNING \* INTO v_context/);
   assert.match(atomicMigration, /RETURN v_context/);
   assert.match(atomicMigration, /GRANT EXECUTE ON FUNCTION public\.create_evolution_evaluation_context/);
