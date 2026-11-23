@@ -19,7 +19,23 @@ const roleKey = (value: unknown): string | null => {
   };
   return aliases[key] ?? null;
 };
-const messageOf = (error: unknown) => error instanceof Error ? error.message : "The evaluation action could not be completed.";
+const messageOf = (error: unknown) => {
+  if (error instanceof Error) return error.message;
+  if (error && typeof error==="object" && "message" in error && typeof error.message==="string") return error.message;
+  return "The evaluation action could not be completed.";
+};
+const friendlyMessageOf = (error: unknown) => {
+  const message=messageOf(error);
+  const known: Array<[string,string]> = [
+    ["no_active_effective_rubric_configured_for_team","No active, effective rubric is configured for this team. An owner or coach must publish a versioned rubric before starting an evaluation."],
+    ["no_active_effective_role_weight_set_for_historical_role","No active, effective role-weight set exists for this historical role. Publish a complete 100% weight set for the selected rubric and role."],
+    ["assigned_historical_match_role_required","The selected match role is no longer assigned in the canonical snapshot. Refresh and choose an assigned historical role."],
+    ["historical_role_snapshot_is_not_mapped_to_a_canonical_role","This historical role is not mapped to a canonical role. An owner or coach must map it before evaluation."],
+    ["active_team_owner_or_coach_required","Only active team owners and coaches can create canonical evaluations."],
+    ["evaluation_player_must_be_an_active_team_member","The selected player is no longer an active team member, so a new evaluation cannot be created."]
+  ];
+  return known.find(([code])=>message.includes(code))?.[1] || message;
+};
 const dateLabel = (value: string | null | undefined) => value ? new Date(value).toLocaleString() : "Not recorded";
 
 export default function EvolutionEvaluationWorkspace({ client, teamId, userId, membershipRole, members }: Props) {
@@ -158,7 +174,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
       setSelectedContext(created.id);
       await loadIndex();
       setNotice("Evaluation context created atomically and pinned to the exact match role, rubric and weight-set versions.");
-    } catch(e) { setError(messageOf(e)); }
+    } catch(e) { setError(friendlyMessageOf(e)); }
     finally { setBusy(""); }
   };
 
