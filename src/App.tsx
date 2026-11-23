@@ -1125,7 +1125,7 @@ export default function App() {
             </section>}{combatNexusView&&<div className="combat-nexus-detail" role="region" aria-live="polite"><div><div className="eyebrow">COMBAT NEXUS / {combatNexusView.toUpperCase()}</div><h4>{combatNexusView==="pets"?"Pet database":"Loadout"}</h4><p>{combatNexusView==="pets"?"The pet catalogue will contain skill details, level effects, cooldowns, activation conditions and verified character interactions.":"Loadout workspace reserved for verified character, pet and weapon combinations. No unverified presets are pre-filled."}</p></div><button type="button" className="secondary-button" onClick={()=>setCombatNexusView(null)}>Close</button></div>}</>}
           </>}
           {section==="Evaluation" && <>
-            <Suspense fallback={<section className="connection-panel" role="status">Loading canonical evaluation workspace…</section>}><EvolutionEvaluationWorkspace client={supabase} teamId={team?.id||""} userId={sessionUserId} membershipRole={team?.membership_role||""} members={teamMembers as any}/></Suspense>
+            <Suspense fallback={<section className="connection-panel" role="status">Loading canonical evaluation workspace…</section>}><EvolutionEvaluationWorkspace key={team?.id||"no-team"} client={supabase} teamId={team?.id||""} userId={sessionUserId} membershipRole={team?.membership_role||""} members={teamMembers as any}/></Suspense>
             <details className="legacy-evaluation-archive">
               <summary>Legacy daily evaluation · historical compatibility</summary>
               
