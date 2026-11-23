@@ -76,6 +76,9 @@ const fakeClient = {
       },
       then(resolve: any, reject: any) {
         queryCounts[table] = (queryCounts[table] || 0) + 1;
+        if (mode === "member" && table === "evolution_player_score_snapshots") {
+          return Promise.resolve({ data: null, error: { message: "permission denied by row-level security policy" } }).then(resolve, reject);
+        }
         if (mode === "error-once" && table === "canonical_sessions" && !failedOnce) {
           failedOnce = true;
           return Promise.resolve({ data: null, error: { message: "Temporary canonical read failure" } }).then(resolve, reject);
