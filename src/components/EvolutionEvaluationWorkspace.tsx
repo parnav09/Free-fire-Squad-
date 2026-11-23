@@ -6,7 +6,7 @@ import "./EvolutionEvaluationWorkspace.css";
 type Row = Record<string, any>;
 type Member = { id: string; user_id: string; display_name: string; player_number: number | null; assigned_role?: string | null; membership_role: string; status: string };
 type Props = { client: SupabaseClient | null; teamId: string; userId: string; membershipRole: string; members: Member[] };
-type Draft = { state: "observed" | "not_observed" | "incomplete" | "rejected_evidence"; rating: number; evidenceId: string; title: string; observation: string; visibility: "team" | "coaches" | "private"; sourceLocator: string; reason: string };
+type Draft = { state: "observed" | "not_observed" | "not_applicable" | "incomplete" | "rejected_evidence"; rating: number; evidenceId: string; title: string; observation: string; visibility: "team" | "coaches" | "private"; sourceLocator: string; reason: string };
 const blankDraft = (): Draft => ({ state: "observed", rating: 5, evidenceId: "", title: "", observation: "", visibility: "coaches", sourceLocator: "", reason: "" });
 const roleKey = (value: unknown): string | null => {
   const key = typeof value === "string" ? value.trim().toLowerCase() : "";
@@ -48,6 +48,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
   const [readiness,setReadiness] = useState<Row|null>(null);
   const [scoreSnapshots,setScoreSnapshots] = useState<Row[]>([]);
   const [coverageSnapshots,setCoverageSnapshots] = useState<Row[]>([]);
+  const [previousEvaluation,setPreviousEvaluation] = useState<Row|null>(null);
   const [drafts,setDrafts] = useState<Record<string,Draft>>({});
   const [recalculationReason,setRecalculationReason] = useState("");
 
@@ -68,7 +69,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
     finally { setLoading(false); }
   },[client,teamId,selectedSession]);
 
-  const loadContext = useCallback(async (id: string) => {
+  const loadContext = useCallback(async (id: string, preserveDrafts = false) => {
     if (!client || !id) return;
     setBusy("loading"); setError(""); setNotice("");
     try {
@@ -85,28 +86,39 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
         client.from("evolution_role_weight_sets").select("*").eq("team_id",teamId).eq("id",wb.data.weight_set_id).single()
       ]);
       if (rv.error) throw rv.error; if (ws.error) throw ws.error;
-      const [cr,w,a,e,es,dl,rd,ss,cs] = await Promise.all([
+      const [cr,w,a,e,rd,ss,cs] = await Promise.all([
         client.from("evolution_rubric_dimension_criteria").select("*").eq("team_id",teamId).eq("rubric_version_id",rv.data.id).order("sort_order"),
         client.from("evolution_role_dimension_weights").select("*").eq("team_id",teamId).eq("weight_set_id",ws.data.id).order("dimension_key"),
         client.from("evolution_evaluation_current_dimension_assessments").select("*").eq("team_id",teamId).eq("evaluation_context_id",id),
         client.from("evolution_evidence_items").select("*").eq("team_id",teamId).eq("evaluation_context_id",id).order("created_at",{ascending:false}),
-        client.from("evolution_evidence_current_status").select("*").eq("team_id",teamId),
-        client.from("evolution_evidence_dimension_links").select("*").eq("team_id",teamId),
         client.from("evolution_evaluation_assessment_readiness").select("*").eq("team_id",teamId).eq("evaluation_context_id",id).maybeSingle(),
         client.from("evolution_player_score_snapshots").select("*").eq("team_id",teamId).eq("evaluation_context_id",id).order("created_at",{ascending:false}),
         client.from("evolution_evidence_coverage_snapshots").select("*").eq("team_id",teamId).eq("evaluation_context_id",id).order("created_at",{ascending:false})
       ]);
-      for (const q of [cr,w,a,e,es,dl,rd,ss,cs]) if (q.error) throw q.error;
+      for (const q of [cr,w,a,e,rd,ss,cs]) if (q.error) throw q.error;
+      const evidenceIds = (e.data||[]).map((x:Row)=>x.id);
+      const [es,dl] = evidenceIds.length ? await Promise.all([
+        client.from("evolution_evidence_current_status").select("*").eq("team_id",teamId).in("evidence_item_id",evidenceIds),
+        client.from("evolution_evidence_dimension_links").select("*").eq("team_id",teamId).in("evidence_item_id",evidenceIds)
+      ]) : [{data:[],error:null},{data:[],error:null}];
+      if (es.error) throw es.error; if (dl.error) throw dl.error;
       setContext(c.data); setRubric(rv.data); setWeightSet(ws.data); setCriteria(cr.data||[]); setWeights(w.data||[]);
       setAssessments(a.data||[]); setEvidence(e.data||[]);
-      const evidenceIds = new Set((e.data||[]).map((x:Row)=>x.id));
-      setEvidenceStatuses((es.data||[]).filter((x:Row)=>evidenceIds.has(x.evidence_item_id)));
-      setEvidenceLinks((dl.data||[]).filter((x:Row)=>evidenceIds.has(x.evidence_item_id)));
+      setEvidenceStatuses(es.data||[]);
+      setEvidenceLinks(dl.data||[]);
       setReadiness(rd.data||null); setScoreSnapshots(ss.data||[]); setCoverageSnapshots(cs.data||[]);
-      setDrafts({});
+      if (!preserveDrafts) setDrafts({});
+      setPreviousEvaluation(null);
+      if (canManage) {
+        const prior = await client.from("evolution_player_score_snapshots")
+          .select("id,evaluation_context_id,score_status,score100,provisional_score100,coverage_percent,created_at")
+          .eq("team_id",teamId).eq("player_member_id",c.data.player_member_id)
+          .neq("evaluation_context_id",id).order("created_at",{ascending:false}).limit(1).maybeSingle();
+        if (!prior.error) setPreviousEvaluation(prior.data||null);
+      }
     } catch (e) { setContext(null); setError(messageOf(e)); }
     finally { setBusy(""); }
-  },[client,teamId]);
+  },[client,teamId,canManage]);
 
   useEffect(()=>{void loadIndex();},[loadIndex]);
   useEffect(()=>{if(selectedContext)void loadContext(selectedContext);else{setContext(null);setRubric(null);setWeightSet(null);}},[selectedContext,loadContext]);
@@ -210,7 +222,8 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
         reason:d.state==="observed"?null:d.reason.trim(),actor_user_id:userId
       });
       if (insert.error) throw insert.error;
-      await loadContext(context.id);
+      await loadContext(context.id,true);
+      setDrafts(old=>{const next={...old};delete next[key];return next;});
       setNotice("Assessment revision saved. Earlier revisions remain in the audit history.");
     } catch(e) { setError(messageOf(e)); }
     finally { setBusy(""); }
@@ -224,7 +237,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
         p_evidence_item_id:item.id,p_to_status:"verified",p_reason:null,p_evidence_version_id:null
       });
       if (result.error) throw result.error;
-      if (context) await loadContext(context.id);
+      if (context) await loadContext(context.id,true);
       setNotice("Evidence verification recorded in the append-only event history.");
     } catch(e) { setError(messageOf(e)); }
     finally { setBusy(""); }
@@ -244,7 +257,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
       });
       if (score.error) throw score.error;
       setRecalculationReason("");
-      await loadContext(context.id);
+      await loadContext(context.id,true);
       setNotice("Coverage and score calculation completed. The database returned an immutable, versioned snapshot.");
     } catch(e) { setError(messageOf(e)); }
     finally { setBusy(""); }
@@ -257,6 +270,8 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
   const scoreValue = (snapshot:Row|undefined) => snapshot?.score_status==="final" ? Number(snapshot.score100) : snapshot?.score_status==="provisional" ? Number(snapshot.provisional_score100) : null;
   const scoreDelta = scoreValue(score)===null || scoreValue(scoreSnapshots[1])===null ? null : Number((scoreValue(score)!-scoreValue(scoreSnapshots[1])!).toFixed(2));
   const canCreate = !!client && !!teamId && canManage && sessions.length>0 && matches.length>0 && roles.length>0;
+  const unsavedDraftCount = Object.keys(drafts).length;
+  const discardDrafts = () => setDrafts({});
 
   return <section className="evolution-eval-workspace" aria-labelledby="evolution-eval-title">
     <header className="evolution-eval-heading">
@@ -280,8 +295,9 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
         </div>
         <div className="evolution-eval-panel">
           <span className="evolution-eval-kicker">EXISTING EVALUATIONS</span>
-          <label>Open evaluation<select value={selectedContext} onChange={e=>setSelectedContext(e.target.value)}><option value="">Choose a saved evaluation</option>{contexts.map(c=>{const p=members.find(m=>m.id===c.player_member_id);return <option key={c.id} value={c.id}>{p?.display_name||"Player"} · {sessionTitle(c.canonical_session_id)} · {matchTitle(c.canonical_session_match_id)} · {new Date(c.created_at).toLocaleDateString()}</option>;})}</select></label>
+          <label>Open evaluation<select value={selectedContext} disabled={unsavedDraftCount>0} onChange={e=>setSelectedContext(e.target.value)}><option value="">Choose a saved evaluation</option>{contexts.map(c=>{const p=members.find(m=>m.id===c.player_member_id);return <option key={c.id} value={c.id}>{p?.display_name||"Player"} · {sessionTitle(c.canonical_session_id)} · {matchTitle(c.canonical_session_match_id)} · {new Date(c.created_at).toLocaleDateString()}</option>;})}</select></label>
           <p className="evolution-eval-muted">Historical contexts are immutable. Reopening one loads its exact match, role, rubric, weight-set and assessment history.</p>
+          {unsavedDraftCount>0 && <p className="evolution-eval-muted" role="status">{unsavedDraftCount} unsaved dimension draft(s). Save them or discard drafts before switching evaluations. <button type="button" className="evolution-eval-secondary" onClick={discardDrafts}>Discard all drafts</button></p>}
           <div className="evolution-eval-counts"><span><b>{contexts.length}</b> contexts</span><span><b>{sessions.length}</b> sessions</span><span><b>{matches.length}</b> matches</span></div>
         </div>
       </div>
@@ -298,34 +314,36 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
       <section className="evolution-eval-panel">
         <div className="evolution-eval-section-head"><div><span className="evolution-eval-kicker">RUBRIC · {rubric.title}</span><h3>Dimension assessment</h3><p>{rubric.description}</p></div><span className="evolution-eval-role-lock">VERSIONED</span></div>
         <div className="evolution-eval-dimensions">
-          {weights.map(weight=>{
-            const definition=CANONICAL_DIMENSION_REGISTRY.find(d=>d.key===weight.dimension_key);
-            const criterion=criteria.find(c=>c.dimension_key===weight.dimension_key);
-            if(!definition||!criterion)return null;
-            const saved=currentAssessment(weight.dimension_key);
-            const draft=drafts[weight.dimension_key]||blankDraft();
-            const linked=activeEvidenceFor(weight.dimension_key);
+          {criteria.map(criterion=>{
+            const weight=weights.find(w=>w.dimension_key===criterion.dimension_key);
+            const definition=CANONICAL_DIMENSION_REGISTRY.find(d=>d.key===criterion.dimension_key);
+            if(!definition)return null;
+            const applicable=!!weight;
+            const saved=currentAssessment(criterion.dimension_key);
+            const draft=drafts[criterion.dimension_key]||blankDraft();
+            const linked=activeEvidenceFor(criterion.dimension_key);
+            const availableEvidence=evidence.filter(item=>linksFor(item.id).some(link=>link.dimension_key===criterion.dimension_key)||!evidenceLinks.some(link=>link.evidence_item_id===item.id));
             const anchors=criterion.rating_anchors||{};
             return <article className="evolution-eval-dimension" key={weight.dimension_key}>
-              <header><div><span>{String(criterion.sort_order).padStart(2,"0")} / 06</span><h4>{definition.label}</h4><p>{criterion.criteria_guidance}</p></div><strong>{(weight.weight_basis_points/100).toFixed(2)}<small>%</small></strong></header>
+              <header><div><span>{String(criterion.sort_order).padStart(2,"0")} / 06</span><h4>{definition.label}</h4><p>{criterion.criteria_guidance}</p></div><strong>{weight?(weight.weight_basis_points/100).toFixed(2):"N/A"}<small>{weight?"%":"· role"}</small></strong></header>
               <div className="evolution-eval-anchor"><b>Rating anchors</b><div>{[0,2,4,6,8,10].map(n=><span key={n}><b>{n}</b> {String(anchors[String(n)]||"—")}</span>)}</div></div>
               {drafts[weight.dimension_key] && <div className="evolution-eval-unsaved" role="status">UNSAVED DRAFT · Save this revision or reset it before leaving.</div>}
               {saved && <div className="evolution-eval-saved">Current: <b>{saved.assessment_state==="observed"?String(saved.rating_value)+"/10":String(saved.assessment_state).replaceAll("_"," ")}</b> · Revision {saved.revision_number} · {dateLabel(saved.created_at)}</div>}
               <div className="evolution-eval-editor">
-                <label>Assessment state<select value={draft.state} onChange={e=>updateDraft(weight.dimension_key,{state:e.target.value as Draft["state"],evidenceId:""})}><option value="observed">Observed</option><option value="not_observed">Not Observed</option><option value="incomplete">Incomplete</option><option value="rejected_evidence">Rejected Evidence</option></select></label>
+                <label>Assessment state<select value={draft.state} onChange={e=>updateDraft(criterion.dimension_key,{state:e.target.value as Draft["state"],evidenceId:""})}>{applicable?<><option value="observed">Observed</option><option value="not_observed">Not Observed</option><option value="incomplete">Incomplete</option><option value="rejected_evidence">Rejected Evidence</option></>:<option value="not_applicable">Not Applicable · excluded by historical role</option>}</select></label>
                 {draft.state==="observed" && <>
-                  <label>Observed rating <output>{draft.rating}/10</output><input type="range" min="0" max="10" step="1" value={draft.rating} onChange={e=>updateDraft(weight.dimension_key,{rating:Number(e.target.value)})}/></label>
-                  <label>Existing evidence<select value={draft.evidenceId} onChange={e=>updateDraft(weight.dimension_key,{evidenceId:e.target.value})}><option value="">Create new evidence below</option>{linked.filter(x=>["pending","verified","corrected"].includes(statusFor(x.id)?.status||"pending")).map(x=><option key={x.id} value={x.id}>{x.title} · {statusFor(x.id)?.status||"pending"}</option>)}</select></label>
-                  {!draft.evidenceId && <div className="evolution-eval-evidence-form"><label>Evidence title<input maxLength={160} value={draft.title} onChange={e=>updateDraft(weight.dimension_key,{title:e.target.value})} placeholder="Specific observed behavior"/></label><label>Observation<textarea maxLength={4000} value={draft.observation} onChange={e=>updateDraft(weight.dimension_key,{observation:e.target.value})} placeholder="Describe what happened, without inferring intent or match outcome."/></label><div className="evolution-eval-form-row"><label>Visibility<select value={draft.visibility} onChange={e=>updateDraft(weight.dimension_key,{visibility:e.target.value as Draft["visibility"]})}><option value="coaches">Coaches</option><option value="team">Team</option><option value="private">Private to author</option></select></label><label>Source link (optional)<input type="url" value={draft.sourceLocator} onChange={e=>updateDraft(weight.dimension_key,{sourceLocator:e.target.value})} placeholder="https://…"/></label></div></div>}
+                  <label>Observed rating <output>{draft.rating}/10</output><input type="range" min="0" max="10" step="1" value={draft.rating} onChange={e=>updateDraft(criterion.dimension_key,{rating:Number(e.target.value)})}/></label>
+                  <label>Existing evidence<select value={draft.evidenceId} onChange={e=>updateDraft(criterion.dimension_key,{evidenceId:e.target.value})}><option value="">Create new evidence below</option>{availableEvidence.filter(x=>["pending","verified","corrected"].includes(statusFor(x.id)?.status||"pending")).map(x=><option key={x.id} value={x.id}>{x.title} · {statusFor(x.id)?.status||"pending"}</option>)}</select></label>
+                  {!draft.evidenceId && <div className="evolution-eval-evidence-form"><label>Evidence title<input maxLength={160} value={draft.title} onChange={e=>updateDraft(criterion.dimension_key,{title:e.target.value})} placeholder="Specific observed behavior"/></label><label>Observation<textarea maxLength={4000} value={draft.observation} onChange={e=>updateDraft(criterion.dimension_key,{observation:e.target.value})} placeholder="Describe what happened, without inferring intent or match outcome."/></label><div className="evolution-eval-form-row"><label>Visibility<select value={draft.visibility} onChange={e=>updateDraft(criterion.dimension_key,{visibility:e.target.value as Draft["visibility"]})}><option value="coaches">Coaches</option><option value="team">Team</option><option value="private">Private to author</option></select></label><label>Source link (optional)<input type="url" value={draft.sourceLocator} onChange={e=>updateDraft(criterion.dimension_key,{sourceLocator:e.target.value})} placeholder="https://…"/></label></div></div>}
                 </>}
-                {draft.state==="rejected_evidence" && <label>Rejected evidence<select value={draft.evidenceId} onChange={e=>updateDraft(weight.dimension_key,{evidenceId:e.target.value})}><option value="">Select rejected evidence</option>{linked.filter(x=>statusFor(x.id)?.status==="rejected").map(x=><option key={x.id} value={x.id}>{x.title}</option>)}</select></label>}
-                {draft.state!=="observed" && <label>Reason (required)<textarea maxLength={1000} minLength={3} value={draft.reason} onChange={e=>updateDraft(weight.dimension_key,{reason:e.target.value})} placeholder="Explain why this dimension is not currently rated."/></label>}
-                <div className="evolution-eval-dimension-actions"><button type="button" className="evolution-eval-secondary" disabled={!!busy||!canManage} onClick={()=>updateDraft(weight.dimension_key,blankDraft())}>Reset draft</button><button type="button" className="evolution-eval-primary" disabled={!!busy||!canManage||(draft.state==="observed"&&!draft.evidenceId&&(!draft.title.trim()||!draft.observation.trim()))||(draft.state!=="observed"&&draft.reason.trim().length<3)||(draft.state==="rejected_evidence"&&!draft.evidenceId)} onClick={()=>saveDimension(weight.dimension_key)}>{busy==="save:"+weight.dimension_key?"Saving…":"Save assessment revision"}</button></div>
+                {draft.state==="rejected_evidence" && <label>Rejected evidence<select value={draft.evidenceId} onChange={e=>updateDraft(criterion.dimension_key,{evidenceId:e.target.value})}><option value="">Select rejected evidence</option>{linked.filter(x=>statusFor(x.id)?.status==="rejected").map(x=><option key={x.id} value={x.id}>{x.title}</option>)}</select></label>}
+                {draft.state!=="observed" && <label>Reason (required)<textarea maxLength={1000} minLength={3} value={draft.reason} onChange={e=>updateDraft(criterion.dimension_key,{reason:e.target.value})} placeholder="Explain why this dimension is not currently rated."/></label>}
+                <div className="evolution-eval-dimension-actions"><button type="button" className="evolution-eval-secondary" disabled={!!busy||!canManage} onClick={()=>setDrafts(old=>{const next={...old};delete next[criterion.dimension_key];return next;})}>Reset draft</button><button type="button" className="evolution-eval-primary" disabled={!!busy||!canManage||(applicable&&draft.state==="not_applicable")||(!applicable&&draft.state!=="not_applicable")||(draft.state==="observed"&&!draft.evidenceId&&(!draft.title.trim()||!draft.observation.trim()))||(draft.state!=="observed"&&draft.reason.trim().length<3)||(draft.state==="rejected_evidence"&&!draft.evidenceId)} onClick={()=>saveDimension(criterion.dimension_key)}>{busy==="save:"+criterion.dimension_key?"Saving…":"Save assessment revision"}</button></div>
               </div>
             </article>;
           })}
         </div>
-        {!weights.length && <p className="evolution-eval-muted">No dimensions are bound to this role-weight set. Scoring is blocked; do not fill missing dimensions with zero.</p>}
+        {!weights.length && <p className="evolution-eval-muted">No applicable dimensions are bound to this role-weight set. Scoring is blocked; do not fill missing dimensions with zero.</p>}
       </section>
       <section className="evolution-eval-panel">
         <div className="evolution-eval-section-head"><div><span className="evolution-eval-kicker">EVIDENCE REGISTER</span><h3>Evidence & verification</h3><p>Evidence remains append-only; status changes are recorded by the verification event ledger.</p></div></div>
@@ -334,6 +352,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
           {!evidence.length&&<p className="evolution-eval-muted">No evidence has been recorded for this evaluation yet.</p>}
         </div>
       </section>
+      {previousEvaluation && <section className="evolution-eval-result-card evolution-eval-previous"><span className="evolution-eval-kicker">PREVIOUS EVALUATION · SAME PLAYER</span><strong>{previousEvaluation.score_status==="final"?String(previousEvaluation.score100)+"/100":previousEvaluation.score_status==="provisional"?String(previousEvaluation.provisional_score100)+"/100 · provisional":"Insufficient"}</strong><small>Coverage {previousEvaluation.coverage_percent??"—"}% · {dateLabel(previousEvaluation.created_at)}</small>{score?.score_status==="final"&&previousEvaluation.score_status==="final"&&<small>Change from previous final score: {Number(score.score100)-Number(previousEvaluation.score100)>0?"+":""}{(Number(score.score100)-Number(previousEvaluation.score100)).toFixed(2)} points</small>}</section>}
       <section className="evolution-eval-results">
         <div className="evolution-eval-result-card"><span className="evolution-eval-kicker">LATEST EVIDENCE COVERAGE</span><strong>{coverage?.coverage_percent!=null?String(coverage.coverage_percent)+"%":"—"}</strong><small>{coverage?.coverage_status||"Not calculated"} · independent of performance score</small></div>
         <div className="evolution-eval-result-card"><span className="evolution-eval-kicker">LATEST PLAYER SCORE</span><strong>{score?.score_status==="final"?String(score.score100)+"/100":score?.score_status==="provisional"?String(score.provisional_score100)+"/100*":"—"}</strong><small>{score?.score_status||"Not calculated"} · {score?.calculation_version||"No snapshot"}</small><small>{scoreDelta===null?"No comparable prior score": "vs previous snapshot: "+(scoreDelta>0?"+":"")+scoreDelta.toFixed(2)+" points"}</small></div>
