@@ -39,11 +39,13 @@ try {
     await page.getByRole("heading", { name: "Linked source sessions" }).waitFor({ state: "visible" });
     await page.getByText("Training Source Session").waitFor({ state: "visible" });
     await page.getByText("ARCHIVED", { exact: true }).waitFor({ state: "visible" });
-    await page.getByText("Player 0", { exact: true }).waitFor({ state: "visible" });
+    const firstPlayer = page.locator(".canonical-evaluation-list .canonical-trace-main strong").first();
+    await firstPlayer.waitFor({ state: "visible" });
+    assert.match(await firstPlayer.innerText(), /Player 0/);
     await page.getByText("Primary Rusher", { exact: true }).first().waitFor({ state: "visible" });
     const rows = await page.locator(".canonical-evaluation-list .canonical-trace-row").count();
     assert.equal(rows, 502, viewport.name + " must render all paginated evaluation rows");
-    const qa = await page.evaluate(() => (window as any).__phase314QA);
+    const qa = await page.evaluate(() => window.__phase314QA);
     assert.ok(qa.rangeCalls.evolution_evaluation_contexts >= 2, "contexts must be fetched in multiple stable pages");
     assert.ok(qa.rangeCalls.evolution_player_score_snapshots >= 2, "score snapshots must be fetched in multiple stable pages");
     const metrics = await page.evaluate(() => ({
