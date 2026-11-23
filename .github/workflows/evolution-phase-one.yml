@@ -48,7 +48,7 @@ jobs:
           diff -u <(printf '%s\n' "${expected_versions[@]}") <(printf '%s\n' "${applied_versions[@]}")
           echo "Verified ${#applied_versions[@]} ordered migrations."
           psql "$SUPABASE_DB_URL" -X -v ON_ERROR_STOP=1 <<'SQL'
-          DO $
+          DO $replay$
           BEGIN
             IF to_regclass('public.canonical_sessions') IS NULL THEN RAISE EXCEPTION 'Phase 2 canonical_sessions missing after clean replay'; END IF;
             IF to_regclass('public.canonical_session_matches') IS NULL THEN RAISE EXCEPTION 'Phase 2 canonical_session_matches missing after clean replay'; END IF;
@@ -58,7 +58,7 @@ jobs:
             IF to_regclass('public.evolution_player_score_snapshots') IS NULL THEN RAISE EXCEPTION 'Phase 3 score snapshots missing after clean replay'; END IF;
             IF to_regprocedure('public.create_evolution_evaluation_context(uuid,uuid,uuid,uuid,uuid,uuid)') IS NULL THEN RAISE EXCEPTION 'Phase 3 atomic context RPC missing after clean replay'; END IF;
             IF to_regprocedure('public.calculate_evolution_player_score_snapshot(uuid,text)') IS NULL THEN RAISE EXCEPTION 'Phase 3 scoring RPC missing after clean replay'; END IF;
-          END $;
+          END $replay$;
           SQL
       - name: Stop disposable local Supabase stack
         if: always()
