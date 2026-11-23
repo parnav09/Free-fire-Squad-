@@ -335,9 +335,10 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
             const linked=activeEvidenceFor(criterion.dimension_key);
             const availableEvidence=evidence.filter(item=>linksFor(item.id).some(link=>link.dimension_key===criterion.dimension_key)||!evidenceLinks.some(link=>link.evidence_item_id===item.id));
             const anchors=criterion.rating_anchors||{};
+            const roleGuidance=criterion.role_guidance?.[weightSet.role_key];
             return <article className="evolution-eval-dimension" key={criterion.dimension_key}>
-              <header><div><span>{String(criterion.sort_order).padStart(2,"0")} / 06</span><h4>{definition.label}</h4><p>{criterion.criteria_guidance}</p></div><strong>{weight?(weight.weight_basis_points/100).toFixed(2):"N/A"}<small>{weight?"%":"· role"}</small></strong></header>
-              <div className="evolution-eval-anchor"><b>Rating anchors</b><div>{[0,2,4,6,8,10].map(n=><span key={n}><b>{n}</b> {String(anchors[String(n)]||"—")}</span>)}</div></div>
+              <header><div><span>{String(criterion.sort_order).padStart(2,"0")} / 06</span><h4>{definition.label}</h4><p>{criterion.criteria_guidance}</p><small>{definition.definition}</small>{roleGuidance&&<small className="evolution-eval-role-guidance">Role guidance: {String(roleGuidance)}</small>}</div><strong>{weight?(weight.weight_basis_points/100).toFixed(2):"N/A"}<small>{weight?"%":"· role"}</small></strong></header>
+              <div className="evolution-eval-anchor"><b>Rating anchors</b><div>{[0,1,2,3,4,5,6,7,8,9,10].map(n=><span key={n}><b>{n}</b> {String(anchors[String(n)]||"—")}</span>)}</div></div>
               {drafts[criterion.dimension_key] && <div className="evolution-eval-unsaved" role="status">UNSAVED DRAFT · Save this revision or reset it before leaving.</div>}
               {saved && <div className="evolution-eval-saved">Current: <b>{saved.assessment_state==="observed"?String(saved.rating_value)+"/10":String(saved.assessment_state).replaceAll("_"," ")}</b> · Revision {saved.revision_number} · {dateLabel(saved.created_at)}</div>}
               <div className="evolution-eval-editor">
