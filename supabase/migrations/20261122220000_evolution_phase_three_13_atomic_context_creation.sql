@@ -17,7 +17,7 @@ SET search_path = ''
 AS $function$
 DECLARE
   v_actor uuid := auth.uid();
-  v_now timestamptz := clock_timestamp();
+  v_now timestamptz;
   v_role_snapshot text;
   v_role_key text;
   v_rubric_version_id uuid;
@@ -72,6 +72,19 @@ BEGIN
     RAISE EXCEPTION 'historical_role_snapshot_is_not_mapped_to_a_canonical_role' USING ERRCODE = '23514';
   END IF;
 
+  INSERT INTO public.evolution_evaluation_contexts (
+    team_id, player_member_id, player_user_id,
+    canonical_session_id, canonical_session_match_id,
+    role_assignment_id, created_by
+  ) VALUES (
+    p_team_id, p_player_member_id, p_player_user_id,
+    p_canonical_session_id, p_canonical_session_match_id,
+    p_role_assignment_id, v_actor
+  )
+  RETURNING * INTO v_context;
+
+  v_now := v_context.created_at;
+
   SELECT rv.id, ws.id
     INTO v_rubric_version_id, v_weight_set_id
   FROM public.evolution_rubric_versions rv
@@ -102,17 +115,6 @@ BEGIN
     END IF;
     RAISE EXCEPTION 'no_active_effective_rubric_configured_for_team' USING ERRCODE = '23514';
   END IF;
-
-  INSERT INTO public.evolution_evaluation_contexts (
-    team_id, player_member_id, player_user_id,
-    canonical_session_id, canonical_session_match_id,
-    role_assignment_id, created_by
-  ) VALUES (
-    p_team_id, p_player_member_id, p_player_user_id,
-    p_canonical_session_id, p_canonical_session_match_id,
-    p_role_assignment_id, v_actor
-  )
-  RETURNING * INTO v_context;
 
   INSERT INTO public.evolution_evaluation_rubric_bindings (
     team_id, evaluation_context_id, rubric_version_id, bound_by
