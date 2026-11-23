@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
-const [panel, css, app, scrims, training, analytics, player, roadmap, packageJson, workflow, phaseTwoNine, phaseThreeThirteen, phaseThreeTen, visualScript, visualFixture, sessionsWorkspace] = await Promise.all([
+const [panel, css, app, scrims, training, analytics, player, roadmap, packageJson, workflow, phaseTwoNine, phaseThreeThirteen, phaseThreeTen, visualScript, visualFixture, sessionsWorkspace, sessionsCss] = await Promise.all([
   read("../src/components/CanonicalModuleIntegrationPanel.tsx"),
   read("../src/components/CanonicalModuleIntegrationPanel.css"),
   read("../src/App.tsx"),
@@ -20,6 +20,7 @@ const [panel, css, app, scrims, training, analytics, player, roadmap, packageJso
   read("./run-evolution-phase-three-14-visual.mjs"),
   read("./phase-three-14-visual/main.tsx"),
   read("../src/components/CanonicalSessionsWorkspace.tsx"),
+  read("../src/components/CanonicalSessionsWorkspace.css"),
 ]);
 
 test("Phase 3.14 reads the canonical source, session, match, role, context and score chain", () => {
@@ -66,6 +67,8 @@ test("existing-source picker and canonical session ledger paginate all history",
   assert.match(sessionsWorkspace, /training_sessions/);
   assert.doesNotMatch(sessionsWorkspace, /\.limit\(100\)/);
   assert.doesNotMatch(sessionsWorkspace, /\.limit\(250\)/);
+  assert.match(sessionsCss, /\.canonical-session-list\{max-height:720px/);
+  assert.match(sessionsCss, /\.canonical-source-list\{max-height:360px/);
 });
 
 test("source sessions include Training and archived history, even without an evaluation context", () => {
