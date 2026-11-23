@@ -98,7 +98,7 @@ test("security tests reject anonymous policy grants and unsafe definer routines 
 
 test("Phase 3.12 checks are part of the normal build and GitHub Actions workflow", () => {
   assert.equal(pkg.scripts["test:evolution-phase-three-12"], "node --test scripts/verify-evolution-phase-three-12.mjs");
-  assert.match(pkg.scripts.build, /test:evolution-phase-three-11 && npm run test:evolution-phase-three-12 && npm run test:evolution-phase-three-13 && npm run test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && vite build/);
+  assert.match(pkg.scripts.build, /test:evolution-phase-three-11 && npm run test:evolution-phase-three-12 && npm run test:evolution-phase-three-13 && npm run test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && npm run test:evolution-phase-four-1 && vite build/);
   assert.match(workflow, /Verify Evolution Phase Three\.12 security, RLS and permissions against isolated disposable PostgreSQL/);
   assert.match(workflow, /verify-evolution-phase-three-12-db\.sh/);
 });
