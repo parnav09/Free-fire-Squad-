@@ -68,3 +68,35 @@ test("mobile controls and visible action hitboxes meet the 44px minimum", () => 
   assert.match(styles, /@media\(max-width:480px\)/);
   assert.match(styles, /grid-template-columns:1fr/);
 });
+
+test("role-inapplicable rubric dimensions expose Not Applicable without inventing a score", () => {
+  assert.match(component, /not_applicable/);
+  assert.match(component, /criteria\\.map\\(criterion/);
+  assert.match(component, /!weight\\?"not_applicable"/);
+  assert.match(component, /assessment state does not match the dimension's historical role applicability/);
+  assert.match(component, /assessment_state:d\\.state/);
+  assert.doesNotMatch(component, /key=\\{weight\\.dimension_key\\}/);
+});
+
+test("refreshing a saved dimension preserves other unsaved drafts", () => {
+  assert.match(component, /loadContext\\(context\\.id,true\\)/);
+  assert.match(component, /delete next\\[key\\]/);
+  assert.match(component, /unsavedDraftCount/);
+  assert.match(component, /disabled=\\{unsavedDraftCount>0\\}/);
+  assert.match(component, /Discard all drafts/);
+});
+
+test("evidence recovery can reattach an unlinked item without creating a duplicate", () => {
+  assert.match(component, /availableEvidence=evidence\\.filter/);
+  assert.match(component, /!evidenceLinks\\.some\\(link=>link\\.evidence_item_id===item\\.id\\)/);
+  assert.match(component, /linksFor\\(evidenceId\\)/);
+  assert.match(component, /unlinked evidence will remain available to attach/);
+  assert.match(component, /\\.in\\("evidence_item_id",evidenceIds\\)/);
+});
+
+test("previous evaluation comparison is scoped to the same player and earlier context", () => {
+  assert.match(component, /PREVIOUS EVALUATION · SAME PLAYER/);
+  assert.match(component, /eq\\("player_member_id",c\\.data\\.player_member_id\\)/);
+  assert.match(component, /lt\\("created_at",c\\.data\\.created_at\\)/);
+  assert.match(component, /Change from previous final score/);
+});
