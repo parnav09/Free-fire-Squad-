@@ -43,6 +43,8 @@ test("verification and scoring use the authoritative database RPCs", () => {
   assert.match(component, /calculate_evolution_evidence_coverage/);
   assert.match(component, /calculate_evolution_player_score_snapshot/);
   assert.match(component, /p_recalculation_reason/);
+  assert.match(component, /\[0,1,2,3,4,5,6,7,8,9,10\]/);
+  assert.match(component, /roleGuidance/);
 });
 
 test("the interface exposes coverage, readiness, immutable score history and explicit failure states", () => {
