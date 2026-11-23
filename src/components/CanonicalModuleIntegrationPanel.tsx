@@ -75,9 +75,8 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
     return { context, session, source, sourceRecordId, match, member, role, snapshot };
   }).sort((a,b) => String(b.context.created_at).localeCompare(String(a.context.created_at))), [contexts,sessionById,sourceBySession,matchById,memberByUser,roleById,latestSnapshotByContext]);
 
-  const visibleRows = view === "players"
-    ? traceRows.filter(row => !!row.member && row.member.status !== "inactive")
-    : traceRows;
+  // Historical contexts remain visible even when a player has left the active roster.
+  const visibleRows = traceRows;
   const linkedSessions = sources.length;
   const evaluatedContexts = contexts.length;
   const playerCount = new Set(contexts.map(context => context.player_user_id)).size;
@@ -94,7 +93,7 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
         <article><small>Canonical evaluations</small><strong>{evaluatedContexts}</strong></article>
         <article><small>Players evaluated</small><strong>{playerCount}</strong></article>
       </div>}
-      {visibleRows.length === 0 ? <p className="muted">{view === "players" ? "No canonical evaluations are linked to the active roster yet." : "No canonical evaluations are available for this team yet."}</p> :
+      {visibleRows.length === 0 ? <p className="muted">{view === "players" ? "No canonical evaluations are available yet. Historical players remain visible even after roster changes." : "No canonical evaluations are available for this team yet."}</p> :
         <div className="canonical-trace-list">{visibleRows.slice(0, view === "players" ? 30 : 50).map(({context,session,source,sourceRecordId,match,member,role,snapshot}) => {
           const score = snapshot?.score_status === "final" ? snapshot.score100 : snapshot?.score_status === "provisional" ? snapshot.provisional_score100 : null;
           return <article className="canonical-trace-row" key={context.id}>
