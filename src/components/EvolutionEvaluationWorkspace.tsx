@@ -57,17 +57,17 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
     setLoading(true); setError("");
     try {
       const [s,m,r,c] = await Promise.all([
-        client.from("canonical_sessions").select("*").eq("team_id",teamId).is("archived_at",null).order("session_date",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false}).limit(250),
-        client.from("canonical_session_matches").select("*").eq("team_id",teamId).order("match_sequence"),
-        client.from("canonical_session_match_roles").select("*").eq("team_id",teamId).order("changed_at",{ascending:false}),
-        client.from("evolution_evaluation_contexts").select("*").eq("team_id",teamId).order("created_at",{ascending:false}).limit(100)
+        client.from("canonical_sessions").select("id,team_id,session_type,title,session_date,created_at,archived_at").eq("team_id",teamId).is("archived_at",null).order("session_date",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false}).limit(250),
+        client.from("canonical_session_matches").select("id,team_id,canonical_session_id,match_sequence,map_name").eq("team_id",teamId).order("match_sequence").limit(2000),
+        client.from("canonical_session_match_roles").select("id,team_id,canonical_session_id,canonical_session_match_id,player_user_id,role_key_snapshot,role_name_snapshot,role_assignment_status,changed_at").eq("team_id",teamId).order("changed_at",{ascending:false}).limit(5000),
+        client.from("evolution_evaluation_contexts").select("id,team_id,player_member_id,player_user_id,canonical_session_id,canonical_session_match_id,role_assignment_id,created_at").eq("team_id",teamId).order("created_at",{ascending:false}).limit(100)
       ]);
       for (const q of [s,m,r,c]) if (q.error) throw q.error;
       setSessions(s.data||[]); setMatches(m.data||[]); setRoles(r.data||[]); setContexts(c.data||[]);
-      if (!selectedSession && s.data?.length) setSelectedSession(s.data[0].id);
+      setSelectedSession(current=>current||(s.data?.[0]?.id||""));
     } catch (e) { setError(messageOf(e)); }
     finally { setLoading(false); }
-  },[client,teamId,selectedSession]);
+  },[client,teamId]);
 
   const loadContext = useCallback(async (id: string, preserveDrafts = false) => {
     if (!client || !id) return;
@@ -90,10 +90,10 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
         client.from("evolution_rubric_dimension_criteria").select("*").eq("team_id",teamId).eq("rubric_version_id",rv.data.id).order("sort_order"),
         client.from("evolution_role_dimension_weights").select("*").eq("team_id",teamId).eq("weight_set_id",ws.data.id).order("dimension_key"),
         client.from("evolution_evaluation_current_dimension_assessments").select("*").eq("team_id",teamId).eq("evaluation_context_id",id),
-        client.from("evolution_evidence_items").select("*").eq("team_id",teamId).eq("evaluation_context_id",id).order("created_at",{ascending:false}),
+        client.from("evolution_evidence_items").select("id,team_id,evaluation_context_id,created_by,source_type,title,observation,source_locator,visibility,created_at").eq("team_id",teamId).eq("evaluation_context_id",id).order("created_at",{ascending:false}).limit(500),
         client.from("evolution_evaluation_assessment_readiness").select("*").eq("team_id",teamId).eq("evaluation_context_id",id).maybeSingle(),
-        client.from("evolution_player_score_snapshots").select("*").eq("team_id",teamId).eq("evaluation_context_id",id).order("created_at",{ascending:false}),
-        client.from("evolution_evidence_coverage_snapshots").select("*").eq("team_id",teamId).eq("evaluation_context_id",id).order("created_at",{ascending:false})
+        client.from("evolution_player_score_snapshots").select("id,score_status,score100,provisional_score100,coverage_percent,recalculation_reason,calculation_version,created_at").eq("team_id",teamId).eq("evaluation_context_id",id).order("created_at",{ascending:false}).limit(100),
+        client.from("evolution_evidence_coverage_snapshots").select("id,coverage_percent,coverage_status,created_at").eq("team_id",teamId).eq("evaluation_context_id",id).order("created_at",{ascending:false}).limit(100)
       ]);
       for (const q of [cr,w,a,e,rd,ss,cs]) if (q.error) throw q.error;
       const evidenceIds = (e.data||[]).map((x:Row)=>x.id);
