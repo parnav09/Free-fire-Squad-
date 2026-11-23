@@ -48,6 +48,8 @@ test("canonical lineage is read-only, team-scoped and bounded", () => {
   assert.match(panel, /\.limit\(1000\)/);
   assert.doesNotMatch(panel, /\.insert\(|\.update\(|\.delete\(/);
   assert.match(panel, /role and rubric bindings stay attached/);
+  assert.match(panel, /Historical contexts remain visible even when a player has left the active roster/);
+  assert.match(panel, /const visibleRows = traceRows/);
 });
 
 test("integration panel handles missing client, loading, errors and empty data", () => {
