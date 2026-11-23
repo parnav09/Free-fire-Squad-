@@ -708,6 +708,7 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - Resolves canonical source record, session, match, player, historical role and latest immutable score snapshot. Final/provisional/insufficient score state and evidence coverage remain separate.
 - Archived sessions remain visible. Reads use team-scoped RLS and stable 500-row pagination; there are no silent fixed-row cutoffs.
 - Added explicit loading, empty, error and retry states. Failed refreshes and team switches clear stale rows.
+- Existing staff-only score snapshot RLS remains unchanged. Member views gracefully show source/evaluation lineage while marking restricted score history unavailable.
 - Competitive results remain separate: kills, placement, Booyah and tournament points are never internal player-performance score inputs.
 - Added expanded Phase 3.14 source-contract coverage for adapter wiring, exact historical role identity, paginated reads, Training source visibility, archived history, retry recovery, read-only behavior, responsive hit targets and score-domain separation.
 - Updated the consolidated GitHub Actions workflow label to Phase 3.14.
