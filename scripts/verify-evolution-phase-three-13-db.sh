@@ -184,7 +184,7 @@ BEGIN
   IF v_after<>v_before THEN
     RAISE EXCEPTION 'Missing role-weight configuration left an orphan evaluation context';
   END IF;
-END $;
+END $$;
 
 RESET ROLE;
 SELECT 'Evolution Phase 3.13 atomic context creation behavior PASS' AS result;
