@@ -695,3 +695,23 @@ Manual comparison of the TypeScript and SQL implementations found a classificati
 - No new SQL migration, legacy conversion/backfill, fake score/evidence/rubric seed, production migration, live data write, merge to main or production deployment.
 
 **Verification still required:** exact latest PR-head source tests, full typecheck/regression/build, responsive browser checks and screenshot review. Do not mark Point 3.13 VERIFIED until the exact latest commit passes GitHub Actions and any failures are fixed and rerun.
+
+
+## 12. Evolution Phase 3.14 — Existing Module Integration (2026-11-23)
+
+**Status: IMPLEMENTED — exact-head CI verification pending.**
+
+- Existing Scrims, Tournament and Training records continue to link through the Phase 2.9 server-authoritative `integrate_canonical_source` adapter; explicit Training promotion remains required for plans.
+- Evolution Evaluation continues to bind a player to the canonical session, match and exact historical role snapshot from Phase 3.13.
+- Added `CanonicalModuleIntegrationPanel`, a shared read-only lineage surface mounted in Player / Weekly Review / Player Trends and Analytics.
+- The panel resolves source module references (Scrims/Tournament/Training), canonical session and match identity, player context and the latest score snapshot. It presents score status and evidence coverage separately.
+- Competitive results remain separate: no kills, placement, Booyah or tournament points are used as internal player-performance score inputs.
+- Reads are team-scoped, bounded and RLS-governed. No source records, evaluation contexts or score snapshots are mutated.
+- Added `scripts/verify-evolution-phase-three-14.mjs` and registered it in the standard build chain and GitHub Actions.
+- Added `docs/evolution/PHASE-3-14-EXISTING-MODULE-INTEGRATION.md`.
+- No new database migration, production migration, live data write, legacy conversion/backfill, merge to main or production deployment.
+
+**Verification pending:** run the dedicated Phase 3.14 contracts, full typecheck/regression/build chain, all applicable disposable PostgreSQL checks and responsive UI acceptance on the exact latest PR head. Do not mark 3.14 VERIFIED until the exact-head workflow succeeds and any failures are fixed and rerun.
+
+**Acceptance:** an evaluation can be traced from player to canonical match/session and back to its source module without duplicate identities or mixing competitive results with player-development scores.
+
