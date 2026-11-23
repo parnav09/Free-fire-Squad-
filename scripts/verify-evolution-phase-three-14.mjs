@@ -87,7 +87,7 @@ test("loading failures clear stale rows and expose a working retry action", () =
 test("historical player and score snapshots are rendered without recalculating competitive results", () => {
   assert.match(panel, /Historical player/);
   assert.match(panel, /Former member/);
-  assert.match(panel, /latest immutable snapshot/);
+  assert.match(panel, /Rows arrive newest-first/);
   assert.match(panel, /score_status === "insufficient"/);
   assert.match(panel, /coverage_percent/);
 });
