@@ -17,6 +17,9 @@ test("Phase 3.14 traces source modules through one canonical session identity", 
   assert.match(panel, /from\("canonical_session_sources"\)/);
   assert.match(panel, /from\("canonical_sessions"\)/);
   assert.match(panel, /from\("canonical_session_matches"\)/);
+  assert.match(panel, /from\("canonical_session_match_roles"\)/);
+  assert.match(panel, /role_assignment_id/);
+  assert.match(panel, /role_name_snapshot/);
   assert.match(panel, /from\("evolution_evaluation_contexts"\)/);
   assert.match(panel, /from\("evolution_player_score_snapshots"\)/);
   assert.match(panel, /scrim_record_id/);
