@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
-const [panel, css, app, scrims, training, analytics, player, roadmap, packageJson, workflow, phaseTwoNine, phaseThreeThirteen, phaseThreeTen, visualScript, visualFixture] = await Promise.all([
+const [panel, css, app, scrims, training, analytics, player, roadmap, packageJson, workflow, phaseTwoNine, phaseThreeThirteen, phaseThreeTen, visualScript, visualFixture, sessionsWorkspace] = await Promise.all([
   read("../src/components/CanonicalModuleIntegrationPanel.tsx"),
   read("../src/components/CanonicalModuleIntegrationPanel.css"),
   read("../src/App.tsx"),
@@ -19,6 +19,7 @@ const [panel, css, app, scrims, training, analytics, player, roadmap, packageJso
   read("../supabase/migrations/20261122200000_evolution_phase_three_10_score_snapshot_history.sql"),
   read("./run-evolution-phase-three-14-visual.mjs"),
   read("./phase-three-14-visual/main.tsx"),
+  read("../src/components/CanonicalSessionsWorkspace.tsx"),
 ]);
 
 test("Phase 3.14 reads the canonical source, session, match, role, context and score chain", () => {
@@ -56,6 +57,15 @@ test("Player and Analytics expose lineage while competitive and development scor
   assert.match(panel, /never derives player performance from kills, placement, Booyah or tournament points/);
   assert.match(player, /LEGACY REVIEW DATA/);
   assert.match(analytics, /COMPETITIVE RESULTS · LEGACY VIEW/);
+});
+
+test("existing-source picker and canonical session ledger paginate all history", () => {
+  assert.match(sessionsWorkspace, /const readAllRows = async/);
+  assert.match(sessionsWorkspace, /\.range\(from,to\)/);
+  assert.match(sessionsWorkspace, /const openLinkPicker/);
+  assert.match(sessionsWorkspace, /training_sessions/);
+  assert.doesNotMatch(sessionsWorkspace, /\.limit\(100\)/);
+  assert.doesNotMatch(sessionsWorkspace, /\.limit\(250\)/);
 });
 
 test("source sessions include Training and archived history, even without an evaluation context", () => {
