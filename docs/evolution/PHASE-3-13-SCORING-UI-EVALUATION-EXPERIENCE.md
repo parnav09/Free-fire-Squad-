@@ -7,11 +7,11 @@ This point adds the canonical, staff-operated evaluation workflow on top of the 
 ## Workflow
 
 1. Select an existing canonical session, canonical match and assigned historical player-role snapshot. Unknown/unmapped roles are not inferred from the current roster.
-2. Create an immutable evaluation context and bind the exact active/effective rubric version and matching active/effective role-weight set.
-3. Record a dimension assessment against the exact rubric definition version. An Observed rating requires dimension-linked evidence; Not Observed, Incomplete and Rejected Evidence require a reason. Zero remains a valid observed rating.
-4. Record evidence provenance and visibility. Verification is a separate owner/coach RPC action; an author cannot verify their own evidence, and private evidence cannot be adjudicated by another member.
+2. Create the immutable evaluation context and bind the exact active/effective rubric version and matching historical role-weight set through one database transaction. The RPC validates staff permission, active player membership, the exact assigned match-role snapshot, and effective configuration; any failed binding rolls back the entire context creation.
+3. Record a dimension assessment against the exact rubric definition version. An Observed rating requires dimension-linked evidence; Not Observed, Not Applicable (only when excluded by the historical role), Incomplete and Rejected Evidence require a reason. Zero remains a valid observed rating.
+4. Record evidence provenance and visibility (manual observation, round note, VOD reference or match reference). Verification is a separate owner/coach RPC action; an author cannot verify their own evidence, and private evidence cannot be adjudicated by another member.
 5. Calculate evidence coverage and the deterministic score through the existing database RPCs. The UI does not calculate or override a score locally.
-6. Display readiness, coverage, final/provisional/insufficient score state and immutable calculation history. Recalculation requires a reason.
+6. Display readiness, coverage, final/provisional/insufficient score state, immutable calculation history and the previous evaluation for the same player. Recalculation requires a reason. Unsaved drafts survive data refreshes and context switching is blocked until drafts are saved or discarded.
 
 ## Safety and data boundaries
 
@@ -25,4 +25,4 @@ This point adds the canonical, staff-operated evaluation workflow on top of the 
 
 ## Verification
 
-The dedicated source-contract suite verifies canonical match/role binding, version-pinned rubric/weights, evidence linkage, append-only assessments, verification/scoring RPC usage, history/readiness UI and responsive hitbox rules. The consolidated build also runs the existing typecheck, all regression tests, responsive UI acceptance and production bundle build. The point is VERIFIED only on the exact latest PR head after GitHub Actions succeeds.
+The dedicated source-contract suite verifies canonical match/role binding, the atomic context-creation RPC, version-pinned rubric/weights, evidence linkage and recovery, append-only assessments, verification/scoring RPC usage, history/readiness UI and responsive hitbox rules. A disposable PostgreSQL run applies the new atomic context migration and verifies its SECURITY DEFINER search path and execute ACL. The consolidated build also runs the existing typecheck, all regression tests, responsive UI acceptance and production bundle build. The point is VERIFIED only on the exact latest PR head after GitHub Actions succeeds.
