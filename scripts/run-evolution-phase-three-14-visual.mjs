@@ -55,7 +55,7 @@ try {
     }));
     assert.ok(metrics.documentWidth <= metrics.width + 1, viewport.name + " horizontal document overflow: " + JSON.stringify(metrics));
     assert.ok(metrics.bodyWidth <= metrics.width + 1, viewport.name + " horizontal body overflow: " + JSON.stringify(metrics));
-    await page.screenshot({ path: resolve(root, "test-results/phase-three-14/" + viewport.name + ".png"), fullPage: true });
+    await page.screenshot({ path: resolve(root, "test-results/phase-three-14/" + viewport.name + ".png"), fullPage: false });
     assert.deepEqual(pageErrors, [], viewport.name + " runtime errors");
     await page.close();
   }
@@ -69,7 +69,7 @@ try {
   await retryButton.click();
   await retry.getByText("Training Source Session").waitFor({ state: "visible" });
   assert.equal(await retry.getByRole("alert").count(), 0, "successful retry must clear the error state");
-  await retry.screenshot({ path: resolve(root, "test-results/phase-three-14/retry-recovered.png"), fullPage: true });
+  await retry.screenshot({ path: resolve(root, "test-results/phase-three-14/retry-recovered.png"), fullPage: false });
   await retry.close();
   const member = await browser.newPage({ viewport: { width: 768, height: 1024 } });
   await member.goto(base + "?mode=member", { waitUntil: "networkidle" });
@@ -78,7 +78,7 @@ try {
   assert.equal(await member.locator(".canonical-evaluation-list .canonical-trace-row").count(), 502, "member-visible evaluation lineage must remain available");
   assert.equal(await member.locator(".canonical-trace-result b").first().innerText(), "Restricted");
   await member.getByText("Training Source Session").waitFor({ state: "visible" });
-  await member.screenshot({ path: resolve(root, "test-results/phase-three-14/member-score-access.png"), fullPage: true });
+  await member.screenshot({ path: resolve(root, "test-results/phase-three-14/member-score-access.png"), fullPage: false });
   await member.close();
   console.log("Phase 3.14 browser acceptance PASS: 390, 768, 1024, 1280, 1440; 502-row pagination; Scrim/Tournament/Training source lineage; archived history; role/snapshot mapping; retry recovery.");
 } finally {
