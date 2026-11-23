@@ -113,7 +113,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
         const prior = await client.from("evolution_player_score_snapshots")
           .select("id,evaluation_context_id,score_status,score100,provisional_score100,coverage_percent,created_at")
           .eq("team_id",teamId).eq("player_member_id",c.data.player_member_id)
-          .neq("evaluation_context_id",id).order("created_at",{ascending:false}).limit(1).maybeSingle();
+          .lt("created_at",c.data.created_at).neq("evaluation_context_id",id).order("created_at",{ascending:false}).limit(1).maybeSingle();
         if (!prior.error) setPreviousEvaluation(prior.data||null);
       }
     } catch (e) { setContext(null); setError(messageOf(e)); }
@@ -185,8 +185,10 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
     if (!client || !context || !userId || !canManage) return;
     const criterion = criteria.find(x=>x.dimension_key===key);
     const weight = weights.find(x=>x.dimension_key===key);
-    if (!criterion || !weight) { setError("This dimension is not present in the bound rubric and historical role-weight set."); return; }
-    const d = drafts[key] || blankDraft();
+    const d = drafts[key] || {...blankDraft(),state:weight?"observed":"not_applicable"};
+    if (!criterion || (!weight && d.state!=="not_applicable") || (weight && d.state==="not_applicable")) {
+      setError("This assessment state does not match the dimension's historical role applicability."); return;
+    }
     setBusy("save:"+key); setError(""); setNotice("");
     try {
       let evidenceId: string|null = null;
@@ -194,22 +196,31 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
         evidenceId = d.evidenceId || null;
         if (d.state==="observed" && !evidenceId) {
           if (d.title.trim().length<1 || d.observation.trim().length<1) throw new Error("Evidence title and observation are required before recording a rating.");
+          if (d.sourceLocator.trim()) {
+            let parsed:URL;
+            try { parsed = new URL(d.sourceLocator.trim()); } catch { throw new Error("Source reference must be a valid HTTP or HTTPS URL."); }
+            if (parsed.protocol!=="https:" && parsed.protocol!=="http:") throw new Error("Source reference must use HTTP or HTTPS.");
+          }
           const item = await client.from("evolution_evidence_items").insert({
             team_id:teamId,evaluation_context_id:context.id,visibility:d.visibility,
             source_type:"manual_observation",title:d.title.trim(),observation:d.observation.trim(),
             source_locator:d.sourceLocator.trim()||null,created_by:userId
           }).select("*").single();
           if (item.error) throw item.error;
-          const link = await client.from("evolution_evidence_dimension_links").insert({
-            team_id:teamId,evidence_item_id:item.data.id,dimension_key:key,
-            definition_version:criterion.dimension_definition_version,created_by:userId
-          });
-          if (link.error) throw new Error("Evidence was saved, but its dimension link failed: "+link.error.message+". Refresh and select the saved evidence item before retrying.");
           evidenceId=item.data.id;
         }
         if (!evidenceId) throw new Error("Choose evidence for this assessment.");
+        if (d.state==="observed" && !linksFor(evidenceId).some(link=>link.dimension_key===key)) {
+          const existingLinks = linksFor(evidenceId);
+          if (existingLinks.length>0) throw new Error("This evidence is already linked to another dimension. Create a separate observation for this dimension.");
+          const link = await client.from("evolution_evidence_dimension_links").insert({
+            team_id:teamId,evidence_item_id:evidenceId,dimension_key:key,
+            definition_version:criterion.dimension_definition_version,created_by:userId
+          });
+          if (link.error) throw new Error("Evidence was saved, but its dimension link failed: "+link.error.message+". Refresh; the unlinked evidence will remain available to attach without recreating it.");
+        }
         if (d.state==="rejected_evidence" && statusFor(evidenceId)?.status!=="rejected") throw new Error("Rejected Evidence requires an item whose current verification status is Rejected.");
-        if (d.state==="observed" && d.evidenceId && !["pending","verified","corrected"].includes(statusFor(evidenceId)?.status || "")) {
+        if (d.state==="observed" && !["pending","verified","corrected"].includes(statusFor(evidenceId)?.status || "")) {
           throw new Error("Observed ratings require pending, verified or corrected evidence.");
         }
       }
@@ -225,7 +236,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
       await loadContext(context.id,true);
       setDrafts(old=>{const next={...old};delete next[key];return next;});
       setNotice("Assessment revision saved. Earlier revisions remain in the audit history.");
-    } catch(e) { setError(messageOf(e)); }
+    } catch(e) { await loadContext(context.id,true); setError(messageOf(e)); }
     finally { setBusy(""); }
   };
 
@@ -320,14 +331,14 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
             if(!definition)return null;
             const applicable=!!weight;
             const saved=currentAssessment(criterion.dimension_key);
-            const draft=drafts[criterion.dimension_key]||blankDraft();
+            const draft=drafts[criterion.dimension_key]||{...blankDraft(),state:weight?"observed":"not_applicable"};
             const linked=activeEvidenceFor(criterion.dimension_key);
             const availableEvidence=evidence.filter(item=>linksFor(item.id).some(link=>link.dimension_key===criterion.dimension_key)||!evidenceLinks.some(link=>link.evidence_item_id===item.id));
             const anchors=criterion.rating_anchors||{};
-            return <article className="evolution-eval-dimension" key={weight.dimension_key}>
+            return <article className="evolution-eval-dimension" key={criterion.dimension_key}>
               <header><div><span>{String(criterion.sort_order).padStart(2,"0")} / 06</span><h4>{definition.label}</h4><p>{criterion.criteria_guidance}</p></div><strong>{weight?(weight.weight_basis_points/100).toFixed(2):"N/A"}<small>{weight?"%":"· role"}</small></strong></header>
               <div className="evolution-eval-anchor"><b>Rating anchors</b><div>{[0,2,4,6,8,10].map(n=><span key={n}><b>{n}</b> {String(anchors[String(n)]||"—")}</span>)}</div></div>
-              {drafts[weight.dimension_key] && <div className="evolution-eval-unsaved" role="status">UNSAVED DRAFT · Save this revision or reset it before leaving.</div>}
+              {drafts[criterion.dimension_key] && <div className="evolution-eval-unsaved" role="status">UNSAVED DRAFT · Save this revision or reset it before leaving.</div>}
               {saved && <div className="evolution-eval-saved">Current: <b>{saved.assessment_state==="observed"?String(saved.rating_value)+"/10":String(saved.assessment_state).replaceAll("_"," ")}</b> · Revision {saved.revision_number} · {dateLabel(saved.created_at)}</div>}
               <div className="evolution-eval-editor">
                 <label>Assessment state<select value={draft.state} onChange={e=>updateDraft(criterion.dimension_key,{state:e.target.value as Draft["state"],evidenceId:""})}>{applicable?<><option value="observed">Observed</option><option value="not_observed">Not Observed</option><option value="incomplete">Incomplete</option><option value="rejected_evidence">Rejected Evidence</option></>:<option value="not_applicable">Not Applicable · excluded by historical role</option>}</select></label>
