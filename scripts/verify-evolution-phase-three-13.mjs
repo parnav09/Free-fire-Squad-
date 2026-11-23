@@ -64,6 +64,7 @@ test("the workspace is mounted in the Evaluation module without replacing legacy
 
 test("mobile controls and visible action hitboxes meet the 44px minimum", () => {
   assert.match(styles, /min-height:44px/);
+  assert.match(styles, /input\\[type=range\\]\\{width:100%;min-height:44px;height:44px/);
   assert.match(styles, /@media\(max-width:760px\)/);
   assert.match(styles, /@media\(max-width:480px\)/);
   assert.match(styles, /grid-template-columns:1fr/);
