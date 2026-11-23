@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
-const [panel, css, app, scrims, training, analytics, player, roadmap, packageJson, workflow, phaseTwoNine, phaseThreeThirteen, visualScript, visualFixture] = await Promise.all([
+const [panel, css, app, scrims, training, analytics, player, roadmap, packageJson, workflow, phaseTwoNine, phaseThreeThirteen, phaseThreeTen, visualScript, visualFixture] = await Promise.all([
   read("../src/components/CanonicalModuleIntegrationPanel.tsx"),
   read("../src/components/CanonicalModuleIntegrationPanel.css"),
   read("../src/App.tsx"),
@@ -16,6 +16,7 @@ const [panel, css, app, scrims, training, analytics, player, roadmap, packageJso
   read("../.github/workflows/evolution-phase-one.yml"),
   read("../supabase/migrations/20261120230000_evolution_phase_two_9_existing_module_integration.sql"),
   read("../supabase/migrations/20261122220000_evolution_phase_three_13_atomic_context_creation.sql"),
+  read("../supabase/migrations/20261122200000_evolution_phase_three_10_score_snapshot_history.sql"),
   read("./run-evolution-phase-three-14-visual.mjs"),
   read("./phase-three-14-visual/main.tsx"),
 ]);
@@ -92,6 +93,16 @@ test("historical player and score snapshots are rendered without recalculating c
   assert.match(panel, /Rows arrive newest-first/);
   assert.match(panel, /score_status === "insufficient"/);
   assert.match(panel, /coverage_percent/);
+});
+
+
+test("staff-only score snapshot RLS does not hide member-visible source lineage", () => {
+  assert.match(phaseThreeTen, /membership_role IN \('owner','coach'\)/);
+  assert.match(panel, /const snapshotRequest = readAllRows/);
+  assert.match(panel, /\.catch\(snapshotError/);
+  assert.match(panel, /Score snapshots are restricted to active Owners and Coaches/);
+  assert.match(panel, /source and evaluation lineage remain available/);
+  assert.match(panel, /role="note"/);
 });
 
 test("Phase 3.14 is part of the normal production build and workflow", () => {
