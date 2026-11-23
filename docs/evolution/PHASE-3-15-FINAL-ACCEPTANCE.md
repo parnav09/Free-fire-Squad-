@@ -44,11 +44,14 @@ Point 3.15 is the final acceptance gate for the complete Evolution Phase Three i
 
 The authoritative verification record is the latest successful GitHub Actions workflow for the exact current PR head. A run on an earlier commit, a cancelled run, a partial job, or a green Vercel comment check is not sufficient.
 
-- Exact PR head: pending this point's first CI run.
-- Dedicated Phase 3.15 acceptance suite: pending.
-- Full typecheck/regression/PostgreSQL/browser/build workflow: pending.
-- Screenshot artifact: required from the Phase 3.14 browser step.
-- Failures: must be fixed on the same feature branch, then the complete workflow must pass again on the new exact head.
+- Exact verified PR head: `493d2affa639abd451a208165752c61468ee2874`.
+- Dedicated Phase 3.15 acceptance suite: **PASS — 8/8 tests**.
+- Full GitHub Actions push workflow [#1640](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45174525390): **SUCCESS**.
+- Full GitHub Actions pull-request workflow [#1641](https://github.com/parnav09/Free-fire-Squad-/actions/runs/45174534373): **SUCCESS**.
+- Both exact-head workflows completed **40/40 steps**; TypeScript, repository regression chain, applicable disposable PostgreSQL integrations, responsive browser acceptance and Vite production build passed.
+- Phase 3.14 browser acceptance: **PASS** at 390, 768, 1024, 1280 and 1440 CSS px; 502-row pagination, Scrim/Tournament/Training source visibility, archived history, retry recovery and member-safe score RLS were verified.
+- Screenshot artifact `evolution-phase-three-14-responsive-screenshots`: uploaded successfully.
+- Earlier failures from stale build-chain assertions and the missing exact-head environment in the nested build were corrected and rerun. No failure was waived or hidden.
 
 ## Completion rule
 
