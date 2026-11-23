@@ -3,7 +3,7 @@ import { getTeamUiCapabilities, indiaDateISO, indiaDateLabel, millisecondsUntilI
 import { createLatestRequestGuard } from "./lib/latest-request-guard";
 import { integrateCanonicalSource } from "./lib/canonical-module-integration";
 import CanonicalSessionsWorkspace from "./components/CanonicalSessionsWorkspace";
-import EvolutionEvaluationWorkspace from "./components/EvolutionEvaluationWorkspace";
+const EvolutionEvaluationWorkspace = lazy(() => import("./components/EvolutionEvaluationWorkspace"));
 import PlacementPicker from "./components/PlacementPicker";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
@@ -1125,7 +1125,7 @@ export default function App() {
             </section>}{combatNexusView&&<div className="combat-nexus-detail" role="region" aria-live="polite"><div><div className="eyebrow">COMBAT NEXUS / {combatNexusView.toUpperCase()}</div><h4>{combatNexusView==="pets"?"Pet database":"Loadout"}</h4><p>{combatNexusView==="pets"?"The pet catalogue will contain skill details, level effects, cooldowns, activation conditions and verified character interactions.":"Loadout workspace reserved for verified character, pet and weapon combinations. No unverified presets are pre-filled."}</p></div><button type="button" className="secondary-button" onClick={()=>setCombatNexusView(null)}>Close</button></div>}</>}
           </>}
           {section==="Evaluation" && <>
-            <EvolutionEvaluationWorkspace client={supabase} teamId={team?.id||""} userId={sessionUserId} membershipRole={team?.membership_role||""} members={teamMembers as any}/>
+            <Suspense fallback={<section className="connection-panel" role="status">Loading canonical evaluation workspace…</section>}><EvolutionEvaluationWorkspace client={supabase} teamId={team?.id||""} userId={sessionUserId} membershipRole={team?.membership_role||""} members={teamMembers as any}/></Suspense>
             <details className="legacy-evaluation-archive">
               <summary>Legacy daily evaluation · historical compatibility</summary>
               
