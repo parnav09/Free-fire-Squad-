@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   migration-replay:
-    name: Full ordered Supabase migration replay (free GitHub runner)
+    name: Production-baseline ordered pending migration replay (free GitHub runner)
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -23,43 +23,91 @@ jobs:
         uses: supabase/setup-cli@v1
         with:
           version: latest
+      - name: Verify supported CLI dump and migration-list commands
+        run: |
+          supabase db dump --help >/dev/null
+          supabase migration list --help >/dev/null
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
       - name: Create isolated local Supabase test project
         run: |
           mkdir -p "$RUNNER_TEMP/squad-os-migration-replay"
           cd "$RUNNER_TEMP/squad-os-migration-replay"
           supabase init
-          rm -rf supabase/migrations
-          mkdir -p supabase/migrations
-          cp -R "$GITHUB_WORKSPACE/supabase/migrations/." supabase/migrations/
-          echo "Migration files: $(find supabase/migrations -maxdepth 1 -type f -name '*.sql' | wc -l)"
       - name: Start disposable local Supabase stack
         run: supabase start -x studio,inbucket,imgproxy,logflare,vector
         working-directory: ${{ runner.temp }}/squad-os-migration-replay
-      - name: Replay every migration from an empty database in timestamp order
-        run: supabase db reset --local --no-seed
-        working-directory: ${{ runner.temp }}/squad-os-migration-replay
-      - name: Assert exact migration ledger and Evolution Phase Three schema
+      - name: Capture production schema-only baseline and applied migration ledger (read-only)
         env:
-          SUPABASE_DB_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           set -euo pipefail
-          mapfile -t expected_versions < <(find "$GITHUB_WORKSPACE/supabase/migrations" -maxdepth 1 -type f -name '*.sql' -printf '%f\n' | sed -E 's/^([0-9]+)_.*/\1/' | sort)
-          mapfile -t applied_versions < <(psql "$SUPABASE_DB_URL" -X -v ON_ERROR_STOP=1 -Atc "SELECT version FROM supabase_migrations.schema_migrations ORDER BY version")
-          diff -u <(printf '%s\n' "${expected_versions[@]}") <(printf '%s\n' "${applied_versions[@]}")
-          echo "Verified ${#applied_versions[@]} ordered migrations."
-          psql "$SUPABASE_DB_URL" -X -v ON_ERROR_STOP=1 <<'SQL'
+          : "${SUPABASE_DB_URL:?Add the protected GitHub Actions secret SUPABASE_DB_URL (session-pooler or direct Postgres connection string); never commit or print it.}"
+          SUPABASE_DB_URL="$SUPABASE_DB_URL" bash scripts/capture-supabase-schema-baseline.sh "$RUNNER_TEMP/squad-os-migration-replay/current-remote-public-schema.sql"
+          psql "$SUPABASE_DB_URL" -X -v ON_ERROR_STOP=1 -Atc "SELECT version FROM supabase_migrations.schema_migrations ORDER BY version" > "$RUNNER_TEMP/squad-os-migration-replay/remote-versions.txt"
+      - name: Restore schema-only baseline into disposable local Supabase
+        run: |
+          set -euo pipefail
+          psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -X -v ON_ERROR_STOP=1 -f "$RUNNER_TEMP/squad-os-migration-replay/current-remote-public-schema.sql"
+        working-directory: ${{ github.workspace }}
+      - name: Apply exactly the pending migrations in timestamp order
+        run: |
+          set -euo pipefail
+          ROOT="$GITHUB_WORKSPACE/supabase/migrations"
+          LOCAL_VERSIONS="$RUNNER_TEMP/squad-os-migration-replay/local-versions.txt"
+          PENDING_VERSIONS="$RUNNER_TEMP/squad-os-migration-replay/pending-versions.txt"
+          find "$ROOT" -maxdepth 1 -type f -name '*.sql' -printf '%f\n' | sed -E 's/^([0-9]+)_.*/\1/' | sort > "$LOCAL_VERSIONS"
+          comm -23 "$LOCAL_VERSIONS" "$RUNNER_TEMP/squad-os-migration-replay/remote-versions.txt" > "$PENDING_VERSIONS"
+          comm -13 "$LOCAL_VERSIONS" "$RUNNER_TEMP/squad-os-migration-replay/remote-versions.txt" > "$RUNNER_TEMP/squad-os-migration-replay/remote-only-versions.txt"
+          test ! -s "$RUNNER_TEMP/squad-os-migration-replay/remote-only-versions.txt" || { echo 'Remote migration ledger contains versions absent from this repository.' >&2; cat "$RUNNER_TEMP/squad-os-migration-replay/remote-only-versions.txt"; exit 1; }
+          cat > "$RUNNER_TEMP/squad-os-migration-replay/expected-pending-versions.txt" <<'VERSIONS'
+          20261118060000
+          20261119120000
+          20261119140000
+          20261119160000
+          20261119180000
+          20261119200000
+          20261120200000
+          20261120220000
+          20261120230000
+          20261121000000
+          20261122130000
+          20261122140000
+          20261122150000
+          20261122160000
+          20261122170000
+          20261122180000
+          20261122190000
+          20261122200000
+          20261122210000
+          20261122220000
+          VERSIONS
+          diff -u "$RUNNER_TEMP/squad-os-migration-replay/expected-pending-versions.txt" "$PENDING_VERSIONS"
+          while IFS= read -r version; do
+            file="$(find "$ROOT" -maxdepth 1 -type f -name "${version}_*.sql" -print -quit)"
+            test -n "$file" || { echo "Missing migration file for $version" >&2; exit 1; }
+            echo "Applying pending migration $version"
+            psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -X -v ON_ERROR_STOP=1 -f "$file"
+          done < "$PENDING_VERSIONS"
+          echo "Successfully applied $(wc -l < "$PENDING_VERSIONS" | tr -d ' ') pending migrations to the disposable database."
+      - name: Assert Evolution Phase Two and Three schema after ordered replay
+        run: |
+          psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -X -v ON_ERROR_STOP=1 <<'SQL'
           DO $replay$
           BEGIN
-            IF to_regclass('public.canonical_sessions') IS NULL THEN RAISE EXCEPTION 'Phase 2 canonical_sessions missing after clean replay'; END IF;
-            IF to_regclass('public.canonical_session_matches') IS NULL THEN RAISE EXCEPTION 'Phase 2 canonical_session_matches missing after clean replay'; END IF;
-            IF to_regclass('public.evolution_dimension_registry') IS NULL THEN RAISE EXCEPTION 'Phase 3 dimension registry missing after clean replay'; END IF;
-            IF to_regclass('public.evolution_evaluation_contexts') IS NULL THEN RAISE EXCEPTION 'Phase 3 evaluation contexts missing after clean replay'; END IF;
-            IF to_regclass('public.evolution_evidence_items') IS NULL THEN RAISE EXCEPTION 'Phase 3 evidence model missing after clean replay'; END IF;
-            IF to_regclass('public.evolution_player_score_snapshots') IS NULL THEN RAISE EXCEPTION 'Phase 3 score snapshots missing after clean replay'; END IF;
-            IF to_regprocedure('public.create_evolution_evaluation_context(uuid,uuid,uuid,uuid,uuid,uuid)') IS NULL THEN RAISE EXCEPTION 'Phase 3 atomic context RPC missing after clean replay'; END IF;
-            IF to_regprocedure('public.calculate_evolution_player_score_snapshot(uuid,text)') IS NULL THEN RAISE EXCEPTION 'Phase 3 scoring RPC missing after clean replay'; END IF;
+            IF to_regclass('public.canonical_sessions') IS NULL THEN RAISE EXCEPTION 'Phase 2 canonical_sessions missing after replay'; END IF;
+            IF to_regclass('public.canonical_session_matches') IS NULL THEN RAISE EXCEPTION 'Phase 2 canonical_session_matches missing after replay'; END IF;
+            IF to_regclass('public.evolution_dimension_registry') IS NULL THEN RAISE EXCEPTION 'Phase 3 dimension registry missing after replay'; END IF;
+            IF to_regclass('public.evolution_evaluation_contexts') IS NULL THEN RAISE EXCEPTION 'Phase 3 evaluation contexts missing after replay'; END IF;
+            IF to_regclass('public.evolution_evidence_items') IS NULL THEN RAISE EXCEPTION 'Phase 3 evidence model missing after replay'; END IF;
+            IF to_regclass('public.evolution_player_score_snapshots') IS NULL THEN RAISE EXCEPTION 'Phase 3 score snapshots missing after replay'; END IF;
+            IF to_regprocedure('public.create_evolution_evaluation_context(uuid,uuid,uuid,uuid,uuid,uuid)') IS NULL THEN RAISE EXCEPTION 'Phase 3 atomic context RPC missing after replay'; END IF;
+            IF to_regprocedure('public.calculate_evolution_player_score_snapshot(uuid,text)') IS NULL THEN RAISE EXCEPTION 'Phase 3 scoring RPC missing after replay'; END IF;
           END $replay$;
           SQL
+        working-directory: ${{ github.workspace }}
       - name: Stop disposable local Supabase stack
         if: always()
         run: supabase stop --no-backup || true
