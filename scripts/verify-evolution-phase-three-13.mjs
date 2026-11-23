@@ -138,7 +138,7 @@ test("atomic context creation migration is applied and its RPC ACL is verified i
   assert.ok(dbHarness.includes("Sniper + IGL"));
   assert.ok(dbHarness.includes("Missing role-weight configuration left an orphan evaluation context"));
   assert.match(dbHarness, /atomic context creation behavior PASS/);
-  assert.ok(dbHarness.includes("END $;\\n\\nRESET ROLE;"));
+  assert.ok(dbHarness.includes("END $$;\\n\\nRESET ROLE;"));
   assert.match(dbHarness, /search_path/);
   assert.match(workflow, /Verify Evolution Phase Three\.13 atomic context creation/);
   assert.match(workflow, /verify-evolution-phase-three-13-db\.sh/);
