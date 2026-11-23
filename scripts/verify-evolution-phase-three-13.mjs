@@ -25,6 +25,9 @@ test("Phase 3.13 uses canonical sessions, matches and immutable historical role 
 
 test("evaluation context creation atomically pins the effective rubric and historical role weights", () => {
   assert.match(component, /rpc\("create_evolution_evaluation_context"/);
+  assert.match(component, /friendlyMessageOf/);
+  assert.match(component, /No active, effective rubric is configured for this team/);
+  assert.match(component, /typeof error\.message==="string"/);
   assert.match(component, /p_role_assignment_id:role\.id/);
   assert.match(component, /evolution_evaluation_rubric_bindings/);
   assert.match(component, /evolution_evaluation_role_weight_bindings/);
