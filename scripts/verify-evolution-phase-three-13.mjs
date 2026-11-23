@@ -46,7 +46,7 @@ test("verification and scoring use the authoritative database RPCs", () => {
 });
 
 test("the interface exposes coverage, readiness, immutable score history and explicit failure states", () => {
-  for (const text of ["ASSESSMENT READINESS","LATEST EVIDENCE COVERAGE","LATEST PLAYER SCORE","IMMUTABLE CALCULATION HISTORY","Retry","role snapshot","Provisional"]) {
+  for (const text of ["ASSESSMENT READINESS","LATEST EVIDENCE COVERAGE","LATEST PLAYER SCORE","IMMUTABLE CALCULATION HISTORY","Retry","role snapshot","Provisional","UNSAVED DRAFT","vs previous snapshot"]) {
     assert.ok(component.toLowerCase().includes(text.toLowerCase()), "missing UI contract: "+text);
   }
   assert.match(component, /roleKey\(role\?\.role_key_snapshot\)/);
