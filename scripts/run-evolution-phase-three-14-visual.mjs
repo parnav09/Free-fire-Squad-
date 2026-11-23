@@ -42,7 +42,8 @@ try {
     const firstPlayer = page.locator(".canonical-evaluation-list .canonical-trace-main strong").first();
     await firstPlayer.waitFor({ state: "visible" });
     assert.match(await firstPlayer.innerText(), /Player 0/);
-    await page.getByText("Primary Rusher", { exact: true }).first().waitFor({ state: "visible" });
+    const firstRole = page.locator(".canonical-evaluation-list .canonical-trace-main small").first();
+    assert.match(await firstRole.innerText(), /Primary Rusher/);
     const rows = await page.locator(".canonical-evaluation-list .canonical-trace-row").count();
     assert.equal(rows, 502, viewport.name + " must render all paginated evaluation rows");
     const qa = await page.evaluate(() => window.__phase314QA);
