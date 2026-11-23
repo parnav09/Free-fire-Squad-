@@ -100,3 +100,11 @@ test("previous evaluation comparison is scoped to the same player and earlier co
   assert.match(component, /lt\\("created_at",c\\.data\\.created_at\\)/);
   assert.match(component, /Change from previous final score/);
 });
+
+test("evidence entry supports each canonical source type and validates external locators", () => {
+  for (const source of ["manual_observation","round_note","vod_reference","match_reference"]) {
+    assert.ok(component.includes(source), "missing evidence source type: "+source);
+  }
+  assert.match(component, /VOD and match references require a source URL/);
+  assert.match(component, /parsed\.protocol!=="https:" && parsed\.protocol!=="http:"/);
+});
