@@ -98,9 +98,9 @@ test("historical player and score snapshots are rendered without recalculating c
 
 test("responsive browser harness covers pagination, mobile layout, retry and member RLS", () => {
   assert.equal(packageJson.scripts["test:evolution-phase-three-14-visual"], "node scripts/run-evolution-phase-three-14-visual.mjs");
-  assert.match(workflow, /Verify Evolution Phase Three\\.14 responsive browser acceptance/);
+  assert.match(workflow, /Verify Evolution Phase Three\.14 responsive browser acceptance/);
   assert.match(workflow, /evolution-phase-three-14-responsive-screenshots/);
-  assert.match(visualScript, /502, viewport\\.name/);
+  assert.match(visualScript, /502, viewport\.name/);
   assert.match(visualScript, /member-visible evaluation lineage/);
   assert.match(visualFixture, /mode === "member"/);
   assert.match(visualFixture, /permission denied by row-level security policy/);
