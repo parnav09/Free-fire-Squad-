@@ -13,6 +13,7 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
   const [sessions, setSessions] = useState<Row[]>([]);
   const [sources, setSources] = useState<Row[]>([]);
   const [matches, setMatches] = useState<Row[]>([]);
+  const [roles, setRoles] = useState<Row[]>([]);
   const [contexts, setContexts] = useState<Row[]>([]);
   const [snapshots, setSnapshots] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,7 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
     let cancelled = false;
     const load = async () => {
       if (!client || !teamId) {
-        setSessions([]); setSources([]); setMatches([]); setContexts([]); setSnapshots([]);
+        setSessions([]); setSources([]); setMatches([]); setRoles([]); setContexts([]); setSnapshots([]);
         setLoading(false); setError("");
         return;
       }
@@ -31,6 +32,7 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
         client.from("canonical_sessions").select("id,session_type,title,session_date,created_at").eq("team_id", teamId).is("archived_at", null).order("session_date", { ascending: false, nullsFirst: false }).limit(250),
         client.from("canonical_session_sources").select("canonical_session_id,source_system,scrim_record_id,tournament_cycle_id,training_session_id").eq("team_id", teamId).limit(500),
         client.from("canonical_session_matches").select("id,canonical_session_id,match_sequence,map_name").eq("team_id", teamId).order("match_sequence").limit(2000),
+        client.from("canonical_session_match_roles").select("id,canonical_session_match_id,player_user_id,role_key_snapshot,role_name_snapshot,role_assignment_status").eq("team_id", teamId).limit(5000),
         client.from("evolution_evaluation_contexts").select("id,player_member_id,player_user_id,canonical_session_id,canonical_session_match_id,role_assignment_id,created_at").eq("team_id", teamId).order("created_at", { ascending: false }).limit(500),
         client.from("evolution_player_score_snapshots").select("id,evaluation_context_id,score_status,score100,provisional_score100,coverage_percent,created_at").eq("team_id", teamId).order("created_at", { ascending: false }).limit(1000)
       ]);
@@ -42,8 +44,9 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
         setSessions(queries[0].data || []);
         setSources(queries[1].data || []);
         setMatches(queries[2].data || []);
-        setContexts(queries[3].data || []);
-        setSnapshots(queries[4].data || []);
+        setRoles(queries[3].data || []);
+        setContexts(queries[4].data || []);
+        setSnapshots(queries[5].data || []);
       }
       setLoading(false);
     };
@@ -55,6 +58,7 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
   const sessionById = useMemo(() => new Map(sessions.map(session => [session.id, session])), [sessions]);
   const sourceBySession = useMemo(() => new Map(sources.map(source => [source.canonical_session_id, source])), [sources]);
   const matchById = useMemo(() => new Map(matches.map(match => [match.id, match])), [matches]);
+  const roleById = useMemo(() => new Map(roles.map(role => [role.id, role])), [roles]);
   const latestSnapshotByContext = useMemo(() => {
     const result = new Map<string, Row>();
     for (const snapshot of snapshots) if (!result.has(snapshot.evaluation_context_id)) result.set(snapshot.evaluation_context_id, snapshot);
@@ -65,10 +69,11 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
     const source = sourceBySession.get(context.canonical_session_id);
     const match = context.canonical_session_match_id ? matchById.get(context.canonical_session_match_id) : null;
     const member = memberByUser.get(context.player_user_id);
+    const role = roleById.get(context.role_assignment_id);
     const snapshot = latestSnapshotByContext.get(context.id);
     const sourceRecordId = source?.scrim_record_id || source?.tournament_cycle_id || source?.training_session_id || null;
-    return { context, session, source, sourceRecordId, match, member, snapshot };
-  }).sort((a,b) => String(b.context.created_at).localeCompare(String(a.context.created_at))), [contexts,sessionById,sourceBySession,matchById,memberByUser,latestSnapshotByContext]);
+    return { context, session, source, sourceRecordId, match, member, role, snapshot };
+  }).sort((a,b) => String(b.context.created_at).localeCompare(String(a.context.created_at))), [contexts,sessionById,sourceBySession,matchById,memberByUser,roleById,latestSnapshotByContext]);
 
   const visibleRows = view === "players"
     ? traceRows.filter(row => !!row.member && row.member.status !== "inactive")
@@ -90,13 +95,13 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
         <article><small>Players evaluated</small><strong>{playerCount}</strong></article>
       </div>}
       {visibleRows.length === 0 ? <p className="muted">{view === "players" ? "No canonical evaluations are linked to the active roster yet." : "No canonical evaluations are available for this team yet."}</p> :
-        <div className="canonical-trace-list">{visibleRows.slice(0, view === "players" ? 30 : 50).map(({context,session,source,sourceRecordId,match,member,snapshot}) => {
+        <div className="canonical-trace-list">{visibleRows.slice(0, view === "players" ? 30 : 50).map(({context,session,source,sourceRecordId,match,member,role,snapshot}) => {
           const score = snapshot?.score_status === "final" ? snapshot.score100 : snapshot?.score_status === "provisional" ? snapshot.provisional_score100 : null;
           return <article className="canonical-trace-row" key={context.id}>
             <div className="canonical-trace-main">
               <strong>{member ? `P${member.player_number || "—"} · ${member.display_name}` : "Player record"}</strong>
               <span>{session?.title || "Canonical session"} · {dateLabel(session?.session_date || context.created_at)}</span>
-              <small>{sourceLabel(source?.source_system)}{sourceRecordId ? ` · source ${String(sourceRecordId).slice(0,8)}` : " · source link pending"} · {match ? `Match ${match.match_sequence}${match.map_name ? " · "+match.map_name : ""}` : "Session-level context"}</small>
+              <small>{sourceLabel(source?.source_system)}{sourceRecordId ? ` · source ${String(sourceRecordId).slice(0,8)}` : " · source link pending"} · {match ? `Match ${match.match_sequence}${match.map_name ? " · "+match.map_name : ""}` : "Session-level context"} · {role?.role_name_snapshot || role?.role_key_snapshot || "Historical role unavailable"}</small>
             </div>
             <div className="canonical-trace-result">
               <b>{snapshot ? snapshot.score_status === "insufficient" ? "Insufficient data" : score === null ? "Score unavailable" : `${score}/100` : "Not calculated"}</b>
