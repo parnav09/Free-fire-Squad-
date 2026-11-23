@@ -4,6 +4,8 @@ import { createLatestRequestGuard } from "./lib/latest-request-guard";
 import { integrateCanonicalSource } from "./lib/canonical-module-integration";
 import CanonicalSessionsWorkspace from "./components/CanonicalSessionsWorkspace";
 const EvolutionEvaluationWorkspace = lazy(() => import("./components/EvolutionEvaluationWorkspace"));
+const CanonicalModuleIntegrationPanel = lazy(() => import("./components/CanonicalModuleIntegrationPanel"));
+import "./components/CanonicalModuleIntegrationPanel.css";
 import PlacementPicker from "./components/PlacementPicker";
 import { currentISOWeekKey, initialPlayers, makeSquareTeamLogo, readPlayers, safeStorageGetItem, safeStorageRemoveItem, safeStorageSetItem, type Player } from "./app/foundation-utils";
 import characterCatalogue from "./data/characterProfiles.json";
@@ -1212,9 +1214,9 @@ export default function App() {
               </section>}
               </>}
           </>}
-          {(section==="Weekly Review"||section==="Player Trends")&&<Suspense fallback={<section className="connection-panel" role="status">Loading legacy player snapshot…</section>}><PlayerWeeklyInsights members={teamMembers} assignments={assignmentRows} evaluations={evalHistory}/></Suspense>}
+          {(section==="Weekly Review"||section==="Player Trends")&&<Suspense fallback={<section className="connection-panel" role="status">Loading legacy player snapshot…</section>}><><PlayerWeeklyInsights members={teamMembers} assignments={assignmentRows} evaluations={evalHistory}/><CanonicalModuleIntegrationPanel client={supabase} teamId={team?.id||""} members={teamMembers} view="players"/></></Suspense>}
           {section==="Analytics" && <Suspense fallback={<section className="connection-panel" role="status">Loading analytics…</section>}>
-            <AnalyticsSection totalMatches={totalMatches} points={points} analyticsMatches={analyticsMatches} rosterSize={players.length}/>
+            <><AnalyticsSection totalMatches={totalMatches} points={points} analyticsMatches={analyticsMatches} rosterSize={players.length}/><CanonicalModuleIntegrationPanel client={supabase} teamId={team?.id||""} members={teamMembers} view="analytics"/></>
           </Suspense>}
           {selectedRosterMember&&<div className="roster-profile-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setSelectedRosterMember(null);}}><section className="roster-profile-modal" role="dialog" aria-modal="true" aria-label={selectedRosterMember.display_name+" character profile"}><button type="button" className="roster-profile-close" aria-label="Close profile" onClick={()=>setSelectedRosterMember(null)}>×</button><div className="eyebrow">PLAYER CHARACTER PROFILE</div><span className="roster-profile-slot">{selectedRosterMember.player_number?"P"+selectedRosterMember.player_number:"PLAYER"}</span><h3>{selectedRosterMember.display_name}</h3><p>{selectedRosterMember.assigned_role||"Role not assigned"} · {selectedRosterMember.membership_role}</p><div className="roster-character-loadout">
   <div className="loadout-slot-group"><label>Active character</label><select value={characterLoadoutDraft.active} onChange={e=>setCharacterLoadoutDraft(d=>({...d,active:e.target.value}))} disabled={characterLoadoutBusy}><option value="">Choose character…</option>{characterSelectOptions}</select></div>
