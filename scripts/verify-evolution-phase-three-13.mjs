@@ -64,48 +64,48 @@ test("the workspace is mounted in the Evaluation module without replacing legacy
 
 test("mobile controls and visible action hitboxes meet the 44px minimum", () => {
   assert.match(styles, /min-height:44px/);
-  assert.match(styles, /input\\[type=range\\]\\{width:100%;min-height:44px;height:44px/);
+  assert.ok(styles.includes(".evolution-eval-editor input[type=range]{width:100%;min-height:44px;height:44px"));
   assert.match(styles, /@media\(max-width:760px\)/);
   assert.match(styles, /@media\(max-width:480px\)/);
   assert.match(styles, /grid-template-columns:1fr/);
 });
 
 test("role-inapplicable rubric dimensions expose Not Applicable without inventing a score", () => {
-  assert.match(component, /not_applicable/);
-  assert.match(component, /criteria\\.map\\(criterion/);
-  assert.match(component, /weight\\?"observed":"not_applicable"/);
-  assert.match(component, /assessment state does not match the dimension's historical role applicability/);
-  assert.match(component, /assessment_state:d\\.state/);
-  assert.doesNotMatch(component, /key=\\{weight\\.dimension_key\\}/);
+  assert.ok(component.includes("not_applicable"));
+  assert.ok(component.includes("criteria.map(criterion=>"));
+  assert.ok(component.includes('weight?"observed":"not_applicable"'));
+  assert.ok(component.includes("assessment state does not match the dimension's historical role applicability"));
+  assert.ok(component.includes("assessment_state:d.state"));
+  assert.ok(!component.includes("key={weight.dimension_key}"));
 });
 
 test("refreshing a saved dimension preserves other unsaved drafts", () => {
-  assert.match(component, /loadContext\\(context\\.id,true\\)/);
-  assert.match(component, /delete next\\[key\\]/);
-  assert.match(component, /unsavedDraftCount/);
-  assert.match(component, /disabled=\\{unsavedDraftCount>0\\}/);
-  assert.match(component, /Discard all drafts/);
+  assert.ok(component.includes("loadContext(context.id,true)"));
+  assert.ok(component.includes("delete next[key]"));
+  assert.ok(component.includes("unsavedDraftCount"));
+  assert.ok(component.includes("disabled={unsavedDraftCount>0}"));
+  assert.ok(component.includes("Discard all drafts"));
 });
 
 test("evidence recovery can reattach an unlinked item without creating a duplicate", () => {
-  assert.match(component, /availableEvidence=evidence\\.filter/);
-  assert.match(component, /!evidenceLinks\\.some\\(link=>link\\.evidence_item_id===item\\.id\\)/);
-  assert.match(component, /linksFor\\(evidenceId\\)/);
-  assert.match(component, /unlinked evidence will remain available to attach/);
-  assert.match(component, /\\.in\\("evidence_item_id",evidenceIds\\)/);
+  assert.ok(component.includes("availableEvidence=evidence.filter"));
+  assert.ok(component.includes("!evidenceLinks.some(link=>link.evidence_item_id===item.id)"));
+  assert.ok(component.includes("linksFor(evidenceId)"));
+  assert.ok(component.includes("unlinked evidence will remain available to attach"));
+  assert.ok(component.includes('.in("evidence_item_id",evidenceIds)'));
 });
 
 test("previous evaluation comparison is scoped to the same player and earlier context", () => {
-  assert.match(component, /PREVIOUS EVALUATION · SAME PLAYER/);
-  assert.match(component, /eq\\("player_member_id",c\\.data\\.player_member_id\\)/);
-  assert.match(component, /lt\\("created_at",c\\.data\\.created_at\\)/);
-  assert.match(component, /Change from previous final score/);
+  assert.ok(component.includes("PREVIOUS EVALUATION · SAME PLAYER"));
+  assert.ok(component.includes('.eq("player_member_id",c.data.player_member_id)'));
+  assert.ok(component.includes('.lt("created_at",c.data.created_at)'));
+  assert.ok(component.includes("Change from previous final score"));
 });
 
 test("evidence entry supports each canonical source type and validates external locators", () => {
   for (const source of ["manual_observation","round_note","vod_reference","match_reference"]) {
     assert.ok(component.includes(source), "missing evidence source type: "+source);
   }
-  assert.match(component, /VOD and match references require a source URL/);
-  assert.match(component, /parsed\.protocol!=="https:" && parsed\.protocol!=="http:"/);
+  assert.ok(component.includes("VOD and match references require a source URL"));
+  assert.ok(component.includes('parsed.protocol!=="https:" && parsed.protocol!=="http:"'));
 });
