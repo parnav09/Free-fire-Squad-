@@ -178,7 +178,7 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
             <div className="canonical-trace-main">
               <strong>{sourceLabel(source?.source_system || session.session_type)}</strong>
               <span>{session.title} · {dateLabel(session.session_date || session.created_at)}</span>
-              <small>{sourceRecordId ? "Source record " + String(sourceRecordId).slice(0, 8) : "Source mapping unavailable"} · Canonical session " + String(session.id).slice(0, 8)}</small>
+              <small>{sourceRecordId ? `Source record ${String(sourceRecordId).slice(0, 8)}` : "Source mapping unavailable"} · Canonical session {String(session.id).slice(0, 8)}</small>
             </div>
             {session.archived_at ? <span className="canonical-trace-archived">ARCHIVED</span> : <span className="canonical-trace-live">LINKED</span>}
           </article>)}
