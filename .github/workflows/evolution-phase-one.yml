@@ -136,6 +136,9 @@ jobs:
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_three_12_ci
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/squad_os_phase_three_12_ci bash scripts/verify-evolution-phase-three-12-db.sh
+      - name: Verify Evolution Phase Three.14 existing module integration contracts
+        run: node --test scripts/verify-evolution-phase-three-14.mjs
+
       - name: Verify Evolution Phase Three.13 atomic context creation against isolated disposable PostgreSQL
         run: |
           PGPASSWORD=postgres createdb -h localhost -U postgres squad_os_phase_three_13_ci
