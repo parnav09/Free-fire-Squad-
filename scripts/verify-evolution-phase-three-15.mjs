@@ -64,7 +64,7 @@ test("all Phase 3.1–3.14 point reports and dedicated source-contract suites ex
 test("the production build executes every Phase 3 suite once, in strict numeric order", () => {
   const build = pkg.scripts.build;
   const executed = [...build.matchAll(/npm run test:evolution-phase-three-(\d+)(?=\s|&&)/g)].map(match => Number(match[1]));
-  assert.deepEqual(executed, Array.from({ length: 14 }, (_, index) => index + 1));
+  assert.deepEqual(executed, Array.from({ length: 15 }, (_, index) => index + 1));
   assert.ok(build.indexOf("test:evolution-phase-three-14") < build.indexOf("test:evolution-phase-three-15"));
   assert.ok(build.endsWith("npm run test:evolution-phase-three-15 && vite build"));
   assert.equal(pkg.scripts["test:evolution-phase-three-15"], "node --test scripts/verify-evolution-phase-three-15.mjs");
@@ -133,6 +133,6 @@ test("the report preserves production, Training and deployment boundaries", () =
   assert.match(report, /Training source sessions/i);
   assert.match(report, /Vercel Preview\/deployment status/i);
   assert.match(report, /No production migration/i);
-  assert.match(report, /exact latest PR-head/i);
+  assert.match(report, /exact latest PR head/i);
   assert.match(roadmap, /### 3\.15 Regression, Integration & Final Acceptance/);
 });
