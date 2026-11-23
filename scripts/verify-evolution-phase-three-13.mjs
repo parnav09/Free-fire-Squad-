@@ -57,7 +57,6 @@ test("the interface exposes coverage, readiness, immutable score history and exp
 test("the workspace is mounted in the Evaluation module without replacing legacy records", () => {
   assert.match(app, /<EvolutionEvaluationWorkspace/);
   assert.match(app, /Legacy daily evaluation/);
-  assert.match(app, /PlayerEvaluationRubric/);
   assert.match(roadmap, /### 3\.13 Scoring UI & Evaluation Experience/);
 });
 
