@@ -254,6 +254,8 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
   const matchTitle = (id:string) => { const m=matches.find(x=>x.id===id); return m ? "Match "+m.match_sequence+(m.map_name?" · "+m.map_name:"") : "Canonical match"; };
   const score = scoreSnapshots[0];
   const coverage = coverageSnapshots[0];
+  const scoreValue = (snapshot:Row|undefined) => snapshot?.score_status==="final" ? Number(snapshot.score100) : snapshot?.score_status==="provisional" ? Number(snapshot.provisional_score100) : null;
+  const scoreDelta = scoreValue(score)===null || scoreValue(scoreSnapshots[1])===null ? null : Number((scoreValue(score)!-scoreValue(scoreSnapshots[1])!).toFixed(2));
   const canCreate = !!client && !!teamId && canManage && sessions.length>0 && matches.length>0 && roles.length>0;
 
   return <section className="evolution-eval-workspace" aria-labelledby="evolution-eval-title">
@@ -307,6 +309,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
             return <article className="evolution-eval-dimension" key={weight.dimension_key}>
               <header><div><span>{String(criterion.sort_order).padStart(2,"0")} / 06</span><h4>{definition.label}</h4><p>{criterion.criteria_guidance}</p></div><strong>{(weight.weight_basis_points/100).toFixed(2)}<small>%</small></strong></header>
               <div className="evolution-eval-anchor"><b>Rating anchors</b><div>{[0,2,4,6,8,10].map(n=><span key={n}><b>{n}</b> {String(anchors[String(n)]||"—")}</span>)}</div></div>
+              {drafts[weight.dimension_key] && <div className="evolution-eval-unsaved" role="status">UNSAVED DRAFT · Save this revision or reset it before leaving.</div>}
               {saved && <div className="evolution-eval-saved">Current: <b>{saved.assessment_state==="observed"?String(saved.rating_value)+"/10":String(saved.assessment_state).replaceAll("_"," ")}</b> · Revision {saved.revision_number} · {dateLabel(saved.created_at)}</div>}
               <div className="evolution-eval-editor">
                 <label>Assessment state<select value={draft.state} onChange={e=>updateDraft(weight.dimension_key,{state:e.target.value as Draft["state"],evidenceId:""})}><option value="observed">Observed</option><option value="not_observed">Not Observed</option><option value="incomplete">Incomplete</option><option value="rejected_evidence">Rejected Evidence</option></select></label>
@@ -333,7 +336,7 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
       </section>
       <section className="evolution-eval-results">
         <div className="evolution-eval-result-card"><span className="evolution-eval-kicker">LATEST EVIDENCE COVERAGE</span><strong>{coverage?.coverage_percent!=null?String(coverage.coverage_percent)+"%":"—"}</strong><small>{coverage?.coverage_status||"Not calculated"} · independent of performance score</small></div>
-        <div className="evolution-eval-result-card"><span className="evolution-eval-kicker">LATEST PLAYER SCORE</span><strong>{score?.score_status==="final"?String(score.score100)+"/100":score?.score_status==="provisional"?String(score.provisional_score100)+"/100*":"—"}</strong><small>{score?.score_status||"Not calculated"} · {score?.calculation_version||"No snapshot"}</small></div>
+        <div className="evolution-eval-result-card"><span className="evolution-eval-kicker">LATEST PLAYER SCORE</span><strong>{score?.score_status==="final"?String(score.score100)+"/100":score?.score_status==="provisional"?String(score.provisional_score100)+"/100*":"—"}</strong><small>{score?.score_status||"Not calculated"} · {score?.calculation_version||"No snapshot"}</small><small>{scoreDelta===null?"No comparable prior score": "vs previous snapshot: "+(scoreDelta>0?"+":"")+scoreDelta.toFixed(2)+" points"}</small></div>
       </section>
       {scoreSnapshots.length>0 && <label className="evolution-eval-reason">Recalculation reason (required for a new snapshot)<input value={recalculationReason} onChange={e=>setRecalculationReason(e.target.value)} maxLength={1000} placeholder="Explain which evidence or assessment changed"/></label>}
       <div className="evolution-eval-calc-actions"><button type="button" className="evolution-eval-primary" disabled={!canManage||!!busy||!weights.length} onClick={calculate}>{busy==="calculate"?"Calculating…":scoreSnapshots.length?"Recalculate & append history":"Calculate coverage & score"}</button><span>Final score appears only when the database policy gates pass. Provisional scores are clearly marked.</span></div>
