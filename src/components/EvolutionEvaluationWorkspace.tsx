@@ -139,43 +139,25 @@ export default function EvolutionEvaluationWorkspace({ client, teamId, userId, m
     const member = role ? members.find(x=>x.user_id===role.player_user_id && x.status==="active") : null;
     const canonicalKey = roleKey(role?.role_key_snapshot);
     const match = matches.find(x=>x.id===selectedMatch);
-    if (!selectedSessionRow || !match || !role || !member || !canonicalKey) { setError("Select a canonical session, its match and a player with an assigned historical role snapshot."); return; }
+    if (!selectedSessionRow || !match || !role || !member || !canonicalKey) {
+      setError("Select a canonical session, its match and a player with an assigned historical role snapshot."); return;
+    }
     setBusy("create"); setError(""); setNotice("");
     try {
-      const now = new Date().toISOString();
-      const [rubricRows,weightRows] = await Promise.all([
-        client.from("evolution_rubric_versions").select("*").eq("team_id",teamId).eq("lifecycle_status","active"),
-        client.from("evolution_role_weight_sets").select("*").eq("team_id",teamId).eq("lifecycle_status","active").eq("role_key",canonicalKey)
-      ]);
-      if (rubricRows.error) throw rubricRows.error; if (weightRows.error) throw weightRows.error;
-      const effective = (row:Row) => !!row.effective_from && new Date(row.effective_from).getTime()<=Date.parse(now) && (!row.effective_to || Date.parse(row.effective_to)>Date.parse(now));
-      const rubricOptions = (rubricRows.data||[]).filter(effective);
-      if (!rubricOptions.length) throw new Error("No active, effective rubric is configured for this team. An owner/coach must publish a versioned rubric before an evaluation can start.");
-      const compatible = (weightRows.data||[]).filter((x:Row)=>rubricOptions.some((r:Row)=>r.id===x.rubric_version_id) && effective(x));
-      if (!compatible.length) throw new Error("No active, effective role-weight set exists for this historical role. Publish a complete 100% weight set for the selected rubric and role before starting.");
-      const compatiblePairs = compatible.map((weight:Row)=>({weight,rubric:rubricOptions.find((row:Row)=>row.id===weight.rubric_version_id)})).filter((pair:any)=>!!pair.rubric);
-      compatiblePairs.sort((a:any,b:any)=>Date.parse(b.rubric.effective_from)-Date.parse(a.rubric.effective_from)||b.weight.version_number-a.weight.version_number);
-      const chosenPair = compatiblePairs[0];
-      if (!chosenPair) throw new Error("The active rubric has no matching active role-weight set. Select a rubric/role pair with a complete published weight set.");
-      const chosenRubric = chosenPair.rubric;
-      const chosenWeight = chosenPair.weight;
-      const ctx = await client.from("evolution_evaluation_contexts").insert({
-        team_id:teamId,player_member_id:member.id,player_user_id:member.user_id,
-        canonical_session_id:selectedSessionRow.id,canonical_session_match_id:match.id,
-        role_assignment_id:role.id,created_by:userId
-      }).select("*").single();
-      if (ctx.error) throw ctx.error;
-      const rubricBinding = await client.from("evolution_evaluation_rubric_bindings").insert({
-        team_id:teamId,evaluation_context_id:ctx.data.id,rubric_version_id:chosenRubric.id,bound_by:userId
+      const result = await client.rpc("create_evolution_evaluation_context",{
+        p_team_id:teamId,
+        p_player_member_id:member.id,
+        p_player_user_id:member.user_id,
+        p_canonical_session_id:selectedSessionRow.id,
+        p_canonical_session_match_id:match.id,
+        p_role_assignment_id:role.id
       });
-      if (rubricBinding.error) throw rubricBinding.error;
-      const weightBinding = await client.from("evolution_evaluation_role_weight_bindings").insert({
-        team_id:teamId,evaluation_context_id:ctx.data.id,role_assignment_id:role.id,
-        weight_set_id:chosenWeight.id,role_key:canonicalKey,bound_by:userId
-      });
-      if (weightBinding.error) throw weightBinding.error;
-      setSelectedContext(ctx.data.id); await loadIndex();
-      setNotice("Evaluation context created and pinned to the exact match role, rubric and weight-set versions.");
+      if (result.error) throw result.error;
+      const created = Array.isArray(result.data) ? result.data[0] : result.data;
+      if (!created?.id) throw new Error("The database did not return the newly created evaluation context.");
+      setSelectedContext(created.id);
+      await loadIndex();
+      setNotice("Evaluation context created atomically and pinned to the exact match role, rubric and weight-set versions.");
     } catch(e) { setError(messageOf(e)); }
     finally { setBusy(""); }
   };
