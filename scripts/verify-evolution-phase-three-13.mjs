@@ -3,11 +3,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
-const [component, styles, app, roadmap] = await Promise.all([
+const [component, styles, app, roadmap, atomicMigration, dbHarness, workflow] = await Promise.all([
   read("../src/components/EvolutionEvaluationWorkspace.tsx"),
   read("../src/components/EvolutionEvaluationWorkspace.css"),
   read("../src/App.tsx"),
   read("../docs/evolution/EVOLUTION-PHASE-3-ROADMAP-AND-CHECKPOINT.md"),
+  read("../supabase/migrations/20261122220000_evolution_phase_three_13_atomic_context_creation.sql"),
+  read("./verify-evolution-phase-three-13-db.sh"),
+  read("../.github/workflows/evolution-phase-one.yml"),
 ]);
 
 test("Phase 3.13 uses canonical sessions, matches and immutable historical role snapshots", () => {
@@ -20,13 +23,18 @@ test("Phase 3.13 uses canonical sessions, matches and immutable historical role 
   assert.match(component, /canonical_session_match_id:match\.id/);
 });
 
-test("evaluation binds exact active rubric and role-weight versions before assessment", () => {
-  assert.match(component, /evolution_rubric_versions/);
-  assert.match(component, /evolution_role_weight_sets/);
+test("evaluation context creation atomically pins the effective rubric and historical role weights", () => {
+  assert.match(component, /rpc\("create_evolution_evaluation_context"/);
+  assert.match(component, /p_role_assignment_id:role\.id/);
   assert.match(component, /evolution_evaluation_rubric_bindings/);
   assert.match(component, /evolution_evaluation_role_weight_bindings/);
-  assert.match(component, /lifecycle_status","active"/);
-  assert.match(component, /effective_from/);
+  assert.match(atomicMigration, /CREATE OR REPLACE FUNCTION public\.create_evolution_evaluation_context/);
+  assert.match(atomicMigration, /SECURITY DEFINER/);
+  assert.match(atomicMigration, /SET search_path = ''/);
+  assert.match(atomicMigration, /canonical_role_key_from_snapshot/);
+  assert.match(atomicMigration, /RETURNING \* INTO v_context/);
+  assert.match(atomicMigration, /RETURN v_context/);
+  assert.match(atomicMigration, /GRANT EXECUTE ON FUNCTION public\.create_evolution_evaluation_context/);
 });
 
 test("evidence creation, dimension linkage and assessment revisions are explicit", () => {
@@ -111,4 +119,13 @@ test("evidence entry supports each canonical source type and validates external 
   }
   assert.ok(component.includes("VOD and match references require a source URL"));
   assert.ok(component.includes('parsed.protocol!=="https:" && parsed.protocol!=="http:"'));
+});
+
+test("atomic context creation migration is applied and its RPC ACL is verified in CI", () => {
+  assert.match(dbHarness, /verify-evolution-phase-three-12-db\.sh/);
+  assert.match(dbHarness, /20261122220000_evolution_phase_three_13_atomic_context_creation\.sql/);
+  assert.match(dbHarness, /has_function_privilege/);
+  assert.match(dbHarness, /search_path/);
+  assert.match(workflow, /Verify Evolution Phase Three\.13 atomic context creation/);
+  assert.match(workflow, /verify-evolution-phase-three-13-db\.sh/);
 });
