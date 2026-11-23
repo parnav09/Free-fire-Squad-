@@ -135,6 +135,8 @@ test("atomic context creation migration is applied and its RPC ACL is verified i
   assert.match(dbHarness, /create_evolution_evaluation_context/);
   assert.match(dbHarness, /Invalid role snapshot unexpectedly created/);
   assert.match(dbHarness, /orphan evaluation context/);
+  assert.ok(dbHarness.includes("Sniper + IGL"));
+  assert.ok(dbHarness.includes("Missing role-weight configuration left an orphan evaluation context"));
   assert.match(dbHarness, /atomic context creation behavior PASS/);
   assert.match(dbHarness, /search_path/);
   assert.match(workflow, /Verify Evolution Phase Three\.13 atomic context creation/);
