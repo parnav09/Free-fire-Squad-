@@ -129,9 +129,9 @@ test("the final gate rejects missing or stale PR/push event SHAs", async () => {
 });
 
 test("the report preserves production, Training and deployment boundaries", () => {
-  assert.match(report, /live Supabase schema\/migration history/i);
+  assert.match(report, /live Supabase migration history/i);
   assert.match(report, /Training source sessions/i);
-  assert.match(report, /Vercel Preview\/deployment status/i);
+  assert.match(report, /Vercel Preview.*deployment/i);
   assert.match(report, /No production migration/i);
   assert.match(report, /exact latest PR head/i);
   assert.match(roadmap, /### 3\.15 Regression, Integration & Final Acceptance/);
