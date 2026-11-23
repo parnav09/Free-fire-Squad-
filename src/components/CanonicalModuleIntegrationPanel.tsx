@@ -35,6 +35,7 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
   const [roles, setRoles] = useState<Row[]>([]);
   const [contexts, setContexts] = useState<Row[]>([]);
   const [snapshots, setSnapshots] = useState<Row[]>([]);
+  const [snapshotNotice, setSnapshotNotice] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refreshVersion, setRefreshVersion] = useState(0);
@@ -44,7 +45,7 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
 
     const load = async () => {
       if (!client || !teamId) {
-        setSessions([]); setSources([]); setMatches([]); setRoles([]); setContexts([]); setSnapshots([]);
+        setSessions([]); setSources([]); setMatches([]); setRoles([]); setContexts([]); setSnapshots([]); setSnapshotNotice("");
         setLoading(false); setError("");
         return;
       }
@@ -53,10 +54,23 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
       // never leave an old team's lineage visible under the new team heading.
       setLoading(true);
       setError("");
-      setSessions([]); setSources([]); setMatches([]); setRoles([]); setContexts([]); setSnapshots([]);
+      setSessions([]); setSources([]); setMatches([]); setRoles([]); setContexts([]); setSnapshots([]); setSnapshotNotice("");
 
       try {
-        const [nextSessions, nextSources, nextMatches, nextRoles, nextContexts, nextSnapshots] = await Promise.all([
+        const snapshotRequest = readAllRows((from, to) => client.from("evolution_player_score_snapshots")
+          .select("id,team_id,evaluation_context_id,score_status,score100,provisional_score100,coverage_percent,created_at")
+          .eq("team_id", teamId)
+          .order("created_at", { ascending: false })
+          .order("id", { ascending: false })
+          .range(from, to))
+          .then(rows => ({ rows, notice: "" }))
+          .catch(snapshotError => ({
+            rows: [] as Row[],
+            notice: /permission|row-level security|not allowed/i.test(errorText(snapshotError))
+              ? "Score snapshots are restricted to active Owners and Coaches."
+              : "Score snapshots are temporarily unavailable; source and evaluation lineage remain available."
+          }));
+        const [nextSessions, nextSources, nextMatches, nextRoles, nextContexts, snapshotResult] = await Promise.all([
           readAllRows((from, to) => client.from("canonical_sessions")
             .select("id,team_id,session_type,title,session_date,created_at,archived_at")
             .eq("team_id", teamId)
@@ -87,12 +101,7 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
             .order("created_at", { ascending: false })
             .order("id", { ascending: false })
             .range(from, to)),
-          readAllRows((from, to) => client.from("evolution_player_score_snapshots")
-            .select("id,team_id,evaluation_context_id,score_status,score100,provisional_score100,coverage_percent,created_at")
-            .eq("team_id", teamId)
-            .order("created_at", { ascending: false })
-            .order("id", { ascending: false })
-            .range(from, to))
+          snapshotRequest
         ]);
 
         if (cancelled) return;
@@ -101,10 +110,11 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
         setMatches(nextMatches);
         setRoles(nextRoles);
         setContexts(nextContexts);
-        setSnapshots(nextSnapshots);
+        setSnapshots(snapshotResult.rows);
+        setSnapshotNotice(snapshotResult.notice);
       } catch (loadError) {
         if (cancelled) return;
-        setSessions([]); setSources([]); setMatches([]); setRoles([]); setContexts([]); setSnapshots([]);
+        setSessions([]); setSources([]); setMatches([]); setRoles([]); setContexts([]); setSnapshots([]); setSnapshotNotice("");
         setError(errorText(loadError));
       } finally {
         if (!cancelled) setLoading(false);
@@ -203,13 +213,14 @@ export default function CanonicalModuleIntegrationPanel({ client, teamId, member
                 <small>{sourceLabel(source?.source_system)}{sourceRecordId ? " · source " + String(sourceRecordId).slice(0, 8) : " · source link unavailable"} · {matchLabel} · {role?.role_name_snapshot || role?.role_key_snapshot || "Historical role unavailable"}</small>
               </div>
               <div className="canonical-trace-result">
-                <b>{snapshot ? snapshot.score_status === "insufficient" ? "Insufficient data" : score === null ? "Score unavailable" : `${score}/100` : "Not calculated"}</b>
-                <small>{snapshot && snapshot.coverage_percent != null ? `${Number(snapshot.coverage_percent).toFixed(1)}% coverage` : "Coverage unavailable"}</small>
+                <b>{snapshot ? snapshot.score_status === "insufficient" ? "Insufficient data" : score === null ? "Score unavailable" : `${score}/100` : snapshotNotice ? "Restricted" : "Not calculated"}</b>
+                <small>{snapshot && snapshot.coverage_percent != null ? `${Number(snapshot.coverage_percent).toFixed(1)}% coverage` : snapshotNotice ? "Score history unavailable" : "Coverage unavailable"}</small>
               </div>
             </article>;
           })}
         </div>}
       </section>
+      {snapshotNotice && <p className="muted canonical-trace-note" role="note">{snapshotNotice}</p>}
       <p className="muted canonical-trace-note">Historical role and rubric bindings stay attached to the evaluation context. This panel never derives player performance from kills, placement, Booyah or tournament points.</p>
     </>}
   </section>;
