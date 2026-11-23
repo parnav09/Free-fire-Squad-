@@ -72,34 +72,35 @@ BEGIN
     RAISE EXCEPTION 'historical_role_snapshot_is_not_mapped_to_a_canonical_role' USING ERRCODE = '23514';
   END IF;
 
-  SELECT rv.id
-    INTO v_rubric_version_id
+  SELECT rv.id, ws.id
+    INTO v_rubric_version_id, v_weight_set_id
   FROM public.evolution_rubric_versions rv
+  JOIN public.evolution_role_weight_sets ws
+    ON ws.team_id = rv.team_id
+   AND ws.rubric_version_id = rv.id
+   AND ws.role_key = v_role_key
+   AND ws.lifecycle_status = 'active'
+   AND ws.effective_from <= v_now
+   AND (ws.effective_to IS NULL OR ws.effective_to > v_now)
   WHERE rv.team_id = p_team_id
     AND rv.lifecycle_status = 'active'
     AND rv.effective_from <= v_now
     AND (rv.effective_to IS NULL OR rv.effective_to > v_now)
-  ORDER BY rv.effective_from DESC, rv.version_number DESC, rv.created_at DESC, rv.id
+  ORDER BY rv.effective_from DESC, rv.version_number DESC,
+    ws.effective_from DESC, ws.version_number DESC, ws.created_at DESC, rv.id, ws.id
   LIMIT 1;
 
   IF v_rubric_version_id IS NULL THEN
+    IF EXISTS (
+      SELECT 1 FROM public.evolution_rubric_versions rv
+      WHERE rv.team_id = p_team_id
+        AND rv.lifecycle_status = 'active'
+        AND rv.effective_from <= v_now
+        AND (rv.effective_to IS NULL OR rv.effective_to > v_now)
+    ) THEN
+      RAISE EXCEPTION 'no_active_effective_role_weight_set_for_historical_role' USING ERRCODE = '23514';
+    END IF;
     RAISE EXCEPTION 'no_active_effective_rubric_configured_for_team' USING ERRCODE = '23514';
-  END IF;
-
-  SELECT ws.id
-    INTO v_weight_set_id
-  FROM public.evolution_role_weight_sets ws
-  WHERE ws.team_id = p_team_id
-    AND ws.rubric_version_id = v_rubric_version_id
-    AND ws.role_key = v_role_key
-    AND ws.lifecycle_status = 'active'
-    AND ws.effective_from <= v_now
-    AND (ws.effective_to IS NULL OR ws.effective_to > v_now)
-  ORDER BY ws.effective_from DESC, ws.version_number DESC, ws.created_at DESC, ws.id
-  LIMIT 1;
-
-  IF v_weight_set_id IS NULL THEN
-    RAISE EXCEPTION 'no_active_effective_role_weight_set_for_historical_role' USING ERRCODE = '23514';
   END IF;
 
   INSERT INTO public.evolution_evaluation_contexts (
