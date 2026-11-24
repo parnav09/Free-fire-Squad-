@@ -41,11 +41,12 @@ const fakeClient={
   from(table:string){
     const filters:Array<[string,unknown]>=[];
     const inFilters:Array<[string,unknown[]]>=[];
+    let range:[number,number]=[0,999];
     const query:any={
       select(){return query;},eq(key:string,value:unknown){filters.push([key,value]);return query;},
       in(key:string,values:unknown[]){inFilters.push([key,values]);return query;},
-      order(){return query;},limit(){return query;},update(){return query;},
-      then(resolve:any,reject:any){return Promise.resolve({data:filterRows(table,filters,inFilters),error:null}).then(resolve,reject);},
+      order(){return query;},limit(){return query;},range(from:number,to:number){range=[from,to];return query;},update(){return query;},
+      then(resolve:any,reject:any){return Promise.resolve({data:filterRows(table,filters,inFilters).slice(range[0],range[1]+1),error:null}).then(resolve,reject);},
       single(){return Promise.resolve({data:filterRows(table,filters,inFilters)[0]||null,error:null});},
       maybeSingle(){return Promise.resolve({data:filterRows(table,filters,inFilters)[0]||null,error:null});}
     };
