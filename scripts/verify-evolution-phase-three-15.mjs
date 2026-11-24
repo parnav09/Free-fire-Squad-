@@ -66,7 +66,7 @@ test("the production build executes every Phase 3 suite once, in strict numeric 
   const executed = [...build.matchAll(/npm run test:evolution-phase-three-(\d+)(?=\s|&&)/g)].map(match => Number(match[1]));
   assert.deepEqual(executed, Array.from({ length: 15 }, (_, index) => index + 1));
   assert.ok(build.indexOf("test:evolution-phase-three-14") < build.indexOf("test:evolution-phase-three-15"));
-  assert.ok(build.endsWith("npm run test:evolution-phase-three-15 && vite build"));
+  assert.ok(build.endsWith("npm run test:evolution-phase-three-15 && npm run test:evolution-phase-four-1 && vite build"));
   assert.equal(pkg.scripts["test:evolution-phase-three-15"], "node --test scripts/verify-evolution-phase-three-15.mjs");
 });
 
@@ -74,9 +74,9 @@ test("earlier phase suites no longer assert a stale Phase 3.14 build-chain endpo
   for (const [index, source] of phaseScripts.entries()) {
     assert.doesNotMatch(source, /test:evolution-phase-three-14\\s*&&\\s*vite build/, `Phase 3.${index + 1} contains a stale pre-3.15 build-chain assertion`);
   }
-  assert.match(scripts[9], /test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && vite build/);
-  assert.match(scripts[10], /test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && vite build/);
-  assert.match(scripts[11], /test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && vite build/);
+  assert.match(scripts[9], /test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && npm run test:evolution-phase-four-1 && vite build/);
+  assert.match(scripts[10], /test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && npm run test:evolution-phase-four-1 && vite build/);
+  assert.match(scripts[11], /test:evolution-phase-three-14 && npm run test:evolution-phase-three-15 && npm run test:evolution-phase-four-1 && vite build/);
   assert.match(scripts[13], /Phase Three\\.1–3\\.15 Final Acceptance/);
 });
 
