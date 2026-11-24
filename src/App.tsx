@@ -465,9 +465,15 @@ export default function App() {
     finally{setBackupBusy(false);}
   };
   const confirmLogout=async()=>{
-    if(!supabase)return;setTeamBusy(true);
-    try{const {error}=await supabase.auth.signOut();if(error)throw error;teamLoadGuardRef.current.invalidate();setConfirmAction(null);setNotice("Signed out successfully. Your team data remains saved.");}
-    catch(e){setNotice(e instanceof Error?e.message:"Logout failed.");}
+    if(!supabase||teamBusy)return;setTeamBusy(true);
+    try{
+      const {error}=await supabase.auth.signOut({scope:"local"});
+      if(error)throw error;
+      teamLoadGuardRef.current.invalidate();
+      setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");
+      setConfirmAction(null);
+      setNotice("Signed out successfully. Your team data remains saved.");
+    }catch(e){setNotice(e instanceof Error?e.message:"Logout failed.");}
     finally{setTeamBusy(false);}
   };
   const confirmLeaveTeam=async()=>{
@@ -1008,7 +1014,7 @@ export default function App() {
                         <span className="team-choice-action">Continue <UiIcon name="chevron-right"/></span>
                       </button>
                     </div>
-                    <div className="team-onboarding-footer"><span>Signed in as <b>{sessionUsername}</b></span><button className="text-button" onClick={()=>setConfirmAction("logout")}>Sign out</button></div>
+                    <div className="team-onboarding-footer"><span>Signed in as <b>{sessionUsername}</b></span><button className="text-button" type="button" disabled={teamBusy} onClick={()=>void confirmLogout()}>{teamBusy?"Signing out…":"Sign out"}</button></div>
                   </> : teamScreen==="create" ? <>
                     <button className="text-button team-back" onClick={()=>{setTeamScreen("choice");setNotice("");}}><UiIcon name="arrow-left"/> Back to team options</button>
                     <div className="team-hero"><span className="team-step">TEAM SETUP · 01 / 02</span><h2>Create your team.</h2><p>Enter the team identity. An invite code will be generated after successful creation.</p></div>
