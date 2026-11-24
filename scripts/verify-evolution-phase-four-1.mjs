@@ -95,3 +95,10 @@ test("Phase 4.1 verifier is part of the production build gate", () => {
   assert.equal(packageJson.scripts["test:evolution-phase-four-1"], "node --test scripts/verify-evolution-phase-four-1.mjs");
   assert.match(packageJson.scripts.build, /test:evolution-phase-four-1/);
 });
+
+test("stale session reads cannot overwrite the active team's session list", () => {
+  assert.match(component, /const sessionRequestVersion = useRef\(0\)/);
+  assert.match(component, /const requestVersion = \+\+sessionRequestVersion\.current/);
+  assert.match(component, /if \(requestVersion !== sessionRequestVersion\.current\) return/);
+  assert.match(component, /return \(\) => \{\s*sessionRequestVersion\.current \+= 1;\s*\}/);
+});
