@@ -18,7 +18,7 @@ import "./components/MatchesSectionTabs.css";
 
 
 
-type UiIconName = "arrow-left" | "arrow-right" | "chevron-right" | "log-out" | "download" | "external-link" | "users";
+type UiIconName = "arrow-left" | "arrow-right" | "chevron-right" | "log-out" | "download" | "external-link" | "users" | "trash";
 function UiIcon({ name, size = 16 }: { name: UiIconName; size?: number }) {
   const paths: Record<UiIconName, React.ReactNode> = {
     "arrow-left": <><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></>,
@@ -27,7 +27,8 @@ function UiIcon({ name, size = 16 }: { name: UiIconName; size?: number }) {
     "log-out": <><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/></>,
     "download": <><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></>,
     "external-link": <><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></>,
-    "users": <><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>
+    "users": <><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>,
+    "trash": <><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></>
   };
   return <svg className="ui-icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">{paths[name]}</svg>;
 }
@@ -130,7 +131,7 @@ export default function App() {
   const [teamMembers, setTeamMembers] = useState<Array<{id:string;user_id:string;display_name:string;player_number:number|null;assigned_role:string|null;membership_role:string;status:string}>>([]);
   const [teamChoices,setTeamChoices]=useState<Array<{id:string;team_name:string;membership_role:string;selectable:boolean}>>([]);
   const [teamBusy, setTeamBusy] = useState(false);
-  const [confirmAction,setConfirmAction]=useState<"logout"|"leave"|"import"|null>(null);
+  const [confirmAction,setConfirmAction]=useState<"logout"|"leave"|"delete"|"import"|null>(null);
   const [leaveTransferTo,setLeaveTransferTo]=useState("");
   const [backupFile,setBackupFile]=useState<File|null>(null);
   const [backupBusy,setBackupBusy]=useState(false);
@@ -485,6 +486,27 @@ export default function App() {
       setTeam(null);setTeamMembers([]);setJoinRequests([]);setIglUserId("");setConfirmAction(null);setLeaveTransferTo("");
       setNotice(data?.deletion_scheduled_at?"You left the team. Empty-team deletion is scheduled after the 48-hour recovery window.":"You left the team. Ownership has been transferred where required.");
     }catch(e){setNotice(e instanceof Error?e.message:"Could not leave team.");}
+    finally{setTeamBusy(false);}
+  };
+  const confirmDeleteTeam=async()=>{
+    if(!supabase||!team||team.membership_role!=="owner"||teamBusy)return;
+    setTeamBusy(true);
+    try{
+      const {data:{user},error:userError}=await supabase.auth.getUser();
+      if(userError)throw userError;
+      if(!user)throw new Error("Sign in again before deleting this team.");
+      const {error}=await supabase.rpc("delete_team_for_team",{p_team_id:team.id});
+      if(error)throw error;
+      if(team.avatar_url){
+        const {error:storageError}=await supabase.storage.from("team-avatars").remove([user.id+"/"+team.id+".jpg"]);
+        if(storageError)console.warn("Team deleted; logo cleanup can be retried:",storageError.message);
+      }
+      teamLoadGuardRef.current.invalidate();
+      safeStorageRemoveItem("squad-os-active-team");
+      setTeam(null);setTeamMembers([]);setTeamChoices([]);setJoinRequests([]);setIglUserId("");
+      setLocalDataHydratedFor("");setConfirmAction(null);setLeaveTransferTo("");
+      setNotice("Team deleted. Its team records were permanently removed.");
+    }catch(e){setNotice(e instanceof Error?e.message:"Could not delete this team.");}
     finally{setTeamBusy(false);}
   };
   const loadTeam = async (preferredTeamId?:string) => {
@@ -1182,7 +1204,7 @@ export default function App() {
               </div>
               <button className="primary-button" disabled={!signedIn||!displayName.trim()} onClick={async()=>{if(!supabase||!signedIn)return;const name=displayName.trim();const {error}=await supabase.rpc("set_display_name",{p_name:name,p_team_id:team?.id||null});if(error){setNotice(error.message.includes("team_members_team_display_name_lower_uidx")?"This IGN is already used in this team. Choose a different IGN.":error.message);return;}if(!team)await supabase.auth.updateUser({data:{display_name:name}});setDisplayName(name);setTeamMembers(rows=>rows.map(m=>m.user_id===sessionUserId?{...m,display_name:name}:m));setNotice(team?"Team IGN updated. This name is unique only inside this team.":"Default IGN updated for future team membership.");}}>Save IGN</button>
               
-              {signedIn&&team&&<section className="account-danger-zone"><div><span className="eyebrow">TEAM MEMBERSHIP</span><strong>Leave this team</strong><small>Your team access ends immediately. Team records stay protected; an empty team enters a 48-hour deletion grace period.</small></div><button className="danger-button" type="button" onClick={()=>setConfirmAction("leave")}>Leave Team</button></section>}
+              {signedIn&&team&&<section className="account-danger-zone"><div><span className="eyebrow">TEAM ACTIONS</span><strong>{team.membership_role==="owner"?"Manage this team":"Team membership"}</strong><small>{team.membership_role==="owner"?"Leave with ownership transfer, or permanently delete this team and all its records.":"You can leave the team. Only the owner can delete it."}</small></div><div className="account-danger-actions"><button className="secondary-button" type="button" disabled={teamBusy} onClick={()=>{setLeaveTransferTo("");setConfirmAction("leave");}}>Leave Team</button>{team.membership_role==="owner"&&<button className="danger-button" type="button" disabled={teamBusy} onClick={()=>setConfirmAction("delete")}>Delete Team</button>}</div></section>}
             </section>
           </>}
           {section==="Settings" && <>
@@ -1247,12 +1269,12 @@ export default function App() {
   <button type="button" className="primary-button" onClick={()=>void saveCharacterLoadout()} disabled={characterLoadoutBusy}>{characterLoadoutBusy?"Saving…":"Save character loadout"}</button>
 </div><button type="button" className="secondary-button" onClick={()=>setSelectedRosterMember(null)}>Close</button></section></div>}{confirmAction&&<div className="confirm-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setConfirmAction(null);}}>
             <section className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
-              <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?<UiIcon name="log-out" size={19}/>:confirmAction==="leave"?<UiIcon name="external-link" size={19}/>:<UiIcon name="download" size={19}/>}</div>
-              <div className="eyebrow">{confirmAction==="logout"?"ACCOUNT SESSION":confirmAction==="leave"?"TEAM MEMBERSHIP":"DATA RESTORE"}</div>
-              <h3 id="confirm-title">{confirmAction==="logout"?"Log out of SQUAD OS?":confirmAction==="leave"?"Leave this team?":"Restore this team backup?"}</h3>
-              <p>{confirmAction==="logout"?"You will be signed out on this device. Your account and team data will remain safe.":confirmAction==="leave"?"Your membership will end immediately. If you are the last active member, the empty team will be queued for deletion after 48 hours.":"This replaces the current team roster and team records with the selected backup. Download a fresh backup first if you need a rollback point."}</p>
+              <div className={"confirm-icon "+(confirmAction==="logout"?"confirm-neutral":"confirm-danger")}>{confirmAction==="logout"?<UiIcon name="log-out" size={19}/>:confirmAction==="leave"?<UiIcon name="external-link" size={19}/>:confirmAction==="delete"?<UiIcon name="trash" size={19}/>:<UiIcon name="download" size={19}/>}</div>
+              <div className="eyebrow">{confirmAction==="logout"?"ACCOUNT SESSION":confirmAction==="leave"?"TEAM MEMBERSHIP":confirmAction==="delete"?"PERMANENT TEAM DELETION":"DATA RESTORE"}</div>
+              <h3 id="confirm-title">{confirmAction==="logout"?"Log out of SQUAD OS?":confirmAction==="leave"?"Leave this team?":confirmAction==="delete"?"Delete this team permanently?":"Restore this team backup?"}</h3>
+              <p>{confirmAction==="logout"?"You will be signed out on this device. Your account and team data will remain safe.":confirmAction==="leave"?"Your access ends immediately. If you are the owner, transfer ownership to an active teammate before leaving. If you are the last member, empty-team cleanup is scheduled after 48 hours.":confirmAction==="delete"?"This permanently deletes the team, roster, settings, evaluations, training and tournament records for every member. This cannot be undone.":"This replaces the current team roster and team records with the selected backup. Download a fresh backup first if you need a rollback point."}</p>
               {confirmAction==="leave"&&team?.membership_role==="owner"&&teamMembers.some(m=>m.status==="active"&&m.user_id!==sessionUserId)&&<label className="confirm-transfer-field">Transfer team ownership to<select value={leaveTransferTo} onChange={e=>setLeaveTransferTo(e.target.value)}><option value="">Select new owner</option>{teamMembers.filter(m=>m.status==="active"&&m.user_id!==sessionUserId).map(m=><option key={m.user_id} value={m.user_id}>P{m.player_number||"—"} · {m.display_name}</option>)}</select></label>}
-              <div className="confirm-actions"><button className="secondary-button" type="button" disabled={teamBusy||backupBusy} onClick={()=>setConfirmAction(null)}>Cancel</button><button className="danger-button" type="button" disabled={teamBusy||backupBusy||(confirmAction==="leave"&&team?.membership_role==="owner"&&teamMembers.some(m=>m.status==="active"&&m.user_id!==sessionUserId)&&!leaveTransferTo)||(confirmAction==="import"&&!backupFile)} onClick={()=>confirmAction==="logout"?confirmLogout():confirmAction==="leave"?confirmLeaveTeam():importTeamBackup()}>{teamBusy||backupBusy?"Working…":confirmAction==="logout"?"Confirm Log Out":confirmAction==="leave"?"Confirm Leave":"Confirm Restore"}</button></div>
+              <div className="confirm-actions"><button className="secondary-button" type="button" disabled={teamBusy||backupBusy} onClick={()=>setConfirmAction(null)}>Cancel</button><button className="danger-button" type="button" disabled={teamBusy||backupBusy||(confirmAction==="leave"&&team?.membership_role==="owner"&&teamMembers.some(m=>m.status==="active"&&m.user_id!==sessionUserId)&&!leaveTransferTo)||(confirmAction==="delete"&&team?.membership_role!=="owner")||(confirmAction==="import"&&!backupFile)} onClick={()=>confirmAction==="logout"?confirmLogout():confirmAction==="leave"?confirmLeaveTeam():confirmAction==="delete"?confirmDeleteTeam():importTeamBackup()}>{teamBusy||backupBusy?"Working…":confirmAction==="logout"?"Confirm Log Out":confirmAction==="leave"?"Confirm Leave":confirmAction==="delete"?"Delete Team":"Confirm Restore"}</button></div>
             </section>
           </div>}
           <footer className="footer-note">SQUAD OS · TEAM WORKSPACE</footer>
