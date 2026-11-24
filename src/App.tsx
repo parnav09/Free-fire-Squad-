@@ -607,6 +607,24 @@ export default function App() {
     setTeamBusy(true);
     let createdTeamId: string | null = null;
     try {
+      // The production reset removed auth.users as well as profiles. A previously cached
+      // JWT can still be present on-device, but its subject no longer has a backing user row.
+      // Verify against Supabase Auth before calling create_team so the UI can recover cleanly
+      // instead of surfacing a raw teams_owner_id_fkey / team_members_user_id_fkey error.
+      const { data: verifiedAuth, error: verifyAuthError } = await supabase.auth.getUser();
+      if (verifyAuthError) {
+        const authMessage = verifyAuthError.message || "";
+        if (verifyAuthError.status === 401 || verifyAuthError.status === 403 || verifyAuthError.status === 404 ||
+            /user from sub claim.*does not exist|user not found|invalid jwt|jwt expired/i.test(authMessage)) {
+          await supabase.auth.signOut();
+          throw new Error("Your previous account was removed during the database reset. Sign up again with a new account, then create your team.");
+        }
+        throw new Error("Could not verify your login with Supabase. Check your connection and try again. " + authMessage);
+      }
+      if (!verifiedAuth.user || verifiedAuth.user.id !== sessionUserId) {
+        await supabase.auth.signOut();
+        throw new Error("Your previous account was removed during the database reset. Sign up again with a new account, then create your team.");
+      }
       const finalIGN = (displayName.trim() || sessionUsername.trim() || "Squad Player").slice(0, 40);
       const { error: nameError } = await supabase.rpc("set_display_name", { p_name: finalIGN });
       if (nameError) {
@@ -663,7 +681,10 @@ export default function App() {
         setNotice("Team was created successfully (ID: " + createdTeamId + "), but its workspace did not refresh. Reload the page; do not create it again." + logoWarning);
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Team creation failed. Please retry.";
+      const rawMessage = error instanceof Error ? error.message : "Team creation failed. Please retry.";
+      const message = /teams_owner_id_fkey|team_members_user_id_fkey|foreign key constraint/i.test(rawMessage)
+        ? "Your previous account was removed during the database reset. Sign up again with a new account, then create your team."
+        : rawMessage;
       setNotice(message);
       console.error("Team creation failed before confirmed success:", error);
     } finally {
