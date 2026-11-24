@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { CANONICAL_ROLE_KEYS, type CanonicalRoleKey } from "../lib/evolution-dimensions";
 import "./DailyEvaluationSessionFirst.css";
@@ -86,8 +86,10 @@ export default function DailyEvaluationSessionFirst({ client, teamId, userId, me
   const [loadingRoles, setLoadingRoles] = useState(false);
   const [error, setError] = useState("");
   const [retryNonce, setRetryNonce] = useState(0);
+  const sessionRequestVersion = useRef(0);
 
   const loadSessions = useCallback(async () => {
+    const requestVersion = ++sessionRequestVersion.current;
     if (!client || !teamId || !userId) {
       setSessions([]);
       setMatches([]);
@@ -110,8 +112,10 @@ export default function DailyEvaluationSessionFirst({ client, teamId, userId, me
         .order("created_at", { ascending: false })
         .order("id", { ascending: false })
         .range(from, to));
+      if (requestVersion !== sessionRequestVersion.current) return;
       setSessions(rows);
     } catch (cause) {
+      if (requestVersion !== sessionRequestVersion.current) return;
       setSessions([]);
       setMatches([]);
       setRoleRows([]);
@@ -120,12 +124,15 @@ export default function DailyEvaluationSessionFirst({ client, teamId, userId, me
       setSelectedTarget("");
       setError(errorMessage(cause));
     } finally {
-      setLoadingSessions(false);
+      if (requestVersion === sessionRequestVersion.current) setLoadingSessions(false);
     }
   }, [client, teamId, userId]);
 
   useEffect(() => {
     void loadSessions();
+    return () => {
+      sessionRequestVersion.current += 1;
+    };
   }, [loadSessions, retryNonce]);
 
   useEffect(() => {
@@ -275,7 +282,6 @@ export default function DailyEvaluationSessionFirst({ client, teamId, userId, me
         </div>
       ) : null}
 
-
       {client && teamId && userId ? (
         <>
           <div className="daily-session-first-date" role="note">
@@ -293,7 +299,7 @@ export default function DailyEvaluationSessionFirst({ client, teamId, userId, me
                 setSelectedSession(event.target.value);
                 setSelectedMatch("");
                 setSelectedTarget("");
-                        }} disabled={loadingSessions}>
+              }} disabled={loadingSessions}>
                 <option value="">Select a session</option>
                 {sessions.map((row) => (
                   <option key={row.id} value={row.id}>
