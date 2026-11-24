@@ -1274,3 +1274,13 @@ button:focus-visible{outline:2px solid #66d7f4!important;outline-offset:2px!impo
 .loadout-status{margin:0;color:#8ee7c2;font-size:12px;line-height:1.5}
 .roster-character-loadout .primary-button{min-height:44px;width:100%}
 .roster-character-loadout select:focus-visible,.roster-character-loadout textarea:focus-visible{outline:2px solid #70d8ed;outline-offset:2px}
+
+
+/* Team action controls: aligned on desktop and equal-width on mobile. */
+.account-danger-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;flex:none}
+.account-danger-actions .secondary-button,.account-danger-actions .danger-button{min-width:116px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
+@media(max-width:640px){
+  .account-danger-zone{align-items:stretch;flex-direction:column;gap:12px}
+  .account-danger-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:9px}
+  .account-danger-actions .secondary-button,.account-danger-actions .danger-button{width:100%;min-width:0;padding-inline:10px}
+}
