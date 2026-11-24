@@ -96,7 +96,7 @@ test("legacy Daily Evaluation cannot create a non-atomic score/feedback partial 
   const save = app.slice(start, end);
   assert.doesNotMatch(save, /daily_score_feedback|privatePayload/);
   assert.match(app, /Private feedback entry is paused/);
-  assert.match(app, /Atomic score \+ feedback submission.*Evolution Phase Four/);
+  assert.match(app, /New evidence-linked, role-aware evaluations are handled in the canonical workflow above/);
   assert.match(save, /if\(evalSaving\)return/);
   assert.match(save, /member\.user_id!==sessionUserId/);
   assert.match(save, /\.eq\("player_id",evalPlayer\)\.eq\("score_date",evalDate\)/);

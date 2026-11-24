@@ -4,6 +4,17 @@ import { integrateCanonicalSource, type CanonicalSourceSystem } from "../lib/can
 import "./CanonicalSessionsWorkspace.css";
 
 type Row = Record<string, any>;
+const CANONICAL_PAGE_SIZE = 500;
+const readAllRows = async (queryForRange: (from: number, to: number) => any): Promise<Row[]> => {
+  const rows: Row[] = [];
+  for (let from = 0; ; from += CANONICAL_PAGE_SIZE) {
+    const { data, error } = await queryForRange(from, from + CANONICAL_PAGE_SIZE - 1);
+    if (error) throw error;
+    const page = (data || []) as Row[];
+    rows.push(...page);
+    if (page.length < CANONICAL_PAGE_SIZE) return rows;
+  }
+};
 type Member = { id: string; user_id: string; display_name: string; player_number: number | null; assigned_role?: string | null; membership_role: string; status: string };
 type Session = { id: string; team_id: string; session_type: "scrim"|"tournament"|"training"; title: string; session_date: string|null; scheduled_at: string|null; season_label: string|null; lifecycle_status: string; lifecycle_version: number; archived_at: string|null; created_at: string; created_by: string };
 type Match = { id: string; canonical_session_id: string; match_sequence: number; source_system: string; map_name: string|null; mode: string|null; round_label: string|null };
@@ -92,12 +103,11 @@ export default function CanonicalSessionsWorkspace({client,teamId,userId,members
     if(!client||!teamId){setSessions([]);setLoading(false);return;}
     quiet?setRefreshing(true):setLoading(true); setError("");
     try{
-      const [ss,src]=await Promise.all([
-        client.from("canonical_sessions").select("*").eq("team_id",teamId).order("session_date",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false}).limit(250),
-        client.from("canonical_session_sources").select("canonical_session_id,source_system,source_record_id").eq("team_id",teamId)
+      const [sessionRows,sourceRows]=await Promise.all([
+        readAllRows((from,to)=>client.from("canonical_sessions").select("*").eq("team_id",teamId).order("session_date",{ascending:false,nullsFirst:false}).order("created_at",{ascending:false}).order("id",{ascending:false}).range(from,to)),
+        readAllRows((from,to)=>client.from("canonical_session_sources").select("id,canonical_session_id,source_system,source_record_id,created_at").eq("team_id",teamId).order("created_at",{ascending:false}).order("id",{ascending:false}).range(from,to))
       ]);
-      if(ss.error)throw ss.error;if(src.error)throw src.error;
-      setSessions((ss.data||[]) as Session[]);setSources(src.data||[]);
+      setSessions(sessionRows as Session[]);setSources(sourceRows);
     }catch(e){setError(errText(e));}finally{setLoading(false);setRefreshing(false);}
   },[client,teamId]);
 
@@ -179,9 +189,9 @@ export default function CanonicalSessionsWorkspace({client,teamId,userId,members
     if(!client)return;setShowLink(true);setLinkLoading(true);setLinkRows([]);
     try{
       const table=linkType==="scrim"?"scrim_records":linkType==="tournament"?"tournament_cycles":"training_sessions";
-      const {data,error:e}=await client.from(table).select("*").eq("team_id",teamId).order("created_at",{ascending:false}).limit(100);
-      if(e)throw e;const linked=new Set(sources.filter(s=>s.source_system===linkType).map(s=>s.source_record_id));
-      setLinkRows((data||[]).filter((x:Row)=>!linked.has(x.id)));
+      const data=await readAllRows((from,to)=>client.from(table).select("*").eq("team_id",teamId).order("created_at",{ascending:false}).order("id",{ascending:false}).range(from,to));
+      const linked=new Set(sources.filter(s=>s.source_system===linkType).map(s=>s.source_record_id));
+      setLinkRows(data.filter((x:Row)=>!linked.has(x.id)));
     }catch(e){setError(errText(e));}finally{setLinkLoading(false);}
   };
   const linkSource=async(row:Row)=>{

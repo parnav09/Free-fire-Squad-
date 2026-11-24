@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-: "${SUPABASE_DB_URL:?Set SUPABASE_DB_URL to the project's direct or session-pooler connection string in a secure environment}"
+: "${SUPABASE_DB_URL:?Set SUPABASE_DB_URL to the project direct or session-pooler connection string in a secure environment}"
 command -v supabase >/dev/null 2>&1 || {
   echo "Supabase CLI is required. Install it using the official Supabase CLI instructions." >&2
   exit 1
