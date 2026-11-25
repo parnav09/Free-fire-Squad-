@@ -6,6 +6,12 @@ import "./styles/tokens.css";
 import "./styles.css";
 import "./styles/foundation.css";
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    void navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => undefined);
+  });
+}
+
 const root = document.getElementById("root");
 if (!root) throw new Error("SQUAD OS root mount is missing.");
 
