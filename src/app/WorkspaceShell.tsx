@@ -24,7 +24,7 @@ export default function WorkspaceShell({
   return (
     <main className="app-shell">
       <aside className="sidebar">
-        <div className="brand-mark" aria-hidden="true">S</div>
+        <div className="brand-mark" aria-hidden="true"><img src="/squad-os-mark.png" alt="" /></div>
         <div className="brand-copy">
           <span className="brand-name">SQUAD OS</span>
           <span className="brand-caption">TEAM OPERATIONS</span>
