@@ -27,7 +27,7 @@ self.addEventListener("fetch", (event) => {
     request.mode === "navigate" ||
     request.destination === "script" ||
     request.destination === "style" ||
-    /\\.(?:html?|m?js|css)$/i.test(url.pathname);
+    [".html", ".htm", ".js", ".mjs", ".css"].some((extension) => url.pathname.toLowerCase().endsWith(extension));
 
   if (!isAppCode) return;
 
