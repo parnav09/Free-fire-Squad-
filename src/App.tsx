@@ -752,7 +752,14 @@ export default function App() {
         if (error) throw error;
       }
       const canonical = await integrateCanonicalSource(supabase!, teamSnapshot.id, "tournament", cycle.id);
+      const { data: refreshedRows, error: refreshError } = await supabase!.from("tournament_matches")
+        .select("match_day,match_number,placement,kills,points,status")
+        .eq("cycle_id", cycle.id)
+        .order("match_day")
+        .order("match_number");
+      if (refreshError) throw refreshError;
       if (activeMatchScopeRef.current === `${teamSnapshot.id}:${weekSnapshot}`) {
+        setSharedMatches(refreshedRows || []);
         setConnection(canonical.linked
           ? "Signed in · cloud + canonical sync active"
           : "Signed in · legacy sync active · canonical link pending");
