@@ -85,3 +85,27 @@ test("Responsive day save and golden controls remain touch and keyboard accessib
   assert.match(styles, /\.tournament-event-day-save-bar button:focus-visible/);
   assert.match(styles, /@media\(prefers-reduced-motion:reduce\)/);
 });
+
+
+test("Event records open as a full-screen page and keep creation separate from saved records", () => {
+  assert.match(component, /selectedRecord \? " is-record-detail" : ""/);
+  assert.match(styles, /\.tournament-event-records\.is-record-detail\{position:fixed;inset:0;/);
+  assert.match(component, /tournament-event-add-panel/);
+  assert.match(component, /Saved Event Records/);
+  assert.match(component, /!selectedRecord && <>/);
+});
+
+test("Only saved overall #1 records receive trophy and champion styling", () => {
+  assert.match(component, /record\.overallPlacement === 1 \? " is-overall-champion" : ""/);
+  assert.match(component, /OVERALL CHAMPION · #1/);
+  assert.match(component, /selectedRecord\.overallPlacement === 1 && <span className="tournament-event-workspace-champion-mark"/);
+  assert.match(styles, /\.tournament-event-record-card\.is-overall-champion/);
+  assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-back-button\.is-champion/);
+});
+
+test("Champion edit, delete, and back controls use coordinated gold accents", () => {
+  assert.match(component, /tournament-event-back-button\$\{selectedRecord\.overallPlacement === 1 \? " is-champion" : ""\}/);
+  assert.match(component, /className="is-edit"/);
+  assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-management-actions button\.is-danger/);
+  assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-edit-actions button/);
+});
