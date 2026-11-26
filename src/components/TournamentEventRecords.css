@@ -440,3 +440,219 @@
  .tournament-event-records.is-record-detail .tournament-event-workspace-kicker{font-size:8px;text-align:right}
 }
 @media(prefers-reduced-motion:reduce){.tournament-event-records.is-record-detail{scroll-behavior:auto}}
+
+
+/* Mobile match ledger hardening: each match is a separate, full-width card. */
+.tournament-event-match-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  align-items:stretch;
+  gap:12px;
+  width:100%;
+  min-width:0;
+}
+.tournament-event-match-card{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  position:relative;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  overflow:visible;
+  isolation:isolate;
+}
+.tournament-event-match-card:has(.scrims-placement-picker.is-open){z-index:20}
+.tournament-event-match-card-head,
+.tournament-event-match-fields,
+.tournament-event-match-total{min-width:0;max-width:100%;box-sizing:border-box}
+.tournament-event-match-fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tournament-event-match-fields label{min-width:0;max-width:100%;box-sizing:border-box}
+.tournament-event-match-fields .scrims-placement-picker,
+.tournament-event-match-fields input,
+.tournament-event-match-fields select,
+.tournament-event-match-fields .tournament-event-derived-points{min-width:0;max-width:100%;box-sizing:border-box}
+@media(max-width:620px){
+  .tournament-event-match-grid{grid-template-columns:minmax(0,1fr);gap:12px}
+  .tournament-event-match-card{padding:13px}
+  .tournament-event-match-fields{grid-template-columns:minmax(0,1fr);gap:8px}
+  .tournament-event-match-fields label{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:10px;font-size:10px;line-height:1.35}
+  .tournament-event-match-fields .scrims-placement-trigger,
+  .tournament-event-match-fields input,
+  .tournament-event-match-fields .tournament-event-derived-points{width:100%;min-height:44px}
+}
+@media(max-width:360px){
+  .tournament-event-match-fields label{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:7px}
+  .tournament-event-match-card{padding:11px}
+}
+
+/* A saved event-wide #1 carries its premium identity into the selected-day editor. */
+.tournament-event-workspace.is-overall-champion .tournament-event-day-detail-header{
+  border-color:#765a2d;
+  background:radial-gradient(ellipse at 100% 0%,rgba(198,161,91,.16),transparent 58%),linear-gradient(145deg,#251b0c,#15120d 68%,#0e1115);
+  box-shadow:inset 0 1px 0 rgba(255,224,158,.08);
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-day-detail-header .tournament-event-workspace-label,
+.tournament-event-workspace.is-overall-champion .tournament-event-day-standing span,
+.tournament-event-workspace.is-overall-champion .tournament-event-standing-panel label,
+.tournament-event-workspace.is-overall-champion .tournament-event-match-fields label{
+  color:#d8bd7b;
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-day-standing strong{color:#f0d99f}
+.tournament-event-workspace.is-overall-champion .tournament-event-standing-panel .scrims-placement-trigger,
+.tournament-event-workspace.is-overall-champion .tournament-event-match-fields .scrims-placement-trigger{
+  border-color:#c99c45!important;
+  background:linear-gradient(180deg,#493211,#241806 58%,#140e05)!important;
+  color:#ffe6a4!important;
+  box-shadow:inset 0 1px 0 rgba(255,231,173,.18),0 3px 10px rgba(0,0,0,.24)!important;
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-match-fields .scrims-placement-chevron{color:#ffd777!important}
+.tournament-event-workspace.is-overall-champion .tournament-event-derived-points{
+  border-color:#8b682f;
+  background:linear-gradient(145deg,#332611,#1b1409);
+  color:#f0d99f;
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-match-fields input,
+.tournament-event-workspace.is-overall-champion .tournament-event-match-fields select{
+  border-color:#8b682f;
+  background:linear-gradient(145deg,#1b150b,#100c06);
+  color:#f0d99f;
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-match-card .tournament-event-match-total{
+  border:1px solid rgba(139,104,47,.42);
+  background:linear-gradient(145deg,#241b0e,#15110a);
+  color:#cbb27d;
+}
+/* Saving remains the familiar blue action, even on a champion event. */
+.tournament-event-workspace.is-overall-champion .tournament-event-day-save-bar button{
+  border-color:#2c5068;
+  background:linear-gradient(135deg,#12364b,#102337);
+  color:#8ce8fa;
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-day-save-bar button:hover:not(:disabled){
+  border-color:#4b91a8;
+  background:linear-gradient(135deg,#153d52,#102337);
+}
+
+/* Compact premium champion card: date, TOP 1, and event totals at a glance. */
+.tournament-event-record-card.is-overall-champion{
+  grid-template-columns:minmax(0,1fr) 20px;
+  align-items:center;
+  gap:8px 12px;
+  padding:14px 15px;
+  border-color:rgba(222,181,91,.72);
+  background:radial-gradient(ellipse at 92% 0%,rgba(210,166,66,.15),transparent 55%),linear-gradient(145deg,#211a0d 0%,#12120f 58%,#0b0e12 100%);
+  box-shadow:inset 0 1px 0 rgba(255,225,160,.11),inset 0 0 0 1px rgba(239,201,111,.06),0 9px 24px rgba(0,0,0,.24);
+}
+.tournament-event-record-card.is-overall-champion:hover{
+  border-color:#f0ce7b;
+  background:radial-gradient(ellipse at 92% 0%,rgba(210,166,66,.2),transparent 55%),linear-gradient(145deg,#2a2110 0%,#17150f 58%,#0d1013 100%);
+}
+.tournament-event-record-card.is-overall-champion .tournament-event-record-champion-topline{
+  grid-column:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-width:0;
+}
+.tournament-event-record-champion-date{
+  overflow:hidden;
+  color:#c9b27c;
+  font-size:9px;
+  font-weight:750;
+  letter-spacing:.04em;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.tournament-event-record-top-one{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  flex:0 0 auto;
+  padding:5px 8px;
+  border:1px solid rgba(226,190,108,.68);
+  border-radius:7px;
+  background:linear-gradient(135deg,rgba(126,91,32,.42),rgba(55,41,17,.72));
+  color:#f5d991;
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:.12em;
+  box-shadow:inset 0 1px 0 rgba(255,230,175,.12),0 3px 10px rgba(0,0,0,.18);
+}
+.tournament-event-record-top-one svg{width:13px;height:13px;fill:currentColor}
+.tournament-event-record-card.is-overall-champion .tournament-event-record-champion-copy{
+  grid-column:1;
+  display:grid;
+  gap:10px;
+  min-width:0;
+}
+.tournament-event-record-card.is-overall-champion .tournament-event-record-champion-copy>strong{
+  margin:0;
+  color:#ffedc5;
+  font-size:14px;
+  line-height:1.35;
+  white-space:normal;
+}
+.tournament-event-record-champion-stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  min-width:0;
+}
+.tournament-event-record-champion-stats>span{
+  display:grid;
+  gap:5px;
+  min-width:0;
+  padding:8px 9px;
+  border:1px solid rgba(155,121,58,.32);
+  border-radius:8px;
+  background:linear-gradient(145deg,rgba(64,48,21,.42),rgba(24,21,15,.68));
+}
+.tournament-event-record-champion-stats small{
+  color:#bba574;
+  font-size:7px;
+  font-weight:850;
+  letter-spacing:.07em;
+  line-height:1.3;
+}
+.tournament-event-record-champion-stats b{
+  color:#f5dfaa;
+  font-size:17px;
+  font-weight:900;
+  font-variant-numeric:tabular-nums;
+}
+.tournament-event-record-overall-standing{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding-top:8px;
+  border-top:1px solid rgba(155,121,58,.3);
+}
+.tournament-event-record-overall-standing>span{
+  color:#bda36c;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.1em;
+}
+.tournament-event-record-overall-standing>strong{
+  color:#f8df9f;
+  font-size:16px;
+  font-weight:950;
+  letter-spacing:.02em;
+}
+.tournament-event-record-card.is-overall-champion .tournament-event-record-arrow{
+  grid-column:2;
+  grid-row:1 / span 2;
+  align-self:center;
+  color:#e9c46f;
+  font-size:17px;
+}
+@media(max-width:420px){
+  .tournament-event-record-card.is-overall-champion{padding:12px;gap:8px}
+  .tournament-event-record-champion-stats{gap:5px}
+  .tournament-event-record-champion-stats>span{padding:7px 6px}
+  .tournament-event-record-champion-stats small{font-size:6.5px;letter-spacing:.04em}
+  .tournament-event-record-champion-stats b{font-size:16px}
+}
