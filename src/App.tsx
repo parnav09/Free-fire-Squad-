@@ -271,13 +271,13 @@ export default function App() {
       inFlight = true;
       if (!hasConnectedOnce) setServerStatus("checking");
       try {
-        // A read-only REST request verifies the Supabase endpoint itself, independently
-        // of auth state, team membership, or whether background data sync is pending.
-        const { error } = await supabase.from("teams").select("id").limit(1);
+        // Check the Supabase REST gateway directly. Do not use a protected app
+        // table: RLS, team membership, or data-sync errors are not server outages.
+        const { checkSupabaseServer } = await import("./lib/supabase/client");
+        const result = await checkSupabaseServer();
         if (active) {
-          const networkFailure = !!error && /failed to fetch|network error|network request failed|load failed|timeout|fetch failed/i.test(error.message || "");
-          hasConnectedOnce = !networkFailure;
-          setServerStatus(networkFailure ? "offline" : "connected");
+          hasConnectedOnce = result === "connected";
+          setServerStatus(result);
         }
       } catch {
         hasConnectedOnce = false;
