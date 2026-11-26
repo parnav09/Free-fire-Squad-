@@ -55,10 +55,26 @@ export async function syncTournamentEventRecords(
       if (insertError?.code === "23505") conflict = true;
       continue;
     }
-    if (remote.deleted_at) continue;
-    if (Number.isFinite(localTime) && localTime > remoteTime) {
+    if (remote.deleted_at) {
+      // A cloud tombstone wins over stale local copies; never resurrect a deleted event.
+      continue;
+    }
+    const localData = { days: record.days || [] };
+    const localDiffers = record.name !== remote.name ||
+      JSON.stringify(localData) !== JSON.stringify(remote.event_data || { days: [] });
+    const hasKnownRevision = Number.isSafeInteger(record.syncRevision);
+    if (hasKnownRevision && record.syncRevision !== remote.revision) {
+      // The local edit was based on an older cloud revision. Keep the local cache intact
+      // and surface a conflict rather than silently overwriting either version.
+      if (localDiffers) conflict = true;
+      continue;
+    }
+    const shouldUpload = hasKnownRevision
+      ? localDiffers
+      : Number.isFinite(localTime) && localTime > remoteTime;
+    if (shouldUpload) {
       const { data: updated, error: updateError } = await client.from("tournament_event_records")
-        .update({ name: record.name, event_data: { days: record.days || [] }, updated_by: userId })
+        .update({ name: record.name, event_data: localData, updated_by: userId })
         .eq("id", record.id).eq("team_id", teamId).eq("revision", remote.revision)
         .select("id").maybeSingle();
       if (updateError) throw updateError;
