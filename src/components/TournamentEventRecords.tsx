@@ -76,6 +76,15 @@ function getEventSummary(record: TournamentEventRecord) {
   return { dayCount: days.length, matchCount, dateLabel };
 }
 
+function getEventMetrics(record: TournamentEventRecord) {
+  const matches = (Array.isArray(record.days) ? record.days : []).flatMap(day => Array.isArray(day.matches) ? day.matches : []);
+  return {
+    totalKills: matches.reduce((total, match) => total + Math.max(0, Number(match.kills) || 0), 0),
+    placementPoints: matches.reduce((total, match) => total + getPlacementPoints(match.placement), 0),
+    recordedMatches: matches.filter(match => match.placement !== null).length
+  };
+}
+
 function getPlacementPoints(placement: number | null): number { return placement === null ? 0 : ([12,9,8,7,6,5,4,3,2,1,0,0][Math.max(1,Math.min(12,placement))-1] ?? 0); }
 
 function normalizeEventName(value: string): string { return value.normalize("NFC").replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim(); }
@@ -589,8 +598,24 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
         <>
           <div className="tournament-event-record-list">
             {visibleRecords.map((record,index)=>{const summary=getEventSummary(record);return <button type="button" className={`tournament-event-record-card${record.overallPlacement === 1 ? " is-overall-champion" : ""}`} key={record.id} onClick={()=>{setSelectedRecordId(record.id);setSelectedDayId(null);setExpanded(false);window.scrollTo({top:0,behavior:"instant"});}} aria-label={`Open ${record.name} tournament workspace${record.overallPlacement === 1 ? ", overall champion" : ""}`}>
-              <span className="tournament-event-record-index">{record.overallPlacement === 1 ? <span aria-hidden="true">🏆</span> : String(index+1).padStart(2,"0")}</span>
-              <span className="tournament-event-record-copy"><strong>{record.name}</strong><span className="tournament-event-record-meta"><span>{summary.dateLabel}</span><span>{summary.dayCount} {summary.dayCount===1?"day":"days"}</span><span>{summary.matchCount} {summary.matchCount===1?"match":"matches"}</span></span>{record.overallPlacement === 1 && <span className="tournament-event-record-champion-label"><span aria-hidden="true">🏆</span> OVERALL CHAMPION · #1</span>}</span>
+              {record.overallPlacement === 1 ? <>
+                <span className="tournament-event-record-champion-topline">
+                  <span className="tournament-event-record-champion-date">{summary.dateLabel}</span>
+                  <span className="tournament-event-record-top-one"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v3h3v3a4 4 0 0 1-4 4h-1a5 5 0 0 1-3 2.8V19h4v2H8v-2h4v-3.2A5 5 0 0 1 9 13H8a4 4 0 0 1-4-4V6h3V3Zm-3 5v1a2 2 0 0 0 2 2h1.2A7 7 0 0 1 7 8V8H4Zm16 0h-3v1a7 7 0 0 1-.2 2H18a2 2 0 0 0 2-2V8Z"/></svg> TOP 1</span>
+                </span>
+                <span className="tournament-event-record-copy tournament-event-record-champion-copy">
+                  <strong>{record.name}</strong>
+                  <span className="tournament-event-record-champion-stats">
+                    <span><small>TOTAL MATCHES</small><b>{summary.matchCount}</b></span>
+                    <span><small>TOTAL KILLS</small><b>{getEventMetrics(record).totalKills}</b></span>
+                    <span><small>PLACEMENT PTS</small><b>{getEventMetrics(record).placementPoints}</b></span>
+                  </span>
+                  <span className="tournament-event-record-overall-standing"><span>OVERALL STANDING</span><strong>#1</strong></span>
+                </span>
+              </> : <>
+                <span className="tournament-event-record-index">{String(index+1).padStart(2,"0")}</span>
+                <span className="tournament-event-record-copy"><strong>{record.name}</strong><span className="tournament-event-record-meta"><span>{summary.dateLabel}</span><span>{summary.dayCount} {summary.dayCount===1?"day":"days"}</span><span>{summary.matchCount} {summary.matchCount===1?"match":"matches"}</span></span></span>
+              </>}
               <span className="tournament-event-record-arrow" aria-hidden="true">↗</span>
             </button>;})}
           </div>
