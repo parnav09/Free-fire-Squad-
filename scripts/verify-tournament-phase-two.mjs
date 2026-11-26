@@ -29,7 +29,7 @@ test("More and Show Less only appear when records exceed the initial page", () =
 });
 
 test("Records are read defensively and refresh across tabs and same-app events", () => {
-  assert.match(records, /window\.localStorage\.getItem\(STORAGE_KEY\)/);
+  assert.match(records, /window\.localStorage\.getItem\(storageKey\)/);\n  assert.match(records, /const activeStorageKey = teamId/);
   assert.match(records, /window\.addEventListener\("storage"/);
   assert.match(records, /squad-os:event-records-updated/);
   assert.match(records, /Array\.isArray\(parsed\)/);
