@@ -25,6 +25,10 @@ test("Day dashboard keeps date, standing, and all daily aggregate metrics", () =
   assert.match(component, /PLACEMENT PTS/);
   assert.match(component, /TOTAL POINTS/);
   assert.match(component, /overallStanding/);
+  assert.match(component, /selectedRecord\.overallPlacement === 1 \? " is-overall-champion" : ""/);
+  assert.match(styles, /\.tournament-event-workspace\.is-overall-champion\{/);
+  assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-workspace-header/);
+  assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-day-select/);
 });
 
 test("Day result entry mirrors Tournament/Scrims champion-only gold placement", () => {
