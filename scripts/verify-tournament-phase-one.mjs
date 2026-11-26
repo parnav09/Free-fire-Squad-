@@ -26,7 +26,7 @@ test("Weekly Tournament implementation remains present and selected by default",
 });
 
 test("Event mode remains separate and advances through the Phase 2 records workspace", () => {
-  assert.match(app, /<TournamentEventRecords \/>/);
+  assert.match(app, /<TournamentEventRecords\b[^>]*\/>/);
   assert.doesNotMatch(app, /Custom tournaments are coming next/);
   assert.doesNotMatch(app, /tournament_event_(?:days|matches|events)/);
 });

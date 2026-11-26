@@ -16,7 +16,6 @@ type TournamentEventRecord = {
   id: string;
   name: string;
   createdAt?: string;
-  updatedAt?: string;
   days?: EventDaySummary[];
 };
 
@@ -180,12 +179,11 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   }, [teamId, signedIn, userId, activeStorageKey, deletedStorageKey]);
 
   useEffect(() => {
-    const syncClient = supabase;
-    if (!teamId || !signedIn || !userId || !syncClient || !hydratedRef.current) return;
+    if (!teamId || !signedIn || !userId || !supabase || !hydratedRef.current) return;
     let active = true;
     const timer = window.setTimeout(() => {
       setSyncStatus("syncing");
-      void syncTournamentEventRecords(syncClient, teamId, userId, records, pendingDeletedIdsRef.current)
+      void syncTournamentEventRecords(supabase, teamId, userId, records, pendingDeletedIdsRef.current)
         .then(result => {
           if (!active) return;
           if (result.conflict) { setSyncStatus("conflict"); return; }
