@@ -103,8 +103,8 @@ export default function App() {
   useEffect(() => { if (!notice) return; const timer = window.setTimeout(() => setNotice(""), 7000); return () => window.clearTimeout(timer); }, [notice]);
   const [sharedMatches, setSharedMatches] = useState<Array<{match_day:number;match_number:number;placement:number|null;kills:number;points:number|null;status:string}>>([]);
   const [matchesHydratedKey, setMatchesHydratedKey] = useState("");
-  const [connection, setConnection] = useState("Checking…");
-  const [isOnline, setIsOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
+  const [, setConnection] = useState("Checking…");
+  const [serverStatus, setServerStatus] = useState<"checking" | "connected" | "offline">("checking");
   const [sessionUsername, setSessionUsername] = useState("");
   const [sessionPassword, setSessionPassword] = useState("");
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signin");
@@ -250,12 +250,64 @@ export default function App() {
   useEffect(()=>{if(!team?.id){setOwnerPowerEnabled(true);return;}setOwnerPowerEnabled(safeStorageGetItem("squad-os:"+team.id+":owner-power")!=="off");},[team?.id]);
 
   useEffect(() => {
-    const onOnline=()=>{setIsOnline(true);setConnection("Syncing…");};
-    const onOffline=()=>{setIsOnline(false);setConnection("Offline");};
+    const onOnline=()=>{setConnection("Syncing…");};
+    const onOffline=()=>{setConnection("Offline");};
     window.addEventListener("online",onOnline);
     window.addEventListener("offline",onOffline);
     return()=>{window.removeEventListener("online",onOnline);window.removeEventListener("offline",onOffline);};
   }, []);
+
+  useEffect(() => {
+    if (!supabase) {
+      if (supabaseReady) setServerStatus("offline");
+      return;
+    }
+    let active = true;
+    let inFlight = false;
+    let hasConnectedOnce = false;
+    let timer: number | undefined;
+    const checkServer = async () => {
+      if (!active || inFlight) return;
+      inFlight = true;
+      if (!hasConnectedOnce) setServerStatus("checking");
+      try {
+        // Check the Supabase REST gateway directly. Do not use a protected app
+        // table: RLS, team membership, or data-sync errors are not server outages.
+        const { checkSupabaseServer } = await import("./lib/supabase/client");
+        const result = await checkSupabaseServer();
+        if (active) {
+          hasConnectedOnce = result === "connected";
+          setServerStatus(result);
+        }
+      } catch {
+        hasConnectedOnce = false;
+        if (active) setServerStatus("offline");
+      } finally {
+        inFlight = false;
+        if (active) timer = window.setTimeout(checkServer, 15000);
+      }
+    };
+    const onOnline = () => {
+      hasConnectedOnce = false;
+      setServerStatus("checking");
+      if (timer !== undefined) window.clearTimeout(timer);
+      void checkServer();
+    };
+    const onOffline = () => {
+      setServerStatus("offline");
+      if (timer !== undefined) window.clearTimeout(timer);
+      timer = window.setTimeout(checkServer, 15000);
+    };
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    void checkServer();
+    return () => {
+      active = false;
+      if (timer !== undefined) window.clearTimeout(timer);
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, [supabase, supabaseReady]);
 
   useEffect(() => {
     let active = true;
@@ -267,7 +319,7 @@ export default function App() {
         }
       })
       .catch(() => {
-        if (active) setConnection("Offline");
+        if (active) { setConnection("Offline"); setServerStatus("offline"); }
       });
     return () => { active = false; };
   }, []);
@@ -956,8 +1008,8 @@ export default function App() {
   };
 
   const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
-  const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error|pending/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
-  const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
+  const syncState = serverStatus === "offline" ? "offline" : serverStatus === "connected" ? "synced" : "syncing";
+  const syncLabel = syncState === "synced" ? "Connected" : syncState === "syncing" ? "Connecting…" : "Disconnected";
   const nav: Section[] = ["Players", "Tournament", "StratForge", "Assignments", "Evolution", "Sessions", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
   const mainNav: Section[] = ["Players", "Tournament", "StratForge", "Assignments"];
   const mobileNavLabel: Record<string,string> = {Players:"Players",Tournament:"Matches",StratForge:"Forge",Assignments:"Tasks",Sessions:"Sessions",Evaluation:"Eval", "Weekly Review":"Review","Player Trends":"Trends",Analytics:"Stats",Profile:"Profile",Settings:"Settings","Training Legacy":"Legacy"};
