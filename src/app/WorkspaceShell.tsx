@@ -55,7 +55,7 @@ export default function WorkspaceShell({
       </aside>
 
       <section className="main-panel">
-        <header className="topbar" data-sync-state={syncState} data-sync-label={syncLabel}>
+        <header className="topbar" aria-live="polite">
           <div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div>
         </header>
         <div className="content">{children}</div>
