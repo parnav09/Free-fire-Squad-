@@ -230,7 +230,8 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   );
   const hasMore = records.length > INITIAL_VISIBLE_RECORDS;
   const selectedRecord = records.find((record) => record.id === selectedRecordId) ?? null;
-  const canEditResults = membershipRole === "owner" || membershipRole === "coach" || (!!userId && iglUserId === userId);
+  const canManageEvents = membershipRole === "owner" || membershipRole === "coach";
+  const canEditResults = canManageEvents || (!!userId && iglUserId === userId);
   const selectedDay = selectedRecord && selectedDayId ? (selectedRecord.days || []).find((day, index) => (day.id || String(day.dayNumber || index + 1)) === selectedDayId) ?? null : null;
 
 
@@ -243,7 +244,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   }
 
   function importLegacyRecords() {
-    if (!teamId || !legacyRecords.length) return;
+    if (!canManageEvents || !teamId || !legacyRecords.length) return;
     const imported = legacyRecords.map(record => ({
       ...record,
       id: createId(),
@@ -254,6 +255,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
     setLegacyRecords([]);
   }
   function openCreateModal() {
+    if (!canManageEvents) return;
     setEventName("");
     setDayCount(1);
     setSetupStep("details");
@@ -342,7 +344,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   }
   function showMatchSaveToast(message: string) {
     setMatchSaveMessage(message);
-    if (message === "Match result saved.") {
+    if (message.endsWith("saved.")) {
       window.setTimeout(() => setMatchSaveMessage(current => current === message ? "" : current), 1800);
       window.requestAnimationFrame(() => document.querySelector(".tournament-event-workspace")?.scrollIntoView({ behavior: "smooth", block: "start" }));
     }
@@ -388,6 +390,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
     } catch { setMatchSaveMessage("Could not clear this match result."); }
   }
   function beginEditRecord(record: TournamentEventRecord) {
+    if (!canManageEvents) return;
     setEditingRecordId(record.id); setEditName(record.name);
     setEditDays((record.days || []).map((day,index)=>({id:day.id||createId(),dayNumber:day.dayNumber||index+1,date:day.date||"",matchCount:day.matchCount||1})));
     setEditError(""); setManagementMessage("");
@@ -397,6 +400,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
     setEditDays(current=>current.map(day=>day.id===dayId?{...day,[field]:field==="matchCount"?(value===""?0:Number(value)):value}:day));
   }
   function saveEditedRecord(record: TournamentEventRecord) {
+    if (!canManageEvents) return;
     const name=normalizeEventName(editName);
     if(!name||name.length>MAX_EVENT_NAME_LENGTH){setEditError("Enter a valid tournament name (maximum 80 characters).");return;}
     if(!editDays.length||editDays.length>MAX_EVENT_DAYS){setEditError("The event must contain at least one valid day.");return;}
@@ -423,6 +427,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
     }catch{setEditError("Could not save changes. Existing tournament data was not updated.");}
   }
   function deleteEventRecord(record: TournamentEventRecord) {
+    if (!canManageEvents) return;
     if(!window.confirm("Delete "+record.name+" and all its match results? This cannot be undone."))return;
     try{const next=records.filter(item=>item.id!==record.id); pendingDeletedIdsRef.current=[...new Set([...pendingDeletedIdsRef.current,record.id])]; window.localStorage.setItem(deletedStorageKey,JSON.stringify(pendingDeletedIdsRef.current)); persistRecords(next);setSelectedRecordId(null);setEditingRecordId(null);setManagementMessage("Tournament record deleted.");window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));}
     catch{setManagementMessage("Could not delete this tournament record.");}
@@ -436,7 +441,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
         <span>{syncStatus === "synced" ? "Synced to team" : syncStatus === "syncing" ? "Syncing…" : syncStatus === "offline" ? "Offline · saved on this device" : syncStatus === "conflict" ? "Sync conflict · local copy preserved" : syncStatus === "error" ? "Sync unavailable · local copy preserved" : "Saved on this device"}</span>
         {(syncStatus === "conflict" || syncStatus === "error" || syncStatus === "offline") && teamId && <button type="button" onClick={() => setRecords(current => [...current])}>Retry sync</button>}
       </div>
-      {teamId && legacyRecords.length > 0 && <div className="tournament-event-legacy-import">
+      {canManageEvents && teamId && legacyRecords.length > 0 && <div className="tournament-event-legacy-import">
         <span>{legacyRecords.length} previous local event{legacyRecords.length === 1 ? "" : "s"} found on this device. They are not assigned to a team yet.</span>
         <button type="button" onClick={importLegacyRecords}>Import to this team</button>
       </div>}
@@ -449,9 +454,9 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
         </div>
         <div className="tournament-event-records-actions">
           <span className="tournament-event-record-count">{records.length} {records.length === 1 ? "RECORD" : "RECORDS"}</span>
-          <button type="button" className="tournament-event-add-button" onClick={openCreateModal}>
+          {canManageEvents && <button type="button" className="tournament-event-add-button" onClick={openCreateModal}>
             <span aria-hidden="true">＋</span> Add Record
-          </button>
+          </button>}
         </div>
       </div>
 
@@ -474,10 +479,10 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
           </header>
 
 
-          <div className="tournament-event-management-actions">
+          {canManageEvents && <div className="tournament-event-management-actions">
             <button type="button" onClick={() => beginEditRecord(selectedRecord)}>Edit Tournament</button>
             <button type="button" className="is-danger" onClick={() => deleteEventRecord(selectedRecord)}>Delete Tournament</button>
-          </div>
+          </div>}
           {managementMessage && <p className="tournament-event-management-message" role="status">{managementMessage}</p>}
           {editingRecordId === selectedRecord.id && <section className="tournament-event-edit-panel" aria-label="Edit tournament details">
             <h3>Edit Tournament</h3>
