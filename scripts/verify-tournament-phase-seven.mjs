@@ -1,8 +1,8 @@
 import test from "node:test";import assert from "node:assert/strict";import{readFile}from"node:fs/promises";
 const c=await readFile(new URL("../src/components/TournamentEventRecords.tsx",import.meta.url),"utf8"),css=await readFile(new URL("../src/components/TournamentEventRecords.css",import.meta.url),"utf8"),p=JSON.parse(await readFile(new URL("../package.json",import.meta.url),"utf8"));
-test("Event days support individual match records",()=>{assert.ok(c.includes("type EventMatchRecord"));assert.ok(c.includes("matches:[]"));assert.ok(c.includes("Array.from({length:matchCount}"));});
+test("Event days support individual match records",()=>{assert.ok(c.includes("type EventMatchRecord"));assert.ok(c.includes("matches:[]"));assert.ok(c.includes("Array.from({length:Math.max(0,Number(selectedDay.matchCount)||0)}"));});
 test("Match result fields validate placement and kills while deriving placement points",()=>{assert.ok(c.includes("placement < 1 || placement > 12"));assert.ok(c.includes("!Number.isSafeInteger(kills)"));assert.ok(c.includes("getPlacementPoints(placement)"));});
-test("Match points are calculated from entered values",()=>{assert.ok(c.includes("placementPoints+m.kills")||c.includes("placementPoints + m.kills"));assert.ok(c.includes("Match points"));});
+test("Match points are calculated from entered values",()=>{assert.ok(c.includes("getPlacementPoints(draft.placement === \"\" ? null : Number(draft.placement))+(Number(draft.kills)||0)"));assert.ok(c.includes("Match points"));});
 test("Match results persist per event and day",()=>{assert.ok(c.includes("persistRecords(next, record.id)"));assert.ok(c.includes("matches: [...existing.filter(m => m.matchNumber !== matchNumber), saved]"));});
 test("Saved results can be cleared without deleting event",()=>{assert.ok(c.includes("function clearMatchResult"));assert.ok(c.includes("filter(match => match.matchNumber !== matchNumber)"));});
 test("Scoreboard aggregates results kills and points",()=>{assert.ok(c.includes("TOTAL KILLS"));assert.ok(c.includes("TOTAL POINTS"));assert.ok(c.includes("RESULTS SAVED"));});
