@@ -97,7 +97,9 @@ test("Event records open as a full-screen page and keep creation separate from s
 
 test("Only saved overall #1 records receive trophy and champion styling", () => {
   assert.match(component, /record\.overallPlacement === 1 \? " is-overall-champion" : ""/);
-  assert.match(component, /OVERALL CHAMPION · #1/);
+  assert.match(component, /TOP 1/);
+  assert.match(component, /OVERALL STANDING/);
+  assert.match(component, /tournament-event-record-champion-date/);
   assert.match(component, /selectedRecord\.overallPlacement === 1 && <span className="tournament-event-workspace-champion-mark"/);
   assert.match(styles, /\.tournament-event-record-card\.is-overall-champion/);
   assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-back-button\.is-champion/);
