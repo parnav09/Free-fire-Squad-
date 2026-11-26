@@ -15,8 +15,6 @@ type WorkspaceShellProps = {
 export default function WorkspaceShell({
   section,
   nav,
-  syncState,
-  syncLabel,
   showNavigation,
   onNavigate,
   children,
