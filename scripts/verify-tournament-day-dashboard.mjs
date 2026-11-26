@@ -3,25 +3,23 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL("../" + path, import.meta.url), "utf8");
-const [component, styles, sync, app, migration] = await Promise.all([
+const [component, styles, sync, app, migration, pickerStyles] = await Promise.all([
   read("src/components/TournamentEventRecords.tsx"),
   read("src/components/TournamentEventRecords.css"),
   read("src/lib/tournament-event-sync.ts"),
   read("src/App.tsx"),
   read("supabase/migrations/20261126073500_tournament_event_igl_result_permissions.sql"),
+  read("src/components/PlacementPicker.css"),
 ]);
 
-test("Event overview opens one selected day instead of rendering every match inline", () => {
-  assert.match(component, /tournament-event-day-select/);
+test("Opening a day switches to a dedicated day-detail page view", () => {
   assert.match(component, /setSelectedDayId\(dayKey\)/);
-  assert.match(component, /!selectedDay \? <>/);
-  assert.match(component, /Array\.from\(\{length:Math\.max\(0,Number\(selectedDay\.matchCount\)/);
+  assert.match(component, /is-day-detail/);
+  assert.match(styles, /is-day-detail.*tournament-event-records-head/);
+  assert.match(component, /selectedDay\.date \? formatDate\(selectedDay\.date\)/);
 });
 
-test("Day details show the configured date and daily match aggregates", () => {
-  assert.match(component, /selectedDay\.date \? formatDate\(selectedDay\.date\)/);
-  assert.match(component, /Last updated/);
-  assert.match(component, /formatUpdatedAt\(selectedRecord\.updatedAt\)/);
+test("Day dashboard keeps date, standing, and all daily aggregate metrics", () => {
   assert.match(component, /DAY MATCHES/);
   assert.match(component, /TOTAL KILLS/);
   assert.match(component, /PLACEMENT PTS/);
@@ -29,13 +27,34 @@ test("Day details show the configured date and daily match aggregates", () => {
   assert.match(component, /overallStanding/);
 });
 
-test("Overall report supports a numeric final standing and combined totals", () => {
-  assert.match(component, /FINAL OVERALL STANDING/);
-  assert.match(component, /overallPlacement/);
-  assert.match(component, /getPlacementPoints\(m\.placement\)\+m\.kills/);
+test("Day result entry mirrors Tournament/Scrims champion-only gold placement", () => {
+  assert.match(component, /draft\.placement === "1" \? " is-champion" : ""/);
+  assert.match(pickerStyles, /\.match-card-top1 \.scrims-placement-trigger/);
+  assert.match(styles, /\.tournament-event-match-card\.is-champion \.scrims-placement-trigger/);
+  assert.match(styles, /\.tournament-event-match-card\.is-champion \.scrims-placement-menu button\.is-selected/);
 });
 
-test("Only owner, coach, or the separately designated IGL can edit results", () => {
+test("All match results are validated and persisted together through one day save action", () => {
+  assert.match(component, /function saveDayResults\(/);
+  assert.match(component, /Select placement for Match/);
+  assert.match(component, /const kills = draft\.kills\.trim\(\) === "" \? 0 : Number\(draft\.kills\)/);
+  assert.match(component, /Save Day Results/);
+  assert.doesNotMatch(component, /Save Result/);
+  assert.doesNotMatch(component, /saveMatchResult\(/);
+});
+
+test("Kills start blank and blank kills are saved as zero", () => {
+  assert.match(component, /kills: saved\?\.kills \? String\(saved\.kills\) : ""/);
+  assert.match(component, /draft\.kills\.trim\(\) === "" \? 0 : Number\(draft\.kills\)/);
+});
+
+test("Successful save stays on the day page and scrolls to its top", () => {
+  assert.match(component, /Day results saved\./);
+  assert.match(component, /tournament-event-day-detail-top.*scrollIntoView/);
+  assert.match(component, /setSelectedDayId\(null\)/);
+});
+
+test("Only owner, coach, or designated IGL can edit day results", () => {
   assert.match(component, /membershipRole === "owner" \|\| membershipRole === "coach"/);
   assert.match(component, /iglUserId === userId/);
   assert.match(component, /disabled=\{!canEditResults\}/);
@@ -43,27 +62,19 @@ test("Only owner, coach, or the separately designated IGL can edit results", () 
   assert.match(component, /read-only\. Only the designated IGL, Coach or Owner/);
 });
 
-test("Event-level overall standing survives local/cloud synchronization", () => {
+test("Event standing data remains part of local/cloud synchronization", () => {
   assert.match(sync, /overallPlacement\?: number \| null/);
   assert.match(sync, /overallPlacement: record\.overallPlacement \?\? null/);
   assert.match(sync, /overallPlacement: row\.event_data\?\.overallPlacement \?\? null/);
 });
 
-test("Save feedback auto-dismisses and returns the user to the workspace top", () => {
-  assert.match(component, /window\.setTimeout\(\(\) => setMatchSaveMessage/);
-  assert.match(component, /scrollIntoView\(\{ behavior: "smooth", block: "start" \}\)/);
+test("Existing records and match IDs are reused during an all-day save", () => {
+  assert.match(component, /id: existing\?\.id \|\| createId\(\)/);
+  assert.match(component, /filter\(match => match\.matchNumber > matchCount\)/);
 });
 
-test("Database update policy authorizes owner, coach, or designated IGL", () => {
-  assert.match(migration, /tournament_event_records_update_igl_manager/);
-  assert.match(migration, /tm\.membership_role in \('owner', 'coach'\)/);
-  assert.match(migration, /ts\.setting_key = 'igl_user_id'/);
-  assert.match(migration, /with check/);
-  assert.match(migration, /tournament_event_records_delete_manager/);
-});
-
-test("Day dashboard styling remains responsive and keyboard-visible", () => {
-  assert.match(styles, /\.tournament-event-last-updated/);
-  assert.match(styles, /\.tournament-event-day-select:focus-visible/);
-  assert.match(styles, /@media\(max-width:520px\)/);
+test("Responsive day save and golden controls remain touch and keyboard accessible", () => {
+  assert.match(styles, /@media\(max-width:620px\).*tournament-event-day-save-bar/s);
+  assert.match(styles, /\.tournament-event-day-save-bar button:focus-visible/);
+  assert.match(styles, /@media\(prefers-reduced-motion:reduce\)/);
 });

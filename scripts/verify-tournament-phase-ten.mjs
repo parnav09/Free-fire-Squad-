@@ -30,7 +30,7 @@ test("Reduced-motion preference is respected", () => {
   assert.ok(css.includes("prefers-reduced-motion:reduce"));
 });
 test("Responsive styles preserve match recording and event workflows", () => {
-  for (const name of ["Save Result", "Edit Tournament", "Delete Tournament", "Add Record", "All Records"]) assert.ok(component.includes(name));
+  for (const name of ["Save Day Results", "Edit Tournament", "Delete Tournament", "Add Record", "All Records"]) assert.ok(component.includes(name));
 });
 test("Sync and legacy import controls remain responsive", () => {
   assert.ok(css.includes(".tournament-event-legacy-import"));
