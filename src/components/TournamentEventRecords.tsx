@@ -510,6 +510,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
               <div><span>TOTAL MATCHES</span><strong>{getEventSummary(selectedRecord).matchCount}</strong></div>
               <div><span>RECORDED</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(Array.isArray(d.matches)?d.matches.filter(m=>m.placement!==null).length:0),0)}</strong></div>
               <div><span>TOTAL KILLS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+m.kills,0),0)}</strong></div>
+              <div><span>PLACEMENT PTS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+getPlacementPoints(m.placement),0),0)}</strong></div>
               <div><span>TOTAL POINTS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+getPlacementPoints(m.placement)+m.kills,0),0)}</strong></div>
             </div>
             <section className="tournament-event-standing-panel" aria-label="Overall tournament standing">
@@ -556,6 +557,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
               <div><span>DAY MATCHES</span><strong>{selectedDay.matchCount || 0}</strong></div>
               <div><span>RECORDED</span><strong>{(selectedDay.matches || []).filter(m=>m.placement!==null).length}</strong></div>
               <div><span>TOTAL KILLS</span><strong>{(selectedDay.matches || []).reduce((n,m)=>n+m.kills,0)}</strong></div>
+              <div><span>PLACEMENT PTS</span><strong>{(selectedDay.matches || []).reduce((n,m)=>n+getPlacementPoints(m.placement),0)}</strong></div>
               <div><span>TOTAL POINTS</span><strong>{(selectedDay.matches || []).reduce((n,m)=>n+getPlacementPoints(m.placement)+m.kills,0)}</strong></div>
             </div>
             {!canEditResults && <p className="tournament-event-readonly-note">Results are read-only. Only the designated IGL, Coach or Owner can update match results and standings.</p>}
