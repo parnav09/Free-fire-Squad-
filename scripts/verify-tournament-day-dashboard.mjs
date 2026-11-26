@@ -20,6 +20,8 @@ test("Event overview opens one selected day instead of rendering every match inl
 
 test("Day details show the configured date and daily match aggregates", () => {
   assert.match(component, /selectedDay\.date \? formatDate\(selectedDay\.date\)/);
+  assert.match(component, /Last updated/);
+  assert.match(component, /formatUpdatedAt\(selectedRecord\.updatedAt\)/);
   assert.match(component, /DAY MATCHES/);
   assert.match(component, /TOTAL KILLS/);
   assert.match(component, /TOTAL POINTS/);
@@ -60,6 +62,7 @@ test("Database update policy authorizes owner, coach, or designated IGL", () => 
 });
 
 test("Day dashboard styling remains responsive and keyboard-visible", () => {
+  assert.match(styles, /\.tournament-event-last-updated/);
   assert.match(styles, /\.tournament-event-day-select:focus-visible/);
   assert.match(styles, /@media\(max-width:520px\)/);
 });
