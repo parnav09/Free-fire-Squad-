@@ -470,7 +470,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
             <div><span>TOTAL MATCHES</span><strong>{getEventSummary(selectedRecord).matchCount}</strong></div>
             <div><span>RECORDED</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(Array.isArray(d.matches)?d.matches.filter(m=>m.placement!==null).length:0),0)}</strong></div>
             <div><span>TOTAL KILLS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+m.kills,0),0)}</strong></div>
-            <div><span>TOTAL POINTS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+m.placementPoints+m.kills,0),0)}</strong></div>
+            <div><span>TOTAL POINTS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+getPlacementPoints(m.placement)+m.kills,0),0)}</strong></div>
           </div>
           {matchSaveMessage && <p className="tournament-event-match-message" role="status">{matchSaveMessage}</p>}
           <div className="tournament-event-workspace-days">
