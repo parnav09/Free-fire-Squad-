@@ -118,3 +118,28 @@
 .tournament-event-workspace-legacy{padding:13px;border:1px dashed #34475e;border-radius:10px;color:#91a4bb;font-size:11px;line-height:1.6}
 @media(max-width:620px){.tournament-event-workspace-top{align-items:flex-start;flex-direction:column}.tournament-event-workspace-header{flex-direction:column}.tournament-event-workspace-stats{width:100%}.tournament-event-workspace-stats div{flex:1}.tournament-event-workspace-day{grid-template-columns:30px minmax(0,1fr);gap:9px;padding:11px}.tournament-event-workspace-day-marker span{width:29px;height:29px}.tournament-event-workspace-match-preview{align-items:flex-start;flex-wrap:wrap}.tournament-event-workspace-coming{width:100%;margin-left:22px;text-align:left}}
 @media(prefers-reduced-motion:reduce){.tournament-event-record-card{transition:none}}
+
+/* Phase 7 — event match ledger and scoreboard */
+.tournament-event-scoreboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.tournament-event-scoreboard>div{display:grid;gap:5px;min-width:0;padding:12px;border:1px solid #29445b;border-radius:10px;background:linear-gradient(145deg,#102238,#0a1524)}
+.tournament-event-scoreboard span{color:#80a5bb;font-size:8px;font-weight:850;letter-spacing:.09em}
+.tournament-event-scoreboard strong{color:#e6f8ff;font-size:21px;font-variant-numeric:tabular-nums}
+.tournament-event-match-message{margin:0;padding:9px 11px;border:1px solid #2c5267;border-radius:8px;background:#0c2030;color:#9fe6f2;font-size:10px}
+.tournament-event-match-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.tournament-event-match-card{min-width:0;padding:11px;border:1px solid #294057;border-radius:10px;background:rgba(5,14,25,.72)}
+.tournament-event-match-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.tournament-event-match-card-head>strong{color:#d9e9f6;font-size:10px;letter-spacing:.08em}
+.tournament-event-match-card-head>span{font-size:8px;font-weight:850;letter-spacing:.08em}
+.tournament-event-match-card-head .is-recorded{color:#80d8bd}.tournament-event-match-card-head .is-pending{color:#8295aa}
+.tournament-event-match-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.tournament-event-match-fields label{display:grid;gap:5px;min-width:0;color:#91a8be;font-size:9px;font-weight:750}
+.tournament-event-match-fields input,.tournament-event-match-fields select{width:100%;min-width:0;height:36px;padding:0 8px;border:1px solid #2b435b;border-radius:7px;background:#0b1929;color:#e6f4ff;font:inherit;font-size:11px}
+.tournament-event-match-fields input:focus,.tournament-event-match-fields select:focus{outline:2px solid #4f9bb0;outline-offset:1px}
+.tournament-event-match-total{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding:8px 9px;border-radius:7px;background:#102238;color:#92a9be;font-size:9px}
+.tournament-event-match-total strong{color:#a3edf6;font-size:15px;font-variant-numeric:tabular-nums}
+.tournament-event-match-actions{display:flex;gap:7px;margin-top:9px}
+.tournament-event-match-actions button{min-height:34px;padding:0 11px;border:1px solid #32647b;border-radius:7px;background:#12354a;color:#a6edf5;font-size:9px;font-weight:850;cursor:pointer}
+.tournament-event-match-actions button.is-clear{border-color:#4b4350;background:#241c29;color:#d5b9c4}
+.tournament-event-match-actions button:focus-visible{outline:2px solid #69d9ef;outline-offset:2px}
+@media(max-width:760px){.tournament-event-match-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.tournament-event-scoreboard{grid-template-columns:repeat(2,minmax(0,1fr))}.tournament-event-match-fields{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.tournament-event-match-fields input,.tournament-event-match-fields select{padding:0 5px;font-size:10px}}

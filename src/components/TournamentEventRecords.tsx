@@ -234,17 +234,43 @@ export default function TournamentEventRecords() {
             <div><span className="tournament-event-workspace-label">TOURNAMENT OVERVIEW</span><h2 id="tournament-event-workspace-title">{selectedRecord.name}</h2><p>Review the schedule and match allocation for this event.</p></div>
             <div className="tournament-event-workspace-stats"><div><strong>{getEventSummary(selectedRecord).dayCount}</strong><span>DAYS</span></div><div><strong>{getEventSummary(selectedRecord).matchCount}</strong><span>MATCHES</span></div></div>
           </header>
-          <div className="tournament-event-workspace-section-head"><h3>Event Schedule</h3><span>{(Array.isArray(selectedRecord.days) ? selectedRecord.days : []).length} DAY ENTRIES</span></div>
+
+          <div className="tournament-event-workspace-section-head"><h3>Match Records & Scoreboard</h3><span>{(selectedRecord.days || []).reduce((sum, d) => sum + (Array.isArray(d.matches) ? d.matches.filter(m => m.placement !== null).length : 0), 0)} RESULTS SAVED</span></div>
+          <div className="tournament-event-scoreboard">
+            <div><span>TOTAL MATCHES</span><strong>{getEventSummary(selectedRecord).matchCount}</strong></div>
+            <div><span>RECORDED</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(Array.isArray(d.matches)?d.matches.filter(m=>m.placement!==null).length:0),0)}</strong></div>
+            <div><span>TOTAL KILLS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+m.kills,0),0)}</strong></div>
+            <div><span>TOTAL POINTS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+m.placementPoints+m.kills,0),0)}</strong></div>
+          </div>
+          {matchSaveMessage && <p className="tournament-event-match-message" role="status">{matchSaveMessage}</p>}
           <div className="tournament-event-workspace-days">
             {(Array.isArray(selectedRecord.days) ? [...selectedRecord.days] : []).sort((x,y)=>(Number(x.dayNumber)||0)-(Number(y.dayNumber)||0)).map((day,index)=>{
               const dayNumber=Number.isSafeInteger(day.dayNumber)&&Number(day.dayNumber)>0?Number(day.dayNumber):index+1;
               const matchCount=Number.isSafeInteger(day.matchCount)&&Number(day.matchCount)>0?Number(day.matchCount):0;
-              return <article className="tournament-event-workspace-day" key={day.id||`legacy-day-${index}`}>
+              const dayMatches=Array.isArray(day.matches)?day.matches:[];
+              const completed=dayMatches.filter(m=>m.placement!==null).length;
+              const dayKills=dayMatches.reduce((n,m)=>n+m.kills,0);
+              const dayPoints=dayMatches.reduce((n,m)=>n+m.placementPoints+m.kills,0);
+              return <article className="tournament-event-workspace-day tournament-event-workspace-day-full" key={day.id||"legacy-day-"+index}>
                 <div className="tournament-event-workspace-day-marker"><span>{String(dayNumber).padStart(2,"0")}</span></div>
                 <div className="tournament-event-workspace-day-content">
-                  <div className="tournament-event-workspace-day-heading"><div><span>DAY {dayNumber}</span><h4>Day {dayNumber}</h4></div><strong>{matchCount} {matchCount===1?"MATCH":"MATCHES"}</strong></div>
-                  <p className="tournament-event-workspace-date">{day.date?formatDate(day.date):"Date not configured"}</p>
-                  <div className="tournament-event-workspace-match-preview"><span className="tournament-event-workspace-match-icon" aria-hidden="true">▦</span><span>{matchCount>0?`${matchCount} match slots planned`:"Match allocation not available"}</span><span className="tournament-event-workspace-coming">MATCH RECORDS · PHASE 7</span></div>
+                  <div className="tournament-event-workspace-day-heading"><div><span>DAY {dayNumber}</span><h4>Day {dayNumber}</h4></div><strong>{completed}/{matchCount} RECORDED</strong></div>
+                  <p className="tournament-event-workspace-date">{day.date?formatDate(day.date):"Date not configured"} · {dayKills} kills · {dayPoints} points</p>
+                  <div className="tournament-event-match-grid">
+                    {Array.from({length:matchCount},(_,i)=>{
+                      const matchNo=i+1, saved=dayMatches.find(m=>m.matchNumber===matchNo), draft=readMatchDraft(selectedRecord,day,matchNo);
+                      return <div className="tournament-event-match-card" key={matchNo}>
+                        <div className="tournament-event-match-card-head"><strong>MATCH {String(matchNo).padStart(2,"0")}</strong><span className={saved&&saved.placement!==null?"is-recorded":"is-pending"}>{saved&&saved.placement!==null?"RECORDED":"PENDING"}</span></div>
+                        <div className="tournament-event-match-fields">
+                          <label>Placement<select value={draft.placement} onChange={e=>updateMatchDraft(selectedRecord,day,matchNo,"placement",e.target.value)}><option value="">Not set</option>{Array.from({length:12},(_,p)=><option key={p+1} value={p+1}>{p+1}</option>)}</select></label>
+                          <label>Placement points<input type="number" min="0" step="1" inputMode="numeric" value={draft.placementPoints} onChange={e=>updateMatchDraft(selectedRecord,day,matchNo,"placementPoints",e.target.value)}/></label>
+                          <label>Kills<input type="number" min="0" step="1" inputMode="numeric" value={draft.kills} onChange={e=>updateMatchDraft(selectedRecord,day,matchNo,"kills",e.target.value)}/></label>
+                        </div>
+                        <div className="tournament-event-match-total"><span>Match points</span><strong>{(Number(draft.placementPoints)||0)+(Number(draft.kills)||0)}</strong></div>
+                        <div className="tournament-event-match-actions"><button type="button" onClick={()=>saveMatchResult(selectedRecord,day,matchNo)}>Save Result</button>{saved&&<button type="button" className="is-clear" onClick={()=>clearMatchResult(selectedRecord,day,matchNo)}>Clear</button>}</div>
+                      </div>;
+                    })}
+                  </div>
                 </div>
               </article>;
             })}
