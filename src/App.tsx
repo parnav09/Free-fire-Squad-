@@ -103,8 +103,8 @@ export default function App() {
   useEffect(() => { if (!notice) return; const timer = window.setTimeout(() => setNotice(""), 7000); return () => window.clearTimeout(timer); }, [notice]);
   const [sharedMatches, setSharedMatches] = useState<Array<{match_day:number;match_number:number;placement:number|null;kills:number;points:number|null;status:string}>>([]);
   const [matchesHydratedKey, setMatchesHydratedKey] = useState("");
-  const [, setConnection] = useState("Checking…");
-  const [, setIsOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
+  const [connection, setConnection] = useState("Checking…");
+  const [isOnline, setIsOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
   const [sessionUsername, setSessionUsername] = useState("");
   const [sessionPassword, setSessionPassword] = useState("");
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signin");
@@ -956,6 +956,8 @@ export default function App() {
   };
 
   const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
+  const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error|pending/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
+  const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
   const nav: Section[] = ["Players", "Tournament", "StratForge", "Assignments", "Evolution", "Sessions", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
   const mainNav: Section[] = ["Players", "Tournament", "StratForge", "Assignments"];
   const mobileNavLabel: Record<string,string> = {Players:"Players",Tournament:"Matches",StratForge:"Forge",Assignments:"Tasks",Sessions:"Sessions",Evaluation:"Eval", "Weekly Review":"Review","Player Trends":"Trends",Analytics:"Stats",Profile:"Profile",Settings:"Settings","Training Legacy":"Legacy"};
@@ -1006,7 +1008,7 @@ export default function App() {
       </aside>
       {!onboarding&&<><nav className="mobile-bottom-nav" aria-label="Main navigation">{mainNav.map(n=><button key={n} className={section===n?"mobile-nav-active":""} aria-current={section===n?"page":undefined} onClick={()=>{setSection(n);setMobileMore(false);}}><span className="mobile-nav-icon">{navIcon[n]}</span><small>{mobileNavLabel[n]}</small></button>)}<button className={mobileMore||(!mainNav.includes(section)&&section!=="Overview")?"mobile-nav-active":""} aria-expanded={mobileMore} onClick={()=>setMobileMore(v=>!v)}><span className="mobile-nav-icon">☰</span><small>More</small></button></nav>{mobileMore&&<div className="mobile-more-backdrop" onClick={()=>setMobileMore(false)}><section className="mobile-more-sheet" aria-label="More sections" onClick={e=>e.stopPropagation()}><header><strong>All workspaces</strong><button aria-label="Close menu" onClick={()=>setMobileMore(false)}>×</button></header><div className="mobile-more-grid">{nav.filter(n=>!mainNav.includes(n)).map(n=><button key={n} className={section===n?"mobile-more-active":""} onClick={()=>{setSection(n);setMobileMore(false);}}><span>{navIcon[n]}</span>{n==="Evaluation"||n==="Weekly Review"||n==="Player Trends"||n==="Analytics"?"Evolution · "+n:n}</button>)}</div></section></div>}</>}
       <section className="main-panel">
-        <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div></header>
+        <header className="topbar"><div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div><div className={"sync-indicator sync-"+syncState} role="status" aria-live="polite" aria-label={"Team sync status: "+syncLabel} title={"Team sync status: "+syncLabel}><i/><span>{syncLabel}</span></div></header>
         <div className="content">
           {onboarding?<>
             <section className="connection-panel" style={{display:"block",maxWidth:680}}>

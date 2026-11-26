@@ -40,10 +40,12 @@ test("placement controls stay blue until the selected value is #1 in every event
   assert.ok(css.includes(".tournament-event-standing-panel.is-top1 .scrims-placement-trigger"));
   assert.ok(scrims.includes('m.placement===1?" scrims-match-top1":""'));
 });
-test("sync diagnostics are not shown in the application or event workspace",()=>{
+test("original compact team sync indicator is preserved without event-level diagnostics",()=>{
   assert.doesNotMatch(c,/Synced to team|Syncing…|Offline · saved on this device|tournament-event-sync-status/);
-  assert.doesNotMatch(app,/sync-indicator|Team sync status/);
-  assert.doesNotMatch(shell,/sync-indicator|Team sync status/);
+  assert.match(app,/sync-indicator sync-/);
+  assert.match(app,/const syncState = !isOnline/);
+  assert.match(app,/const syncLabel = syncState/);
+  assert.match(shell,/sync-indicator sync-/);
 });
 test("decorative diagonal arrows are removed from interactive app surfaces",()=>{
   for(const source of [c,app,scrims,pets,characters,planning]) assert.doesNotMatch(source,/↗/);
