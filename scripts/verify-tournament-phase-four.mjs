@@ -23,7 +23,7 @@ test("Every day has its own date picker and independent positive integer match c
 test("Date validation permits non-consecutive dates but rejects missing, invalid and duplicate dates", () => {
   assert.ok(component.includes("Choose a date for this day."));
   assert.ok(component.includes("Enter a valid calendar date."));
-  assert.ok(component.includes("seenDates.has(day.date)"));
+  assert.ok(component.includes("dates.has(day.date)"));
   assert.ok(component.includes("Each tournament day must have a different date."));
   assert.ok(!component.includes("date.getTime() < Date.now()"));
 });
