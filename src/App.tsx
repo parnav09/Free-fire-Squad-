@@ -105,7 +105,6 @@ export default function App() {
   const [matchesHydratedKey, setMatchesHydratedKey] = useState("");
   const [, setConnection] = useState("Checking…");
   const [serverStatus, setServerStatus] = useState<"checking" | "connected" | "offline">("checking");
-  const [isOnline, setIsOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
   const [sessionUsername, setSessionUsername] = useState("");
   const [sessionPassword, setSessionPassword] = useState("");
   const [authMode, setAuthMode] = useState<"signin"|"signup">("signin");
@@ -251,8 +250,8 @@ export default function App() {
   useEffect(()=>{if(!team?.id){setOwnerPowerEnabled(true);return;}setOwnerPowerEnabled(safeStorageGetItem("squad-os:"+team.id+":owner-power")!=="off");},[team?.id]);
 
   useEffect(() => {
-    const onOnline=()=>{setIsOnline(true);setConnection("Syncing…");};
-    const onOffline=()=>{setIsOnline(false);setConnection("Offline");};
+    const onOnline=()=>{setConnection("Syncing…");};
+    const onOffline=()=>{setConnection("Offline");};
     window.addEventListener("online",onOnline);
     window.addEventListener("offline",onOffline);
     return()=>{window.removeEventListener("online",onOnline);window.removeEventListener("offline",onOffline);};
@@ -269,12 +268,6 @@ export default function App() {
     let timer: number | undefined;
     const checkServer = async () => {
       if (!active || inFlight) return;
-      if (typeof navigator !== "undefined" && !navigator.onLine) {
-        hasConnectedOnce = false;
-        setServerStatus("offline");
-        timer = window.setTimeout(checkServer, 15000);
-        return;
-      }
       inFlight = true;
       if (!hasConnectedOnce) setServerStatus("checking");
       try {
@@ -1015,7 +1008,7 @@ export default function App() {
   };
 
   const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
-  const syncState = !isOnline || serverStatus === "offline" ? "offline" : serverStatus === "connected" ? "synced" : "syncing";
+  const syncState = serverStatus === "offline" ? "offline" : serverStatus === "connected" ? "synced" : "syncing";
   const syncLabel = syncState === "synced" ? "Connected" : syncState === "syncing" ? "Connecting…" : "Disconnected";
   const nav: Section[] = ["Players", "Tournament", "StratForge", "Assignments", "Evolution", "Sessions", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
   const mainNav: Section[] = ["Players", "Tournament", "StratForge", "Assignments"];
