@@ -375,11 +375,17 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
       if(!Number.isSafeInteger(day.matchCount)||day.matchCount<1){setEditError("Each day needs at least one whole-number match.");return;}
       total+=day.matchCount;if(!Number.isSafeInteger(total)){setEditError("Combined match count is too large.");return;}
     }
-    const removal=(record.days||[]).some((old,index)=>old.matches?.some(match=>match.matchNumber>(editDays.find(day=>day.id===old.id)?.matchCount??editDays[index]?.matchCount??0)));
+    const originalDays = Array.isArray(record.days) ? record.days : [];
+    const findOriginalDay = (draft: EventDayDraft, index: number) =>
+      originalDays.find(day => day.id && day.id === draft.id) || originalDays[index] || null;
+    const removal = originalDays.some((old, index) => {
+      const draft = editDays.find(day => day.id && old.id === day.id) || editDays[index];
+      return (old.matches || []).some(match => match.matchNumber > (draft?.matchCount ?? 0));
+    });
     if(removal&&!window.confirm("Reducing match counts will remove saved results for matches beyond the new limit. Continue?"))return;
     try{
-      const next=records.map(item=>item.id!==record.id?item:{...item,name,days:editDays.map(draft=>{
-        const old=(item.days||[]).find(day=>day.id===draft.id);
+      const next=records.map(item=>item.id!==record.id?item:{...item,name,days:editDays.map((draft,index)=>{
+        const old = findOriginalDay(draft,index);
         return {...draft,matches:(old?.matches||[]).filter(match=>match.matchNumber<=draft.matchCount)};
       })});
       persistRecords(next, record.id);setEditingRecordId(null);setEditError("");setManagementMessage("Tournament details updated.");window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));
