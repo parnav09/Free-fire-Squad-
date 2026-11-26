@@ -569,7 +569,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
             <div className="tournament-event-match-grid">
               {Array.from({length:Math.max(0,Number(selectedDay.matchCount)||0)},(_,i)=>{
                 const matchNo=i+1, saved=(selectedDay.matches || []).find(m=>m.matchNumber===matchNo), draft=readMatchDraft(selectedRecord,selectedDay,matchNo);
-                return <div className={`tournament-event-match-card${draft.placement === "1" ? " is-champion" : ""}`} key={matchNo}>
+                return <div className={`tournament-event-match-card${saved?.placement === 1 ? " is-champion" : ""}`} key={matchNo}>
                   <div className="tournament-event-match-card-head"><strong>MATCH {String(matchNo).padStart(2,"0")}</strong><span className={saved&&saved.placement!==null?"is-recorded":"is-pending"}>{saved&&saved.placement!==null?"RECORDED":"PENDING"}</span></div>
                   <div className="tournament-event-match-fields">
                     <label>Placement<PlacementPicker value={draft.placement === "" ? null : Number(draft.placement)} disabled={!canEditResults} onChange={n=>updateMatchDraft(selectedRecord,selectedDay,matchNo,"placement",String(n))} onClear={()=>updateMatchDraft(selectedRecord,selectedDay,matchNo,"placement","")}/></label>
