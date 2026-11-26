@@ -7,18 +7,17 @@ const records = await readFile(new URL("../src/components/TournamentEventRecords
 const styles = await readFile(new URL("../src/components/TournamentEventRecords.css", import.meta.url), "utf8");
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 
-test("Event mode now renders a dedicated records workspace", () => {
+test("Event mode renders its dedicated records workspace without altering Weekly mode", () => {
   assert.match(app, /import TournamentEventRecords from "\.\/components\/TournamentEventRecords"/);
   assert.match(app, /tournamentMode === "Weekly" \? <>/);
   assert.match(app, /<TournamentEventRecords \/>/);
   assert.doesNotMatch(app, /Custom tournaments are coming next/);
 });
 
-test("Records workspace has an explicit empty state and Phase 3 add boundary", () => {
+test("Records workspace retains the empty state and Add Record entry point", () => {
   assert.match(records, /No Records/);
   assert.match(records, /Add Record/);
-  assert.match(records, /disabled aria-describedby="tournament-event-add-hint"/);
-  assert.match(records, /Record creation unlocks in Phase 3/);
+  assert.match(records, /onClick=\{openCreateModal\}/);
 });
 
 test("More and Show Less only appear when records exceed the initial page", () => {
@@ -36,14 +35,14 @@ test("Records are read defensively and refresh across tabs and same-app events",
   assert.match(records, /Array\.isArray\(parsed\)/);
 });
 
-test("Event records UI is responsive and keyboard accessible", () => {
+test("Records UI remains responsive and keyboard accessible", () => {
   assert.match(styles, /@media\(max-width:620px\)/);
   assert.match(styles, /:focus-visible/);
   assert.match(records, /aria-labelledby="tournament-event-records-title"/);
   assert.match(records, /role="status"/);
 });
 
-test("Phase 2 regression test is included in the production build chain", () => {
+test("Phase 2 regression test remains in the production build chain", () => {
   assert.equal(packageJson.scripts["test:tournament-phase-two"], "node --test scripts/verify-tournament-phase-two.mjs");
   assert.match(packageJson.scripts.build, /npm run test:tournament-phase-two/);
 });
