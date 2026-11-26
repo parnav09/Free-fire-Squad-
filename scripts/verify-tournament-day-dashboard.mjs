@@ -31,14 +31,16 @@ test("Day dashboard keeps date, standing, and all daily aggregate metrics", () =
   assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-day-select/);
 });
 
-test("Day result entry mirrors Tournament/Scrims champion-only gold placement", () => {
-  assert.match(component, /saved\?\.placement === 1 \? " is-champion" : ""/);
-  assert.doesNotMatch(component, /draft\.placement === "1" \? " is-champion" : ""/);
+test("Day result placement stays blue by default and turns gold only when the current selection is #1", () => {
+  assert.match(component, /draft\.placement === "1" \? " is-champion" : ""/);
+  assert.doesNotMatch(component, /saved\?\.placement === 1 \? " is-champion" : ""/);
+  assert.match(styles, /\.tournament-event-match-card:not\(\.is-champion\) \.scrims-placement-trigger/);
+  assert.match(styles, /\.tournament-event-match-card\.is-champion \.scrims-placement-trigger/);
+  assert.match(styles, /\.tournament-event-match-card:not\(\.is-champion\) \.scrims-placement-menu button\.is-selected/);
+  assert.match(styles, /\.tournament-event-match-card\.is-champion \.scrims-placement-menu button\.is-selected/);
   assert.match(styles, /\.tournament-event-day-save-bar button\{[^}]*#2c5068[^}]*#12364b/s);
   assert.doesNotMatch(styles, /\.tournament-event-day-save-bar button\{[^}]*#d4ad5d/s);
   assert.match(pickerStyles, /\.match-card-top1 \.scrims-placement-trigger/);
-  assert.match(styles, /\.tournament-event-match-card\.is-champion \.scrims-placement-trigger/);
-  assert.match(styles, /\.tournament-event-match-card\.is-champion \.scrims-placement-menu button\.is-selected/);
 });
 
 test("All match results are validated and persisted together through one day save action", () => {
@@ -86,7 +88,6 @@ test("Responsive day save and golden controls remain touch and keyboard accessib
   assert.match(styles, /@media\(prefers-reduced-motion:reduce\)/);
 });
 
-
 test("Event records open as a full-screen page and keep creation separate from saved records", () => {
   assert.match(component, /selectedRecord \? " is-record-detail" : ""/);
   assert.match(styles, /\.tournament-event-records\.is-record-detail\{position:fixed;inset:0;/);
@@ -97,7 +98,9 @@ test("Event records open as a full-screen page and keep creation separate from s
 
 test("Only saved overall #1 records receive trophy and champion styling", () => {
   assert.match(component, /record\.overallPlacement === 1 \? " is-overall-champion" : ""/);
-  assert.match(component, /OVERALL CHAMPION · #1/);
+  assert.match(component, /TOP 1/);
+  assert.match(component, /OVERALL STANDING/);
+  assert.match(component, /tournament-event-record-champion-date/);
   assert.match(component, /selectedRecord\.overallPlacement === 1 && <span className="tournament-event-workspace-champion-mark"/);
   assert.match(styles, /\.tournament-event-record-card\.is-overall-champion/);
   assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-back-button\.is-champion/);

@@ -26,12 +26,14 @@ test("Scrims, Tournament and Training use the shared canonical adapter", async (
     read("../src/lib/canonical-module-integration.ts"),
   ]);
   assert.match(scrims, /integrateCanonicalSource\(supabase,teamId,"scrim",saved\.id\)/);
-  assert.match(scrims, /Link canonical ID/);
+  assert.match(scrims, /Link to session/);
+  assert.doesNotMatch(scrims, /Link canonical ID/);
   assert.match(app, /integrateCanonicalSource\(supabase!, teamSnapshot\.id, "tournament", cycle\.id\)/);
   assert.match(app, /linkCurrentTournamentCycle/);
   assert.match(training, /integrateCanonicalSource\(supabase!,teamId,"training",created\.data\.id\)/);
   assert.match(training, /promotePlanToTraining/);
-  assert.match(training, /Link canonical ID/);
+  assert.match(training, /Link session/);
+  assert.doesNotMatch(training, /Link canonical ID/);
   assert.match(adapter, /client\.rpc\("integrate_canonical_source"/);
   assert.match(adapter, /canonicalSessionId/);
   assert.match(adapter, /PGRST202/);
