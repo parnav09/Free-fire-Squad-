@@ -87,6 +87,7 @@ function triggerStepHaptic(): void {
 export default function TournamentEventRecords() {
   const [records, setRecords] = useState<TournamentEventRecord[]>(readEventRecords);
   const [expanded, setExpanded] = useState(false);
+  const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [eventName, setEventName] = useState("");
   const [dayCount, setDayCount] = useState(1);
@@ -124,6 +125,7 @@ export default function TournamentEventRecords() {
     [expanded, records]
   );
   const hasMore = records.length > INITIAL_VISIBLE_RECORDS;
+  const selectedRecord = records.find((record) => record.id === selectedRecordId) ?? null;
 
   function openCreateModal() {
     setEventName("");
@@ -216,39 +218,46 @@ export default function TournamentEventRecords() {
 
       {records.length === 0 ? (
         <div className="tournament-event-empty" role="status">
-          <span className="tournament-event-empty-mark" aria-hidden="true">＋</span>
-          <strong>No Records</strong>
+          <span className="tournament-event-empty-mark" aria-hidden="true">＋</span><strong>No Records</strong>
           <p>Your custom tournament records will appear here once you create one.</p>
         </div>
+      ) : selectedRecord ? (
+        <section className="tournament-event-workspace" aria-labelledby="tournament-event-workspace-title">
+          <div className="tournament-event-workspace-top">
+            <button type="button" className="tournament-event-back-button" onClick={() => setSelectedRecordId(null)}><span aria-hidden="true">←</span> All Records</button>
+            <span className="tournament-event-workspace-kicker">CUSTOM EVENT WORKSPACE</span>
+          </div>
+          <header className="tournament-event-workspace-header">
+            <div><span className="tournament-event-workspace-label">TOURNAMENT OVERVIEW</span><h2 id="tournament-event-workspace-title">{selectedRecord.name}</h2><p>Review the schedule and match allocation for this event.</p></div>
+            <div className="tournament-event-workspace-stats"><div><strong>{getEventSummary(selectedRecord).dayCount}</strong><span>DAYS</span></div><div><strong>{getEventSummary(selectedRecord).matchCount}</strong><span>MATCHES</span></div></div>
+          </header>
+          <div className="tournament-event-workspace-section-head"><h3>Event Schedule</h3><span>{(Array.isArray(selectedRecord.days) ? selectedRecord.days : []).length} DAY ENTRIES</span></div>
+          <div className="tournament-event-workspace-days">
+            {(Array.isArray(selectedRecord.days) ? [...selectedRecord.days] : []).sort((x,y)=>(Number(x.dayNumber)||0)-(Number(y.dayNumber)||0)).map((day,index)=>{
+              const dayNumber=Number.isSafeInteger(day.dayNumber)&&Number(day.dayNumber)>0?Number(day.dayNumber):index+1;
+              const matchCount=Number.isSafeInteger(day.matchCount)&&Number(day.matchCount)>0?Number(day.matchCount):0;
+              return <article className="tournament-event-workspace-day" key={day.id||`legacy-day-${index}`}>
+                <div className="tournament-event-workspace-day-marker"><span>{String(dayNumber).padStart(2,"0")}</span></div>
+                <div className="tournament-event-workspace-day-content">
+                  <div className="tournament-event-workspace-day-heading"><div><span>DAY {dayNumber}</span><h4>Day {dayNumber}</h4></div><strong>{matchCount} {matchCount===1?"MATCH":"MATCHES"}</strong></div>
+                  <p className="tournament-event-workspace-date">{day.date?formatDate(day.date):"Date not configured"}</p>
+                  <div className="tournament-event-workspace-match-preview"><span className="tournament-event-workspace-match-icon" aria-hidden="true">▦</span><span>{matchCount>0?`${matchCount} match slots planned`:"Match allocation not available"}</span><span className="tournament-event-workspace-coming">MATCH RECORDS · PHASE 7</span></div>
+                </div>
+              </article>;
+            })}
+          </div>
+          {(!Array.isArray(selectedRecord.days)||selectedRecord.days.length===0)&&<div className="tournament-event-workspace-legacy" role="status">This is an older event record without day details. Its original record is preserved.</div>}
+        </section>
       ) : (
         <>
           <div className="tournament-event-record-list">
-            {visibleRecords.map((record, index) => {
-              const summary = getEventSummary(record);
-              return (
-                <article className="tournament-event-record-card" key={record.id}>
-                  <span className="tournament-event-record-index">{String(index + 1).padStart(2, "0")}</span>
-                  <div className="tournament-event-record-copy">
-                    <h3>{record.name}</h3>
-                    <div className="tournament-event-record-meta">
-                      <span>{summary.dateLabel}</span>
-                      <span>{summary.dayCount} {summary.dayCount === 1 ? "day" : "days"}</span>
-                      <span>{summary.matchCount} {summary.matchCount === 1 ? "match" : "matches"}</span>
-                    </div>
-                  </div>
-                  <span className="tournament-event-record-arrow" aria-hidden="true">↗</span>
-                </article>
-              );
-            })}
+            {visibleRecords.map((record,index)=>{const summary=getEventSummary(record);return <button type="button" className="tournament-event-record-card" key={record.id} onClick={()=>{setSelectedRecordId(record.id);setExpanded(false);}} aria-label={`Open ${record.name} tournament workspace`}>
+              <span className="tournament-event-record-index">{String(index+1).padStart(2,"0")}</span>
+              <span className="tournament-event-record-copy"><strong>{record.name}</strong><span className="tournament-event-record-meta"><span>{summary.dateLabel}</span><span>{summary.dayCount} {summary.dayCount===1?"day":"days"}</span><span>{summary.matchCount} {summary.matchCount===1?"match":"matches"}</span></span></span>
+              <span className="tournament-event-record-arrow" aria-hidden="true">↗</span>
+            </button>;})}
           </div>
-          {hasMore && (
-            <div className="tournament-event-list-footer">
-              <button type="button" className="tournament-event-more-button" onClick={() => setExpanded((value) => !value)}>
-                {expanded ? "Show Less" : `More · ${records.length - INITIAL_VISIBLE_RECORDS} more`}
-                <span aria-hidden="true">{expanded ? "↑" : "↓"}</span>
-              </button>
-            </div>
-          )}
+          {hasMore&&<div className="tournament-event-list-footer"><button type="button" className="tournament-event-more-button" onClick={()=>setExpanded(value=>!value)}>{expanded?"Show Less":`More · ${records.length-INITIAL_VISIBLE_RECORDS} more`}<span aria-hidden="true">{expanded?"↑":"↓"}</span></button></div>}
         </>
       )}
 
