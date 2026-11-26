@@ -21,3 +21,30 @@ export const supabase = isSupabaseConfigured
       },
     })
   : null;
+
+/**
+ * Checks the Supabase REST gateway itself, without querying application tables.
+ * Any HTTP response proves the gateway is reachable; 5xx and network failures
+ * indicate that the service is currently unavailable.
+ */
+export async function checkSupabaseServer(): Promise<"connected" | "offline"> {
+  if (!supabaseUrl || !supabasePublishableKey) return "offline";
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/`, {
+      method: "GET",
+      headers: {
+        apikey: supabasePublishableKey,
+        Authorization: `Bearer ${supabasePublishableKey}`,
+      },
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    return response.status < 500 ? "connected" : "offline";
+  } catch {
+    return "offline";
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
