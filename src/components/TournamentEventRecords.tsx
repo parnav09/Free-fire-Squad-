@@ -401,18 +401,6 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
     } catch { setMatchSaveMessage("Could not save day results. Your previous saved results were preserved."); }
     finally { saveLockRef.current = false; }
   }
-  function clearMatchResult(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
-    if (!canEditResults) return;
-    try {
-      const next = records.map(item => item.id !== record.id ? item : { ...item, days: (item.days || []).map(entry =>
-        (entry.id || String(entry.dayNumber || 0)) !== (day.id || String(day.dayNumber || 0)) ? entry : { ...entry, matches: (entry.matches || []).filter(match => match.matchNumber !== matchNumber) }
-      ) });
-      persistRecords(next, record.id);
-      const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber);
-      setMatchDrafts(current => { const copy={...current}; delete copy[key]; return copy; });
-      window.dispatchEvent(new CustomEvent("squad-os:event-records-updated")); setMatchSaveMessage("Match result cleared.");
-    } catch { setMatchSaveMessage("Could not clear this match result."); }
-  }
   function beginEditRecord(record: TournamentEventRecord) {
     if (!canManageEvents) return;
     setEditingRecordId(record.id); setEditName(record.name);
