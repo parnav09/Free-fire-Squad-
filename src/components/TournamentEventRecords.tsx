@@ -141,13 +141,19 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   const [storageError, setStorageError] = useState("");
   const saveLockRef = useRef(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const recordsRootRef = useRef<HTMLElement | null>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const refreshRecords = () => setRecords(readEventRecords(activeStorageKey));
     window.addEventListener("storage", refreshRecords);
     window.addEventListener("squad-os:event-records-updated", refreshRecords);
-    return () => {
+    const scrollRecordsToTop = () => {
+    recordsRootRef.current?.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
+  return () => {
       window.removeEventListener("storage", refreshRecords);
       window.removeEventListener("squad-os:event-records-updated", refreshRecords);
     };
@@ -455,13 +461,8 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   }
 
   return (
-    <section className={`tournament-event-records${selectedRecord ? " is-record-detail" : ""}${selectedDay ? " is-day-detail" : ""}`} aria-labelledby="tournament-event-records-title">
+    <section ref={recordsRootRef} data-sync-status={syncStatus} className={`tournament-event-records${selectedRecord ? " is-record-detail" : ""}${selectedDay ? " is-day-detail" : ""}`} aria-labelledby="tournament-event-records-title">
 
-      <div className="tournament-event-sync-status" role="status" aria-live="polite">
-        <span className={`tournament-event-sync-dot is-${syncStatus}`} aria-hidden="true" />
-        <span>{syncStatus === "synced" ? "Synced to team" : syncStatus === "syncing" ? "Syncing…" : syncStatus === "offline" ? "Offline · saved on this device" : syncStatus === "conflict" ? "Sync conflict · local copy preserved" : syncStatus === "error" ? "Sync unavailable · local copy preserved" : "Saved on this device"}</span>
-        {(syncStatus === "conflict" || syncStatus === "error" || syncStatus === "offline") && teamId && <button type="button" onClick={() => setRecords(current => [...current])}>Retry sync</button>}
-      </div>
       {canManageEvents && teamId && legacyRecords.length > 0 && <div className="tournament-event-legacy-import">
         <span>{legacyRecords.length} previous local event{legacyRecords.length === 1 ? "" : "s"} found on this device. They are not assigned to a team yet.</span>
         <button type="button" onClick={importLegacyRecords}>Import to this team</button>
@@ -492,11 +493,11 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
       ) : selectedRecord ? (
         <section className={`tournament-event-workspace${selectedRecord.overallPlacement === 1 ? " is-overall-champion" : ""}`} aria-labelledby="tournament-event-workspace-title">
           <div className="tournament-event-workspace-top">
-            <button type="button" className={`tournament-event-back-button${selectedRecord.overallPlacement === 1 ? " is-champion" : ""}`} onClick={() => { setSelectedRecordId(null); setSelectedDayId(null); window.scrollTo({ top: 0, behavior: "instant" }); }}><span aria-hidden="true">←</span> All Records</button>
+            <button type="button" className={`tournament-event-back-button${selectedRecord.overallPlacement === 1 ? " is-champion" : ""}`} onClick={() => { setSelectedRecordId(null); setSelectedDayId(null); scrollRecordsToTop(); }}><span aria-hidden="true">←</span> All Records</button>
             <span className="tournament-event-workspace-kicker">CUSTOM EVENT WORKSPACE</span>
           </div>
           <header className="tournament-event-workspace-header">
-            <div>{selectedRecord.overallPlacement === 1 && <span className="tournament-event-workspace-champion-mark"><span aria-hidden="true">🏆</span> OVERALL CHAMPION</span>}<span className="tournament-event-workspace-label">TOURNAMENT OVERVIEW</span><h2 id="tournament-event-workspace-title">{selectedRecord.name}</h2><p>Review the schedule and match allocation for this event.</p></div>
+            <div>{selectedRecord.overallPlacement === 1 && <span className="tournament-event-workspace-champion-mark"><svg className="tournament-event-trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z"/><path d="M8 6H4v2a4 4 0 0 0 4 4M16 6h4v2a4 4 0 0 1-4 4M12 13v4m-4 3h8m-7-3h6"/></svg> OVERALL CHAMPION</span>}<span className="tournament-event-workspace-label">TOURNAMENT OVERVIEW</span><h2 id="tournament-event-workspace-title">{selectedRecord.name}</h2><p>Review the schedule and match allocation for this event.</p></div>
             <div className="tournament-event-workspace-stats"><div><strong>{getEventSummary(selectedRecord).dayCount}</strong><span>DAYS</span></div><div><strong>{getEventSummary(selectedRecord).matchCount}</strong><span>MATCHES</span></div></div>
           </header>
 
@@ -528,7 +529,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
               <div><span>PLACEMENT PTS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+getPlacementPoints(m.placement),0),0)}</strong></div>
               <div><span>TOTAL POINTS</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(d.matches||[]).reduce((n,m)=>n+getPlacementPoints(m.placement)+m.kills,0),0)}</strong></div>
             </div>
-            <section className="tournament-event-standing-panel" aria-label="Overall tournament standing">
+            <section className={`tournament-event-standing-panel${selectedRecord.overallPlacement === 1 ? " is-top1" : ""}`} aria-label="Overall tournament standing">
               <div><span>FINAL OVERALL STANDING</span><strong>{selectedRecord.overallPlacement ? "#"+selectedRecord.overallPlacement : "Not set"}</strong></div>
               <label>Overall position
                 <PlacementPicker value={selectedRecord.overallPlacement ?? null} disabled={!canEditResults} onChange={n=>saveEventStanding(selectedRecord,n)} onClear={()=>saveEventStanding(selectedRecord,null)}/>
@@ -544,25 +545,24 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
                 const kills=dayMatches.reduce((n,m)=>n+m.kills,0);
                 const points=dayMatches.reduce((n,m)=>n+getPlacementPoints(m.placement)+m.kills,0);
                 const dayKey=day.id || String(day.dayNumber || dayNumber);
-                return <button type="button" className="tournament-event-day-select" key={dayKey} onClick={()=>{setSelectedDayId(dayKey);setMatchSaveMessage("");}}>
+                return <button type="button" className="tournament-event-day-select" key={dayKey} onClick={()=>{setSelectedDayId(dayKey);setMatchSaveMessage("");scrollRecordsToTop();}}>
                   <span className="tournament-event-day-select-index">{String(dayNumber).padStart(2,"0")}</span>
                   <span className="tournament-event-day-select-copy"><strong>Day {dayNumber}</strong><small>{day.date?formatDate(day.date):"Date not configured"} · {completed}/{matchCount} matches</small><small>{kills} kills · {points} total points</small></span>
                   <span className="tournament-event-day-select-standing">{day.overallStanding ? "#"+day.overallStanding : "—"}<small>Standing</small></span>
-                  <span aria-hidden="true">›</span>
                 </button>;
               })}
             </div>
             {(!Array.isArray(selectedRecord.days)||selectedRecord.days.length===0)&&<div className="tournament-event-workspace-legacy" role="status">This is an older event record without day details. Its original record is preserved.</div>}
           </> : <>
             <div className="tournament-event-day-detail-top">
-              <button type="button" className="tournament-event-back-button" onClick={()=>{setSelectedDayId(null);setMatchSaveMessage("");}}>← Overall Tournament</button>
+              <button type="button" className="tournament-event-back-button" onClick={()=>{setSelectedDayId(null);setMatchSaveMessage("");scrollRecordsToTop();}}>← Overall Tournament</button>
               <span>DAY {String(selectedDay.dayNumber || 1).padStart(2,"0")} DETAILS</span>
             </div>
             <header className="tournament-event-day-detail-header">
               <div><span className="tournament-event-workspace-label">SELECTED TOURNAMENT DAY</span><h3>Day {selectedDay.dayNumber || 1}</h3><p>{selectedDay.date ? formatDate(selectedDay.date) : "Date not configured"}</p><small className="tournament-event-last-updated">Last updated · {formatUpdatedAt(selectedRecord.updatedAt)}</small></div>
               <div className="tournament-event-day-standing"><span>DAY STANDING</span><strong>{selectedDay.overallStanding ? "#"+selectedDay.overallStanding : "—"}</strong></div>
             </header>
-            <section className="tournament-event-standing-panel" aria-label="Day overall standing">
+            <section className={`tournament-event-standing-panel${selectedDay.overallStanding === 1 ? " is-top1" : ""}`} aria-label="Day overall standing">
               <div><span>DAY OVERALL POSITION</span><strong>{selectedDay.overallStanding ? "#"+selectedDay.overallStanding : "Not set"}</strong></div>
               <label>Day position
                 <PlacementPicker value={selectedDay.overallStanding ?? null} disabled={!canEditResults} onChange={n=>saveDayStanding(selectedRecord,selectedDay,n)} onClear={()=>saveDayStanding(selectedRecord,selectedDay,null)}/>
@@ -579,7 +579,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
             <div className="tournament-event-match-grid">
               {Array.from({length:Math.max(0,Number(selectedDay.matchCount)||0)},(_,i)=>{
                 const matchNo=i+1, saved=(selectedDay.matches || []).find(m=>m.matchNumber===matchNo), draft=readMatchDraft(selectedRecord,selectedDay,matchNo);
-                return <div className={`tournament-event-match-card${saved?.placement === 1 ? " is-champion" : ""}`} key={matchNo}>
+                return <div className={`tournament-event-match-card${draft.placement === "1" ? " is-champion" : ""}`} key={matchNo}>
                   <div className="tournament-event-match-card-head"><strong>MATCH {String(matchNo).padStart(2,"0")}</strong><span className={saved&&saved.placement!==null?"is-recorded":"is-pending"}>{saved&&saved.placement!==null?"RECORDED":"PENDING"}</span></div>
                   <div className="tournament-event-match-fields">
                     <label>Placement<PlacementPicker value={draft.placement === "" ? null : Number(draft.placement)} disabled={!canEditResults} onChange={n=>updateMatchDraft(selectedRecord,selectedDay,matchNo,"placement",String(n))} onClear={()=>updateMatchDraft(selectedRecord,selectedDay,matchNo,"placement","")}/></label>
@@ -597,11 +597,11 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
       ) : (
         <>
           <div className="tournament-event-record-list">
-            {visibleRecords.map((record,index)=>{const summary=getEventSummary(record);return <button type="button" className={`tournament-event-record-card${record.overallPlacement === 1 ? " is-overall-champion" : ""}`} key={record.id} onClick={()=>{setSelectedRecordId(record.id);setSelectedDayId(null);setExpanded(false);window.scrollTo({top:0,behavior:"instant"});}} aria-label={`Open ${record.name} tournament workspace${record.overallPlacement === 1 ? ", overall champion" : ""}`}>
+            {visibleRecords.map((record,index)=>{const summary=getEventSummary(record);return <button type="button" className={`tournament-event-record-card${record.overallPlacement === 1 ? " is-overall-champion" : ""}`} key={record.id} onClick={()=>{setSelectedRecordId(record.id);setSelectedDayId(null);setExpanded(false);scrollRecordsToTop();}} aria-label={`Open ${record.name} tournament workspace${record.overallPlacement === 1 ? ", overall champion" : ""}`}>
               {record.overallPlacement === 1 ? <>
                 <span className="tournament-event-record-champion-topline">
                   <span className="tournament-event-record-champion-date">{summary.dateLabel}</span>
-                  <span className="tournament-event-record-top-one"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v3h3v3a4 4 0 0 1-4 4h-1a5 5 0 0 1-3 2.8V19h4v2H8v-2h4v-3.2A5 5 0 0 1 9 13H8a4 4 0 0 1-4-4V6h3V3Zm-3 5v1a2 2 0 0 0 2 2h1.2A7 7 0 0 1 7 8V8H4Zm16 0h-3v1a7 7 0 0 1-.2 2H18a2 2 0 0 0 2-2V8Z"/></svg> TOP 1</span>
+                  <span className="tournament-event-record-top-one"><span className="tournament-event-record-trophy" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z"/><path d="M8 6H4v2a4 4 0 0 0 4 4M16 6h4v2a4 4 0 0 1-4 4M12 13v4m-4 3h8m-7-3h6"/></svg></span><span>TOP 1</span></span>
                 </span>
                 <span className="tournament-event-record-copy tournament-event-record-champion-copy">
                   <strong>{record.name}</strong>
@@ -616,7 +616,6 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
                 <span className="tournament-event-record-index">{String(index+1).padStart(2,"0")}</span>
                 <span className="tournament-event-record-copy"><strong>{record.name}</strong><span className="tournament-event-record-meta"><span>{summary.dateLabel}</span><span>{summary.dayCount} {summary.dayCount===1?"day":"days"}</span><span>{summary.matchCount} {summary.matchCount===1?"match":"matches"}</span></span></span>
               </>}
-              <span className="tournament-event-record-arrow" aria-hidden="true">↗</span>
             </button>;})}
           </div>
           {hasMore&&<div className="tournament-event-list-footer"><button type="button" className="tournament-event-more-button" onClick={()=>setExpanded(value=>!value)}>{expanded?"Show Less":`More · ${records.length-INITIAL_VISIBLE_RECORDS} more`}<span aria-hidden="true">{expanded?"↑":"↓"}</span></button></div>}

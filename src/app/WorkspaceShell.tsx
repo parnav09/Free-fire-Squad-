@@ -55,18 +55,8 @@ export default function WorkspaceShell({
       </aside>
 
       <section className="main-panel">
-        <header className="topbar">
+        <header className="topbar" data-sync-state={syncState} data-sync-label={syncLabel}>
           <div className="breadcrumb">WORKSPACE <span>/</span> {section.toUpperCase()}</div>
-          <div
-            className={"sync-indicator sync-" + syncState}
-            role="status"
-            aria-live="polite"
-            aria-label={"Team sync status: " + syncLabel}
-            title={"Team sync status: " + syncLabel}
-          >
-            <i aria-hidden="true" />
-            <span>{syncLabel}</span>
-          </div>
         </header>
         <div className="content">{children}</div>
       </section>

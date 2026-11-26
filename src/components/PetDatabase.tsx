@@ -224,7 +224,7 @@ export default function PetDatabase({ onBack }: Props) {
       </label>
       {showSuggestions && query.trim() && suggestions.length > 0 && <div className="character-search-suggestions" id="pet-search-suggestions" role="listbox" aria-label="Matching pets">
         {suggestions.map((result, index) => <button type="button" role="option" aria-selected={index === activeSuggestionIndex} className={index === activeSuggestionIndex ? "active" : ""} key={result.pet.id} onMouseDown={event => event.preventDefault()} onClick={() => chooseSuggestion(result.pet)}>
-          <span className="character-suggestion-name">{result.pet.name}</span><span className="character-suggestion-meta">{result.pet.status === "verified" ? "Official name" : "Unverified slot"}</span><span aria-hidden="true">↗</span>
+          <span className="character-suggestion-name">{result.pet.name}</span><span className="character-suggestion-meta">{result.pet.status === "verified" ? "Official name" : "Unverified slot"}</span>
         </button>)}
       </div>}
     </div>
@@ -234,8 +234,8 @@ export default function PetDatabase({ onBack }: Props) {
         <div className="character-result-art">
           <div className="character-result-monogram pet-result-monogram"><span>{pet.name.split(/[- .]/).map(part => part[0]).join("").slice(0, 2).toUpperCase()}</span><small>{petProfiles[pet.id] ? "PROFILE ADDED" : pet.id === "kitty" ? "PET PROFILE" : "OFFICIAL NAME"}</small></div>
         </div>
-        <div className="character-result-copy"><span className="character-result-status">{pet.status === "verified" ? "OFFICIAL NAME VERIFIED" : "NAME CONFIRMATION PENDING"}</span><h2>{pet.name}</h2><b>{petProfiles[pet.id] ? petProfiles[pet.id].skill : pet.id === "kitty" ? "Cosmetic-only · No skill" : "Pet profile"}</b><p>{petProfiles[pet.id] ? (isHindi ? (petHinglish[pet.id]?.summary || petProfiles[pet.id].summary) : petProfiles[pet.id].summary) : pet.id === "kitty" ? (isHindi ? "Sirf appearance ke liye; gameplay ability nahi." : "Appearance-focused pet with no gameplay ability.") : "Official name indexed. Detailed profile will be added in its assigned batch."}</p><span className="character-result-open">{isHindi ? "Full profile dekhein" : "Open full profile"} <span aria-hidden="true">↗</span></span></div>
-        <span className="character-result-chevron" aria-hidden="true">↗</span>
+        <div className="character-result-copy"><span className="character-result-status">{pet.status === "verified" ? "OFFICIAL NAME VERIFIED" : "NAME CONFIRMATION PENDING"}</span><h2>{pet.name}</h2><b>{petProfiles[pet.id] ? petProfiles[pet.id].skill : pet.id === "kitty" ? "Cosmetic-only · No skill" : "Pet profile"}</b><p>{petProfiles[pet.id] ? (isHindi ? (petHinglish[pet.id]?.summary || petProfiles[pet.id].summary) : petProfiles[pet.id].summary) : pet.id === "kitty" ? (isHindi ? "Sirf appearance ke liye; gameplay ability nahi." : "Appearance-focused pet with no gameplay ability.") : "Official name indexed. Detailed profile will be added in its assigned batch."}</p><span className="character-result-open">{isHindi ? "Full profile dekhein" : "Open full profile"} </span></div>
+        
       </button>)}
     </div> : <div className="character-empty-state"><b>{isHindi ? "Koi matching pet nahi mila" : "No matching pet"}</b><span>{isHindi ? "Dusri spelling ya chhota naam try karein." : "Try another spelling or a shorter name."}</span></div>}
     <div className="character-load-more-wrap">
