@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "./TournamentEventRecords.css";
 import { supabase } from "../lib/supabase/client";
 import { syncTournamentEventRecords } from "../lib/tournament-event-sync";
+import PlacementPicker from "./PlacementPicker";
 
 type EventMatchRecord = { id: string; matchNumber: number; placement: number | null; placementPoints: number; kills: number; };
 type EventDaySummary = {
@@ -65,6 +66,8 @@ function getEventSummary(record: TournamentEventRecord) {
       : `${formatDate(dates[0])} – ${formatDate(dates[dates.length - 1])}`;
   return { dayCount: days.length, matchCount, dateLabel };
 }
+
+function getPlacementPoints(placement: number | null): number { return placement === null ? 0 : ([12,9,8,7,6,5,4,3,2,1,0,0][Math.max(1,Math.min(12,placement))-1] ?? 0); }
 
 function normalizeEventName(value: string): string { return value.normalize("NFC").replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim(); }
 function isValidCalendarDate(value: string): boolean {
@@ -323,19 +326,21 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   function readMatchDraft(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
     const saved = (day.matches || []).find(item => item.matchNumber === matchNumber);
     const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber);
-    return matchDrafts[key] || { placement: saved?.placement == null ? "" : String(saved.placement), placementPoints: String(saved?.placementPoints ?? 0), kills: String(saved?.kills ?? 0) };
+    return matchDrafts[key] || { placement: saved?.placement == null ? "" : String(saved.placement), placementPoints: String(getPlacementPoints(saved?.placement ?? null)), kills: String(saved?.kills ?? 0) };
   }
-  function updateMatchDraft(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number, field: "placement" | "placementPoints" | "kills", value: string) {
+  function updateMatchDraft(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number, field: "placement" | "kills", value: string) {
     const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber);
-    setMatchDrafts(current => ({ ...current, [key]: { ...readMatchDraft(record, day, matchNumber), [field]: value } }));
+    const current = readMatchDraft(record, day, matchNumber);
+    const placement = field === "placement" ? (value === "" ? null : Number(value)) : (current.placement === "" ? null : Number(current.placement));
+    setMatchDrafts(previous => ({ ...previous, [key]: { ...current, [field]: value, placementPoints: String(getPlacementPoints(placement)) } }));
     setMatchSaveMessage("");
   }
   function saveMatchResult(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
     const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber), draft = matchDrafts[key] || readMatchDraft(record, day, matchNumber);
-    const placement = draft.placement === "" ? null : Number(draft.placement), placementPoints = Number(draft.placementPoints), kills = Number(draft.kills);
+    const placement = draft.placement === "" ? null : Number(draft.placement), placementPoints = getPlacementPoints(placement), kills = Number(draft.kills);
     if (placement !== null && (!Number.isSafeInteger(placement) || placement < 1 || placement > 12)) { setMatchSaveMessage("Placement must be between 1 and 12."); return; }
-    if (!Number.isSafeInteger(placementPoints) || placementPoints < 0 || !Number.isSafeInteger(kills) || kills < 0) { setMatchSaveMessage("Placement points and kills must be non-negative whole numbers."); return; }
-    if (placement === null && (placementPoints > 0 || kills > 0)) { setMatchSaveMessage("Choose a placement before saving points or kills."); return; }
+    if (!Number.isSafeInteger(kills) || kills < 0) { setMatchSaveMessage("Kills must be a non-negative whole number."); return; }
+    if (placement === null && kills > 0) { setMatchSaveMessage("Choose a placement before saving kills."); return; }
     try {
       const next = records.map(item => item.id !== record.id ? item : { ...item, days: (item.days || []).map(entry => {
         if ((entry.id || String(entry.dayNumber || 0)) !== (day.id || String(day.dayNumber || 0))) return entry;
@@ -487,11 +492,11 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
                       return <div className="tournament-event-match-card" key={matchNo}>
                         <div className="tournament-event-match-card-head"><strong>MATCH {String(matchNo).padStart(2,"0")}</strong><span className={saved&&saved.placement!==null?"is-recorded":"is-pending"}>{saved&&saved.placement!==null?"RECORDED":"PENDING"}</span></div>
                         <div className="tournament-event-match-fields">
-                          <label>Placement<select value={draft.placement} onChange={e=>updateMatchDraft(selectedRecord,day,matchNo,"placement",e.target.value)}><option value="">Not set</option>{Array.from({length:12},(_,p)=><option key={p+1} value={p+1}>{p+1}</option>)}</select></label>
-                          <label>Placement points<input type="number" min="0" step="1" inputMode="numeric" value={draft.placementPoints} onChange={e=>updateMatchDraft(selectedRecord,day,matchNo,"placementPoints",e.target.value)}/></label>
-                          <label>Kills<input type="number" min="0" step="1" inputMode="numeric" value={draft.kills} onChange={e=>updateMatchDraft(selectedRecord,day,matchNo,"kills",e.target.value)}/></label>
+                          <label>Placement<PlacementPicker value={draft.placement === "" ? null : Number(draft.placement)} disabled={false} onChange={n=>updateMatchDraft(selectedRecord,day,matchNo,"placement",String(n))}/></label>
+                          <label>Placement points<strong className="tournament-event-derived-points">{getPlacementPoints(draft.placement === "" ? null : Number(draft.placement))}</strong></label>
+                          <label>Kills<input type="text" inputMode="numeric" pattern="[0-9]*" value={draft.kills} onChange={e=>updateMatchDraft(selectedRecord,day,matchNo,"kills",e.target.value.replace(/[^0-9]/g,""))}/></label>
                         </div>
-                        <div className="tournament-event-match-total"><span>Match points</span><strong>{(Number(draft.placementPoints)||0)+(Number(draft.kills)||0)}</strong></div>
+                        <div className="tournament-event-match-total"><span>Match points</span><strong>{getPlacementPoints(draft.placement === "" ? null : Number(draft.placement))+(Number(draft.kills)||0)}</strong></div>
                         <div className="tournament-event-match-actions"><button type="button" onClick={()=>saveMatchResult(selectedRecord,day,matchNo)}>Save Result</button>{saved&&<button type="button" className="is-clear" onClick={()=>clearMatchResult(selectedRecord,day,matchNo)}>Clear</button>}</div>
                       </div>;
                     })}
