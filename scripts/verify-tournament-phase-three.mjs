@@ -25,10 +25,10 @@ test("Day stepper supports bounded plus/minus controls and optional subtle hapti
 });
 
 test("Phase 3 validates the tournament name and initializes the selected number of day drafts", () => {
-  assert.match(component, /const trimmedName = eventName\\.trim\\(\\)/);
-  assert.match(component, /if \\(!trimmedName\\)/);
-  assert.match(component, /Array\\.from\\(\\{ length: dayCount \\}/);
-  assert.match(component, /setSetupStep\\("days"\\)/);
+  assert.ok(component.includes("const trimmedName = eventName.trim()"));
+  assert.ok(component.includes("if (!trimmedName)"));
+  assert.ok(component.includes("Array.from({ length: dayCount }"));
+  assert.ok(component.includes('setSetupStep("days")'));
 });
 
 test("Modal supports cancel, Escape, focus, error reporting and reduced motion", () => {
