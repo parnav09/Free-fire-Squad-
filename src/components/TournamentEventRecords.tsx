@@ -492,7 +492,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
                       return <div className="tournament-event-match-card" key={matchNo}>
                         <div className="tournament-event-match-card-head"><strong>MATCH {String(matchNo).padStart(2,"0")}</strong><span className={saved&&saved.placement!==null?"is-recorded":"is-pending"}>{saved&&saved.placement!==null?"RECORDED":"PENDING"}</span></div>
                         <div className="tournament-event-match-fields">
-                          <label>Placement<PlacementPicker value={draft.placement === "" ? null : Number(draft.placement)} disabled={false} onChange={n=>updateMatchDraft(selectedRecord,day,matchNo,"placement",String(n))}/></label>
+                          <label>Placement<PlacementPicker value={draft.placement === "" ? null : Number(draft.placement)} disabled={false} onChange={n=>updateMatchDraft(selectedRecord,day,matchNo,"placement",String(n))} onClear={()=>updateMatchDraft(selectedRecord,day,matchNo,"placement","")}/></label>
                           <label>Placement points<strong className="tournament-event-derived-points">{getPlacementPoints(draft.placement === "" ? null : Number(draft.placement))}</strong></label>
                           <label>Kills<input type="text" inputMode="numeric" pattern="[0-9]*" value={draft.kills} onChange={e=>updateMatchDraft(selectedRecord,day,matchNo,"kills",e.target.value.replace(/[^0-9]/g,""))}/></label>
                         </div>
