@@ -6,10 +6,11 @@ export type SyncedEventRecord = {
   createdAt?: string;
   updatedAt?: string;
   syncRevision?: number;
-  days?: Array<{ id?: string; dayNumber?: number; date?: string; matchCount?: number; matches?: Array<{ id: string; matchNumber: number; placement: number | null; placementPoints: number; kills: number }> }>;
+  days?: Array<{ id?: string; dayNumber?: number; date?: string; matchCount?: number; overallStanding?: number | null; matches?: Array<{ id: string; matchNumber: number; placement: number | null; placementPoints: number; kills: number }> }>;
+  overallPlacement?: number | null;
 };
 type CloudRow = {
-  id: string; team_id: string; name: string; event_data: { days?: SyncedEventRecord["days"] };
+  id: string; team_id: string; name: string; event_data: { days?: SyncedEventRecord["days"]; overallPlacement?: number | null };
   revision: number; created_at: string; updated_at: string; deleted_at: string | null;
 };
 export type EventSyncResult = { records: SyncedEventRecord[]; deletedIds: string[]; conflict: boolean };
@@ -48,7 +49,7 @@ export async function syncTournamentEventRecords(
     if (!remote) {
       const { error: insertError } = await client.from("tournament_event_records").insert({
         id: record.id, team_id: teamId, name: record.name,
-        event_data: { days: record.days || [] }, revision: 1,
+        event_data: { days: record.days || [], overallPlacement: record.overallPlacement ?? null }, revision: 1,
         created_by: userId, updated_by: userId
       });
       if (insertError && insertError.code !== "23505") throw insertError;
@@ -59,7 +60,7 @@ export async function syncTournamentEventRecords(
       // A cloud tombstone wins over stale local copies; never resurrect a deleted event.
       continue;
     }
-    const localData = { days: record.days || [] };
+    const localData = { days: record.days || [], overallPlacement: record.overallPlacement ?? null };
     const localDiffers = record.name !== remote.name ||
       JSON.stringify(localData) !== JSON.stringify(remote.event_data || { days: [] });
     const hasKnownRevision = Number.isSafeInteger(record.syncRevision);
@@ -89,7 +90,7 @@ export async function syncTournamentEventRecords(
   const finalRows = (latest || []) as CloudRow[];
   const records = finalRows.filter(row => !row.deleted_at).map(row => ({
     id: row.id, name: row.name, createdAt: row.created_at, updatedAt: row.updated_at,
-    syncRevision: row.revision, days: Array.isArray(row.event_data?.days) ? row.event_data.days : []
+    syncRevision: row.revision, days: Array.isArray(row.event_data?.days) ? row.event_data.days : [], overallPlacement: row.event_data?.overallPlacement ?? null
   })).sort((a,b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
   const deletedIds = finalRows.filter(row => !!row.deleted_at).map(row => row.id);
   return { records, deletedIds, conflict };

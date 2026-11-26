@@ -1132,7 +1132,7 @@ export default function App() {
             </div>}
           </section>}
             <p className="footer-note">Prototype scoring: placement 1–10 = 12,9,8,7,6,5,4,3,2,1 points; 11/12 = 0. Add kills. Not an official tournament scoring preset.</p>
-            </> : <TournamentEventRecords teamId={team?.id ?? null} userId={sessionUserId} signedIn={signedIn} />}
+            </> : <TournamentEventRecords teamId={team?.id ?? null} userId={sessionUserId} signedIn={signedIn} membershipRole={team?.membership_role ?? null} iglUserId={iglUserId} />}
           </>}</>}
 {section==="Training Legacy" && <>
             <div className="section-heading"><div><div className="eyebrow">PRACTICE BLOCK</div><h2>Team drill checklist</h2></div></div>

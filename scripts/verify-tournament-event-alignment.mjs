@@ -29,12 +29,12 @@ test("Kills input follows the weekly numeric-entry behavior", () => {
 });
 test("Unset placement can be selected and cleared safely", () => {
   assert.ok(picker.includes('onClear?.()'));
-  assert.ok(event.includes('onClear={()=>updateMatchDraft(selectedRecord,day,matchNo,"placement","")}'));
+  assert.ok(event.includes('onClear={()=>updateMatchDraft(selectedRecord,selectedDay,matchNo,"placement","")}'));
   assert.ok(event.includes('placement === null && kills > 0'));
 });
 test("Match total and day summary use derived placement points plus kills", () => {
   assert.ok(event.includes("getPlacementPoints(draft.placement === \"\" ? null : Number(draft.placement))+(Number(draft.kills)||0)"));
-  assert.ok(event.includes("m.placementPoints+m.kills"));
+  assert.ok(event.includes("getPlacementPoints(m.placement)+m.kills"));
 });
 test("Event match alignment test is part of the production build", () => {
   assert.equal(pkg.scripts["test:tournament-event-alignment"], "node --test scripts/verify-tournament-event-alignment.mjs");
