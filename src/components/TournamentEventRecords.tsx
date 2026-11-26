@@ -234,7 +234,6 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
 
   function importLegacyRecords() {
     if (!teamId || !legacyRecords.length) return;
-    const ids = new Set(records.map(record => record.id));
     const imported = legacyRecords.map(record => ({
       ...record,
       id: createId(),
