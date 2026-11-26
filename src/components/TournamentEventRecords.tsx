@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "./TournamentEventRecords.css";
 
 type EventMatchRecord = { id: string; matchNumber: number; placement: number | null; placementPoints: number; kills: number; };
+type EventMatchRecord = { id: string; matchNumber: number; placement: number | null; placementPoints: number; kills: number; };
 type EventDaySummary = {
   id?: string;
   dayNumber?: number;
@@ -90,6 +91,13 @@ export default function TournamentEventRecords() {
   const [records, setRecords] = useState<TournamentEventRecord[]>(readEventRecords);
   const [expanded, setExpanded] = useState(false);
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
+  const [matchDrafts, setMatchDrafts] = useState<Record<string, { placement: string; placementPoints: string; kills: string }>>({});
+  const [matchSaveMessage, setMatchSaveMessage] = useState("");
+  const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editDays, setEditDays] = useState<EventDayDraft[]>([]);
+  const [editError, setEditError] = useState("");
+  const [managementMessage, setManagementMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [eventName, setEventName] = useState("");
   const [dayCount, setDayCount] = useState(1);
@@ -197,11 +205,84 @@ export default function TournamentEventRecords() {
   const raw=window.localStorage.getItem(STORAGE_KEY);let existing:TournamentEventRecord[]=[];
   if(raw){const parsed:unknown=JSON.parse(raw);if(!Array.isArray(parsed))throw new Error("Invalid records");existing=parsed.filter((x):x is TournamentEventRecord=>x!==null&&typeof x==="object"&&typeof x.id==="string"&&typeof x.name==="string"&&x.name.trim().length>0);if(existing.length!==parsed.length)throw new Error("Unreadable records");}
   const used=new Set(existing.map(x=>x.id));let id=createId();while(used.has(id))id=createId();
-  const record:TournamentEventRecord={id,name:normalizedName,createdAt:new Date().toISOString(),days:[...dayDrafts].sort((x,y)=>x.dayNumber-y.dayNumber).map(d=>({id:d.id,dayNumber:d.dayNumber,date:d.date,matchCount:d.matchCount}))};
+  const record:TournamentEventRecord={id,name:normalizedName,createdAt:new Date().toISOString(),days:[...dayDrafts].sort((x,y)=>x.dayNumber-y.dayNumber).map(d=>({id:d.id,dayNumber:d.dayNumber,date:d.date,matchCount:d.matchCount,matches:[]}))};
   const next=[record,...existing];window.localStorage.setItem(STORAGE_KEY,JSON.stringify(next));setRecords(next);setExpanded(false);window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));setModalOpen(false);setEventName("");setDayCount(1);setDayDrafts([]);setDayErrors({});setSetupStep("details");setStorageError("");
  }catch{setStorageError("Could not safely save this event. Existing records were left unchanged; check browser storage and try again.");}finally{saveLockRef.current=false;}
  }
  function returnToEventDetails(){setSetupStep("details");setDayErrors({});setStorageError("");}
+
+
+  function matchDraftKey(recordId: string, dayId: string, matchNumber: number) { return recordId + ":" + dayId + ":" + matchNumber; }
+  function readMatchDraft(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
+    const saved = (day.matches || []).find(item => item.matchNumber === matchNumber);
+    const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber);
+    return matchDrafts[key] || { placement: saved?.placement == null ? "" : String(saved.placement), placementPoints: String(saved?.placementPoints ?? 0), kills: String(saved?.kills ?? 0) };
+  }
+  function updateMatchDraft(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number, field: "placement" | "placementPoints" | "kills", value: string) {
+    const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber);
+    setMatchDrafts(current => ({ ...current, [key]: { ...readMatchDraft(record, day, matchNumber), [field]: value } }));
+    setMatchSaveMessage("");
+  }
+  function saveMatchResult(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
+    const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber), draft = matchDrafts[key] || readMatchDraft(record, day, matchNumber);
+    const placement = draft.placement === "" ? null : Number(draft.placement), placementPoints = Number(draft.placementPoints), kills = Number(draft.kills);
+    if (placement !== null && (!Number.isSafeInteger(placement) || placement < 1 || placement > 12)) { setMatchSaveMessage("Placement must be between 1 and 12."); return; }
+    if (!Number.isSafeInteger(placementPoints) || placementPoints < 0 || !Number.isSafeInteger(kills) || kills < 0) { setMatchSaveMessage("Placement points and kills must be non-negative whole numbers."); return; }
+    if (placement === null && (placementPoints > 0 || kills > 0)) { setMatchSaveMessage("Choose a placement before saving points or kills."); return; }
+    try {
+      const next = records.map(item => item.id !== record.id ? item : { ...item, days: (item.days || []).map(entry => {
+        if ((entry.id || String(entry.dayNumber || 0)) !== (day.id || String(day.dayNumber || 0))) return entry;
+        const existing = entry.matches || [], saved: EventMatchRecord = { id: existing.find(m => m.matchNumber === matchNumber)?.id || createId(), matchNumber, placement, placementPoints, kills };
+        return { ...entry, matches: [...existing.filter(m => m.matchNumber !== matchNumber), saved].sort((a,b)=>a.matchNumber-b.matchNumber) };
+      }) });
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); setRecords(next); window.dispatchEvent(new CustomEvent("squad-os:event-records-updated")); setMatchSaveMessage("Match result saved.");
+    } catch { setMatchSaveMessage("Could not save this match result."); }
+  }
+  function clearMatchResult(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
+    try {
+      const next = records.map(item => item.id !== record.id ? item : { ...item, days: (item.days || []).map(entry =>
+        (entry.id || String(entry.dayNumber || 0)) !== (day.id || String(day.dayNumber || 0)) ? entry : { ...entry, matches: (entry.matches || []).filter(match => match.matchNumber !== matchNumber) }
+      ) });
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); setRecords(next);
+      const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber);
+      setMatchDrafts(current => { const copy={...current}; delete copy[key]; return copy; });
+      window.dispatchEvent(new CustomEvent("squad-os:event-records-updated")); setMatchSaveMessage("Match result cleared.");
+    } catch { setMatchSaveMessage("Could not clear this match result."); }
+  }
+  function beginEditRecord(record: TournamentEventRecord) {
+    setEditingRecordId(record.id); setEditName(record.name);
+    setEditDays((record.days || []).map((day,index)=>({id:day.id||createId(),dayNumber:day.dayNumber||index+1,date:day.date||"",matchCount:day.matchCount||1})));
+    setEditError(""); setManagementMessage("");
+  }
+  function cancelEditRecord() { setEditingRecordId(null); setEditError(""); }
+  function updateEditDay(dayId: string, field: "date" | "matchCount", value: string) {
+    setEditDays(current=>current.map(day=>day.id===dayId?{...day,[field]:field==="matchCount"?(value===""?0:Number(value)):value}:day));
+  }
+  function saveEditedRecord(record: TournamentEventRecord) {
+    const name=normalizeEventName(editName);
+    if(!name||name.length>MAX_EVENT_NAME_LENGTH){setEditError("Enter a valid tournament name (maximum 80 characters).");return;}
+    if(!editDays.length||editDays.length>MAX_EVENT_DAYS){setEditError("The event must contain at least one valid day.");return;}
+    const dates=new Set<string>();let total=0;
+    for(const day of editDays){
+      if(!isValidCalendarDate(day.date)||dates.has(day.date)){setEditError("Every day needs a valid, unique date.");return;} dates.add(day.date);
+      if(!Number.isSafeInteger(day.matchCount)||day.matchCount<1){setEditError("Each day needs at least one whole-number match.");return;}
+      total+=day.matchCount;if(!Number.isSafeInteger(total)){setEditError("Combined match count is too large.");return;}
+    }
+    const removal=(record.days||[]).some((old,index)=>old.matches?.some(match=>match.matchNumber>(editDays.find(day=>day.id===old.id)?.matchCount??editDays[index]?.matchCount??0)));
+    if(removal&&!window.confirm("Reducing match counts will remove saved results for matches beyond the new limit. Continue?"))return;
+    try{
+      const next=records.map(item=>item.id!==record.id?item:{...item,name,days:editDays.map(draft=>{
+        const old=(item.days||[]).find(day=>day.id===draft.id);
+        return {...draft,matches:(old?.matches||[]).filter(match=>match.matchNumber<=draft.matchCount)};
+      })});
+      window.localStorage.setItem(STORAGE_KEY,JSON.stringify(next));setRecords(next);setEditingRecordId(null);setEditError("");setManagementMessage("Tournament details updated.");window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));
+    }catch{setEditError("Could not save changes. Existing tournament data was not updated.");}
+  }
+  function deleteEventRecord(record: TournamentEventRecord) {
+    if(!window.confirm("Delete "+record.name+" and all its match results? This cannot be undone."))return;
+    try{const next=records.filter(item=>item.id!==record.id);window.localStorage.setItem(STORAGE_KEY,JSON.stringify(next));setRecords(next);setSelectedRecordId(null);setEditingRecordId(null);setManagementMessage("Tournament record deleted.");window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));}
+    catch{setManagementMessage("Could not delete this tournament record.");}
+  }
 
   return (
     <section className="tournament-event-records" aria-labelledby="tournament-event-records-title">
@@ -236,6 +317,24 @@ export default function TournamentEventRecords() {
             <div><span className="tournament-event-workspace-label">TOURNAMENT OVERVIEW</span><h2 id="tournament-event-workspace-title">{selectedRecord.name}</h2><p>Review the schedule and match allocation for this event.</p></div>
             <div className="tournament-event-workspace-stats"><div><strong>{getEventSummary(selectedRecord).dayCount}</strong><span>DAYS</span></div><div><strong>{getEventSummary(selectedRecord).matchCount}</strong><span>MATCHES</span></div></div>
           </header>
+
+
+          <div className="tournament-event-management-actions">
+            <button type="button" onClick={() => beginEditRecord(selectedRecord)}>Edit Tournament</button>
+            <button type="button" className="is-danger" onClick={() => deleteEventRecord(selectedRecord)}>Delete Tournament</button>
+          </div>
+          {managementMessage && <p className="tournament-event-management-message" role="status">{managementMessage}</p>}
+          {editingRecordId === selectedRecord.id && <section className="tournament-event-edit-panel" aria-label="Edit tournament details">
+            <h3>Edit Tournament</h3>
+            <label>Tournament name<input value={editName} maxLength={MAX_EVENT_NAME_LENGTH} onChange={e=>setEditName(e.target.value)}/></label>
+            {editDays.map(day=><div className="tournament-event-edit-day" key={day.id}>
+              <strong>Day {day.dayNumber}</strong>
+              <label>Date<input type="date" value={day.date} onChange={e=>updateEditDay(day.id,"date",e.target.value)}/></label>
+              <label>Matches<input type="number" min="1" step="1" value={day.matchCount||""} onChange={e=>updateEditDay(day.id,"matchCount",e.target.value)}/></label>
+            </div>)}
+            {editError && <p role="alert">{editError}</p>}
+            <div className="tournament-event-edit-actions"><button type="button" onClick={()=>saveEditedRecord(selectedRecord)}>Save Changes</button><button type="button" className="is-cancel" onClick={cancelEditRecord}>Cancel</button></div>
+          </section>}
 
           <div className="tournament-event-workspace-section-head"><h3>Match Records & Scoreboard</h3><span>{(selectedRecord.days || []).reduce((sum, d) => sum + (Array.isArray(d.matches) ? d.matches.filter(m => m.placement !== null).length : 0), 0)} RESULTS SAVED</span></div>
           <div className="tournament-event-scoreboard">
