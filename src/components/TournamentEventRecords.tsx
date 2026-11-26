@@ -480,7 +480,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
           <p>Your custom tournament records will appear here once you create one.</p>
         </div>
       ) : selectedRecord ? (
-        <section className="tournament-event-workspace" aria-labelledby="tournament-event-workspace-title">
+        <section className={`tournament-event-workspace${selectedRecord.overallPlacement === 1 ? " is-overall-champion" : ""}`} aria-labelledby="tournament-event-workspace-title">
           <div className="tournament-event-workspace-top">
             <button type="button" className="tournament-event-back-button" onClick={() => { setSelectedRecordId(null); setSelectedDayId(null); }}><span aria-hidden="true">←</span> All Records</button>
             <span className="tournament-event-workspace-kicker">CUSTOM EVENT WORKSPACE</span>
