@@ -29,8 +29,8 @@ test("Date validation permits non-consecutive dates but rejects missing, invalid
 });
 test("Saving persists each configured date and match count in the Event record schema", () => {
   assert.ok(component.includes("handleSaveConfiguredEvent"));
-  assert.ok(component.includes("date: day.date"));
-  assert.ok(component.includes("matchCount: day.matchCount"));
+  assert.ok(component.includes("date:d.date"));
+  assert.ok(component.includes("matchCount:d.matchCount"));
   assert.ok(component.includes("window.localStorage.setItem(activeStorageKey"));
   assert.ok(component.includes("squad-os:event-records-updated"));
 });
