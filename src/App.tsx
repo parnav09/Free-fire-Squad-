@@ -265,25 +265,29 @@ export default function App() {
     }
     let active = true;
     let inFlight = false;
+    let hasConnectedOnce = false;
     let timer: number | undefined;
     const checkServer = async () => {
       if (!active || inFlight) return;
       if (typeof navigator !== "undefined" && !navigator.onLine) {
+        hasConnectedOnce = false;
         setServerStatus("offline");
         timer = window.setTimeout(checkServer, 15000);
         return;
       }
       inFlight = true;
-      setServerStatus("checking");
+      if (!hasConnectedOnce) setServerStatus("checking");
       try {
         // A read-only REST request verifies the Supabase endpoint itself, independently
         // of auth state, team membership, or whether background data sync is pending.
         const { error } = await supabase.from("teams").select("id").limit(1);
         if (active) {
           const networkFailure = !!error && /failed to fetch|network error|network request failed|load failed|timeout|fetch failed/i.test(error.message || "");
+          hasConnectedOnce = !networkFailure;
           setServerStatus(networkFailure ? "offline" : "connected");
         }
       } catch {
+        hasConnectedOnce = false;
         if (active) setServerStatus("offline");
       } finally {
         inFlight = false;
@@ -291,6 +295,8 @@ export default function App() {
       }
     };
     const onOnline = () => {
+      hasConnectedOnce = false;
+      setServerStatus("checking");
       if (timer !== undefined) window.clearTimeout(timer);
       void checkServer();
     };
@@ -320,7 +326,7 @@ export default function App() {
         }
       })
       .catch(() => {
-        if (active) setConnection("Offline");
+        if (active) { setConnection("Offline"); setServerStatus("offline"); }
       });
     return () => { active = false; };
   }, []);
