@@ -103,7 +103,7 @@ export default function App() {
   useEffect(() => { if (!notice) return; const timer = window.setTimeout(() => setNotice(""), 7000); return () => window.clearTimeout(timer); }, [notice]);
   const [sharedMatches, setSharedMatches] = useState<Array<{match_day:number;match_number:number;placement:number|null;kills:number;points:number|null;status:string}>>([]);
   const [matchesHydratedKey, setMatchesHydratedKey] = useState("");
-  const [connection, setConnection] = useState("Checking…");
+  const [, setConnection] = useState("Checking…");
   const [serverStatus, setServerStatus] = useState<"checking" | "connected" | "offline">("checking");
   const [isOnline, setIsOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
   const [sessionUsername, setSessionUsername] = useState("");
