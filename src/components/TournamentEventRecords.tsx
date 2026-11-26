@@ -96,6 +96,7 @@ export default function TournamentEventRecords() {
   const [dayErrors, setDayErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
   const [storageError, setStorageError] = useState("");
+  const saveLockRef = useRef(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
@@ -160,7 +161,9 @@ export default function TournamentEventRecords() {
       setFormError(`Tournament name must be ${MAX_EVENT_NAME_LENGTH} characters or fewer.`);
       return;
     }
-    if (!Number.isSafeInteger(dayCount) || dayCount < MIN_EVENT_DAYS || dayCount > MAX_EVENT_DAYS) { setFormError("Choose a valid number of tournament days."); return; }\n    setEventName(trimmedName);\n    setDayDrafts(Array.from({ length: dayCount }, (_, index) => ({
+    if (!Number.isSafeInteger(dayCount) || dayCount < MIN_EVENT_DAYS || dayCount > MAX_EVENT_DAYS) { setFormError("Choose a valid number of tournament days."); return; }
+    setEventName(trimmedName);
+    setDayDrafts(Array.from({ length: dayCount }, (_, index) => ({
       id: createId(), dayNumber: index + 1, date: "", matchCount: 1
     })));
     setDayErrors({});
