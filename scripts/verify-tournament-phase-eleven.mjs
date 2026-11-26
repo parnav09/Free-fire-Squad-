@@ -53,7 +53,7 @@ test("Editing and deletion preserve event-level data safety", () => {
 });
 test("Team-scoped cloud sync retains revision conflict and deletion safeguards", () => {
   assert.ok(component.includes("${STORAGE_KEY}:${teamId}"));
-  assert.ok(sync.includes(".eq(\"revision\", remote.revision)"));
+  assert.ok(sync.includes('.eq("revision", remote.revision)'));
   assert.ok(sync.includes("record.syncRevision !== remote.revision"));
   assert.ok(sync.includes("if (remote.deleted_at)"));
   assert.ok(component.includes("pendingDeletedIdsRef"));
@@ -64,8 +64,10 @@ test("Cloud persistence remains protected by team membership RLS and indexed for
   assert.ok(indexMigration.includes("tournament_event_records_created_by_idx"));
   assert.ok(indexMigration.includes("tournament_event_records_updated_by_idx"));
 });
-test("Offline fallback and explicit legacy import remain available", () => {
-  assert.ok(component.includes("Offline · saved on this device"));
+test("Offline fallback and explicit legacy import remain available without sync diagnostics", () => {
+  assert.ok(component.includes("readEventRecords(activeStorageKey)"));
+  assert.ok(component.includes('setSyncStatus(typeof navigator !== "undefined" && navigator.onLine ? "error" : "offline")'));
+  assert.doesNotMatch(component,/Offline · saved on this device|Synced to team|Syncing…|Sync conflict|Sync unavailable/);
   assert.ok(component.includes("Import to this team"));
   assert.ok(component.includes("legacyImportPendingRef"));
 });
