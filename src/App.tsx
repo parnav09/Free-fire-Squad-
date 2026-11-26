@@ -104,6 +104,7 @@ export default function App() {
   const [sharedMatches, setSharedMatches] = useState<Array<{match_day:number;match_number:number;placement:number|null;kills:number;points:number|null;status:string}>>([]);
   const [matchesHydratedKey, setMatchesHydratedKey] = useState("");
   const [connection, setConnection] = useState("Checking…");
+  const [serverStatus, setServerStatus] = useState<"checking" | "connected" | "offline">("checking");
   const [isOnline, setIsOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
   const [sessionUsername, setSessionUsername] = useState("");
   const [sessionPassword, setSessionPassword] = useState("");
@@ -256,6 +257,58 @@ export default function App() {
     window.addEventListener("offline",onOffline);
     return()=>{window.removeEventListener("online",onOnline);window.removeEventListener("offline",onOffline);};
   }, []);
+
+  useEffect(() => {
+    if (!supabase) {
+      if (supabaseReady) setServerStatus("offline");
+      return;
+    }
+    let active = true;
+    let inFlight = false;
+    let timer: number | undefined;
+    const checkServer = async () => {
+      if (!active || inFlight) return;
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        setServerStatus("offline");
+        timer = window.setTimeout(checkServer, 15000);
+        return;
+      }
+      inFlight = true;
+      setServerStatus("checking");
+      try {
+        // A read-only REST request verifies the Supabase endpoint itself, independently
+        // of auth state, team membership, or whether background data sync is pending.
+        const { error } = await supabase.from("teams").select("id").limit(1);
+        if (active) {
+          const networkFailure = !!error && /failed to fetch|network error|network request failed|load failed|timeout|fetch failed/i.test(error.message || "");
+          setServerStatus(networkFailure ? "offline" : "connected");
+        }
+      } catch {
+        if (active) setServerStatus("offline");
+      } finally {
+        inFlight = false;
+        if (active) timer = window.setTimeout(checkServer, 15000);
+      }
+    };
+    const onOnline = () => {
+      if (timer !== undefined) window.clearTimeout(timer);
+      void checkServer();
+    };
+    const onOffline = () => {
+      setServerStatus("offline");
+      if (timer !== undefined) window.clearTimeout(timer);
+      timer = window.setTimeout(checkServer, 15000);
+    };
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    void checkServer();
+    return () => {
+      active = false;
+      if (timer !== undefined) window.clearTimeout(timer);
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, [supabase, supabaseReady]);
 
   useEffect(() => {
     let active = true;
@@ -956,8 +1009,8 @@ export default function App() {
   };
 
   const noticeTone = /fail|error|incorrect|invalid|unable|could not|not available|denied|expired/i.test(notice) ? "error" : /saved|success|assigned|approved|created|updated|sent|copied|completed|added|switched/i.test(notice) ? "success" : "info";
-  const syncState = !isOnline ? "offline" : !signedIn || !team ? "error" : /retry|needs review|unavailable|failed|not configured|error|pending/i.test(connection) ? "error" : /checking|syncing/i.test(connection) ? "syncing" : "synced";
-  const syncLabel = syncState === "synced" ? "Synced" : syncState === "syncing" ? "Syncing" : syncState === "offline" ? "Offline" : "Not synced";
+  const syncState = !isOnline || serverStatus === "offline" ? "offline" : serverStatus === "connected" ? "synced" : "syncing";
+  const syncLabel = syncState === "synced" ? "Connected" : syncState === "syncing" ? "Connecting…" : "Disconnected";
   const nav: Section[] = ["Players", "Tournament", "StratForge", "Assignments", "Evolution", "Sessions", "Evaluation", "Weekly Review", "Player Trends", "Analytics", "Profile", "Settings", "Training Legacy"];
   const mainNav: Section[] = ["Players", "Tournament", "StratForge", "Assignments"];
   const mobileNavLabel: Record<string,string> = {Players:"Players",Tournament:"Matches",StratForge:"Forge",Assignments:"Tasks",Sessions:"Sessions",Evaluation:"Eval", "Weekly Review":"Review","Player Trends":"Trends",Analytics:"Stats",Profile:"Profile",Settings:"Settings","Training Legacy":"Legacy"};
