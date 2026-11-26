@@ -446,7 +446,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   }
 
   return (
-    <section className={`tournament-event-records${selectedDay ? " is-day-detail" : ""}`} aria-labelledby="tournament-event-records-title">
+    <section className={`tournament-event-records${selectedRecord ? " is-record-detail" : ""}${selectedDay ? " is-day-detail" : ""}`} aria-labelledby="tournament-event-records-title">
 
       <div className="tournament-event-sync-status" role="status" aria-live="polite">
         <span className={`tournament-event-sync-dot is-${syncStatus}`} aria-hidden="true" />
@@ -458,19 +458,20 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
         <button type="button" onClick={importLegacyRecords}>Import to this team</button>
       </div>}
 
-      <div className="tournament-event-records-head">
-        <div>
-          <div className="eyebrow">EVENT MODE · CUSTOM TOURNAMENTS</div>
-          <h2 id="tournament-event-records-title">Tournament Records</h2>
-          <p>Keep each custom tournament separate from your weekly cycle.</p>
+      {!selectedRecord && <>
+        <div className="tournament-event-records-head">
+          <div>
+            <div className="eyebrow">EVENT MODE · CUSTOM TOURNAMENTS</div>
+            <h2 id="tournament-event-records-title">Tournament Records</h2>
+            <p>Keep each custom tournament separate from your weekly cycle.</p>
+          </div>
         </div>
-        <div className="tournament-event-records-actions">
-          <span className="tournament-event-record-count">{records.length} {records.length === 1 ? "RECORD" : "RECORDS"}</span>
-          {canManageEvents && <button type="button" className="tournament-event-add-button" onClick={openCreateModal}>
-            <span aria-hidden="true">＋</span> Add Record
-          </button>}
-        </div>
-      </div>
+        {canManageEvents && <section className="tournament-event-add-panel" aria-label="Add tournament record">
+          <div><span className="tournament-event-add-kicker">EVENT SETUP</span><strong>Add a new event record</strong><p>Create a separate tournament with its own days, matches and final standing.</p></div>
+          <button type="button" className="tournament-event-add-button" onClick={openCreateModal}><span aria-hidden="true">＋</span> Add Record</button>
+        </section>}
+        <div className="tournament-event-list-heading"><h3>Saved Event Records</h3><span>{records.length} {records.length === 1 ? "RECORD" : "RECORDS"}</span></div>
+      </>}
 
       {storageError && <p className="tournament-event-storage-error" role="alert">{storageError}</p>}
 
@@ -482,17 +483,17 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
       ) : selectedRecord ? (
         <section className={`tournament-event-workspace${selectedRecord.overallPlacement === 1 ? " is-overall-champion" : ""}`} aria-labelledby="tournament-event-workspace-title">
           <div className="tournament-event-workspace-top">
-            <button type="button" className="tournament-event-back-button" onClick={() => { setSelectedRecordId(null); setSelectedDayId(null); }}><span aria-hidden="true">←</span> All Records</button>
+            <button type="button" className={`tournament-event-back-button${selectedRecord.overallPlacement === 1 ? " is-champion" : ""}`} onClick={() => { setSelectedRecordId(null); setSelectedDayId(null); window.scrollTo({ top: 0, behavior: "instant" }); }}><span aria-hidden="true">←</span> All Records</button>
             <span className="tournament-event-workspace-kicker">CUSTOM EVENT WORKSPACE</span>
           </div>
           <header className="tournament-event-workspace-header">
-            <div><span className="tournament-event-workspace-label">TOURNAMENT OVERVIEW</span><h2 id="tournament-event-workspace-title">{selectedRecord.name}</h2><p>Review the schedule and match allocation for this event.</p></div>
+            <div>{selectedRecord.overallPlacement === 1 && <span className="tournament-event-workspace-champion-mark"><span aria-hidden="true">🏆</span> OVERALL CHAMPION</span>}<span className="tournament-event-workspace-label">TOURNAMENT OVERVIEW</span><h2 id="tournament-event-workspace-title">{selectedRecord.name}</h2><p>Review the schedule and match allocation for this event.</p></div>
             <div className="tournament-event-workspace-stats"><div><strong>{getEventSummary(selectedRecord).dayCount}</strong><span>DAYS</span></div><div><strong>{getEventSummary(selectedRecord).matchCount}</strong><span>MATCHES</span></div></div>
           </header>
 
 
           {canManageEvents && <div className="tournament-event-management-actions">
-            <button type="button" onClick={() => beginEditRecord(selectedRecord)}>Edit Tournament</button>
+            <button type="button" className="is-edit" onClick={() => beginEditRecord(selectedRecord)}>Edit Tournament</button>
             <button type="button" className="is-danger" onClick={() => deleteEventRecord(selectedRecord)}>Delete Tournament</button>
           </div>}
           {managementMessage && <p className="tournament-event-management-message" role="status">{managementMessage}</p>}
@@ -587,9 +588,9 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
       ) : (
         <>
           <div className="tournament-event-record-list">
-            {visibleRecords.map((record,index)=>{const summary=getEventSummary(record);return <button type="button" className="tournament-event-record-card" key={record.id} onClick={()=>{setSelectedRecordId(record.id);setSelectedDayId(null);setExpanded(false);}} aria-label={`Open ${record.name} tournament workspace`}>
-              <span className="tournament-event-record-index">{String(index+1).padStart(2,"0")}</span>
-              <span className="tournament-event-record-copy"><strong>{record.name}</strong><span className="tournament-event-record-meta"><span>{summary.dateLabel}</span><span>{summary.dayCount} {summary.dayCount===1?"day":"days"}</span><span>{summary.matchCount} {summary.matchCount===1?"match":"matches"}</span></span></span>
+            {visibleRecords.map((record,index)=>{const summary=getEventSummary(record);return <button type="button" className={`tournament-event-record-card${record.overallPlacement === 1 ? " is-overall-champion" : ""}`} key={record.id} onClick={()=>{setSelectedRecordId(record.id);setSelectedDayId(null);setExpanded(false);window.scrollTo({top:0,behavior:"instant"});}} aria-label={`Open ${record.name} tournament workspace${record.overallPlacement === 1 ? ", overall champion" : ""}`}>
+              <span className="tournament-event-record-index">{record.overallPlacement === 1 ? <span aria-hidden="true">🏆</span> : String(index+1).padStart(2,"0")}</span>
+              <span className="tournament-event-record-copy"><strong>{record.name}</strong><span className="tournament-event-record-meta"><span>{summary.dateLabel}</span><span>{summary.dayCount} {summary.dayCount===1?"day":"days"}</span><span>{summary.matchCount} {summary.matchCount===1?"match":"matches"}</span></span>{record.overallPlacement === 1 && <span className="tournament-event-record-champion-label"><span aria-hidden="true">🏆</span> OVERALL CHAMPION · #1</span>}</span>
               <span className="tournament-event-record-arrow" aria-hidden="true">↗</span>
             </button>;})}
           </div>
