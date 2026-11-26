@@ -57,6 +57,13 @@ function formatDate(value?: string): string {
   return new Intl.DateTimeFormat(undefined, { day: "numeric", month: "short", year: "numeric" }).format(date);
 }
 
+function formatUpdatedAt(value?: string): string {
+  if (!value) return "Not updated yet";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Not updated yet";
+  return new Intl.DateTimeFormat(undefined, { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }).format(date);
+}
+
 function getEventSummary(record: TournamentEventRecord) {
   const days = Array.isArray(record.days) ? record.days : [];
   const dates = days.map((day) => day.date).filter((date): date is string => typeof date === "string" && date.length > 0).sort();
@@ -536,7 +543,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
               <span>DAY {String(selectedDay.dayNumber || 1).padStart(2,"0")} DETAILS</span>
             </div>
             <header className="tournament-event-day-detail-header">
-              <div><span className="tournament-event-workspace-label">SELECTED TOURNAMENT DAY</span><h3>Day {selectedDay.dayNumber || 1}</h3><p>{selectedDay.date ? formatDate(selectedDay.date) : "Date not configured"}</p></div>
+              <div><span className="tournament-event-workspace-label">SELECTED TOURNAMENT DAY</span><h3>Day {selectedDay.dayNumber || 1}</h3><p>{selectedDay.date ? formatDate(selectedDay.date) : "Date not configured"}</p><small className="tournament-event-last-updated">Last updated · {formatUpdatedAt(selectedRecord.updatedAt)}</small></div>
               <div className="tournament-event-day-standing"><span>DAY STANDING</span><strong>{selectedDay.overallStanding ? "#"+selectedDay.overallStanding : "—"}</strong></div>
             </header>
             <section className="tournament-event-standing-panel" aria-label="Day overall standing">
