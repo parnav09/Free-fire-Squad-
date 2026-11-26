@@ -25,7 +25,7 @@ test("Day stepper supports bounded plus/minus controls and optional subtle hapti
 });
 
 test("Phase 3 validates the tournament name and initializes the selected number of day drafts", () => {
-  assert.ok(component.includes("const trimmedName = eventName.trim()"));
+  assert.ok(component.includes("const trimmedName = normalizeEventName(eventName)"));
   assert.ok(component.includes("if (!trimmedName)"));
   assert.ok(component.includes("Array.from({ length: dayCount }"));
   assert.ok(component.includes('setSetupStep("days")'));
