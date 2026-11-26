@@ -16,6 +16,7 @@ const CharactersDatabase = lazy(() => import("./components/CharactersDatabase"))
 const PetDatabase = lazy(() => import("./components/PetDatabase"));
 import "./components/MatchesSectionTabs.css";
 import TournamentModeFoundation, { type TournamentMode } from "./components/TournamentModeFoundation";
+import TournamentEventRecords from "./components/TournamentEventRecords";
 
 
 
@@ -1131,7 +1132,7 @@ export default function App() {
             </div>}
           </section>}
             <p className="footer-note">Prototype scoring: placement 1–10 = 12,9,8,7,6,5,4,3,2,1 points; 11/12 = 0. Add kills. Not an official tournament scoring preset.</p>
-            </> : <div className="tournament-event-foundation" aria-live="polite"><span className="eyebrow">EVENT MODE · FOUNDATION</span><h2>Custom tournaments are coming next</h2><p>Event mode is now separated from Weekly Tournament. Event records, custom days and match schedules will be introduced in the following Tournament phases.</p><span className="tournament-foundation-status">FOUNDATION READY · PHASE 1</span></div>}
+            </> : <TournamentEventRecords />}
           </>}</>}
 {section==="Training Legacy" && <>
             <div className="section-heading"><div><div className="eyebrow">PRACTICE BLOCK</div><h2>Team drill checklist</h2></div></div>
