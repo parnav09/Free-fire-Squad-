@@ -1,0 +1,10 @@
+import test from "node:test"; import assert from "node:assert/strict"; import {readFile} from "node:fs/promises";
+const c=await readFile(new URL("../src/components/TournamentEventRecords.tsx",import.meta.url),"utf8");const p=JSON.parse(await readFile(new URL("../package.json",import.meta.url),"utf8"));
+test("normalize event names",()=>{assert.ok(c.includes('value.normalize("NFC")'));assert.ok(c.includes('replace(/\\s+/g, " ").trim()'));assert.ok(c.includes("name:normalizedName"));});
+test("strict calendar date validation",()=>{assert.ok(c.includes("function isValidCalendarDate"));assert.ok(c.includes("getUTCFullYear()===year"));assert.ok(c.includes("getUTCMonth()===month-1"));assert.ok(c.includes("getUTCDate()===day"));});
+test("day count sequence and IDs validated",()=>{assert.ok(c.includes("dayDrafts.length!==dayCount"));assert.ok(c.includes("ids.has(day.id)"));assert.ok(c.includes("numbers.has(day.dayNumber)"));});
+test("unique dates and positive safe match counts",()=>{assert.ok(c.includes("dates.has(day.date)"));assert.ok(c.includes("!Number.isSafeInteger(day.matchCount)||day.matchCount<1"));});
+test("combined match total overflow rejected",()=>{assert.ok(c.includes("total+=day.matchCount"));assert.ok(c.includes("!Number.isSafeInteger(total)"));});
+test("rapid duplicate submit guarded",()=>{assert.ok(c.includes("if(saveLockRef.current)return"));assert.ok(c.includes("finally{saveLockRef.current=false;}"));});
+test("corrupt records are not overwritten",()=>{assert.ok(c.includes("const parsed:unknown=JSON.parse(raw)"));assert.ok(c.includes("existing.length!==parsed.length"));});
+test("phase 5 verifier is in build",()=>{assert.equal(p.scripts["test:tournament-phase-five"],"node --test scripts/verify-tournament-phase-five.mjs");assert.ok(p.scripts.build.includes("npm run test:tournament-phase-five"));});

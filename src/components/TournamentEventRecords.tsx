@@ -61,6 +61,14 @@ function getEventSummary(record: TournamentEventRecord) {
   return { dayCount: days.length, matchCount, dateLabel };
 }
 
+function normalizeEventName(value: string): string { return value.normalize("NFC").replace(/[\\u0000-\\u001f\\u007f]/g, "").replace(/\\s+/g, " ").trim(); }
+function isValidCalendarDate(value: string): boolean {
+ const match=/^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(value); if(!match)return false;
+ const year=Number(match[1]),month=Number(match[2]),day=Number(match[3]);
+ if(year<1000||month<1||month>12||day<1||day>31)return false;
+ const d=new Date(Date.UTC(year,month-1,day));
+ return d.getUTCFullYear()===year&&d.getUTCMonth()===month-1&&d.getUTCDate()===day;
+}
 function createId(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
   return `event-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
@@ -140,7 +148,7 @@ export default function TournamentEventRecords() {
 
   function handleCreateEvent(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const trimmedName = eventName.trim();
+    const trimmedName = normalizeEventName(eventName);
     if (!trimmedName) {
       setFormError("Enter a tournament name to continue.");
       nameInputRef.current?.focus();
@@ -150,7 +158,7 @@ export default function TournamentEventRecords() {
       setFormError(`Tournament name must be ${MAX_EVENT_NAME_LENGTH} characters or fewer.`);
       return;
     }
-    setDayDrafts(Array.from({ length: dayCount }, (_, index) => ({
+    if (!Number.isSafeInteger(dayCount) || dayCount < MIN_EVENT_DAYS || dayCount > MAX_EVENT_DAYS) { setFormError("Choose a valid number of tournament days."); return; }\n    setEventName(trimmedName);\n    setDayDrafts(Array.from({ length: dayCount }, (_, index) => ({
       id: createId(), dayNumber: index + 1, date: "", matchCount: 1
     })));
     setDayErrors({});
@@ -166,43 +174,27 @@ export default function TournamentEventRecords() {
   }
 
   function handleSaveConfiguredEvent(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const nextErrors: Record<string, string> = {};
-    const seenDates = new Set<string>();
-    for (const day of dayDrafts) {
-      if (!day.date) nextErrors[day.id] = "Choose a date for this day.";
-      else if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(day.date) || Number.isNaN(new Date(`${day.date}T00:00:00`).getTime())) nextErrors[day.id] = "Enter a valid calendar date.";
-      else if (seenDates.has(day.date)) nextErrors[day.id] = "Each tournament day must have a different date.";
-      else if (!Number.isSafeInteger(day.matchCount) || day.matchCount < 1) nextErrors[day.id] = "Enter at least 1 match.";
-      if (day.date) seenDates.add(day.date);
-    }
-    if (Object.keys(nextErrors).length) { setDayErrors(nextErrors); return; }
-
-    const newRecord: TournamentEventRecord = {
-      id: createId(),
-      name: eventName.trim(),
-      createdAt: new Date().toISOString(),
-      days: dayDrafts.map((day) => ({ id: day.id, dayNumber: day.dayNumber, date: day.date, matchCount: day.matchCount }))
-    };
-    try {
-      const nextRecords = [newRecord, ...readEventRecords()];
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextRecords));
-      setRecords(nextRecords);
-      setExpanded(false);
-      window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));
-      setModalOpen(false);
-      setEventName("");
-      setDayCount(1);
-      setDayDrafts([]);
-      setDayErrors({});
-      setSetupStep("details");
-      setStorageError("");
-    } catch {
-      setStorageError("Could not save this record on this device. Check available browser storage and try again.");
-    }
-  }
-
-  function returnToEventDetails() { setSetupStep("details"); setDayErrors({}); }
+ event.preventDefault(); if(saveLockRef.current)return; saveLockRef.current=true; setStorageError("");
+ const normalizedName=normalizeEventName(eventName), errors:Record<string,string>={}, dates=new Set<string>(), ids=new Set<string>(), numbers=new Set<number>(); let total=0;
+ if(!normalizedName||normalizedName.length>MAX_EVENT_NAME_LENGTH){setFormError(!normalizedName?"Enter a tournament name before saving.":`Tournament name must be ${MAX_EVENT_NAME_LENGTH} characters or fewer.`);setSetupStep("details");saveLockRef.current=false;return;}
+ if(!Number.isSafeInteger(dayCount)||dayCount<MIN_EVENT_DAYS||dayCount>MAX_EVENT_DAYS||dayDrafts.length!==dayCount){setStorageError("The event day configuration is incomplete. Go back and set the number of days again.");saveLockRef.current=false;return;}
+ for(const day of dayDrafts){
+  if(!day.id||ids.has(day.id))errors[day.id||`day-${day.dayNumber}']="This day configuration is duplicated."; ids.add(day.id);
+  if(!Number.isSafeInteger(day.dayNumber)||day.dayNumber<1||day.dayNumber>dayCount||numbers.has(day.dayNumber))errors[day.id]="Day order is invalid."; numbers.add(day.dayNumber);
+  if(!day.date)errors[day.id]="Choose a date for this day.";else if(!isValidCalendarDate(day.date))errors[day.id]="Enter a valid calendar date.";else if(dates.has(day.date))errors[day.id]="Each tournament day must have a different date."; if(day.date)dates.add(day.date);
+  if(!Number.isSafeInteger(day.matchCount)||day.matchCount<1)errors[day.id]="Enter a whole-number match count of at least 1.";else{total+=day.matchCount;if(!Number.isSafeInteger(total))errors[day.id]="The combined match count is too large. Reduce the match counts.";}
+ }
+ if(numbers.size!==dayCount||Array.from({length:dayCount},(_,i)=>i+1).some(n=>!numbers.has(n))){setStorageError("The day sequence is incomplete. Go back and recreate the day list.");saveLockRef.current=false;return;}
+ if(Object.keys(errors).length){setDayErrors(errors);saveLockRef.current=false;return;}
+ try{
+  const raw=window.localStorage.getItem(STORAGE_KEY);let existing:TournamentEventRecord[]=[];
+  if(raw){const parsed:unknown=JSON.parse(raw);if(!Array.isArray(parsed))throw new Error("Invalid records");existing=parsed.filter((x):x is TournamentEventRecord=>x!==null&&typeof x==="object"&&typeof x.id==="string"&&typeof x.name==="string"&&x.name.trim().length>0);if(existing.length!==parsed.length)throw new Error("Unreadable records");}
+  const used=new Set(existing.map(x=>x.id));let id=createId();while(used.has(id))id=createId();
+  const record:TournamentEventRecord={id,name:normalizedName,createdAt:new Date().toISOString(),days:[...dayDrafts].sort((x,y)=>x.dayNumber-y.dayNumber).map(d=>({id:d.id,dayNumber:d.dayNumber,date:d.date,matchCount:d.matchCount}))};
+  const next=[record,...existing];window.localStorage.setItem(STORAGE_KEY,JSON.stringify(next));setRecords(next);setExpanded(false);window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));setModalOpen(false);setEventName("");setDayCount(1);setDayDrafts([]);setDayErrors({});setSetupStep("details");setStorageError("");
+ }catch{setStorageError("Could not safely save this event. Existing records were left unchanged; check browser storage and try again.");}finally{saveLockRef.current=false;}
+ }
+ function returnToEventDetails(){setSetupStep("details");setDayErrors({});setStorageError("");}
 
   return (
     <section className="tournament-event-records" aria-labelledby="tournament-event-records-title">
