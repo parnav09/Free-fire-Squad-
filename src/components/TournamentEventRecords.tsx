@@ -299,7 +299,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
  if(!normalizedName||normalizedName.length>MAX_EVENT_NAME_LENGTH){setFormError(!normalizedName?"Enter a tournament name before saving.":`Tournament name must be ${MAX_EVENT_NAME_LENGTH} characters or fewer.`);setSetupStep("details");saveLockRef.current=false;return;}
  if(!Number.isSafeInteger(dayCount)||dayCount<MIN_EVENT_DAYS||dayCount>MAX_EVENT_DAYS||dayDrafts.length!==dayCount){setStorageError("The event day configuration is incomplete. Go back and set the number of days again.");saveLockRef.current=false;return;}
  for(const day of dayDrafts){
-  if(!day.id||ids.has(day.id))errors[day.id||`day-${day.dayNumber}']="This day configuration is duplicated."; ids.add(day.id);
+  if(!day.id||ids.has(day.id))errors[day.id || `day-${day.dayNumber}`] = "This day configuration is duplicated."; ids.add(day.id);
   if(!Number.isSafeInteger(day.dayNumber)||day.dayNumber<1||day.dayNumber>dayCount||numbers.has(day.dayNumber))errors[day.id]="Day order is invalid."; numbers.add(day.dayNumber);
   if(!day.date)errors[day.id]="Choose a date for this day.";else if(!isValidCalendarDate(day.date))errors[day.id]="Enter a valid calendar date.";else if(dates.has(day.date))errors[day.id]="Each tournament day must have a different date."; if(day.date)dates.add(day.date);
   if(!Number.isSafeInteger(day.matchCount)||day.matchCount<1)errors[day.id]="Enter a whole-number match count of at least 1.";else{total+=day.matchCount;if(!Number.isSafeInteger(total))errors[day.id]="The combined match count is too large. Reduce the match counts.";}
