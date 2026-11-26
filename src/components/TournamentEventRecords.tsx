@@ -340,7 +340,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   function readMatchDraft(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
     const saved = (day.matches || []).find(item => item.matchNumber === matchNumber);
     const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber);
-    return matchDrafts[key] || { placement: saved?.placement == null ? "" : String(saved.placement), placementPoints: String(getPlacementPoints(saved?.placement ?? null)), kills: String(saved?.kills ?? 0) };
+    return matchDrafts[key] || { placement: saved?.placement == null ? "" : String(saved.placement), placementPoints: String(getPlacementPoints(saved?.placement ?? null)), kills: saved?.kills ? String(saved.kills) : "" };
   }
   function updateMatchDraft(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number, field: "placement" | "kills", value: string) {
     const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber);
@@ -353,7 +353,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
     setMatchSaveMessage(message);
     if (message.endsWith("saved.")) {
       window.setTimeout(() => setMatchSaveMessage(current => current === message ? "" : current), 1800);
-      window.requestAnimationFrame(() => document.querySelector(".tournament-event-workspace")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      window.requestAnimationFrame(() => document.querySelector(".tournament-event-day-detail-top")?.scrollIntoView({ behavior: "smooth", block: "start" }));
     }
   }
   function saveDayStanding(record: TournamentEventRecord, day: EventDaySummary, value: number | null) {
@@ -368,21 +368,38 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
     try { persistRecords(records.map(item => item.id === record.id ? { ...item, overallPlacement: value } : item), record.id); showMatchSaveToast("Overall standing saved."); }
     catch { setMatchSaveMessage("Could not save overall standing."); }
   }
-  function saveMatchResult(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
-    if (!canEditResults) return;
-    const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber), draft = matchDrafts[key] || readMatchDraft(record, day, matchNumber);
-    const placement = draft.placement === "" ? null : Number(draft.placement), placementPoints = getPlacementPoints(placement), kills = Number(draft.kills);
-    if (placement !== null && (!Number.isSafeInteger(placement) || placement < 1 || placement > 12)) { setMatchSaveMessage("Placement must be between 1 and 12."); return; }
-    if (!Number.isSafeInteger(kills) || kills < 0) { setMatchSaveMessage("Kills must be a non-negative whole number."); return; }
-    if (placement === null && kills > 0) { setMatchSaveMessage("Choose a placement before saving kills."); return; }
+  function saveDayResults(record: TournamentEventRecord, day: EventDaySummary) {
+    if (!canEditResults || saveLockRef.current) return;
+    const matchCount = Math.max(0, Number(day.matchCount) || 0);
+    if (!matchCount) { setMatchSaveMessage("This day has no configured matches."); return; }
+    const dayKey = day.id || String(day.dayNumber || 0);
+    const prepared: EventMatchRecord[] = [];
+    for (let matchNumber = 1; matchNumber <= matchCount; matchNumber += 1) {
+      const draft = readMatchDraft(record, day, matchNumber);
+      const placement = draft.placement === "" ? null : Number(draft.placement);
+      const kills = draft.kills.trim() === "" ? 0 : Number(draft.kills);
+      if (placement === null) { setMatchSaveMessage(`Select placement for Match ${String(matchNumber).padStart(2, "0")} before saving the day.`); return; }
+      if (!Number.isSafeInteger(placement) || placement < 1 || placement > 12) { setMatchSaveMessage(`Placement for Match ${String(matchNumber).padStart(2, "0")} must be between 1 and 12.`); return; }
+      if (!Number.isSafeInteger(kills) || kills < 0) { setMatchSaveMessage(`Kills for Match ${String(matchNumber).padStart(2, "0")} must be a non-negative whole number.`); return; }
+      const existing = (day.matches || []).find(match => match.matchNumber === matchNumber);
+      prepared.push({ id: existing?.id || createId(), matchNumber, placement, placementPoints: getPlacementPoints(placement), kills });
+    }
+    saveLockRef.current = true;
     try {
-      const next = records.map(item => item.id !== record.id ? item : { ...item, days: (item.days || []).map(entry => {
-        if ((entry.id || String(entry.dayNumber || 0)) !== (day.id || String(day.dayNumber || 0))) return entry;
-        const existing = entry.matches || [], saved: EventMatchRecord = { id: existing.find(m => m.matchNumber === matchNumber)?.id || createId(), matchNumber, placement, placementPoints, kills };
-        return { ...entry, matches: [...existing.filter(m => m.matchNumber !== matchNumber), saved].sort((a,b)=>a.matchNumber-b.matchNumber) };
+      const next = records.map(item => item.id !== record.id ? item : { ...item, days: (item.days || []).map((entry, index) => {
+        if ((entry.id || String(entry.dayNumber || index + 1)) !== dayKey) return entry;
+        return { ...entry, matches: [...(entry.matches || []).filter(match => match.matchNumber > matchCount), ...prepared].sort((a, b) => a.matchNumber - b.matchNumber) };
       }) });
-      persistRecords(next, record.id); window.dispatchEvent(new CustomEvent("squad-os:event-records-updated")); showMatchSaveToast("Match result saved.");
-    } catch { setMatchSaveMessage("Could not save this match result."); }
+      persistRecords(next, record.id);
+      setMatchDrafts(current => {
+        const copy = { ...current };
+        for (let matchNumber = 1; matchNumber <= matchCount; matchNumber += 1) delete copy[matchDraftKey(record.id, dayKey, matchNumber)];
+        return copy;
+      });
+      window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));
+      showMatchSaveToast("Day results saved.");
+    } catch { setMatchSaveMessage("Could not save day results. Your previous saved results were preserved."); }
+    finally { saveLockRef.current = false; }
   }
   function clearMatchResult(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
     if (!canEditResults) return;
@@ -441,7 +458,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
   }
 
   return (
-    <section className="tournament-event-records" aria-labelledby="tournament-event-records-title">
+    <section className={`tournament-event-records${selectedDay ? " is-day-detail" : ""}`} aria-labelledby="tournament-event-records-title">
 
       <div className="tournament-event-sync-status" role="status" aria-live="polite">
         <span className={`tournament-event-sync-dot is-${syncStatus}`} aria-hidden="true" />
@@ -564,7 +581,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
             <div className="tournament-event-match-grid">
               {Array.from({length:Math.max(0,Number(selectedDay.matchCount)||0)},(_,i)=>{
                 const matchNo=i+1, saved=(selectedDay.matches || []).find(m=>m.matchNumber===matchNo), draft=readMatchDraft(selectedRecord,selectedDay,matchNo);
-                return <div className="tournament-event-match-card" key={matchNo}>
+                return <div className={`tournament-event-match-card${draft.placement === "1" ? " is-champion" : ""}`} key={matchNo}>
                   <div className="tournament-event-match-card-head"><strong>MATCH {String(matchNo).padStart(2,"0")}</strong><span className={saved&&saved.placement!==null?"is-recorded":"is-pending"}>{saved&&saved.placement!==null?"RECORDED":"PENDING"}</span></div>
                   <div className="tournament-event-match-fields">
                     <label>Placement<PlacementPicker value={draft.placement === "" ? null : Number(draft.placement)} disabled={!canEditResults} onChange={n=>updateMatchDraft(selectedRecord,selectedDay,matchNo,"placement",String(n))} onClear={()=>updateMatchDraft(selectedRecord,selectedDay,matchNo,"placement","")}/></label>
@@ -572,10 +589,10 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
                     <label>Kills<input type="text" inputMode="numeric" pattern="[0-9]*" value={draft.kills} disabled={!canEditResults} onChange={e=>updateMatchDraft(selectedRecord,selectedDay,matchNo,"kills",e.target.value.replace(/[^0-9]/g,""))}/></label>
                   </div>
                   <div className="tournament-event-match-total"><span>Match points</span><strong>{getPlacementPoints(draft.placement === "" ? null : Number(draft.placement))+(Number(draft.kills)||0)}</strong></div>
-                  {canEditResults && <div className="tournament-event-match-actions"><button type="button" onClick={()=>saveMatchResult(selectedRecord,selectedDay,matchNo)}>Save Result</button>{saved&&<button type="button" className="is-clear" onClick={()=>clearMatchResult(selectedRecord,selectedDay,matchNo)}>Clear</button>}</div>}
                 </div>;
               })}
             </div>
+            {canEditResults && <div className="tournament-event-day-save-bar"><div><strong>Ready to save the day?</strong><span>All {selectedDay.matchCount || 0} match results are saved together.</span></div><button type="button" disabled={(selectedDay.matchCount || 0) < 1} onClick={() => saveDayResults(selectedRecord, selectedDay)}>Save Day Results</button></div>}
           </>}
           {(!Array.isArray(selectedRecord.days)||selectedRecord.days.length===0)&&<div className="tournament-event-workspace-legacy" role="status">This is an older event record without day details. Its original record is preserved.</div>}
         </section>
