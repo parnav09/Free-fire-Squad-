@@ -306,3 +306,5 @@
  .tournament-event-day-detail-header h3{font-size:19px}
  .tournament-event-day-standing strong{font-size:21px}
 }
+
+.tournament-event-last-updated{display:block;margin-top:7px;color:#6f96ac;font-size:9px;font-weight:700;letter-spacing:.02em}
