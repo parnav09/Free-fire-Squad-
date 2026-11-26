@@ -498,7 +498,7 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
 
           {matchSaveMessage && <p className="tournament-event-match-message" role="status" aria-live="polite">{matchSaveMessage}</p>}
           {!selectedDay ? <>
-            <div className="tournament-event-workspace-section-head"><h3>Overall Tournament Report</h3><span>ALL DAYS</span></div>
+            <div className="tournament-event-workspace-section-head"><h3>Overall Tournament Report</h3><span>{(selectedRecord.days || []).reduce((sum,d)=>sum+(Array.isArray(d.matches)?d.matches.filter(m=>m.placement!==null).length:0),0)} RESULTS SAVED · ALL DAYS</span></div>
             <div className="tournament-event-scoreboard">
               <div><span>TOTAL MATCHES</span><strong>{getEventSummary(selectedRecord).matchCount}</strong></div>
               <div><span>RECORDED</span><strong>{(selectedRecord.days || []).reduce((sum,d)=>sum+(Array.isArray(d.matches)?d.matches.filter(m=>m.placement!==null).length:0),0)}</strong></div>
