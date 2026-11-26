@@ -15,6 +15,8 @@ type TournamentEventRecord = {
   days?: EventDaySummary[];
 };
 
+type EventDayDraft = { id: string; dayNumber: number; date: string; matchCount: number; };
+
 const STORAGE_KEY = "squad-os-event-tournament-records";
 const INITIAL_VISIBLE_RECORDS = 4;
 const MIN_EVENT_DAYS = 1;
@@ -80,6 +82,9 @@ export default function TournamentEventRecords() {
   const [modalOpen, setModalOpen] = useState(false);
   const [eventName, setEventName] = useState("");
   const [dayCount, setDayCount] = useState(1);
+  const [setupStep, setSetupStep] = useState<"details" | "days">("details");
+  const [dayDrafts, setDayDrafts] = useState<EventDayDraft[]>([]);
+  const [dayErrors, setDayErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
   const [storageError, setStorageError] = useState("");
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -115,6 +120,9 @@ export default function TournamentEventRecords() {
   function openCreateModal() {
     setEventName("");
     setDayCount(1);
+    setSetupStep("details");
+    setDayDrafts([]);
+    setDayErrors({});
     setFormError("");
     setStorageError("");
     setModalOpen(true);
@@ -142,19 +150,40 @@ export default function TournamentEventRecords() {
       setFormError(`Tournament name must be ${MAX_EVENT_NAME_LENGTH} characters or fewer.`);
       return;
     }
+    setDayDrafts(Array.from({ length: dayCount }, (_, index) => ({
+      id: createId(), dayNumber: index + 1, date: "", matchCount: 1
+    })));
+    setDayErrors({});
+    setSetupStep("days");
+  }
+
+  function updateDayDraft(dayId: string, field: "date" | "matchCount", value: string) {
+    setDayDrafts((current) => current.map((day) => day.id === dayId
+      ? { ...day, [field]: field === "matchCount" ? (value === "" ? 0 : Number(value)) : value }
+      : day
+    ));
+    setDayErrors((current) => { const next = { ...current }; delete next[dayId]; return next; });
+  }
+
+  function handleSaveConfiguredEvent(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const nextErrors: Record<string, string> = {};
+    const seenDates = new Set<string>();
+    for (const day of dayDrafts) {
+      if (!day.date) nextErrors[day.id] = "Choose a date for this day.";
+      else if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(day.date) || Number.isNaN(new Date(`${day.date}T00:00:00`).getTime())) nextErrors[day.id] = "Enter a valid calendar date.";
+      else if (seenDates.has(day.date)) nextErrors[day.id] = "Each tournament day must have a different date.";
+      else if (!Number.isSafeInteger(day.matchCount) || day.matchCount < 1) nextErrors[day.id] = "Enter at least 1 match.";
+      if (day.date) seenDates.add(day.date);
+    }
+    if (Object.keys(nextErrors).length) { setDayErrors(nextErrors); return; }
 
     const newRecord: TournamentEventRecord = {
       id: createId(),
-      name: trimmedName,
+      name: eventName.trim(),
       createdAt: new Date().toISOString(),
-      days: Array.from({ length: dayCount }, (_, index) => ({
-        id: createId(),
-        dayNumber: index + 1,
-        date: "",
-        matchCount: 0
-      }))
+      days: dayDrafts.map((day) => ({ id: day.id, dayNumber: day.dayNumber, date: day.date, matchCount: day.matchCount }))
     };
-
     try {
       const nextRecords = [newRecord, ...readEventRecords()];
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextRecords));
@@ -164,11 +193,16 @@ export default function TournamentEventRecords() {
       setModalOpen(false);
       setEventName("");
       setDayCount(1);
+      setDayDrafts([]);
+      setDayErrors({});
+      setSetupStep("details");
       setStorageError("");
     } catch {
       setStorageError("Could not save this record on this device. Check available browser storage and try again.");
     }
   }
+
+  function returnToEventDetails() { setSetupStep("details"); setDayErrors({}); }
 
   return (
     <section className="tournament-event-records" aria-labelledby="tournament-event-records-title">
@@ -234,55 +268,75 @@ export default function TournamentEventRecords() {
         onClose={() => setModalOpen(false)}
         onClick={(event) => { if (event.target === dialogRef.current) closeCreateModal(); }}
       >
-        <form className="tournament-event-modal-form" onSubmit={handleCreateEvent} noValidate>
-          <div className="tournament-event-modal-topline">
-            <span className="tournament-event-modal-kicker">NEW EVENT · SETUP</span>
-            <button type="button" className="tournament-event-modal-close" aria-label="Close create tournament dialog" onClick={closeCreateModal}>×</button>
-          </div>
-          <div className="tournament-event-modal-heading">
-            <span className="tournament-event-modal-icon" aria-hidden="true">✦</span>
-            <div>
-              <h2 id="tournament-event-modal-title">Create Tournament</h2>
-              <p>Set up a custom event independently from your weekly tournament.</p>
+        {setupStep === "details" ? (
+          <form className="tournament-event-modal-form" onSubmit={handleCreateEvent} noValidate>
+            <div className="tournament-event-modal-topline">
+              <span className="tournament-event-modal-kicker">NEW EVENT · STEP 1 OF 2</span>
+              <button type="button" className="tournament-event-modal-close" aria-label="Close create tournament dialog" onClick={closeCreateModal}>×</button>
             </div>
-          </div>
-
-          <label className="tournament-event-field-label" htmlFor="tournament-event-name">Tournament Name</label>
-          <input
-            ref={nameInputRef}
-            id="tournament-event-name"
-            className="tournament-event-name-input"
-            type="text"
-            value={eventName}
-            onChange={(event) => { setEventName(event.target.value); setFormError(""); }}
-            maxLength={MAX_EVENT_NAME_LENGTH}
-            placeholder="Enter tournament name"
-            autoComplete="off"
-            required
-          />
-          <div className="tournament-event-input-foot">
-            {formError ? <span className="tournament-event-form-error" role="alert">{formError}</span> : <span>Choose a clear name for this event.</span>}
-            <span>{eventName.length}/{MAX_EVENT_NAME_LENGTH}</span>
-          </div>
-
-          <div className="tournament-event-day-count-panel">
-            <div>
-              <span className="tournament-event-field-label">Number of Days</span>
-              <p>Choose how many days this event will include.</p>
+            <div className="tournament-event-modal-heading">
+              <span className="tournament-event-modal-icon" aria-hidden="true">✦</span>
+              <div><h2 id="tournament-event-modal-title">Create Tournament</h2><p>Set up a custom event independently from your weekly tournament.</p></div>
             </div>
-            <div className="tournament-event-stepper" aria-label="Tournament day count">
-              <button type="button" aria-label="Decrease tournament days" onClick={() => changeDayCount(-1)} disabled={dayCount <= MIN_EVENT_DAYS}>−</button>
-              <output aria-live="polite" aria-atomic="true">{dayCount}</output>
-              <button type="button" aria-label="Increase tournament days" onClick={() => changeDayCount(1)} disabled={dayCount >= MAX_EVENT_DAYS}>＋</button>
+            <label className="tournament-event-field-label" htmlFor="tournament-event-name">Tournament Name</label>
+            <input ref={nameInputRef} id="tournament-event-name" className="tournament-event-name-input" type="text" value={eventName}
+              onChange={(event) => { setEventName(event.target.value); setFormError(""); }} maxLength={MAX_EVENT_NAME_LENGTH}
+              placeholder="Enter tournament name" autoComplete="off" required />
+            <div className="tournament-event-input-foot">
+              {formError ? <span className="tournament-event-form-error" role="alert">{formError}</span> : <span>Choose a clear name for this event.</span>}
+              <span>{eventName.length}/{MAX_EVENT_NAME_LENGTH}</span>
             </div>
-          </div>
-          <p className="tournament-event-day-count-note">You can configure each day’s date and match count in the next setup step. Maximum {MAX_EVENT_DAYS} days per event.</p>
-
-          <div className="tournament-event-modal-footer">
-            <button type="button" className="tournament-event-cancel-button" onClick={closeCreateModal}>Cancel</button>
-            <button type="submit" className="tournament-event-create-button">Create Event <span aria-hidden="true">→</span></button>
-          </div>
-        </form>
+            <div className="tournament-event-day-count-panel">
+              <div><span className="tournament-event-field-label">Number of Days</span><p>Choose how many days this event will include.</p></div>
+              <div className="tournament-event-stepper" aria-label="Tournament day count">
+                <button type="button" aria-label="Decrease tournament days" onClick={() => changeDayCount(-1)} disabled={dayCount <= MIN_EVENT_DAYS}>−</button>
+                <output aria-live="polite" aria-atomic="true">{dayCount}</output>
+                <button type="button" aria-label="Increase tournament days" onClick={() => changeDayCount(1)} disabled={dayCount >= MAX_EVENT_DAYS}>＋</button>
+              </div>
+            </div>
+            <p className="tournament-event-day-count-note">Configure a separate date and match count for every day in the next step. Maximum {MAX_EVENT_DAYS} days per event.</p>
+            <div className="tournament-event-modal-footer">
+              <button type="button" className="tournament-event-cancel-button" onClick={closeCreateModal}>Cancel</button>
+              <button type="submit" className="tournament-event-create-button">Continue <span aria-hidden="true">→</span></button>
+            </div>
+          </form>
+        ) : (
+          <form className="tournament-event-modal-form tournament-event-days-form" onSubmit={handleSaveConfiguredEvent} noValidate>
+            <div className="tournament-event-modal-topline">
+              <span className="tournament-event-modal-kicker">NEW EVENT · STEP 2 OF 2</span>
+              <button type="button" className="tournament-event-modal-close" aria-label="Close create tournament dialog" onClick={closeCreateModal}>×</button>
+            </div>
+            <div className="tournament-event-modal-heading">
+              <span className="tournament-event-modal-icon" aria-hidden="true">▦</span>
+              <div><h2 id="tournament-event-modal-title">Configure Event Days</h2><p><strong>{eventName.trim()}</strong> · Set a date and match count for each day.</p></div>
+            </div>
+            <div className="tournament-event-days-summary"><span>{dayDrafts.length} {dayDrafts.length === 1 ? "DAY" : "DAYS"} IN THIS EVENT</span><span>Dates can be non-consecutive</span></div>
+            <div className="tournament-event-day-config-list">
+              {dayDrafts.map((day) => (
+                <section className="tournament-event-day-config-card" key={day.id} aria-labelledby={`event-day-title-${day.id}`}>
+                  <div className="tournament-event-day-config-heading"><span className="tournament-event-day-number">DAY {day.dayNumber}</span><strong id={`event-day-title-${day.id}`}>Day {day.dayNumber} details</strong></div>
+                  <div className="tournament-event-day-config-fields">
+                    <label className="tournament-event-day-field"><span>Date</span>
+                      <input type="date" value={day.date} onChange={(event) => updateDayDraft(day.id, "date", event.target.value)}
+                        aria-label={`Date for day ${day.dayNumber}`} aria-invalid={Boolean(dayErrors[day.id])}
+                        aria-describedby={dayErrors[day.id] ? `event-day-error-${day.id}` : undefined} />
+                    </label>
+                    <label className="tournament-event-day-field"><span>Matches</span>
+                      <input type="number" inputMode="numeric" min="1" step="1" value={day.matchCount || ""}
+                        onChange={(event) => updateDayDraft(day.id, "matchCount", event.target.value)}
+                        aria-label={`Match count for day ${day.dayNumber}`} />
+                    </label>
+                  </div>
+                  {dayErrors[day.id] && <p className="tournament-event-day-error" id={`event-day-error-${day.id}`} role="alert">{dayErrors[day.id]}</p>}
+                </section>
+              ))}
+            </div>
+            <div className="tournament-event-modal-footer tournament-event-days-footer">
+              <button type="button" className="tournament-event-cancel-button" onClick={returnToEventDetails}>Back</button>
+              <button type="submit" className="tournament-event-create-button">Save Event <span aria-hidden="true">→</span></button>
+            </div>
+          </form>
+        )}
       </dialog>
     </section>
   );

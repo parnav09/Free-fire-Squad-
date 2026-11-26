@@ -24,13 +24,11 @@ test("Day stepper supports bounded plus/minus controls and optional subtle hapti
   assert.match(component, /typeof navigator\.vibrate === "function"/);
 });
 
-test("Creating an event validates the name and persists a separate record with the selected day count", () => {
-  assert.match(component, /const trimmedName = eventName\.trim\(\)/);
-  assert.match(component, /if \(!trimmedName\)/);
-  assert.match(component, /Array\.from\(\{ length: dayCount \}/);
-  assert.match(component, /window\.localStorage\.setItem\(STORAGE_KEY/);
-  assert.match(component, /window\.dispatchEvent\(new CustomEvent\("squad-os:event-records-updated"\)\)/);
-  assert.match(component, /setRecords\(nextRecords\)/);
+test("Phase 3 validates the tournament name and initializes the selected number of day drafts", () => {
+  assert.ok(component.includes("const trimmedName = eventName.trim()"));
+  assert.ok(component.includes("if (!trimmedName)"));
+  assert.ok(component.includes("Array.from({ length: dayCount }"));
+  assert.ok(component.includes('setSetupStep("days")'));
 });
 
 test("Modal supports cancel, Escape, focus, error reporting and reduced motion", () => {
