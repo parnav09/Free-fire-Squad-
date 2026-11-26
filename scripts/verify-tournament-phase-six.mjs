@@ -45,7 +45,7 @@ test("original compact team sync indicator is preserved without event-level diag
   assert.match(app,/sync-indicator sync-/);
   assert.match(app,/const syncState = serverStatus === "offline"/);
   assert.match(app,/const syncLabel = syncState/);
-  assert.match(app,/supabase\.from\("teams"\)\.select\("id"\)\.limit\(1\)/);
+  assert.match(app,/checkSupabaseServer\(\)/);
   assert.match(app,/window\.setTimeout\(checkServer, 15000\)/);
   assert.match(shell,/sync-indicator sync-/);
 });
