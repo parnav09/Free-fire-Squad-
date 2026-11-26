@@ -25,9 +25,9 @@ test("Weekly Tournament implementation remains present and selected by default",
   assert.match(app, /tournament_matches/);
 });
 
-test("Event mode is isolated as a Phase 1 foundation placeholder", () => {
-  assert.match(app, /Custom tournaments are coming next/);
-  assert.match(app, /FOUNDATION READY · PHASE 1/);
+test("Event mode remains separate and advances through the Phase 2 records workspace", () => {
+  assert.match(app, /<TournamentEventRecords \/>/);
+  assert.doesNotMatch(app, /Custom tournaments are coming next/);
   assert.doesNotMatch(app, /tournament_event_(?:days|matches|events)/);
 });
 
