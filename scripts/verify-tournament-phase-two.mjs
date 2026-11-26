@@ -23,8 +23,8 @@ test("Records workspace retains the empty state and Add Record entry point", () 
 test("More and Show Less only appear when records exceed the initial page", () => {
   assert.match(records, /INITIAL_VISIBLE_RECORDS = 4/);
   assert.match(records, /const hasMore = records\.length > INITIAL_VISIBLE_RECORDS/);
-  assert.match(records, /\{hasMore&&\(/);
-  assert.match(records, /expanded \? "Show Less"/);
+  assert.match(records, /\{hasMore&&/);
+  assert.match(records, /expanded\?"Show Less"/);
   assert.match(records, /records\.slice\(0, INITIAL_VISIBLE_RECORDS\)/);
 });
 
