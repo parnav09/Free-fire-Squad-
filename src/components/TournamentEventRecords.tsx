@@ -61,9 +61,9 @@ function getEventSummary(record: TournamentEventRecord) {
   return { dayCount: days.length, matchCount, dateLabel };
 }
 
-function normalizeEventName(value: string): string { return value.normalize("NFC").replace(/[\\u0000-\\u001f\\u007f]/g, "").replace(/\\s+/g, " ").trim(); }
+function normalizeEventName(value: string): string { return value.normalize("NFC").replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim(); }
 function isValidCalendarDate(value: string): boolean {
- const match=/^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(value); if(!match)return false;
+ const match=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value); if(!match)return false;
  const year=Number(match[1]),month=Number(match[2]),day=Number(match[3]);
  if(year<1000||month<1||month>12||day<1||day>31)return false;
  const d=new Date(Date.UTC(year,month-1,day));
