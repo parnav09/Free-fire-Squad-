@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./TournamentEventRecords.css";
+import { supabase } from "../lib/supabase/client";
+import { syncTournamentEventRecords } from "../lib/tournament-event-sync";
 
-type EventMatchRecord = { id: string; matchNumber: number; placement: number | null; placementPoints: number; kills: number; };
 type EventMatchRecord = { id: string; matchNumber: number; placement: number | null; placementPoints: number; kills: number; };
 type EventDaySummary = {
   id?: string;
@@ -26,10 +27,10 @@ const MIN_EVENT_DAYS = 1;
 const MAX_EVENT_DAYS = 60;
 const MAX_EVENT_NAME_LENGTH = 80;
 
-function readEventRecords(): TournamentEventRecord[] {
+function readEventRecords(storageKey: string = STORAGE_KEY): TournamentEventRecord[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(storageKey);
     if (!raw) return [];
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
@@ -87,8 +88,17 @@ function triggerStepHaptic(): void {
   }
 }
 
-export default function TournamentEventRecords() {
-  const [records, setRecords] = useState<TournamentEventRecord[]>(readEventRecords);
+type TournamentEventRecordsProps = { teamId?: string | null; userId?: string | null; signedIn?: boolean; };
+
+export default function TournamentEventRecords({ teamId = null, userId = null, signedIn = false }: TournamentEventRecordsProps) {
+  const activeStorageKey = teamId ? `${STORAGE_KEY}:${teamId}` : STORAGE_KEY;
+  const deletedStorageKey = `${activeStorageKey}:deleted`;
+  const [records, setRecords] = useState<TournamentEventRecord[]>(() => readEventRecords(activeStorageKey));
+  const [syncStatus, setSyncStatus] = useState<"local" | "syncing" | "synced" | "offline" | "error" | "conflict">("local");
+  const [legacyRecords, setLegacyRecords] = useState<TournamentEventRecord[]>(() => teamId ? readEventRecords(STORAGE_KEY) : []);
+  const hydratedRef = useRef(false);
+  const pendingDeletedIdsRef = useRef<string[]>([]);
+  const legacyImportPendingRef = useRef(false);
   const [expanded, setExpanded] = useState(false);
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
   const [matchDrafts, setMatchDrafts] = useState<Record<string, { placement: string; placementPoints: string; kills: string }>>({});
@@ -111,14 +121,89 @@ export default function TournamentEventRecords() {
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const refreshRecords = () => setRecords(readEventRecords());
+    const refreshRecords = () => setRecords(readEventRecords(activeStorageKey));
     window.addEventListener("storage", refreshRecords);
     window.addEventListener("squad-os:event-records-updated", refreshRecords);
     return () => {
       window.removeEventListener("storage", refreshRecords);
       window.removeEventListener("squad-os:event-records-updated", refreshRecords);
     };
-  }, []);
+  }, [activeStorageKey]);
+
+
+  useEffect(() => {
+    if (!teamId || !signedIn || !userId || !supabase) {
+      hydratedRef.current = false;
+      setSyncStatus("local");
+      setRecords(readEventRecords(activeStorageKey));
+      setLegacyRecords(teamId ? readEventRecords(STORAGE_KEY) : []);
+      return;
+    }
+    let active = true;
+    hydratedRef.current = false;
+    const cached = readEventRecords(activeStorageKey);
+    try {
+      const rawDeleted = window.localStorage.getItem(deletedStorageKey);
+      pendingDeletedIdsRef.current = rawDeleted ? JSON.parse(rawDeleted) as string[] : [];
+    } catch { pendingDeletedIdsRef.current = []; }
+    setRecords(cached);
+    setSyncStatus("syncing");
+    void (async () => {
+      try {
+        const result = await syncTournamentEventRecords(supabase, teamId, userId, cached, pendingDeletedIdsRef.current);
+        if (!active) return;
+        if (result.conflict) {
+          setSyncStatus("conflict");
+          hydratedRef.current = true;
+          return;
+        }
+        pendingDeletedIdsRef.current = result.deletedIds;
+        window.localStorage.setItem(deletedStorageKey, JSON.stringify(result.deletedIds));
+        window.localStorage.setItem(activeStorageKey, JSON.stringify(result.records));
+        setRecords(result.records);
+        setLegacyRecords(readEventRecords(STORAGE_KEY));
+        if (legacyImportPendingRef.current) {
+          window.localStorage.removeItem(STORAGE_KEY);
+          setLegacyRecords([]);
+          legacyImportPendingRef.current = false;
+        }
+        hydratedRef.current = true;
+        setSyncStatus("synced");
+      } catch {
+        if (!active) return;
+        hydratedRef.current = true;
+        setSyncStatus(typeof navigator !== "undefined" && navigator.onLine ? "error" : "offline");
+      }
+    })();
+    return () => { active = false; };
+  }, [teamId, signedIn, userId, activeStorageKey, deletedStorageKey]);
+
+  useEffect(() => {
+    if (!teamId || !signedIn || !userId || !supabase || !hydratedRef.current) return;
+    let active = true;
+    const timer = window.setTimeout(() => {
+      setSyncStatus("syncing");
+      void syncTournamentEventRecords(supabase, teamId, userId, records, pendingDeletedIdsRef.current)
+        .then(result => {
+          if (!active) return;
+          if (result.conflict) { setSyncStatus("conflict"); return; }
+          pendingDeletedIdsRef.current = result.deletedIds;
+          window.localStorage.setItem(deletedStorageKey, JSON.stringify(result.deletedIds));
+          window.localStorage.setItem(activeStorageKey, JSON.stringify(result.records));
+          if (JSON.stringify(result.records) !== JSON.stringify(records)) setRecords(result.records);
+          setSyncStatus("synced");
+          if (legacyImportPendingRef.current) {
+            window.localStorage.removeItem(STORAGE_KEY);
+            setLegacyRecords([]);
+            legacyImportPendingRef.current = false;
+          }
+        })
+        .catch(() => { if (active) setSyncStatus(typeof navigator !== "undefined" && navigator.onLine ? "error" : "offline"); });
+    }, 450);
+    const retryOnline = () => setRecords(current => [...current]);
+    window.addEventListener("online", retryOnline);
+    return () => { active = false; window.clearTimeout(timer); window.removeEventListener("online", retryOnline); };
+  }, [records, teamId, signedIn, userId, activeStorageKey, deletedStorageKey]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -138,6 +223,27 @@ export default function TournamentEventRecords() {
   const hasMore = records.length > INITIAL_VISIBLE_RECORDS;
   const selectedRecord = records.find((record) => record.id === selectedRecordId) ?? null;
 
+
+  function persistRecords(next: TournamentEventRecord[], changedId?: string) {
+    const updatedAt = new Date().toISOString();
+    const prepared = next.map(record => record.id === changedId ? { ...record, updatedAt } : record);
+    window.localStorage.setItem(activeStorageKey, JSON.stringify(prepared));
+    setRecords(prepared);
+    window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));
+  }
+
+  function importLegacyRecords() {
+    if (!teamId || !legacyRecords.length) return;
+    const ids = new Set(records.map(record => record.id));
+    const imported = legacyRecords.map(record => ({
+      ...record,
+      id: createId(),
+      updatedAt: new Date().toISOString()
+    }));
+    legacyImportPendingRef.current = true;
+    persistRecords([...imported, ...records]);
+    setLegacyRecords([]);
+  }
   function openCreateModal() {
     setEventName("");
     setDayCount(1);
@@ -202,11 +308,11 @@ export default function TournamentEventRecords() {
  if(numbers.size!==dayCount||Array.from({length:dayCount},(_,i)=>i+1).some(n=>!numbers.has(n))){setStorageError("The day sequence is incomplete. Go back and recreate the day list.");saveLockRef.current=false;return;}
  if(Object.keys(errors).length){setDayErrors(errors);saveLockRef.current=false;return;}
  try{
-  const raw=window.localStorage.getItem(STORAGE_KEY);let existing:TournamentEventRecord[]=[];
+  const raw=window.localStorage.getItem(activeStorageKey);let existing:TournamentEventRecord[]=[];
   if(raw){const parsed:unknown=JSON.parse(raw);if(!Array.isArray(parsed))throw new Error("Invalid records");existing=parsed.filter((x):x is TournamentEventRecord=>x!==null&&typeof x==="object"&&typeof x.id==="string"&&typeof x.name==="string"&&x.name.trim().length>0);if(existing.length!==parsed.length)throw new Error("Unreadable records");}
   const used=new Set(existing.map(x=>x.id));let id=createId();while(used.has(id))id=createId();
-  const record:TournamentEventRecord={id,name:normalizedName,createdAt:new Date().toISOString(),days:[...dayDrafts].sort((x,y)=>x.dayNumber-y.dayNumber).map(d=>({id:d.id,dayNumber:d.dayNumber,date:d.date,matchCount:d.matchCount,matches:[]}))};
-  const next=[record,...existing];window.localStorage.setItem(STORAGE_KEY,JSON.stringify(next));setRecords(next);setExpanded(false);window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));setModalOpen(false);setEventName("");setDayCount(1);setDayDrafts([]);setDayErrors({});setSetupStep("details");setStorageError("");
+  const record:TournamentEventRecord={id,name:normalizedName,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),days:[...dayDrafts].sort((x,y)=>x.dayNumber-y.dayNumber).map(d=>({id:d.id,dayNumber:d.dayNumber,date:d.date,matchCount:d.matchCount,matches:[]}))};
+  const next=[record,...existing];persistRecords(next, record.id);setExpanded(false);window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));setModalOpen(false);setEventName("");setDayCount(1);setDayDrafts([]);setDayErrors({});setSetupStep("details");setStorageError("");
  }catch{setStorageError("Could not safely save this event. Existing records were left unchanged; check browser storage and try again.");}finally{saveLockRef.current=false;}
  }
  function returnToEventDetails(){setSetupStep("details");setDayErrors({});setStorageError("");}
@@ -235,7 +341,7 @@ export default function TournamentEventRecords() {
         const existing = entry.matches || [], saved: EventMatchRecord = { id: existing.find(m => m.matchNumber === matchNumber)?.id || createId(), matchNumber, placement, placementPoints, kills };
         return { ...entry, matches: [...existing.filter(m => m.matchNumber !== matchNumber), saved].sort((a,b)=>a.matchNumber-b.matchNumber) };
       }) });
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); setRecords(next); window.dispatchEvent(new CustomEvent("squad-os:event-records-updated")); setMatchSaveMessage("Match result saved.");
+      persistRecords(next, record.id); window.dispatchEvent(new CustomEvent("squad-os:event-records-updated")); setMatchSaveMessage("Match result saved.");
     } catch { setMatchSaveMessage("Could not save this match result."); }
   }
   function clearMatchResult(record: TournamentEventRecord, day: EventDaySummary, matchNumber: number) {
@@ -243,7 +349,7 @@ export default function TournamentEventRecords() {
       const next = records.map(item => item.id !== record.id ? item : { ...item, days: (item.days || []).map(entry =>
         (entry.id || String(entry.dayNumber || 0)) !== (day.id || String(day.dayNumber || 0)) ? entry : { ...entry, matches: (entry.matches || []).filter(match => match.matchNumber !== matchNumber) }
       ) });
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); setRecords(next);
+      persistRecords(next, record.id);
       const key = matchDraftKey(record.id, day.id || String(day.dayNumber || 0), matchNumber);
       setMatchDrafts(current => { const copy={...current}; delete copy[key]; return copy; });
       window.dispatchEvent(new CustomEvent("squad-os:event-records-updated")); setMatchSaveMessage("Match result cleared.");
@@ -275,17 +381,28 @@ export default function TournamentEventRecords() {
         const old=(item.days||[]).find(day=>day.id===draft.id);
         return {...draft,matches:(old?.matches||[]).filter(match=>match.matchNumber<=draft.matchCount)};
       })});
-      window.localStorage.setItem(STORAGE_KEY,JSON.stringify(next));setRecords(next);setEditingRecordId(null);setEditError("");setManagementMessage("Tournament details updated.");window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));
+      persistRecords(next, record.id);setEditingRecordId(null);setEditError("");setManagementMessage("Tournament details updated.");window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));
     }catch{setEditError("Could not save changes. Existing tournament data was not updated.");}
   }
   function deleteEventRecord(record: TournamentEventRecord) {
     if(!window.confirm("Delete "+record.name+" and all its match results? This cannot be undone."))return;
-    try{const next=records.filter(item=>item.id!==record.id);window.localStorage.setItem(STORAGE_KEY,JSON.stringify(next));setRecords(next);setSelectedRecordId(null);setEditingRecordId(null);setManagementMessage("Tournament record deleted.");window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));}
+    try{const next=records.filter(item=>item.id!==record.id); pendingDeletedIdsRef.current=[...new Set([...pendingDeletedIdsRef.current,record.id])]; window.localStorage.setItem(deletedStorageKey,JSON.stringify(pendingDeletedIdsRef.current)); persistRecords(next);setSelectedRecordId(null);setEditingRecordId(null);setManagementMessage("Tournament record deleted.");window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));}
     catch{setManagementMessage("Could not delete this tournament record.");}
   }
 
   return (
     <section className="tournament-event-records" aria-labelledby="tournament-event-records-title">
+
+      <div className="tournament-event-sync-status" role="status" aria-live="polite">
+        <span className={`tournament-event-sync-dot is-${syncStatus}`} aria-hidden="true" />
+        <span>{syncStatus === "synced" ? "Synced to team" : syncStatus === "syncing" ? "Syncing…" : syncStatus === "offline" ? "Offline · saved on this device" : syncStatus === "conflict" ? "Sync conflict · local copy preserved" : syncStatus === "error" ? "Sync unavailable · local copy preserved" : "Saved on this device"}</span>
+        {(syncStatus === "conflict" || syncStatus === "error" || syncStatus === "offline") && teamId && <button type="button" onClick={() => setRecords(current => [...current])}>Retry sync</button>}
+      </div>
+      {teamId && legacyRecords.length > 0 && <div className="tournament-event-legacy-import">
+        <span>{legacyRecords.length} previous local event{legacyRecords.length === 1 ? "" : "s"} found on this device. They are not assigned to a team yet.</span>
+        <button type="button" onClick={importLegacyRecords}>Import to this team</button>
+      </div>}
+
       <div className="tournament-event-records-head">
         <div>
           <div className="eyebrow">EVENT MODE · CUSTOM TOURNAMENTS</div>

@@ -179,3 +179,6 @@
 .tournament-event-edit-actions{display:flex;gap:8px;flex-wrap:wrap}
 .tournament-event-edit-actions button.is-cancel{border-color:#39475a;background:#182334;color:#b4c2d2}
 @media(max-width:520px){.tournament-event-edit-day{grid-template-columns:1fr 1fr}.tournament-event-edit-day>strong{grid-column:1/-1}}
+
+.tournament-event-sync-status button{min-height:28px;padding:0 9px;border:1px solid #415a70;border-radius:7px;background:#15283a;color:#d5e7f4;font-size:9px;font-weight:800;cursor:pointer}
+.tournament-event-sync-status button:focus-visible{outline:2px solid #69d9ef;outline-offset:2px}
