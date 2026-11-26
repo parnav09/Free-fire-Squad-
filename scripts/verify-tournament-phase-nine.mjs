@@ -1,0 +1,17 @@
+import test from "node:test";import assert from "node:assert/strict";import{readFile}from"node:fs/promises";
+const component=await readFile(new URL("../src/components/TournamentEventRecords.tsx",import.meta.url),"utf8");
+const sync=await readFile(new URL("../src/lib/tournament-event-sync.ts",import.meta.url),"utf8");
+const migration=await readFile(new URL("../supabase/migrations/20261126005159_tournament_event_records_cloud_sync.sql",import.meta.url),"utf8");
+const indexes=await readFile(new URL("../supabase/migrations/20261126005619_tournament_event_records_fk_indexes.sql",import.meta.url),"utf8");
+const app=await readFile(new URL("../src/App.tsx",import.meta.url),"utf8");
+const pkg=JSON.parse(await readFile(new URL("../package.json",import.meta.url),"utf8"));
+test("Phase 8 duplicate match type declaration is corrected",()=>{assert.equal(component.split("type EventMatchRecord").length-1,1);});
+test("Event records are scoped to the selected signed-in team",()=>{assert.ok(component.includes("STORAGE_KEY}:${teamId}"));assert.ok(app.includes("teamId={team?.id ?? null}"));assert.ok(app.includes("userId={sessionUserId}"));});
+test("Cloud persistence uses the team-scoped table and authenticated user",()=>{assert.ok(sync.includes('from("tournament_event_records")'));assert.ok(sync.includes("team_id: teamId"));assert.ok(sync.includes("created_by: userId"));});
+test("Offline cache and pending deletes are retained locally",()=>{assert.ok(component.includes("activeStorageKey"));assert.ok(component.includes("pendingDeletedIdsRef"));assert.ok(component.includes("Offline · saved on this device"));});
+test("Concurrent updates use revision checks instead of blind overwrites",()=>{assert.ok(sync.includes(".eq(\"revision\", remote.revision)"));assert.ok(sync.includes("record.syncRevision !== remote.revision"));assert.ok(sync.includes("conflict = true"));});
+test("Cloud tombstones prevent deleted events from being resurrected",()=>{assert.ok(sync.includes("if (remote.deleted_at)"));assert.ok(sync.includes("never resurrect a deleted event"));});
+test("Legacy local events require an explicit team import",()=>{assert.ok(component.includes("Import to this team"));assert.ok(component.includes("legacyImportPendingRef"));});
+test("Cloud table is protected by RLS membership policies",()=>{assert.ok(migration.includes("enable row level security"));assert.ok(migration.includes("is_team_member(team_id)"));assert.ok(migration.includes("to authenticated"));});
+test("Cloud table foreign keys have covering indexes",()=>{assert.ok(indexes.includes("tournament_event_records_created_by_idx"));assert.ok(indexes.includes("tournament_event_records_updated_by_idx"));});
+test("Phase 9 verifier is in the consolidated build chain",()=>{assert.equal(pkg.scripts["test:tournament-phase-nine"],"node --test scripts/verify-tournament-phase-nine.mjs");assert.ok(pkg.scripts.build.includes("npm run test:tournament-phase-nine"));});

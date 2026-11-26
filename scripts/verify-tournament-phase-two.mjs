@@ -10,7 +10,7 @@ const packageJson = JSON.parse(await readFile(new URL("../package.json", import.
 test("Event mode renders its dedicated records workspace without altering Weekly mode", () => {
   assert.match(app, /import TournamentEventRecords from "\.\/components\/TournamentEventRecords"/);
   assert.match(app, /tournamentMode === "Weekly" \? <>/);
-  assert.match(app, /<TournamentEventRecords \/>/);
+  assert.match(app, /<TournamentEventRecords\b[^>]*\/>/);
   assert.doesNotMatch(app, /Custom tournaments are coming next/);
 });
 
@@ -23,13 +23,14 @@ test("Records workspace retains the empty state and Add Record entry point", () 
 test("More and Show Less only appear when records exceed the initial page", () => {
   assert.match(records, /INITIAL_VISIBLE_RECORDS = 4/);
   assert.match(records, /const hasMore = records\.length > INITIAL_VISIBLE_RECORDS/);
-  assert.match(records, /\{hasMore && \(/);
-  assert.match(records, /expanded \? "Show Less"/);
+  assert.match(records, /\{hasMore&&/);
+  assert.match(records, /expanded\?"Show Less"/);
   assert.match(records, /records\.slice\(0, INITIAL_VISIBLE_RECORDS\)/);
 });
 
 test("Records are read defensively and refresh across tabs and same-app events", () => {
-  assert.match(records, /window\.localStorage\.getItem\(STORAGE_KEY\)/);
+  assert.match(records, /window\.localStorage\.getItem\(storageKey\)/);
+  assert.match(records, /const activeStorageKey = teamId/);
   assert.match(records, /window\.addEventListener\("storage"/);
   assert.match(records, /squad-os:event-records-updated/);
   assert.match(records, /Array\.isArray\(parsed\)/);

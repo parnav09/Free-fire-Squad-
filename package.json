@@ -11,7 +11,7 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "test:foundation": "node --test scripts/verify-foundation.mjs",
-    "build": "npm run typecheck && npm run test:foundation && npm run test:characters && npm run test:evolution && npm run test:evolution-phase-one && npm run test:evolution-phase-one-5 && npm run test:evolution-phase-one-5-b && npm run test:evolution-phase-one-5-c && npm run test:evolution-phase-one-5-d && npm run test:evolution-phase-one-5-e && npm run test:evolution-phase-two-1 && npm run test:evolution-phase-two-2 && npm run test:evolution-phase-two-3 && npm run test:evolution-phase-two-4 && npm run test:evolution-phase-two-5 && npm run test:evolution-phase-two-6 && npm run test:evolution-phase-two-7 && npm run test:evolution-phase-two-8 && npm run test:evolution-phase-two-9 && npm run test:evolution-phase-two-10 && npm run test:evolution-phase-two-11 && npm run test:evolution-phase-two-12 && npm run test:tournament-phase-one && npm run test:tournament-phase-two && npm run test:tournament-phase-three && npm run test:tournament-phase-four && vite build",
+    "build": "npm run typecheck && npm run test:foundation && npm run test:characters && npm run test:evolution && npm run test:evolution-phase-one && npm run test:evolution-phase-one-5 && npm run test:evolution-phase-one-5-b && npm run test:evolution-phase-one-5-c && npm run test:evolution-phase-one-5-d && npm run test:evolution-phase-one-5-e && npm run test:evolution-phase-two-1 && npm run test:evolution-phase-two-2 && npm run test:evolution-phase-two-3 && npm run test:evolution-phase-two-4 && npm run test:evolution-phase-two-5 && npm run test:evolution-phase-two-6 && npm run test:evolution-phase-two-7 && npm run test:evolution-phase-two-8 && npm run test:evolution-phase-two-9 && npm run test:evolution-phase-two-10 && npm run test:evolution-phase-two-11 && npm run test:evolution-phase-two-12 && npm run test:tournament-phase-one && npm run test:tournament-phase-two && npm run test:tournament-phase-three && npm run test:tournament-phase-four && npm run test:tournament-phase-five && npm run test:tournament-phase-six && npm run test:tournament-phase-seven && npm run test:tournament-phase-eight && npm run test:tournament-phase-nine && npm run test:tournament-phase-ten && vite build",
     "preview": "vite preview",
     "test:characters": "node --test scripts/verify-character-profile.mjs",
     "test:evolution": "node --test scripts/verify-evolution-legacy-fixes.mjs",
@@ -37,7 +37,13 @@
     "test:tournament-phase-one": "node --test scripts/verify-tournament-phase-one.mjs",
     "test:tournament-phase-two": "node --test scripts/verify-tournament-phase-two.mjs",
     "test:tournament-phase-three": "node --test scripts/verify-tournament-phase-three.mjs",
-    "test:tournament-phase-four": "node --test scripts/verify-tournament-phase-four.mjs"
+    "test:tournament-phase-four": "node --test scripts/verify-tournament-phase-four.mjs",
+    "test:tournament-phase-five": "node --test scripts/verify-tournament-phase-five.mjs",
+    "test:tournament-phase-six": "node --test scripts/verify-tournament-phase-six.mjs",
+    "test:tournament-phase-seven": "node --test scripts/verify-tournament-phase-seven.mjs",
+    "test:tournament-phase-eight": "node --test scripts/verify-tournament-phase-eight.mjs",
+    "test:tournament-phase-nine": "node --test scripts/verify-tournament-phase-nine.mjs",
+    "test:tournament-phase-ten": "node --test scripts/verify-tournament-phase-ten.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.1",

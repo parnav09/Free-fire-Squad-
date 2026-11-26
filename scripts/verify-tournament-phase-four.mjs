@@ -23,15 +23,15 @@ test("Every day has its own date picker and independent positive integer match c
 test("Date validation permits non-consecutive dates but rejects missing, invalid and duplicate dates", () => {
   assert.ok(component.includes("Choose a date for this day."));
   assert.ok(component.includes("Enter a valid calendar date."));
-  assert.ok(component.includes("seenDates.has(day.date)"));
+  assert.ok(component.includes("dates.has(day.date)"));
   assert.ok(component.includes("Each tournament day must have a different date."));
   assert.ok(!component.includes("date.getTime() < Date.now()"));
 });
 test("Saving persists each configured date and match count in the Event record schema", () => {
   assert.ok(component.includes("handleSaveConfiguredEvent"));
-  assert.ok(component.includes("date: day.date"));
-  assert.ok(component.includes("matchCount: day.matchCount"));
-  assert.ok(component.includes("window.localStorage.setItem(STORAGE_KEY"));
+  assert.ok(component.includes("date:d.date"));
+  assert.ok(component.includes("matchCount:d.matchCount"));
+  assert.ok(component.includes("window.localStorage.setItem(activeStorageKey"));
   assert.ok(component.includes("squad-os:event-records-updated"));
 });
 test("Day setup has validation feedback, a back action and responsive scrollable layout", () => {
