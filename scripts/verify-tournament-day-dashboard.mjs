@@ -24,6 +24,7 @@ test("Day details show the configured date and daily match aggregates", () => {
   assert.match(component, /formatUpdatedAt\(selectedRecord\.updatedAt\)/);
   assert.match(component, /DAY MATCHES/);
   assert.match(component, /TOTAL KILLS/);
+  assert.match(component, /PLACEMENT PTS/);
   assert.match(component, /TOTAL POINTS/);
   assert.match(component, /overallStanding/);
 });
