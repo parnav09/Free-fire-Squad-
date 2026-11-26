@@ -16,7 +16,7 @@ test("Event match editor reuses the weekly placement picker", () => {
 test("Placement scoring matches the weekly scoreboard mapping", () => {
   assert.ok(event.includes("function getPlacementPoints(placement: number | null)"));
   assert.ok(event.includes("[12,9,8,7,6,5,4,3,2,1,0,0]"));
-  assert.ok(event.includes("placementPoints = getPlacementPoints(placement)"));
+  assert.ok(event.includes("placementPoints: getPlacementPoints(placement)"));
 });
 test("Placement points are derived and no longer manually editable", () => {
   assert.ok(event.includes('getPlacementPoints(draft.placement === "" ? null : Number(draft.placement))'));
@@ -30,7 +30,8 @@ test("Kills input follows the weekly numeric-entry behavior", () => {
 test("Unset placement can be selected and cleared safely", () => {
   assert.ok(picker.includes('onClear?.()'));
   assert.ok(event.includes('onClear={()=>updateMatchDraft(selectedRecord,selectedDay,matchNo,"placement","")}'));
-  assert.ok(event.includes('placement === null && kills > 0'));
+  assert.ok(event.includes('if (placement === null)'));
+  assert.ok(event.includes("Select placement for Match"));
 });
 test("Match total and day summary use derived placement points plus kills", () => {
   assert.ok(event.includes("getPlacementPoints(draft.placement === \"\" ? null : Number(draft.placement))+(Number(draft.kills)||0)"));
