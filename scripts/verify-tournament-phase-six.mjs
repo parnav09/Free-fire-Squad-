@@ -43,8 +43,10 @@ test("placement controls stay blue until the selected value is #1 in every event
 test("original compact team sync indicator is preserved without event-level diagnostics",()=>{
   assert.doesNotMatch(c,/Synced to team|Syncing…|Offline · saved on this device|tournament-event-sync-status/);
   assert.match(app,/sync-indicator sync-/);
-  assert.match(app,/const syncState = !isOnline/);
+  assert.match(app,/const syncState = serverStatus === "offline"/);
   assert.match(app,/const syncLabel = syncState/);
+  assert.match(app,/supabase\.from\("teams"\)\.select\("id"\)\.limit\(1\)/);
+  assert.match(app,/window\.setTimeout\(checkServer, 15000\)/);
   assert.match(shell,/sync-indicator sync-/);
 });
 test("decorative diagonal arrows are removed from interactive app surfaces",()=>{
