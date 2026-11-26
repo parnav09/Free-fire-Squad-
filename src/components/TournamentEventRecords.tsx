@@ -148,11 +148,6 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
     const refreshRecords = () => setRecords(readEventRecords(activeStorageKey));
     window.addEventListener("storage", refreshRecords);
     window.addEventListener("squad-os:event-records-updated", refreshRecords);
-    const scrollRecordsToTop = () => {
-    recordsRootRef.current?.scrollTo({ top: 0, behavior: "instant" });
-    window.scrollTo({ top: 0, behavior: "instant" });
-  };
-
   return () => {
       window.removeEventListener("storage", refreshRecords);
       window.removeEventListener("squad-os:event-records-updated", refreshRecords);
@@ -459,6 +454,11 @@ export default function TournamentEventRecords({ teamId = null, userId = null, s
     try{const next=records.filter(item=>item.id!==record.id); pendingDeletedIdsRef.current=[...new Set([...pendingDeletedIdsRef.current,record.id])]; window.localStorage.setItem(deletedStorageKey,JSON.stringify(pendingDeletedIdsRef.current)); persistRecords(next);setSelectedRecordId(null);setEditingRecordId(null);setManagementMessage("Tournament record deleted.");window.dispatchEvent(new CustomEvent("squad-os:event-records-updated"));}
     catch{setManagementMessage("Could not delete this tournament record.");}
   }
+
+  const scrollRecordsToTop = () => {
+    recordsRootRef.current?.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
 
   return (
     <section ref={recordsRootRef} data-sync-status={syncStatus} className={`tournament-event-records${selectedRecord ? " is-record-detail" : ""}${selectedDay ? " is-day-detail" : ""}`} aria-labelledby="tournament-event-records-title">
