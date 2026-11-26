@@ -1,0 +1,15 @@
+.tournament-mode-switch-wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 22px;padding:5px 0 0}
+.tournament-mode-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:min(100%,420px);padding:5px;border:1px solid #26354b;background:#0b1220;border-radius:14px}
+.tournament-mode-switch button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;min-height:52px;padding:8px 14px;border:1px solid transparent;border-radius:10px;background:transparent;color:#93a7c5;text-align:left;cursor:pointer;transition:background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease}
+.tournament-mode-switch button span{font-size:13px;font-weight:800;letter-spacing:.01em}
+.tournament-mode-switch button small{font-size:10px;color:#71839f;font-weight:550}
+.tournament-mode-switch button.active{background:linear-gradient(135deg,#12364b,#102337);border-color:#2d6179;color:#8be7fa;box-shadow:inset 0 1px #ffffff0b,0 4px 18px #06111b55}
+.tournament-mode-switch button.active small{color:#8fb9ca}
+.tournament-mode-switch button:focus-visible{outline:2px solid #69d9ef;outline-offset:3px}
+.tournament-mode-context{color:#71839f;font-size:10px;letter-spacing:.04em;text-align:right}
+.tournament-event-foundation{display:grid;justify-items:start;gap:12px;margin-top:8px;padding:clamp(20px,4vw,30px);border:1px solid rgba(105,217,239,.16);border-radius:16px;background:radial-gradient(ellipse at 100% 0%,rgba(56,112,150,.14),transparent 55%),linear-gradient(145deg,#0d1729,#080d18)}
+.tournament-event-foundation h2{margin:0;color:#eaf5ff;font-size:clamp(20px,3vw,26px)}
+.tournament-event-foundation p{max-width:620px;margin:0;color:#8fa1bb;font-size:12px;line-height:1.75}
+.tournament-foundation-status{display:inline-flex;align-items:center;min-height:28px;padding:6px 10px;border:1px solid rgba(105,217,239,.2);border-radius:7px;background:rgba(39,112,139,.1);color:#83dff1;font-size:9px;font-weight:800;letter-spacing:.1em}
+@media(max-width:620px){.tournament-mode-switch-wrap{align-items:stretch;flex-direction:column;gap:9px;margin-bottom:18px}.tournament-mode-switch{width:100%}.tournament-mode-switch button{min-height:48px;padding:8px 11px}.tournament-mode-context{text-align:left}.tournament-event-foundation{border-radius:13px}}
+@media(prefers-reduced-motion:reduce){.tournament-mode-switch button{transition:none}}
