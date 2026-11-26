@@ -10,14 +10,10 @@ type TournamentModeFoundationProps = {
 export default function TournamentModeFoundation({ mode, onChange }: TournamentModeFoundationProps) {
   return (
     <div className="tournament-mode-switch-wrap">
-      <div className="tournament-mode-switch" role="tablist" aria-label="Tournament modes">
+      <div className="tournament-mode-switch" role="group" aria-label="Tournament modes">
         <button
           type="button"
-          role="tab"
-          id="tournament-weekly-tab"
-          aria-selected={mode === "Weekly"}
-          aria-controls="tournament-mode-panel"
-          tabIndex={mode === "Weekly" ? 0 : -1}
+          aria-pressed={mode === "Weekly"}
           className={mode === "Weekly" ? "active" : ""}
           onClick={() => onChange("Weekly")}
         >
@@ -26,11 +22,7 @@ export default function TournamentModeFoundation({ mode, onChange }: TournamentM
         </button>
         <button
           type="button"
-          role="tab"
-          id="tournament-event-tab"
-          aria-selected={mode === "Event"}
-          aria-controls="tournament-mode-panel"
-          tabIndex={mode === "Event" ? 0 : -1}
+          aria-pressed={mode === "Event"}
           className={mode === "Event" ? "active" : ""}
           onClick={() => onChange("Event")}
         >

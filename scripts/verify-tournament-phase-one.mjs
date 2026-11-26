@@ -9,7 +9,9 @@ const modeStyles = await readFile(new URL("../src/components/TournamentModeFound
 test("Tournament Phase 1 exposes independent Weekly and Event modes", () => {
   assert.match(app, /useState<TournamentMode>\("Weekly"\)/);
   assert.match(app, /<TournamentModeFoundation mode=\{tournamentMode\} onChange=\{setTournamentMode\}\/>/);
-  assert.match(modeComponent, /role="tablist"/);
+  assert.match(modeComponent, /role="group"/);
+  assert.match(modeComponent, /aria-pressed=\{mode === "Weekly"\}/);
+  assert.match(modeComponent, /aria-pressed=\{mode === "Event"\}/);
   assert.match(modeComponent, /onChange\("Weekly"\)/);
   assert.match(modeComponent, /onChange\("Event"\)/);
 });
