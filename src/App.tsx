@@ -15,6 +15,7 @@ const ScrimsSection = lazy(() => import("./components/ScrimsSection"));
 const CharactersDatabase = lazy(() => import("./components/CharactersDatabase"));
 const PetDatabase = lazy(() => import("./components/PetDatabase"));
 import "./components/MatchesSectionTabs.css";
+import TournamentModeFoundation, { type TournamentMode } from "./components/TournamentModeFoundation";
 
 
 
@@ -89,6 +90,7 @@ export default function App() {
   const [drillLanguage,setDrillLanguage]=useState<"en"|"hi-en">(()=>safeStorageGetItem("squad-os-drill-language")==="hi-en"?"hi-en":"en");
   const changeDrillLanguage=(value:"en"|"hi-en")=>{setDrillLanguage(value);safeStorageSetItem("squad-os-drill-language",value);};
   const [matchesTab, setMatchesTab] = useState<"Scrims"|"Tournament">("Scrims");
+  const [tournamentMode, setTournamentMode] = useState<TournamentMode>("Weekly");
   const [mobileMore, setMobileMore] = useState(false);
   const [players, setPlayers] = useState<Player[]>(readPlayers);
   const [week, setWeek] = useState(() => safeStorageGetItem("squad-os-week") || currentISOWeekKey());
@@ -1079,6 +1081,8 @@ export default function App() {
           {section==="Evolution"&&<><div className="section-heading"><div><div className="eyebrow">PLAYER DEVELOPMENT · EVOLUTION</div><h2>One place for improvement</h2></div><span className="phase-pill">4 MODULES</span></div><p className="intro">Evaluation, weekly review, player trends and squad analytics stay together. Use the module you need; all records remain team-shared.</p><div className="evolution-hub-grid">{[{title:"Daily Evaluation",desc:"Legacy five-dimension form. Canonical session-linked workflow is planned for Evolution Phase Four.",to:"Evaluation",icon:"◎"},{title:"Weekly Review",desc:"Legacy read-only snapshot. Full review and approvals are planned for Evolution Phase Seven.",to:"Weekly Review",icon:"↗"},{title:"Player Trends",desc:"Legacy read-only preview. Longitudinal trends are planned for Evolution Phase Eight.",to:"Player Trends",icon:"⌁"},{title:"Squad Analytics",desc:"Competitive-results snapshot. Player-development analytics are planned for Evolution Phase Nine.",to:"Analytics",icon:"▥"}].map(x=><button key={x.to} className="evolution-hub-card" onClick={()=>setSection(x.to as Section)}><span className="evolution-hub-icon">{x.icon}</span><strong>{x.title}</strong><small>{x.desc}</small><span className="evolution-hub-link">Open module →</span></button>)}</div></>}
           {section==="Sessions" && <CanonicalSessionsWorkspace client={supabase} teamId={team?.id||""} userId={sessionUserId} membershipRole={team?.membership_role||""} members={teamMembers}/>}
           {section==="Tournament" && <><div className="matches-section-tabs" role="tablist" aria-label="Matches sections"><button role="tab" aria-selected={matchesTab==="Scrims"} className={matchesTab==="Scrims"?"active":""} onClick={()=>setMatchesTab("Scrims")}>Scrims</button><button role="tab" aria-selected={matchesTab==="Tournament"} className={matchesTab==="Tournament"?"active":""} onClick={()=>setMatchesTab("Tournament")}>Tournaments</button></div>{matchesTab==="Scrims"?<Suspense fallback={<div className="pt-loading">Opening scrims workspace…</div>}> <ScrimsSection supabase={supabase} teamId={team?.id||""} userId={sessionUserId} teamMembers={teamMembers as Array<{user_id:string;display_name?:string}>}/> </Suspense>:<>
+            <TournamentModeFoundation mode={tournamentMode} onChange={setTournamentMode}/>
+            {tournamentMode === "Weekly" ? <>
             <div className="section-heading"><div><div className="eyebrow">WEEKLY CYCLE</div><h2>Matchday ledger</h2></div><div className="scoreboard-actions"><button className="secondary-button score-action" onClick={linkCurrentTournamentCycle}>↻ Sync Tournament</button><span className="phase-pill">7 DAYS · 6 MATCHES / DAY</span></div></div>
             <div className="toolbar"><label>Week <input value={week} onChange={e=>setWeek(e.target.value)} placeholder="YYYY-W##"/></label><label>Day <select value={day} onChange={e=>setDay(Number(e.target.value))}>{Array.from({length:7},(_,i)=><option value={i+1} key={i}>Day {i+1} · {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][i]}</option>)}</select></label></div>
             <div className="match-grid">{Array.from({length:6},(_,i)=>{const key=week+"-D"+day+"-M"+(i+1);const remote=sharedMatches.find(x=>x.match_day===day&&x.match_number===i+1);const m=matches[key]??((signedIn&&team&&remote)?{placement:remote.placement??12,kills:remote.kills??0}:{placement:12,kills:0});return <article className={`match-card${m.placement===1?" match-card-top1":""}`} key={key}><div className="card-index">MATCH 0{i+1}</div><h3>Match {i+1}</h3><label>Placement<PlacementPicker value={m.placement} disabled={!!team&&!(team.membership_role==="coach"||team.membership_role==="owner")} onChange={n=>saveMatch(key,"placement",n)}/></label><label>Kills<input type="text" inputMode="numeric" pattern="[0-9]*" minLength={1} value={killDrafts[key] ?? (m.kills > 0 ? String(m.kills) : "")} disabled={!!team&&!(team.membership_role==="coach"||team.membership_role==="owner")} onChange={e=>{const raw=e.target.value;setKillDrafts(prev=>({...prev,[key]:raw}));}} onBlur={e=>{const raw=e.currentTarget.value;if(raw===""){if(m.kills>0)saveMatch(key,"kills",0);}else{saveMatch(key,"kills",Math.max(0,Number(raw)));}setKillDrafts(prev=>{const next={...prev};delete next[key];return next;});}} onKeyDown={e=>{if(e.key==="Enter"){e.currentTarget.blur();}}}/></label></article>})}</div>
@@ -1127,6 +1131,7 @@ export default function App() {
             </div>}
           </section>}
             <p className="footer-note">Prototype scoring: placement 1–10 = 12,9,8,7,6,5,4,3,2,1 points; 11/12 = 0. Add kills. Not an official tournament scoring preset.</p>
+            </> : <div className="tournament-event-foundation" aria-live="polite"><span className="eyebrow">EVENT MODE · FOUNDATION</span><h2>Custom tournaments are coming next</h2><p>Event mode is now separated from Weekly Tournament. Event records, custom days and match schedules will be introduced in the following Tournament phases.</p><span className="tournament-foundation-status">FOUNDATION READY · PHASE 1</span></div>}
           </>}</>}
 {section==="Training Legacy" && <>
             <div className="section-heading"><div><div className="eyebrow">PRACTICE BLOCK</div><h2>Team drill checklist</h2></div></div>
