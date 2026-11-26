@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./TournamentEventRecords.css";
 
+type EventMatchRecord = { id: string; matchNumber: number; placement: number | null; placementPoints: number; kills: number; };
 type EventDaySummary = {
   id?: string;
   dayNumber?: number;
   date?: string;
   matchCount?: number;
+  matches?: EventMatchRecord[];
 };
 
 type TournamentEventRecord = {
