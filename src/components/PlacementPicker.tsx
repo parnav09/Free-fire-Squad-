@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./PlacementPicker.css";
 
-export default function PlacementPicker({value,disabled,onChange}:{value:number|null;disabled:boolean;onChange:(n:number)=>void;onClear?:()=>void}) {
+export default function PlacementPicker({value,disabled,onChange,onClear}:{value:number|null;disabled:boolean;onChange:(n:number)=>void;onClear?:()=>void}) {
  const [open,setOpen]=useState(false);
  const label=(n:number|null)=>n===null?"Not set":n===12?"12+ / Other":n+(n===1?"st":n===2?"nd":n===3?"rd":"th");
  return <div className={`scrims-placement-picker${open?" is-open":""}`}>
