@@ -265,3 +265,9 @@
   .tournament-event-modal :focus-visible,
   .tournament-event-workspace :focus-visible{outline:2px solid Highlight}
 }
+
+/* Event match editor mirrors the weekly match-entry placement control. */
+.tournament-event-derived-points{display:flex;align-items:center;min-height:42px;padding:0 12px;border:1px solid #2c5068;border-radius:9px;background:linear-gradient(135deg,#12364b,#102337);color:#8ce8fa;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.tournament-event-match-fields .scrims-placement-picker{min-width:0;width:100%}
+.tournament-event-match-fields .scrims-placement-trigger{width:100%;min-height:42px;justify-content:space-between}
+.tournament-event-match-fields .scrims-placement-menu{max-height:220px;z-index:130}
