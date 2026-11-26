@@ -25,10 +25,17 @@ test("Day dashboard keeps date, standing, and all daily aggregate metrics", () =
   assert.match(component, /PLACEMENT PTS/);
   assert.match(component, /TOTAL POINTS/);
   assert.match(component, /overallStanding/);
+  assert.match(component, /selectedRecord\.overallPlacement === 1 \? " is-overall-champion" : ""/);
+  assert.match(styles, /\.tournament-event-workspace\.is-overall-champion\{/);
+  assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-workspace-header/);
+  assert.match(styles, /\.tournament-event-workspace\.is-overall-champion \.tournament-event-day-select/);
 });
 
 test("Day result entry mirrors Tournament/Scrims champion-only gold placement", () => {
-  assert.match(component, /draft\.placement === "1" \? " is-champion" : ""/);
+  assert.match(component, /saved\?\.placement === 1 \? " is-champion" : ""/);
+  assert.doesNotMatch(component, /draft\.placement === "1" \? " is-champion" : ""/);
+  assert.match(styles, /\.tournament-event-day-save-bar button\{[^}]*#2c5068[^}]*#12364b/s);
+  assert.doesNotMatch(styles, /\.tournament-event-day-save-bar button\{[^}]*#d4ad5d/s);
   assert.match(pickerStyles, /\.match-card-top1 \.scrims-placement-trigger/);
   assert.match(styles, /\.tournament-event-match-card\.is-champion \.scrims-placement-trigger/);
   assert.match(styles, /\.tournament-event-match-card\.is-champion \.scrims-placement-menu button\.is-selected/);

@@ -324,11 +324,11 @@
 .tournament-event-records.is-day-detail .tournament-event-management-actions,
 .tournament-event-records.is-day-detail .tournament-event-management-message,
 .tournament-event-records.is-day-detail .tournament-event-edit-panel{display:none}
-.tournament-event-day-save-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;padding:14px;border:1px solid #765a28;border-radius:12px;background:radial-gradient(ellipse at 100% 0%,rgba(215,174,83,.13),transparent 58%),linear-gradient(145deg,#211909,#100e0a)}
+.tournament-event-day-save-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;padding:14px;border:1px solid #263b55;border-radius:12px;background:linear-gradient(145deg,#111d30,#0b1422)}
 .tournament-event-day-save-bar>div{display:grid;gap:4px;min-width:0}
-.tournament-event-day-save-bar strong{color:#f2d99e;font-size:12px}
-.tournament-event-day-save-bar span{color:#b8a67f;font-size:10px;line-height:1.5}
-.tournament-event-day-save-bar button{min-height:46px;flex:0 0 auto;padding:0 20px;border:1px solid #d4ad5d;border-radius:10px;background:linear-gradient(145deg,#9b712b,#5c3f12);color:#fff0c5;font-size:12px;font-weight:900;letter-spacing:.02em;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,232,177,.25),0 5px 14px rgba(0,0,0,.25)}
+.tournament-event-day-save-bar strong{color:#e6eefb;font-size:12px}
+.tournament-event-day-save-bar span{color:#91a7c8;font-size:10px;line-height:1.5}
+.tournament-event-day-save-bar button{min-height:46px;flex:0 0 auto;padding:0 20px;border:1px solid #2c5068;border-radius:10px;background:linear-gradient(135deg,#12364b,#102337);color:#8ce8fa;font-size:12px;font-weight:800;letter-spacing:.02em;cursor:pointer;box-shadow:inset 0 1px 0 rgba(165,230,244,.08),0 5px 14px rgba(0,0,0,.2)}
 .tournament-event-day-save-bar button:disabled{opacity:.5;cursor:not-allowed}
 .tournament-event-day-save-bar button:focus-visible{outline:2px solid #ffe2a0;outline-offset:3px}
 .tournament-event-match-card.is-champion{border-color:#8b682f;background:radial-gradient(ellipse at 92% 0%,rgba(198,161,91,.16),transparent 54%),linear-gradient(145deg,#1b150b,#0a0b0d 68%);box-shadow:inset 0 1px 0 rgba(255,224,158,.09),0 5px 16px rgba(0,0,0,.25)}
@@ -341,3 +341,57 @@
 .tournament-event-match-card.is-champion .scrims-placement-menu button.is-selected{background:linear-gradient(145deg,#a27a31,#704e19 45%,#3e280b)!important;border-color:#f0ce7c!important;color:#fff3cb!important}
 @media(max-width:620px){.tournament-event-day-save-bar{align-items:stretch;flex-direction:column}.tournament-event-day-save-bar button{width:100%;min-height:48px}}
 @media(prefers-reduced-motion:reduce){.tournament-event-day-save-bar button{transition:none}}
+
+
+/* Overall event champion: activate only from the saved final standing across every day. */
+.tournament-event-workspace.is-overall-champion{
+  padding:clamp(12px,2.5vw,20px);
+  border:1px solid #8b682f;
+  border-radius:16px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(198,161,91,.13),transparent 54%),linear-gradient(155deg,#171208 0%,#0e1014 48%,#0a0d12 100%);
+  box-shadow:inset 0 1px 0 rgba(255,224,158,.1),0 8px 26px rgba(0,0,0,.24);
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-workspace-kicker,
+.tournament-event-workspace.is-overall-champion .tournament-event-workspace-label,
+.tournament-event-workspace.is-overall-champion .tournament-event-workspace-section-head>span,
+.tournament-event-workspace.is-overall-champion .tournament-event-day-detail-top>span{color:#d9b45e}
+.tournament-event-workspace.is-overall-champion .tournament-event-workspace-header{
+  border-color:#765a2d;
+  background:radial-gradient(ellipse at 100% 0%,rgba(198,161,91,.2),transparent 58%),linear-gradient(145deg,#251b0c,#15120d 68%,#0e1115);
+  box-shadow:inset 0 1px 0 rgba(255,224,158,.1);
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-workspace-header h2,
+.tournament-event-workspace.is-overall-champion .tournament-event-workspace-stats strong{color:#f0d99f}
+.tournament-event-workspace.is-overall-champion .tournament-event-workspace-stats div,
+.tournament-event-workspace.is-overall-champion .tournament-event-scoreboard>div,
+.tournament-event-workspace.is-overall-champion .tournament-event-standing-panel,
+.tournament-event-workspace.is-overall-champion .tournament-event-day-select{
+  border-color:#594522;
+  background:linear-gradient(145deg,rgba(47,35,16,.88),rgba(19,16,11,.94));
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-scoreboard span,
+.tournament-event-workspace.is-overall-champion .tournament-event-standing-panel span{color:#bda36c}
+.tournament-event-workspace.is-overall-champion .tournament-event-scoreboard strong,
+.tournament-event-workspace.is-overall-champion .tournament-event-standing-panel strong{color:#f0d99f}
+.tournament-event-workspace.is-overall-champion .tournament-event-day-select-index{
+  border-color:#80612e;background:#30230f;color:#f0d99f;
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-day-select-copy strong,
+.tournament-event-workspace.is-overall-champion .tournament-event-day-select-standing{color:#e6cb8e}
+.tournament-event-workspace.is-overall-champion .tournament-event-day-select:hover{
+  border-color:#a9823b;
+  background:linear-gradient(145deg,#392a13,#1b160d);
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-day-detail-top .tournament-event-back-button{
+  border-color:#765a2d;color:#dfc58e;background:#21190d;
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-match-card{
+  border-color:#5a4728;
+  background:linear-gradient(145deg,rgba(35,27,14,.82),rgba(13,13,12,.92));
+}
+.tournament-event-workspace.is-overall-champion .tournament-event-match-card-head>strong{color:#e0c487}
+.tournament-event-workspace.is-overall-champion .tournament-event-match-total{background:#241b0e;color:#cbb27d}
+.tournament-event-workspace.is-overall-champion .tournament-event-match-total strong{color:#f0d99f}
+@media(max-width:620px){
+  .tournament-event-workspace.is-overall-champion{padding:10px;border-radius:13px}
+}
