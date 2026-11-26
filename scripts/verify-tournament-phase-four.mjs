@@ -31,7 +31,7 @@ test("Saving persists each configured date and match count in the Event record s
   assert.ok(component.includes("handleSaveConfiguredEvent"));
   assert.ok(component.includes("date: day.date"));
   assert.ok(component.includes("matchCount: day.matchCount"));
-  assert.ok(component.includes("window.localStorage.setItem(STORAGE_KEY"));
+  assert.ok(component.includes("window.localStorage.setItem(activeStorageKey"));
   assert.ok(component.includes("squad-os:event-records-updated"));
 });
 test("Day setup has validation feedback, a back action and responsive scrollable layout", () => {

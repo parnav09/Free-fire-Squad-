@@ -10,7 +10,7 @@ const packageJson = JSON.parse(await readFile(new URL("../package.json", import.
 test("Event mode renders its dedicated records workspace without altering Weekly mode", () => {
   assert.match(app, /import TournamentEventRecords from "\.\/components\/TournamentEventRecords"/);
   assert.match(app, /tournamentMode === "Weekly" \? <>/);
-  assert.match(app, /<TournamentEventRecords \/>/);
+  assert.match(app, /<TournamentEventRecords\\b[^>]*\\/>/);
   assert.doesNotMatch(app, /Custom tournaments are coming next/);
 });
 
