@@ -634,7 +634,7 @@
   font-weight:950;
   letter-spacing:.02em;
 }
-.tournament-event-record-card.is-overall-champion @media(max-width:420px){
+@media(max-width:420px){
   .tournament-event-record-card.is-overall-champion{padding:12px;gap:8px}
   .tournament-event-record-champion-stats{gap:5px}
   .tournament-event-record-champion-stats>span{padding:7px 6px}
