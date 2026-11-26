@@ -41,7 +41,7 @@ test("Event creation retains normalized names and strict calendar-date validatio
 test("Match recording retains validated placement, points and kill totals", () => {
   assert.ok(component.includes("function saveDayResults"));
   assert.ok(component.includes("placement < 1 || placement > 12"));
-  assert.ok(component.includes("placementPoints, kills") && component.includes("getPlacementPoints(placement)"));
+  assert.ok(component.includes("placementPoints: getPlacementPoints(placement), kills") && component.includes("getPlacementPoints(placement)"));
   assert.ok(component.includes("Save Day Results"));
 });
 test("Editing and deletion preserve event-level data safety", () => {
